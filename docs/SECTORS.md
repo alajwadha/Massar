@@ -28,32 +28,32 @@ dimensions**:
 
 | # | Slug | العربية | English | Priority | Target HR | Anchor employers |
 |---|---|---|---|---|---|---|
-| 1 | `investment_finance` | الاستثمار والتمويل | Investment & Finance | 1 | 250 | PIF, SNB, Al Rajhi, + boutique advisory/fintech SMEs |
-| 2 | `consulting` | الاستشارات والخدمات المهنية | Consulting & Professional Services | 1 | 200 | MBB, Big 4, + local/boutique consultancies |
-| 3 | `energy_petrochem` | الطاقة والبتروكيماويات | Energy & Petrochemicals | 1 | 200 | Aramco, SABIC, + contractors & service SMEs |
-| 4 | `gigaprojects_realestate` | المشاريع الكبرى والعقار والإنشاء | Giga-projects, Real Estate & Construction | 1 | 250 | NEOM, Roshn, + the long tail of contractors |
-| 5 | `government` | الحكومة والقطاع العام | Government & Public Sector | 1 | 180 | Ministries, authorities, + semi-gov entities |
-| 6 | `recruitment_agencies` | مكاتب التوظيف والاستقدام | Recruitment & Staffing Agencies | 1 | 220 | Maharah, SMASCO, Hays, ManpowerGroup, Michael Page |
-| 7 | `telecom_it` | الاتصالات وتقنية المعلومات | Telecom & IT | 2 | 130 | stc, Mobily, Zain, + IT services SMEs |
-| 8 | `tech_startups` | التقنية والشركات الناشئة | Tech & Startups | 2 | 180 | Tamara, Jahez, Salla, + the whole startup long tail |
-| 9 | `healthcare_pharma` | الصحة والأدوية | Healthcare & Pharma | 2 | 160 | MOH, KFSHRC, + private hospitals & clinics |
-| 10 | `manufacturing_mining` | الصناعة والتعدين | Manufacturing & Mining | 2 | 140 | Ma'aden, + industrial-city factories (SMEs) |
-| 11 | `transport_logistics` | النقل واللوجستيات | Transport & Logistics | 2 | 140 | Saudia, Bahri, + freight/logistics SMEs |
-| 12 | `retail_fmcg` | التجزئة والسلع الاستهلاكية | Retail & FMCG | 3 | 120 | Cenomi, Almarai, + retailers & distributors |
-| 13 | `education_training` | التعليم والتدريب | Education & Training | 3 | 120 | KAUST, + private schools & training centers |
-| 14 | `tourism_entertainment` | السياحة والترفيه والضيافة | Tourism, Entertainment & Hospitality | 3 | 110 | SEVEN, GEA, + hotels & F&B operators |
-| 15 | `insurance` | التأمين | Insurance | 3 | 80 | Bupa, Tawuniya, + brokers |
-| 16 | `aerospace_defense` | الطيران والدفاع | Aerospace & Defense | 3 | 70 | SAMI, GAMI, + suppliers |
+| 1 | `investment_finance` | الاستثمار والتمويل | Investment & Finance | 1 | 350 | PIF, SNB, Al Rajhi, + boutique advisory/fintech SMEs |
+| 2 | `consulting` | الاستشارات والخدمات المهنية | Consulting & Professional Services | 1 | 280 | MBB, Big 4, + local/boutique consultancies |
+| 3 | `energy_petrochem` | الطاقة والبتروكيماويات | Energy & Petrochemicals | 1 | 280 | Aramco, SABIC, + contractors & service SMEs |
+| 4 | `gigaprojects_realestate` | المشاريع الكبرى والعقار والإنشاء | Giga-projects, Real Estate & Construction | 1 | 350 | NEOM, Roshn, + the long tail of contractors |
+| 5 | `government` | الحكومة والقطاع العام | Government & Public Sector | 1 | 250 | Ministries, authorities, + semi-gov entities |
+| 6 | `recruitment_agencies` | مكاتب التوظيف والاستقدام | Recruitment & Staffing Agencies | 1 | 300 | Maharah, SMASCO, Hays, ManpowerGroup, Michael Page |
+| 7 | `telecom_it` | الاتصالات وتقنية المعلومات | Telecom & IT | 2 | 180 | stc, Mobily, Zain, + IT services SMEs |
+| 8 | `tech_startups` | التقنية والشركات الناشئة | Tech & Startups | 2 | 250 | Tamara, Jahez, Salla, + the whole startup long tail |
+| 9 | `healthcare_pharma` | الصحة والأدوية | Healthcare & Pharma | 2 | 220 | MOH, KFSHRC, + private hospitals & clinics |
+| 10 | `manufacturing_mining` | الصناعة والتعدين | Manufacturing & Mining | 2 | 190 | Ma'aden, + industrial-city factories (SMEs) |
+| 11 | `transport_logistics` | النقل واللوجستيات | Transport & Logistics | 2 | 190 | Saudia, Bahri, + freight/logistics SMEs |
+| 12 | `retail_fmcg` | التجزئة والسلع الاستهلاكية | Retail & FMCG | 3 | 170 | Cenomi, Almarai, + retailers & distributors |
+| 13 | `education_training` | التعليم والتدريب | Education & Training | 3 | 160 | KAUST, + private schools & training centers |
+| 14 | `tourism_entertainment` | السياحة والترفيه والضيافة | Tourism, Entertainment & Hospitality | 3 | 150 | SEVEN, GEA, + hotels & F&B operators |
+| 15 | `insurance` | التأمين | Insurance | 3 | 100 | Bupa, Tawuniya, + brokers |
+| 16 | `aerospace_defense` | الطيران والدفاع | Aerospace & Defense | 3 | 80 | SAMI, GAMI, + suppliers |
 
-**Mature target: ~2,550 individual HR people** (P1 ≈ 1,300 · P2 ≈ 750 · P3 ≈ 500).
-Start with priority-1 (sectors 1–6 ≈ 1,300), and within each sector fill
+**Mature target: ~3,500 individual HR people** (P1 ≈ 1,810 · P2 ≈ 1,030 · P3 ≈ 660).
+Start with priority-1 (sectors 1–6 ≈ 1,810), and within each sector fill
 mid-market + SME + agency first.
 
 ## Tier mix to aim for (per sector)
-For a priority-1 sector targeting ~250 people:
-- `giant` / `large` (anchors): ~60 (24%)
-- `mid_market`: ~100 (40%)
-- `sme`: ~90 (36%)
+For a priority-1 sector targeting ~350 people:
+- `giant` / `large` (anchors): ~85 (24%)
+- `mid_market`: ~140 (40%)
+- `sme`: ~125 (36%)
 
 The exact split flexes by sector, but the rule holds: **the majority comes from
 mid-market and smaller firms**, because those are the people who reply.
