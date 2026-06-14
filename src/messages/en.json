@@ -1,0 +1,79 @@
+{
+  "meta": {
+    "title": "Masaar — Your path to jobs and promotions at Saudi Arabia's top firms",
+    "description": "Instead of applying into the void, reach decision-makers directly, see your CV competitiveness score for each role, and build a certifications roadmap with Hadaf reimbursement."
+  },
+  "nav": {
+    "features": "Features",
+    "score": "CV Score",
+    "pricing": "Pricing",
+    "faq": "FAQ",
+    "start": "Get started"
+  },
+  "hero": {
+    "badge": "A Saudi career platform",
+    "title": "Be known before you apply.",
+    "subtitle": "Most roles at PIF, Aramco and NEOM are filled through referrals before they're ever posted. Masaar connects you directly to decision-makers, scores your CV for each role, and builds your certifications roadmap.",
+    "cta_primary": "See your score",
+    "cta_secondary": "How it works",
+    "trust": "Join professionals targeting PIF, Aramco, NEOM, McKinsey and the ministries"
+  },
+  "score": {
+    "eyebrow": "The standout feature",
+    "title": "Your CV competitiveness score — for one specific role at a time",
+    "body": "You're not a single number. You may be strong for Investment Analyst and weak for Senior Portfolio Manager. Masaar scores you per role — and, more importantly, shows what raises it.",
+    "example_role": "Investment Analyst — PIF",
+    "from": "from",
+    "to": "to",
+    "lever_cfa": "Complete CFA Level 1",
+    "lever_rewrite": "Rewrite your bullets with metrics",
+    "lever_exp": "Two more years of experience",
+    "effort_months": "3–6 months",
+    "effort_minutes": "30 minutes",
+    "effort_years": "2 years",
+    "note": "Deliberately conservative — better to under-promise than to inflate."
+  },
+  "features": {
+    "title": "Everything you need to move with confidence",
+    "paths_title": "Tailored career paths",
+    "paths_body": "Paths built from your background — like \"Investment Analyst at PIF\" or \"Strategy Consultant at McKinsey\".",
+    "certs_title": "Roadmap with Hadaf reimbursement",
+    "certs_body": "Certifications intelligently ordered, with cost and which ones Hadaf reimburses ~50% of — most people don't know this exists.",
+    "targets_title": "Decision-makers, not just connections",
+    "targets_body": "We identify the right Directors and VPs, and show whether they're already in your network or need a connection request.",
+    "messages_title": "Outreach in your voice",
+    "messages_body": "Messages ready to send on LinkedIn, written in your tone, with a simple tracker for who you've contacted and who replied."
+  },
+  "contacts": {
+    "title": "Two contact surfaces — each with a job to do",
+    "targets_title": "Good Targets",
+    "targets_body": "Decision-makers in the actual role (Directors, VPs) — strategic, relationship-driven outreach.",
+    "hr_title": "HR",
+    "hr_body": "A shared database we build and maintain of recruiters — the formal gateway for applications."
+  },
+  "pricing": {
+    "title": "One-time. No subscription.",
+    "subtitle": "Pay once via mada or Apple Pay and unlock your full dashboard.",
+    "starter": "Starter",
+    "pro": "Pro",
+    "starter_desc": "Start with confidence",
+    "pro_desc": "Wider coverage, more targets",
+    "cta": "Get started",
+    "feature_paths": "Career paths",
+    "feature_score": "Per-role competitiveness score",
+    "feature_targets": "Decision-maker list",
+    "feature_roadmap": "Hadaf certifications roadmap"
+  },
+  "cta": {
+    "title": "Stop applying into the void.",
+    "body": "Know your real competitiveness, and reach the people who actually decide.",
+    "button": "See your score"
+  },
+  "footer": {
+    "tagline": "Masaar — your career path, made clear.",
+    "rights": "All rights reserved"
+  },
+  "common": {
+    "soon": "Soon"
+  }
+}
