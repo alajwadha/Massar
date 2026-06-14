@@ -8,7 +8,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "hr:validate": "node scripts/validate-hr.mjs",
+    "hr:import": "node scripts/import-hr.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
