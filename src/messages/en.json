@@ -74,6 +74,27 @@
     "rights": "All rights reserved"
   },
   "common": {
-    "soon": "Soon"
+    "soon": "Soon",
+    "back": "Back"
+  },
+  "import": {
+    "eyebrow": "Good Targets",
+    "title": "How to export your LinkedIn connections",
+    "subtitle": "We need your connections file (CSV) to find the right decision-makers for you. Exporting takes a few minutes, and the file stays private to you.",
+    "steps_title": "Steps",
+    "steps": [
+      "Open LinkedIn, click your photo (Me), then “Settings & Privacy”.",
+      "In the side menu, choose “Data privacy”.",
+      "Click “Get a copy of your data”.",
+      "Select “Connections” specifically instead of the full archive — it arrives faster.",
+      "Click “Request archive” and enter your password if asked.",
+      "Within minutes LinkedIn emails you a download link — download the Connections.csv file.",
+      "Come back to Masaar and upload the file here."
+    ],
+    "note": "Note: the file may have a few descriptive rows at the top — don't worry, we handle those automatically.",
+    "privacy_title": "Your privacy",
+    "privacy_body": "We use the file only to match decision-makers to your goal, and never share it. You can delete it anytime.",
+    "upload_cta": "Upload CSV",
+    "upload_hint": "Drag the file here or click to choose · CSV only"
   }
 }
