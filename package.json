@@ -10,7 +10,8 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "hr:validate": "node scripts/validate-hr.mjs",
-    "hr:import": "node scripts/import-hr.mjs"
+    "hr:import": "node scripts/import-hr.mjs",
+    "dashboard:html": "node scripts/build-dashboard-html.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
