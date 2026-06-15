@@ -1,27 +1,23 @@
 'use client';
 
 import { Sparkles, ArrowLeft, GraduationCap, BadgeCheck } from 'lucide-react';
-import { journey, contacts, financeCerts, ui, type Loc } from '@/lib/app-data';
+import { primaryPath, journey, ui, type Loc } from '@/lib/app-data';
 import { ProgressRing, Counter, SectionHeading, Stagger, StaggerItem } from './ui';
 import { ContactCard } from './contacts';
-import type { TabId } from './dashboard';
 
 export function OverviewSection({
   locale,
-  onNavigate,
+  onOpenPath,
 }: {
   locale: Loc;
-  onNavigate: (id: TabId) => void;
+  onOpenPath: (id: string) => void;
 }) {
-  const priority = contacts.filter((c) => c.priority).slice(0, 3);
-  const current = financeCerts.find((c) => c.status === 'current');
+  const priority = primaryPath.contacts.filter((c) => c.priority).slice(0, 3);
+  const current = primaryPath.certs.find((c) => c.status === 'current');
 
   return (
     <div>
-      <SectionHeading
-        eyebrow={ui.overview.eyebrow[locale]}
-        title={ui.overview.title[locale]}
-      />
+      <SectionHeading eyebrow={ui.overview.eyebrow[locale]} title={ui.overview.title[locale]} />
 
       {/* Career journey hero */}
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-600 to-brand-700 p-6 text-white shadow-lift sm:p-7">
@@ -31,9 +27,7 @@ export function OverviewSection({
           <ProgressRing value={journey.percent} color="#ffffff" track="rgba(255,255,255,0.22)">
             <div className="leading-none">
               <Counter to={journey.percent} suffix="%" className="text-3xl font-extrabold" />
-              <div className="mt-1 text-[10px] font-medium text-white/75">
-                {ui.overview.journeyLabel[locale]}
-              </div>
+              <div className="mt-1 text-[10px] font-medium text-white/75">{ui.overview.journeyLabel[locale]}</div>
             </div>
           </ProgressRing>
 
@@ -63,7 +57,7 @@ export function OverviewSection({
         </div>
       </div>
 
-      {/* Today's move */}
+      {/* Today's top move */}
       <div className="mt-4 flex items-start gap-3 rounded-2xl border border-brand-100 bg-brand-50/70 p-4">
         <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-white text-brand-600 shadow-soft">
           <Sparkles className="h-5 w-5" />
@@ -78,7 +72,7 @@ export function OverviewSection({
       {current && (
         <button
           type="button"
-          onClick={() => onNavigate('certs')}
+          onClick={() => onOpenPath(primaryPath.id)}
           className="group mt-4 flex w-full items-center gap-4 rounded-2xl border border-line bg-canvas-raised p-4 text-start shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift"
         >
           <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-brand-50 text-brand-600">
@@ -108,10 +102,10 @@ export function OverviewSection({
         </div>
         <button
           type="button"
-          onClick={() => onNavigate('contacts')}
+          onClick={() => onOpenPath(primaryPath.id)}
           className="hidden shrink-0 items-center gap-1 text-sm font-semibold text-brand-700 hover:text-brand-900 sm:inline-flex"
         >
-          {ui.overview.viewAll[locale]}
+          {ui.overview.openPath[locale]}
           <ArrowLeft className="h-4 w-4 ltr:rotate-180" />
         </button>
       </div>
@@ -126,10 +120,10 @@ export function OverviewSection({
 
       <button
         type="button"
-        onClick={() => onNavigate('contacts')}
+        onClick={() => onOpenPath(primaryPath.id)}
         className="mt-4 inline-flex w-full items-center justify-center gap-1.5 rounded-xl border border-line bg-canvas-raised py-3 text-sm font-semibold text-brand-700 shadow-soft hover:border-ink/20 sm:hidden"
       >
-        {ui.overview.viewAll[locale]}
+        {ui.overview.openPath[locale]}
         <ArrowLeft className="h-4 w-4 ltr:rotate-180" />
       </button>
     </div>

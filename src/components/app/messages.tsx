@@ -3,7 +3,7 @@
 import { useState, type ReactNode } from 'react';
 import { Copy, Check, RefreshCw, Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { templates, ui, type Template, type Loc } from '@/lib/app-data';
+import { templates as ALL_TEMPLATES, ui, type Template, type Loc } from '@/lib/app-data';
 import { SectionHeading, Stagger, StaggerItem } from './ui';
 
 function MetaTag({ children }: { children: ReactNode }) {
@@ -83,14 +83,10 @@ function TemplateCard({ template: t, locale }: { template: Template; locale: Loc
   );
 }
 
-export function MessagesSection({ locale }: { locale: Loc }) {
+export function MessagesSection({ locale, templates = ALL_TEMPLATES }: { locale: Loc; templates?: Template[] }) {
   return (
     <div>
-      <SectionHeading
-        eyebrow={ui.messages.eyebrow[locale]}
-        title={ui.messages.title[locale]}
-        sub={ui.messages.sub[locale]}
-      />
+      <SectionHeading title={ui.messages.title[locale]} sub={ui.messages.sub[locale]} />
       <Stagger className="grid gap-3 lg:grid-cols-2">
         {templates.map((t) => (
           <StaggerItem key={t.id} className="h-full">

@@ -3,18 +3,12 @@
 import { type ReactNode } from 'react';
 import { Check, BadgeCheck, Wallet, Clock, Lightbulb } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { financeCerts, ui, type Cert, type Loc } from '@/lib/app-data';
+import { ui, type Cert, type Loc } from '@/lib/app-data';
 import { SectionHeading, Stagger, StaggerItem } from './ui';
 
-const BANNER = {
-  title: {
-    ar: (n: number, t: number) => `${n} من ${t} شهادات مدعومة من هدف`,
-    en: (n: number, t: number) => `${n} of ${t} certifications are Hadaf-supported`,
-  },
-  sub: {
-    ar: 'استرداد ~50% من تكلفة الشهادة المعتمدة.',
-    en: 'Reclaim ~50% of the approved certification cost.',
-  },
+const BANNER_TITLE = {
+  ar: (n: number, t: number) => `${n} من ${t} شهادات يدعمها هدف`,
+  en: (n: number, t: number) => `${n} of ${t} certifications are Hadaf-supported`,
 };
 
 function StatusChip({ status, locale }: { status: Cert['status']; locale: Loc }) {
@@ -107,32 +101,30 @@ function CertCard({ cert, locale }: { cert: Cert; locale: Loc }) {
   );
 }
 
-export function CertificationsSection({ locale }: { locale: Loc }) {
-  const total = financeCerts.length;
-  const supported = financeCerts.filter((c) => c.hadaf).length;
+export function CertificationsSection({ certs, locale }: { certs: Cert[]; locale: Loc }) {
+  const total = certs.length;
+  const supported = certs.filter((c) => c.hadaf).length;
 
   return (
     <div>
-      <SectionHeading
-        eyebrow={ui.certs.eyebrow[locale]}
-        title={ui.certs.title[locale]}
-        sub={ui.certs.sub[locale]}
-      />
+      <SectionHeading title={ui.certs.title[locale]} sub={ui.certs.sub[locale]} />
 
-      <div className="mb-6 flex items-center gap-3 rounded-2xl border border-brand-100 bg-brand-50/70 p-4">
-        <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand-600 text-white shadow-soft">
-          <BadgeCheck className="h-5 w-5" />
+      {supported > 0 && (
+        <div className="mb-6 flex items-center gap-3 rounded-2xl border border-brand-100 bg-brand-50/70 p-4">
+          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand-600 text-white shadow-soft">
+            <BadgeCheck className="h-5 w-5" />
+          </div>
+          <div>
+            <div className="text-sm font-bold text-brand-700">{BANNER_TITLE[locale](supported, total)}</div>
+            <div className="mt-0.5 text-xs text-ink-soft">{ui.certs.bannerSub[locale]}</div>
+          </div>
         </div>
-        <div>
-          <div className="text-sm font-bold text-brand-700">{BANNER.title[locale](supported, total)}</div>
-          <div className="mt-0.5 text-xs text-ink-soft">{BANNER.sub[locale]}</div>
-        </div>
-      </div>
+      )}
 
       <div className="relative">
         <div className="absolute bottom-4 top-4 start-[15px] w-0.5 bg-line" aria-hidden />
         <Stagger className="space-y-3">
-          {financeCerts.map((cert) => (
+          {certs.map((cert) => (
             <StaggerItem key={cert.name} className="relative ps-11">
               <Dot status={cert.status} />
               <CertCard cert={cert} locale={locale} />

@@ -1,45 +1,38 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useLocale } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LayoutDashboard, Compass, GraduationCap, Users, Send, Activity } from 'lucide-react';
+import { LayoutDashboard, Compass, Activity } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { profile, ui, type Loc } from '@/lib/app-data';
 import { OverviewSection } from './overview';
 import { PathsSection } from './paths';
-import { CertificationsSection } from './certifications';
-import { ContactsSection } from './contacts';
-import { MessagesSection } from './messages';
 import { TrackerSection } from './tracker';
 
-export type TabId = 'overview' | 'paths' | 'certs' | 'contacts' | 'messages' | 'tracker';
+type TabId = 'home' | 'paths' | 'tracker';
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 const TABS = [
-  { id: 'overview', Icon: LayoutDashboard },
+  { id: 'home', Icon: LayoutDashboard },
   { id: 'paths', Icon: Compass },
-  { id: 'certs', Icon: GraduationCap },
-  { id: 'contacts', Icon: Users },
-  { id: 'messages', Icon: Send },
   { id: 'tracker', Icon: Activity },
 ] as const;
 
 export function Dashboard() {
   const locale = useLocale() as Loc;
-  const [tab, setTab] = useState<TabId>('overview');
+  const [tab, setTab] = useState<TabId>('home');
+  const [selectedPathId, setSelectedPathId] = useState<string | null>(null);
 
-  // Tabs are deep-linkable via the URL hash (e.g. /app#contacts) so a section
-  // can be shared or linked to directly.
-  useEffect(() => {
-    const h = window.location.hash.slice(1);
-    if (TABS.some((t) => t.id === h)) setTab(h as TabId);
-  }, []);
-
-  const select = (id: TabId) => {
+  const selectTab = (id: TabId) => {
     setTab(id);
-    if (typeof window !== 'undefined') window.history.replaceState(null, '', `#${id}`);
+    if (id === 'paths') setSelectedPathId(null); // top-tab Paths always shows the list
+  };
+
+  const openPath = (id: string) => {
+    setSelectedPathId(id);
+    setTab('paths');
   };
 
   return (
@@ -66,16 +59,16 @@ export function Dashboard() {
         </div>
       </div>
 
-      {/* Sticky section nav */}
+      {/* Top navigation */}
       <div className="sticky top-16 z-40 -mx-5 mt-6 border-b border-line bg-canvas/85 px-5 backdrop-blur-md sm:-mx-8 sm:px-8">
-        <div className="flex gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="flex gap-1">
           {TABS.map((t) => {
             const active = tab === t.id;
             return (
               <button
                 key={t.id}
                 type="button"
-                onClick={() => select(t.id)}
+                onClick={() => selectTab(t.id)}
                 className={cn(
                   'relative flex shrink-0 items-center gap-2 px-3.5 py-3.5 text-sm font-semibold transition-colors',
                   active ? 'text-brand-700' : 'text-ink-muted hover:text-ink',
@@ -106,11 +99,10 @@ export function Dashboard() {
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.25, ease: EASE }}
           >
-            {tab === 'overview' && <OverviewSection locale={locale} onNavigate={select} />}
-            {tab === 'paths' && <PathsSection locale={locale} />}
-            {tab === 'certs' && <CertificationsSection locale={locale} />}
-            {tab === 'contacts' && <ContactsSection locale={locale} />}
-            {tab === 'messages' && <MessagesSection locale={locale} />}
+            {tab === 'home' && <OverviewSection locale={locale} onOpenPath={openPath} />}
+            {tab === 'paths' && (
+              <PathsSection locale={locale} selectedId={selectedPathId} onSelect={setSelectedPathId} />
+            )}
             {tab === 'tracker' && <TrackerSection locale={locale} />}
           </motion.div>
         </AnimatePresence>

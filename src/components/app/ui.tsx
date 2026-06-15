@@ -25,10 +25,16 @@ export const companyGrad: Record<CompanyKey, string> = {
   pif: 'from-emerald-500 to-emerald-700',
   aramco: 'from-amber-500 to-orange-600',
   acwa: 'from-cyan-500 to-teal-600',
-  moe: 'from-blue-500 to-indigo-600',
-  mck: 'from-violet-500 to-purple-700',
-  stc: 'from-rose-500 to-pink-600',
   neom: 'from-teal-500 to-emerald-600',
+  gov: 'from-blue-600 to-indigo-700',
+  mck: 'from-violet-500 to-purple-700',
+  bcg: 'from-indigo-500 to-violet-700',
+  bain: 'from-fuchsia-500 to-purple-700',
+  strat: 'from-violet-600 to-indigo-700',
+  pwc: 'from-orange-500 to-red-600',
+  stc: 'from-rose-500 to-pink-600',
+  elm: 'from-sky-500 to-blue-600',
+  cst: 'from-slate-500 to-slate-700',
 };
 
 /* ------------------------------------------------------------------ counter -- */
@@ -212,14 +218,18 @@ export function SectionHeading({
   title,
   sub,
 }: {
-  eyebrow: string;
+  eyebrow?: string;
   title: string;
   sub?: string;
 }) {
   return (
     <div className="mb-5">
-      <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-700">{eyebrow}</div>
-      <h2 className="mt-1.5 text-xl font-extrabold tracking-tight sm:text-2xl">{title}</h2>
+      {eyebrow && (
+        <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-700">{eyebrow}</div>
+      )}
+      <h2 className={cn('text-xl font-extrabold tracking-tight sm:text-2xl', eyebrow && 'mt-1.5')}>
+        {title}
+      </h2>
       {sub && <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-ink-soft">{sub}</p>}
     </div>
   );

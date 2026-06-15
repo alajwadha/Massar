@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { Search, Send, Reply, RefreshCw, ArrowUpRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { contacts as ALL, ui, type Contact, type ContactStatus, type Loc } from '@/lib/app-data';
+import { ui, type Contact, type ContactStatus, type Loc } from '@/lib/app-data';
 import { Avatar, ScoreRing, StatusPill, SectionHeading, Stagger, StaggerItem } from './ui';
 
 function actionFor(status: ContactStatus) {
@@ -55,26 +55,26 @@ export function ContactCard({ contact: c, locale }: { contact: Contact; locale: 
 
 type Filter = 'all' | 'hot' | ContactStatus;
 
-export function ContactsSection({ locale }: { locale: Loc }) {
+export function ContactsSection({ contacts, locale }: { contacts: Contact[]; locale: Loc }) {
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<Filter>('all');
 
   const counts = useMemo(
     () => ({
-      all: ALL.length,
-      hot: ALL.filter((c) => c.score >= 180).length,
-      new: ALL.filter((c) => c.status === 'new').length,
-      sent: ALL.filter((c) => c.status === 'sent').length,
-      replied: ALL.filter((c) => c.status === 'replied').length,
-      followup: ALL.filter((c) => c.status === 'followup').length,
+      all: contacts.length,
+      hot: contacts.filter((c) => c.score >= 175).length,
+      new: contacts.filter((c) => c.status === 'new').length,
+      sent: contacts.filter((c) => c.status === 'sent').length,
+      replied: contacts.filter((c) => c.status === 'replied').length,
+      followup: contacts.filter((c) => c.status === 'followup').length,
     }),
-    [],
+    [contacts],
   );
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return ALL.filter((c) => {
-      if (filter === 'hot' && c.score < 180) return false;
+    return contacts.filter((c) => {
+      if (filter === 'hot' && c.score < 175) return false;
       if (filter !== 'all' && filter !== 'hot' && c.status !== filter) return false;
       if (!q) return true;
       return (
@@ -85,9 +85,9 @@ export function ContactsSection({ locale }: { locale: Loc }) {
         c.role.en.toLowerCase().includes(q)
       );
     });
-  }, [query, filter]);
+  }, [contacts, query, filter]);
 
-  const chips: { id: Filter; label: string; count: number }[] = [
+  const allChips: { id: Filter; label: string; count: number }[] = [
     { id: 'all', label: ui.contacts.all[locale], count: counts.all },
     { id: 'hot', label: '🔥 ' + ui.contacts.hot[locale], count: counts.hot },
     { id: 'new', label: ui.contacts.new[locale], count: counts.new },
@@ -95,14 +95,11 @@ export function ContactsSection({ locale }: { locale: Loc }) {
     { id: 'replied', label: ui.contacts.replied[locale], count: counts.replied },
     { id: 'followup', label: ui.contacts.followup[locale], count: counts.followup },
   ];
+  const chips = allChips.filter((c) => c.id === 'all' || c.count > 0);
 
   return (
     <div>
-      <SectionHeading
-        eyebrow={ui.contacts.eyebrow[locale]}
-        title={ui.contacts.title[locale]}
-        sub={ui.contacts.sub[locale]}
-      />
+      <SectionHeading title={ui.contacts.title[locale]} sub={ui.contacts.sub[locale]} />
 
       <div className="flex items-center gap-2.5 rounded-2xl border border-line bg-canvas-raised px-4 py-3 shadow-soft">
         <Search className="h-4 w-4 shrink-0 text-ink-muted" />
