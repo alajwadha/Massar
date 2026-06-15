@@ -136,7 +136,7 @@ export const financeCerts: Cert[] = [
     name: 'SOCPA',
     desc: { ar: 'محاسب قانوني سعودي معتمد', en: 'Saudi Certified Public Accountant' },
     status: 'done',
-    cost: { ar: '٣,٥٠٠ ر.س', en: '3,500 SAR' },
+    cost: { ar: '3,500 ر.س', en: '3,500 SAR' },
     duration: { ar: 'منجزة', en: 'Completed' },
     hadaf: true,
   },
@@ -144,7 +144,7 @@ export const financeCerts: Cert[] = [
     name: 'CME-1',
     desc: { ar: 'المعهد المالي · الأساسيات', en: 'Finance Institute · Foundations' },
     status: 'done',
-    cost: { ar: '٢,٠٠٠ ر.س', en: '2,000 SAR' },
+    cost: { ar: '2,000 ر.س', en: '2,000 SAR' },
     duration: { ar: 'منجزة', en: 'Completed' },
     hadaf: true,
   },
@@ -156,18 +156,18 @@ export const financeCerts: Cert[] = [
     },
     status: 'done',
     cost: { ar: '$497', en: '$497' },
-    duration: { ar: '٣ أشهر', en: '3 months' },
+    duration: { ar: '3 أشهر', en: '3 months' },
   },
   {
     name: 'CFA Level 1',
     desc: { ar: 'محلل مالي معتمد', en: 'Chartered Financial Analyst' },
     status: 'current',
-    cost: { ar: '٥,٥٠٠ ر.س', en: '5,500 SAR' },
-    duration: { ar: '٦ أشهر · ٣٠٠ ساعة', en: '6 months · 300h' },
+    cost: { ar: '5,500 ر.س', en: '5,500 SAR' },
+    duration: { ar: '6 أشهر · 300 ساعة', en: '6 months · 300h' },
     hadaf: true,
-    hadafNote: { ar: 'استرداد ~٢,٧٥٠ ر.س عبر هدف', en: 'Reclaim ~2,750 SAR via Hadaf' },
+    hadafNote: { ar: 'استرداد ~2,750 ر.س عبر هدف', en: 'Reclaim ~2,750 SAR via Hadaf' },
     why: {
-      ar: 'المعيار الذهبي لوظائف PIF. امتحان فبراير ٢٠٢٧، فابدأ التحضير في يونيو.',
+      ar: 'المعيار الذهبي لوظائف PIF. امتحان فبراير 2027، فابدأ التحضير في يونيو.',
       en: 'The gold standard for PIF roles. Feb 2027 exam, so start studying in June.',
     },
   },
@@ -178,8 +178,8 @@ export const financeCerts: Cert[] = [
       en: 'Advanced level · sets you apart at the Big 4',
     },
     status: 'future',
-    cost: { ar: '٥,٥٠٠ ر.س', en: '5,500 SAR' },
-    duration: { ar: '٨ أشهر', en: '8 months' },
+    cost: { ar: '5,500 ر.س', en: '5,500 SAR' },
+    duration: { ar: '8 أشهر', en: '8 months' },
     hadaf: true,
   },
 ];
@@ -248,7 +248,7 @@ export const contacts: Contact[] = [
     companyKey: 'acwa',
     score: 173,
     status: 'sent',
-    when: { ar: 'قبل ٤ أيام', en: '4 days ago' },
+    when: { ar: 'قبل 4 أيام', en: '4 days ago' },
   },
   {
     id: 'c5',
@@ -259,7 +259,7 @@ export const contacts: Contact[] = [
     companyKey: 'moe',
     score: 165,
     status: 'followup',
-    when: { ar: 'متابعة · ٩ أيام', en: 'Follow-up · 9d' },
+    when: { ar: 'متابعة · 9 أيام', en: 'Follow-up · 9d' },
   },
   {
     id: 'c6',
@@ -270,7 +270,7 @@ export const contacts: Contact[] = [
     companyKey: 'pif',
     score: 161,
     status: 'sent',
-    when: { ar: 'قبل ٥ ساعات', en: '5h ago' },
+    when: { ar: 'قبل 5 ساعات', en: '5h ago' },
   },
   {
     id: 'c7',
@@ -313,7 +313,7 @@ export const templates: Template[] = [
     id: 't1',
     title: { ar: 'المقدّمة المباشرة', en: 'Direct Introduction' },
     preview: {
-      ar: 'مرحباً {الاسم}، أنا علي، طالب ماجستير اقتصاديات الطاقة في كورنيل (تخرّج مايو ٢٠٢٦) مع خبرة تشغيلية في رأس الخير. أستكشف فرصاً في {الشركة}...',
+      ar: 'مرحباً {الاسم}، أنا علي، طالب ماجستير اقتصاديات الطاقة في كورنيل (تخرّج مايو 2026) مع خبرة تشغيلية في رأس الخير. أستكشف فرصاً في {الشركة}...',
       en: "Hi {firstName}, I'm Ali, an Energy Economics M.Eng. at Cornell (graduating May 2026) with operational experience at Ras Al-Khair. I'm exploring opportunities at {company}...",
     },
     words: 60,
@@ -358,7 +358,7 @@ export const templates: Template[] = [
     id: 't5',
     title: { ar: 'القصيرة والمباشرة', en: 'Short & Direct' },
     preview: {
-      ar: 'مرحباً {الاسم}، خرّيج اقتصاديات طاقة من كورنيل (مايو ٢٠٢٦)، خبرة سابقة في رأس الخير، أستهدف قطاع الطاقة السعودي. هل يناسبك حديث ١٠ دقائق؟',
+      ar: 'مرحباً {الاسم}، خرّيج اقتصاديات طاقة من كورنيل (مايو 2026)، خبرة سابقة في رأس الخير، أستهدف قطاع الطاقة السعودي. هل يناسبك حديث 10 دقائق؟',
       en: 'Hi {firstName}, Cornell Energy Economics grad (May 2026), prior ops at Ras Al-Khair, targeting the Saudi energy sector. Open to a 10-min chat?',
     },
     words: 40,
@@ -397,7 +397,7 @@ export const tracker = {
     {
       kind: 'sent',
       text: { ar: 'أرسلت إلى يوسف هاشم · PIF', en: 'Sent to Yusuf Hashem · PIF' },
-      when: { ar: 'قبل ٥ ساعات', en: '5h ago' },
+      when: { ar: 'قبل 5 ساعات', en: '5h ago' },
     },
     {
       kind: 'cert',
@@ -434,7 +434,7 @@ export const ui = {
     contactsLabel: { ar: 'جهة اتصال', en: 'Contacts' },
     tipTitle: { ar: 'حركة اليوم', en: "Today's move" },
     tip: {
-      ar: 'تواصل مع عبدالرحمن العتيبي في PIF اليوم، فهو أعلى فرصك (تقييم ١٩٢).',
+      ar: 'تواصل مع عبدالرحمن العتيبي في PIF اليوم، فهو أعلى فرصك (تقييم 192).',
       en: 'Reach out to Abdulrahman Alotaibi at PIF today, your strongest lead (score 192).',
     },
     actionsTitle: { ar: 'ثلاث مهام لهذا اليوم', en: 'Three things for today' },
@@ -459,7 +459,7 @@ export const ui = {
   },
   certs: {
     eyebrow: { ar: 'الشهادات', en: 'Certifications' },
-    title: { ar: 'المسار المالي · ٥ شهادات', en: 'Finance path · 5 certifications' },
+    title: { ar: 'المسار المالي · 5 شهادات', en: 'Finance path · 5 certifications' },
     sub: {
       ar: 'مرتَّبة بذكاء، مع تكلفتها الفعلية بعد دعم هدف.',
       en: 'Intelligently sequenced, with real cost after Hadaf support.',
@@ -473,7 +473,7 @@ export const ui = {
   },
   contacts: {
     eyebrow: { ar: 'جهات الاتصال', en: 'Contacts' },
-    title: { ar: '١,٠٠٠ جهة اتصال', en: '1,000 contacts' },
+    title: { ar: '1,000 جهة اتصال', en: '1,000 contacts' },
     sub: {
       ar: 'في الشركات التي تستهدفها، مرتَّبة حسب تقييم الذكاء الاصطناعي.',
       en: 'At your target companies, ranked by AI match score.',

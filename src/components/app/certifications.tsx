@@ -12,7 +12,7 @@ const BANNER = {
     en: (n: number, t: number) => `${n} of ${t} certifications are Hadaf-supported`,
   },
   sub: {
-    ar: 'استرداد ~٥٠٪ من تكلفة الشهادة المعتمدة.',
+    ar: 'استرداد ~50% من تكلفة الشهادة المعتمدة.',
     en: 'Reclaim ~50% of the approved certification cost.',
   },
 };
