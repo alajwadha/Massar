@@ -3,7 +3,6 @@
 import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
 import { Link } from '@/i18n/routing';
-import { Button } from '@/components/ui/button';
 import { LocaleSwitcher } from '@/components/locale-switcher';
 
 export function Header() {
@@ -25,22 +24,21 @@ export function Header() {
         </Link>
 
         <nav className="hidden items-center gap-7 md:flex">
-          <a href="#features" className="text-sm text-ink-soft transition-colors hover:text-ink">
-            {t('features')}
-          </a>
-          <a href="#score" className="text-sm text-ink-soft transition-colors hover:text-ink">
-            {t('score')}
-          </a>
-          <a href="#pricing" className="text-sm text-ink-soft transition-colors hover:text-ink">
-            {t('pricing')}
-          </a>
+          <a href="#how" className="text-sm text-ink-soft transition-colors hover:text-ink">{t('howItWorks')}</a>
+          <a href="#score" className="text-sm text-ink-soft transition-colors hover:text-ink">{t('score')}</a>
+          <a href="#features" className="text-sm text-ink-soft transition-colors hover:text-ink">{t('features')}</a>
+          <a href="#pricing" className="text-sm text-ink-soft transition-colors hover:text-ink">{t('pricing')}</a>
+          <a href="#faq" className="text-sm text-ink-soft transition-colors hover:text-ink">{t('faq')}</a>
         </nav>
 
         <div className="flex items-center gap-2">
           <LocaleSwitcher />
-          <Button size="md" className="hidden sm:inline-flex">
+          <a
+            href="#pricing"
+            className="hidden h-10 items-center justify-center rounded-full bg-brand-600 px-5 text-sm font-medium text-white shadow-soft transition-colors hover:bg-brand-700 sm:inline-flex"
+          >
             {t('start')}
-          </Button>
+          </a>
         </div>
       </div>
     </motion.header>

@@ -3,7 +3,6 @@
 import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Sparkles } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { ScoreGauge } from './score-gauge';
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -54,13 +53,19 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.18, ease }}
             className="mt-8 flex flex-wrap items-center gap-3"
           >
-            <Button size="lg" className="group">
+            <a
+              href="#pricing"
+              className="group inline-flex h-12 items-center justify-center gap-2 rounded-full bg-brand-600 px-7 text-base font-medium text-white shadow-soft transition-colors duration-200 hover:bg-brand-700"
+            >
               {t('cta_primary')}
               <ArrowLeft className="h-4 w-4 transition-transform duration-200 group-hover:-translate-x-1 rtl:rotate-0 ltr:rotate-180" />
-            </Button>
-            <Button size="lg" variant="secondary">
+            </a>
+            <a
+              href="#how"
+              className="inline-flex h-12 items-center justify-center rounded-full border border-line bg-canvas-raised px-7 text-base font-medium text-ink transition-colors duration-200 hover:border-ink/20"
+            >
               {t('cta_secondary')}
-            </Button>
+            </a>
           </motion.div>
 
           <motion.p

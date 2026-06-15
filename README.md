@@ -59,8 +59,32 @@ supabase/migrations/   # Postgres schema (RLS-protected)
 docs/                  # plan, data model, scoring rubric
 ```
 
+## Sales site & payments
+
+The public site sells the product end to end: a professional, modern marketing
+landing (hero + CV-score showcase, problem, how-it-works, features, Hadaf hook,
+testimonials, pricing, FAQ) → **checkout** → **Moyasar payment** (mada / cards /
+STC Pay) → **server-side verification** → unlock. The payment integration is
+code-complete and env-gated; see **`docs/PAYMENTS.md`** for the keys needed to go
+live. Until keys are set, checkout shows a "not configured" notice and the rest
+of the site works.
+
+## Deploy (Vercel)
+
+1. Push to GitHub (done) and import the repo at vercel.com → New Project.
+2. Framework preset: **Next.js** (auto-detected). No build config needed.
+3. Add environment variables (Project → Settings → Environment Variables):
+   `NEXT_PUBLIC_SITE_URL`, `MOYASAR_PUBLISHABLE_KEY`, `MOYASAR_SECRET_KEY`
+   (and Supabase/Anthropic/Resend keys when those phases land — see `.env.example`).
+4. Deploy. Set a custom domain when ready; update `NEXT_PUBLIC_SITE_URL` to match
+   (it's used for the Moyasar payment callback).
+
+To keep the internal `/admin` HR dashboard private, add auth (Phase 1) before
+sharing the deployed URL, or gate it with Vercel password protection.
+
 ## Status
 
-Phase 0 (foundation) is in place: design system, i18n/RTL, PWA shell, landing
-page, and the database schema. See `docs/PLAN.md` for what Phase 1 (the
-human-in-the-loop MVP) adds next.
+Foundation + sales site are in place: design system, i18n/RTL, PWA, full
+marketing site, Moyasar checkout, and the HR database (1,200+ contacts) with its
+admin dashboard. See `docs/PLAN.md` for the remaining Phase 1 work (Supabase +
+auth, CV scoring, customer dashboard).

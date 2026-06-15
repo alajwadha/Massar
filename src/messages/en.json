@@ -4,6 +4,7 @@
     "description": "Instead of applying into the void, reach decision-makers directly, see your CV competitiveness score for each role, and build a certifications roadmap with Hadaf reimbursement."
   },
   "nav": {
+    "howItWorks": "How it works",
     "features": "Features",
     "score": "CV Score",
     "pricing": "Pricing",
@@ -62,7 +63,9 @@
     "feature_paths": "Career paths",
     "feature_score": "Per-role competitiveness score",
     "feature_targets": "Decision-maker list",
-    "feature_roadmap": "Hadaf certifications roadmap"
+    "feature_roadmap": "Hadaf certifications roadmap",
+    "popular": "Most popular",
+    "guarantee": "Secure payment via Moyasar · mada, Apple Pay & cards · dashboard unlocks instantly"
   },
   "cta": {
     "title": "Stop applying into the void.",
@@ -72,6 +75,81 @@
   "footer": {
     "tagline": "Masaar — your career path, made clear.",
     "rights": "All rights reserved"
+  },
+  "problem": {
+    "eyebrow": "The problem",
+    "title": "You send hundreds of applications — and hear nothing",
+    "body": "ATS systems filter out most CVs before a human sees them, and the best roles at top firms are filled through referrals before they're ever posted. The result: months of waiting, for nothing.",
+    "stat1": "250+",
+    "stat1label": "applications with no real reply",
+    "stat2": "75%",
+    "stat2label": "of CVs auto-filtered before review",
+    "stat3": "months",
+    "stat3label": "the traditional search drags on"
+  },
+  "how": {
+    "eyebrow": "How it works",
+    "title": "From your CV to your opportunity in four steps",
+    "step1t": "Upload your CV",
+    "step1b": "Upload your CV and answer a few quick questions about your goal and target companies.",
+    "step2t": "See your score",
+    "step2b": "We score your competitiveness for each role — and show exactly what raises it.",
+    "step3t": "Get your plan",
+    "step3b": "Career paths, a Hadaf-reimbursable certifications roadmap, and the right decision-makers.",
+    "step4t": "Reach out directly",
+    "step4b": "Ready-to-send messages in your voice to reach who decides — and a tracker for who you've contacted."
+  },
+  "hadaf": {
+    "eyebrow": "A perk most people miss",
+    "title": "Get ~50% of your certification cost back via Hadaf",
+    "body": "The Human Resources Development Fund (Hadaf) reimburses about half the cost of accredited professional certifications. We show which certs in your roadmap qualify, how much you get back, and how.",
+    "point1": "We flag which certs in your path qualify",
+    "point2": "We compute the net cost after reimbursement",
+    "point3": "We order them by impact on your score",
+    "cta": "See what you get back"
+  },
+  "testimonials": {
+    "eyebrow": "Success stories",
+    "title": "From 'no reply' to real interviews",
+    "q1": "I raised my score from 61 to 84 for a PIF role in two weeks after rewriting my bullets. I got three replies.",
+    "n1": "Investment Analyst",
+    "r1": "Riyadh",
+    "q2": "First time I understood why my CV is strong for one role and weak for another. Reaching managers directly changed everything.",
+    "n2": "Project Engineer",
+    "r2": "Jeddah",
+    "q3": "The Hadaf roadmap saved me thousands of riyals, and I knew exactly who to contact instead of applying into the void.",
+    "n3": "Marketing Specialist",
+    "r3": "Dammam"
+  },
+  "faq": {
+    "title": "Frequently asked questions",
+    "q1": "Is it one-time or a subscription?",
+    "a1": "One-time only. Pay once and get your full dashboard — no recurring fees.",
+    "q2": "How is the competitiveness score calculated?",
+    "a2": "We weigh education, experience, employer prestige, skills, and how well your achievements are written — per specific role — and show what raises it. Deliberately conservative so you can trust it.",
+    "q3": "Do you message people on LinkedIn for me?",
+    "a3": "No. We draft the messages and identify decision-makers; you send them yourself — you're always in control, and your privacy is protected.",
+    "q4": "What payment methods are supported?",
+    "a4": "mada, Apple Pay, and credit cards via the secure Moyasar gateway.",
+    "q5": "Does it work if I want a promotion, not a new job?",
+    "a5": "Yes. Score yourself for a more senior role inside your own company and see exactly what you need to get promoted."
+  },
+  "checkout": {
+    "back": "Back to pricing",
+    "title": "Complete your purchase",
+    "subtitle": "One secure payment via mada or card. Your dashboard unlocks instantly after payment.",
+    "summary": "Order summary",
+    "oneTime": "One-time — no subscription",
+    "secure": "Secure, encrypted payment via Moyasar",
+    "notConfigured": "Payment gateway not enabled yet",
+    "notConfiguredHint": "Add your Moyasar API keys to the environment to enable live payments (requires a Saudi merchant account).",
+    "verifying": "Verifying your payment…",
+    "paidTitle": "Payment successful!",
+    "paidBody": "Welcome to Masaar. Your dashboard is ready — let's build your path.",
+    "failedTitle": "Payment didn't complete",
+    "failedBody": "We didn't receive payment confirmation. You won't be charged for an incomplete payment. Please try again.",
+    "startNow": "Get started",
+    "retry": "Try again"
   },
   "common": {
     "soon": "Soon",

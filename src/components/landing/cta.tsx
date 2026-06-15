@@ -2,7 +2,6 @@
 
 import { useTranslations } from 'next-intl';
 import { Reveal } from '@/components/reveal';
-import { Button } from '@/components/ui/button';
 
 export function CTA() {
   const t = useTranslations('cta');
@@ -23,9 +22,12 @@ export function CTA() {
               {t('body')}
             </p>
             <div className="relative mt-8 flex justify-center">
-              <Button size="lg" className="bg-white text-ink hover:bg-white/90">
+              <a
+                href="#pricing"
+                className="inline-flex h-12 items-center justify-center rounded-full bg-white px-7 text-base font-medium text-ink transition-colors duration-200 hover:bg-white/90"
+              >
                 {t('button')}
-              </Button>
+              </a>
             </div>
           </div>
         </Reveal>
