@@ -53,17 +53,20 @@ import {
 } from '@/lib/app-data';
 
 const EASE = [0.16, 1, 0.3, 1] as const;
+const INK = '#1d1d1f'; // Apple graphite
 type Tab = 'home' | 'paths' | 'contacts' | 'tracker';
 
 /* --------------------------------------------------------------- primitives --
-   Apple-style liquid glass: translucent white, heavy blur + saturation, a hair-
-   thin light border, and a soft shadow. Minimal, airy, light. */
+   Apple "Liquid Glass": the material is CLEAR and neutral. It refracts the vivid
+   wallpaper behind it (that is where color comes from), has a bright specular edge
+   (glass-edge), heavy blur + saturation, generous rounding, and a soft deep
+   shadow. The chrome itself is monochrome graphite/white; no brand fill. */
 
 function Glass({ className, children }: { className?: string; children: React.ReactNode }) {
   return (
     <div
       className={cn(
-        'rounded-3xl border border-white/[0.65] bg-white/55 shadow-[0_12px_50px_-18px_rgba(15,40,32,0.22)] backdrop-blur-2xl backdrop-saturate-150',
+        'glass-edge rounded-[26px] border border-white/55 bg-white/40 shadow-[0_28px_80px_-32px_rgba(20,22,48,0.45)] ring-1 ring-white/40 backdrop-blur-2xl backdrop-saturate-[2]',
         className,
       )}
     >
@@ -73,19 +76,19 @@ function Glass({ className, children }: { className?: string; children: React.Re
 }
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
-  return <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-600/90">{children}</div>;
+  return <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-zinc-400">{children}</div>;
 }
 
 const KIND_META: Record<PickKind, { cls: string; Icon: typeof Crown; key: 'kindTop' | 'kindMid' | 'kindCommon' }> = {
-  top: { cls: 'text-emerald-600', Icon: Crown, key: 'kindTop' },
+  top: { cls: 'text-zinc-900', Icon: Crown, key: 'kindTop' },
   mid: { cls: 'text-amber-600', Icon: User, key: 'kindMid' },
   common: { cls: 'text-violet-600', Icon: Sparkles, key: 'kindCommon' },
 };
 
 const STATUS_BTNS: { key: ContactStatus; sk: 'status_sent' | 'status_replied' | 'status_followup'; on: string }[] = [
-  { key: 'sent', sk: 'status_sent', on: 'bg-emerald-600 text-white' },
-  { key: 'replied', sk: 'status_replied', on: 'bg-sky-600 text-white' },
-  { key: 'followup', sk: 'status_followup', on: 'bg-rose-500 text-white' },
+  { key: 'sent', sk: 'status_sent', on: 'bg-zinc-900 text-white' },
+  { key: 'replied', sk: 'status_replied', on: 'bg-blue-600 text-white' },
+  { key: 'followup', sk: 'status_followup', on: 'bg-amber-500 text-white' },
 ];
 
 /* ------------------------------------------------------------- contact card -- */
@@ -113,32 +116,32 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
   };
 
   return (
-    <Glass className="flex h-full flex-col p-4 transition-shadow duration-300 hover:shadow-[0_18px_60px_-18px_rgba(15,40,32,0.3)]">
+    <Glass className="flex h-full flex-col p-4 transition-shadow duration-300 hover:shadow-[0_34px_90px_-32px_rgba(20,22,48,0.55)]">
       <div className="flex items-start gap-3">
         <Avatar initials={c.name[locale].charAt(0)} companyKey={c.companyKey} seed={c.company.en} />
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
             <h3 className="truncate text-[15px] font-semibold text-zinc-900">{c.name[locale]}</h3>
             {isRecruiter && (
-              <span className="shrink-0 rounded-full bg-sky-500/10 px-2 py-0.5 text-[10px] font-bold text-sky-600">
+              <span className="shrink-0 rounded-full bg-blue-500/10 px-2 py-0.5 text-[10px] font-bold text-blue-700">
                 {ui.contacts.recruiter[locale]}
               </span>
             )}
           </div>
           <p className="mt-0.5 truncate text-[13px] text-zinc-500">{c.role[locale]}</p>
-          <p className="mt-0.5 truncate text-xs font-semibold text-emerald-700">{c.company[locale]}</p>
+          <p className="mt-0.5 truncate text-xs font-semibold text-zinc-600">{c.company[locale]}</p>
         </div>
       </div>
 
       {isRecruiter && (c.sector || c.companyTier) && (
         <div className="mt-2.5 flex flex-wrap gap-1.5">
           {c.sector && SECTOR_LABELS[c.sector] && (
-            <span className="rounded-md bg-zinc-900/[0.04] px-2 py-0.5 text-[10.5px] font-semibold text-zinc-600">
+            <span className="rounded-md bg-zinc-900/[0.05] px-2 py-0.5 text-[10.5px] font-semibold text-zinc-600">
               {SECTOR_LABELS[c.sector][locale]}
             </span>
           )}
           {c.companyTier && (
-            <span className="rounded-md bg-zinc-900/[0.04] px-2 py-0.5 text-[10.5px] font-semibold text-zinc-500">
+            <span className="rounded-md bg-zinc-900/[0.05] px-2 py-0.5 text-[10.5px] font-semibold text-zinc-500">
               {TIER_LABELS[c.companyTier][locale]}
             </span>
           )}
@@ -157,7 +160,7 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
         </div>
       )}
 
-      <div className="mt-3 border-t border-zinc-900/[0.06] pt-3">
+      <div className="mt-3 border-t border-zinc-900/[0.07] pt-3">
         <div className="flex items-center gap-1.5">
           {STATUS_BTNS.map((b) => {
             const active = status === b.key;
@@ -167,7 +170,7 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
                 type="button"
                 onClick={() => setStatus(c.id, active ? 'new' : b.key)}
                 className={cn(
-                  'flex-1 rounded-lg px-2 py-1.5 text-[11px] font-bold transition-colors',
+                  'flex-1 rounded-full px-2 py-1.5 text-[11px] font-bold transition-colors',
                   active ? b.on : 'bg-white/60 text-zinc-500 hover:text-zinc-900',
                 )}
               >
@@ -179,11 +182,11 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
       </div>
 
       <div className="mt-3 flex-1">
-        <div className="mb-1.5 flex items-start gap-1.5 rounded-xl bg-amber-500/10 px-2.5 py-1.5 text-[11px] leading-relaxed text-amber-700">
+        <div className="mb-1.5 flex items-start gap-1.5 rounded-xl bg-amber-400/15 px-2.5 py-1.5 text-[11px] leading-relaxed text-amber-700">
           <PenLine className="mt-0.5 h-3 w-3 shrink-0" />
           <span>{ui.contacts.handwrite[locale]}</span>
         </div>
-        <div className="rounded-2xl border border-white/60 bg-white/50 p-3">
+        <div className="rounded-2xl border border-white/60 bg-white/45 p-3">
           <div className="mb-1.5 flex items-center justify-between gap-2">
             <span className="truncate text-[11px] font-semibold text-zinc-400">
               {ui.contacts.messagePreview[locale]} · {template.title[locale]}
@@ -192,7 +195,7 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
               type="button"
               onClick={() => setMsgLang((l) => (l === 'ar' ? 'en' : 'ar'))}
               title={ui.contacts.msgLangHint[locale]}
-              className="inline-flex items-center gap-1 rounded-md border border-zinc-900/10 bg-white/70 px-1.5 py-0.5 text-[10px] font-bold text-zinc-500 hover:text-zinc-900"
+              className="inline-flex items-center gap-1 rounded-full border border-zinc-900/10 bg-white/70 px-1.5 py-0.5 text-[10px] font-bold text-zinc-500 hover:text-zinc-900"
             >
               <Languages className="h-3 w-3" />
               {msgLang === 'ar' ? 'EN' : 'ع'}
@@ -210,7 +213,7 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
           onClick={copy}
           className={cn(
             'flex flex-1 items-center justify-center gap-1.5 rounded-full px-3 py-2.5 text-[13px] font-bold transition-colors',
-            copied ? 'bg-emerald-500/15 text-emerald-700' : 'bg-emerald-600 text-white hover:bg-emerald-700',
+            copied ? 'bg-zinc-900/[0.06] text-zinc-700' : 'bg-zinc-900 text-white hover:bg-zinc-800',
           )}
         >
           {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
@@ -229,7 +232,7 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
           target="_blank"
           rel="noopener noreferrer"
           title={ui.contacts.linkedin[locale]}
-          className="grid w-11 shrink-0 place-items-center rounded-full border border-zinc-900/10 bg-white/60 text-sky-600 transition-colors hover:bg-white"
+          className="grid w-11 shrink-0 place-items-center rounded-full border border-zinc-900/10 bg-white/60 text-blue-600 transition-colors hover:bg-white"
         >
           <Linkedin className="h-4 w-4" />
         </a>
@@ -277,13 +280,13 @@ function Home({ locale, go }: { locale: Loc; go: (t: Tab) => void }) {
       <Glass className="p-6 sm:p-9">
         <div className="grid gap-9 lg:grid-cols-[auto_1fr]">
           <div className="flex flex-col items-center gap-4">
-            <ProgressRing value={score} size={160} stroke={10} color="#059669" track="rgba(15,40,32,0.07)">
+            <ProgressRing value={score} size={160} stroke={9} color={INK} track="rgba(20,22,48,0.08)">
               <div className="leading-none">
                 <Counter to={score} className="text-5xl font-semibold tracking-tight text-zinc-900" />
                 <div className="mt-1 text-[11px] font-medium text-zinc-400">/ 100</div>
               </div>
             </ProgressRing>
-            <div className="inline-flex rounded-full border border-white/70 bg-white/50 p-0.5 backdrop-blur">
+            <div className="inline-flex rounded-full border border-white/60 bg-white/50 p-0.5 backdrop-blur">
               {LEVELS.map((lv) => (
                 <button
                   key={lv.id}
@@ -291,7 +294,7 @@ function Home({ locale, go }: { locale: Loc; go: (t: Tab) => void }) {
                   onClick={() => setLevel(lv.id)}
                   className={cn(
                     'rounded-full px-2.5 py-1.5 text-[11px] font-bold transition-colors',
-                    level === lv.id ? 'bg-emerald-600 text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-900',
+                    level === lv.id ? 'bg-zinc-900 text-white' : 'text-zinc-500 hover:text-zinc-900',
                   )}
                 >
                   {lv.label[locale]}
@@ -307,7 +310,7 @@ function Home({ locale, go }: { locale: Loc; go: (t: Tab) => void }) {
 
             <div className="mt-5 grid grid-cols-3 gap-3">
               {stats.map((s) => (
-                <div key={s.label} className="rounded-2xl border border-white/60 bg-white/45 px-3 py-3 text-center">
+                <div key={s.label} className="rounded-2xl border border-white/60 bg-white/40 px-3 py-3 text-center">
                   <div className="text-xl font-semibold text-zinc-900">{s.v}</div>
                   <div className="mt-0.5 text-[11px] text-zinc-400">{s.label}</div>
                 </div>
@@ -316,17 +319,17 @@ function Home({ locale, go }: { locale: Loc; go: (t: Tab) => void }) {
 
             <div className="mt-5">
               <div className="flex items-center gap-1.5 text-xs font-bold text-zinc-700">
-                <TrendingUp className="h-3.5 w-3.5 text-emerald-600" />
+                <TrendingUp className="h-3.5 w-3.5 text-zinc-900" />
                 {ui.overview.improvementsTitle[locale]}
               </div>
               <ul className="mt-2.5 space-y-2">
                 {cvScore.improvements.map((imp, i) => (
                   <li key={i} className="flex items-center gap-2.5 text-[13px]">
-                    <span className="shrink-0 rounded-md bg-emerald-500/15 px-1.5 py-0.5 text-[11px] font-bold text-emerald-700 tabular-nums">+{imp.delta}</span>
+                    <span className="shrink-0 rounded-md bg-zinc-900/[0.07] px-1.5 py-0.5 text-[11px] font-bold text-zinc-800 tabular-nums">+{imp.delta}</span>
                     <span className="min-w-0 flex-1 text-zinc-600">
                       {imp.action[locale]}
                       {i === 0 && (
-                        <span className="ms-2 whitespace-nowrap rounded bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-bold text-amber-700">
+                        <span className="ms-2 whitespace-nowrap rounded bg-amber-400/20 px-1.5 py-0.5 text-[10px] font-bold text-amber-700">
                           {ui.overview.quickWin[locale]}
                         </span>
                       )}
@@ -339,12 +342,12 @@ function Home({ locale, go }: { locale: Loc; go: (t: Tab) => void }) {
                 <div className="flex items-center justify-between text-[11px] font-semibold">
                   <span className="text-zinc-400">{ui.overview.reachable[locale]}</span>
                   <span className="tabular-nums text-zinc-500">
-                    {score} <span className="text-zinc-300">→</span> <span className="font-bold text-emerald-700">{potential}</span>
+                    {score} <span className="text-zinc-300">→</span> <span className="font-bold text-zinc-900">{potential}</span>
                   </span>
                 </div>
-                <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-zinc-900/[0.06]">
-                  <div className="h-full rounded-full bg-emerald-500/30" style={{ width: `${potential}%` }}>
-                    <div className="h-full rounded-full bg-emerald-600" style={{ width: `${(score / potential) * 100}%` }} />
+                <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-zinc-900/[0.07]">
+                  <div className="h-full rounded-full bg-zinc-900/25" style={{ width: `${potential}%` }}>
+                    <div className="h-full rounded-full bg-zinc-900" style={{ width: `${(score / potential) * 100}%` }} />
                   </div>
                 </div>
               </div>
@@ -355,7 +358,7 @@ function Home({ locale, go }: { locale: Loc; go: (t: Tab) => void }) {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Glass className="flex items-start gap-3 p-5">
-          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-emerald-500/15 text-emerald-700">
+          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-2xl bg-white/60 text-zinc-800">
             <Sparkles className="h-5 w-5" />
           </div>
           <div>
@@ -365,8 +368,8 @@ function Home({ locale, go }: { locale: Loc; go: (t: Tab) => void }) {
         </Glass>
         {current && (
           <button type="button" onClick={() => go('paths')} className="group text-start">
-            <Glass className="flex h-full items-center gap-3 p-5 transition-shadow hover:shadow-[0_18px_60px_-18px_rgba(15,40,32,0.3)]">
-              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white/60 text-emerald-700">
+            <Glass className="flex h-full items-center gap-3 p-5 transition-shadow hover:shadow-[0_34px_90px_-32px_rgba(20,22,48,0.55)]">
+              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-white/60 text-zinc-800">
                 <BadgeCheck className="h-5 w-5" />
               </div>
               <div className="min-w-0 flex-1">
@@ -382,7 +385,7 @@ function Home({ locale, go }: { locale: Loc; go: (t: Tab) => void }) {
       <div>
         <div className="mb-1 flex items-end justify-between">
           <h2 className="text-lg font-semibold text-zinc-900">{ui.overview.actionsTitle[locale]}</h2>
-          <button type="button" onClick={() => go('contacts')} className="inline-flex items-center gap-1 text-sm font-semibold text-emerald-700 hover:text-emerald-800">
+          <button type="button" onClick={() => go('contacts')} className="inline-flex items-center gap-1 text-sm font-semibold text-zinc-900 hover:text-zinc-600">
             {ui.overview.openContacts[locale]} <ArrowLeft className="h-4 w-4 ltr:rotate-180" />
           </button>
         </div>
@@ -393,11 +396,11 @@ function Home({ locale, go }: { locale: Loc; go: (t: Tab) => void }) {
           <button
             type="button"
             onClick={() => go('contacts')}
-            className="mt-4 flex w-full flex-col items-center gap-1 rounded-3xl border border-dashed border-zinc-900/15 bg-white/40 p-8 text-center backdrop-blur transition-colors hover:border-emerald-600/40"
+            className="mt-4 flex w-full flex-col items-center gap-1 rounded-[26px] border border-dashed border-zinc-900/15 bg-white/35 p-8 text-center backdrop-blur transition-colors hover:border-zinc-900/30"
           >
-            <Network className="h-6 w-6 text-emerald-600" />
+            <Network className="h-6 w-6 text-zinc-700" />
             <span className="mt-1 text-sm font-semibold text-zinc-900">{ui.network.locked[locale]}</span>
-            <span className="text-xs font-bold text-emerald-700">{ui.network.upload[locale]}</span>
+            <span className="text-xs font-bold text-zinc-600">{ui.network.upload[locale]}</span>
           </button>
         )}
       </div>
@@ -425,7 +428,7 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
       <Glass className="p-6">
         <div className="flex flex-wrap items-center gap-2">
           <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">{path.name[locale]}</h2>
-          {path.primary && <span className="rounded-full bg-emerald-500/15 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700">★ {ui.paths.primary[locale]}</span>}
+          {path.primary && <span className="rounded-full bg-zinc-900 px-2.5 py-0.5 text-[10px] font-bold text-white">★ {ui.paths.primary[locale]}</span>}
         </div>
         <p className="mt-1 text-sm text-zinc-500">{path.targets[locale]}</p>
         <div className="mt-5 grid grid-cols-4 gap-3">
@@ -435,7 +438,7 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
             { v: path.months, l: ui.paths.statMonths[locale] },
             { v: `+${totalScore}`, l: ui.paths.totalScore[locale] },
           ].map((s) => (
-            <div key={s.l} className="rounded-2xl border border-white/60 bg-white/45 px-2 py-3 text-center">
+            <div key={s.l} className="rounded-2xl border border-white/60 bg-white/40 px-2 py-3 text-center">
               <div className="text-lg font-semibold text-zinc-900 tabular-nums">{s.v}</div>
               <div className="mt-0.5 text-[10px] text-zinc-400">{s.l}</div>
             </div>
@@ -456,12 +459,12 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
                     <h4 className="font-semibold text-zinc-900">{cert.name[locale]}</h4>
                     <p className="mt-1 text-[13px] leading-relaxed text-zinc-500">{cert.desc[locale]}</p>
                   </div>
-                  <span className="shrink-0 rounded-xl bg-emerald-500/15 px-2 py-1 text-sm font-bold text-emerald-700 tabular-nums">+{cert.scoreAdd}</span>
+                  <span className="shrink-0 rounded-xl bg-zinc-900/[0.07] px-2 py-1 text-sm font-bold text-zinc-800 tabular-nums">+{cert.scoreAdd}</span>
                 </div>
                 <div className="mt-3 flex flex-wrap items-center gap-2">
-                  {cert.hadaf && <span className="rounded-md bg-emerald-500/10 px-2 py-1 text-[11px] font-semibold text-emerald-700">{ui.certs.hadaf[locale]}</span>}
-                  <span className="rounded-md bg-zinc-900/[0.04] px-2 py-1 text-[11px] font-semibold text-zinc-600">{cert.cost[locale]}</span>
-                  <span className="rounded-md bg-zinc-900/[0.04] px-2 py-1 text-[11px] font-semibold text-zinc-500">{cert.duration[locale]}</span>
+                  {cert.hadaf && <span className="rounded-md bg-zinc-900/[0.05] px-2 py-1 text-[11px] font-semibold text-zinc-700">{ui.certs.hadaf[locale]}</span>}
+                  <span className="rounded-md bg-zinc-900/[0.05] px-2 py-1 text-[11px] font-semibold text-zinc-600">{cert.cost[locale]}</span>
+                  <span className="rounded-md bg-zinc-900/[0.05] px-2 py-1 text-[11px] font-semibold text-zinc-500">{cert.duration[locale]}</span>
                   <div className="ms-auto flex gap-2">
                     <a href={cert.official} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-full border border-zinc-900/10 bg-white/60 px-3 py-1.5 text-[12px] font-semibold text-zinc-600 hover:text-zinc-900">
                       <ExternalLink className="h-3.5 w-3.5" /> {ui.certs.official[locale]}
@@ -471,7 +474,7 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
                       onClick={() => toggleCert(cert.name.en)}
                       className={cn(
                         'inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-bold transition-colors',
-                        isDone ? 'bg-emerald-600 text-white' : 'border border-zinc-900/10 bg-white/60 text-zinc-600 hover:text-zinc-900',
+                        isDone ? 'bg-zinc-900 text-white' : 'border border-zinc-900/10 bg-white/60 text-zinc-600 hover:text-zinc-900',
                       )}
                     >
                       <Check className="h-3.5 w-3.5" /> {isDone ? ui.certs.markedDone[locale] : ui.certs.markDone[locale]}
@@ -515,25 +518,25 @@ function Paths({ locale }: { locale: Loc }) {
           const totalScore = p.certs.reduce((s, c) => s + c.scoreAdd, 0);
           return (
             <button key={p.id} type="button" onClick={() => setSel(p.id)} className="group text-start">
-              <Glass className={cn('h-full p-5 transition-shadow hover:shadow-[0_18px_60px_-18px_rgba(15,40,32,0.3)]', p.primary && 'ring-1 ring-emerald-500/30')}>
+              <Glass className={cn('h-full p-5 transition-shadow hover:shadow-[0_34px_90px_-32px_rgba(20,22,48,0.55)]', p.primary && 'ring-2 ring-zinc-900/15')}>
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <h3 className="text-[15px] font-semibold text-zinc-900">{p.name[locale]}</h3>
                     <p className="mt-1 text-[13px] text-zinc-500">{p.targets[locale]}</p>
                   </div>
-                  {p.primary && <span className="shrink-0 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold text-emerald-700">★</span>}
+                  {p.primary && <span className="shrink-0 rounded-full bg-zinc-900 px-2 py-0.5 text-[10px] font-bold text-white">★</span>}
                 </div>
                 <div className="mt-4 flex items-center justify-between text-xs">
                   <span className="font-semibold text-zinc-500">{ui.paths.score[locale]}</span>
-                  <span className="font-bold text-emerald-700 tabular-nums">{score}<span className="ms-1 text-[10px] text-zinc-400">{ui.paths.scoreOf[locale]}</span></span>
+                  <span className="font-bold text-zinc-900 tabular-nums">{score}<span className="ms-1 text-[10px] text-zinc-400">{ui.paths.scoreOf[locale]}</span></span>
                 </div>
-                <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-zinc-900/[0.06]">
-                  <div className="h-full rounded-full bg-emerald-600" style={{ width: `${score}%` }} />
+                <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-zinc-900/[0.08]">
+                  <div className="h-full rounded-full bg-zinc-900" style={{ width: `${score}%` }} />
                 </div>
                 <div className="mt-4 flex items-center gap-4 text-[12px] text-zinc-400">
                   <span><span className="font-bold text-zinc-600">{p.certs.length}</span> {ui.paths.statCerts[locale]}</span>
                   <span><span className="font-bold text-zinc-600">{p.months}</span> {ui.paths.statMonths[locale]}</span>
-                  <span><span className="font-bold text-emerald-700">+{totalScore}</span> {ui.paths.totalScore[locale]}</span>
+                  <span><span className="font-bold text-zinc-800">+{totalScore}</span> {ui.paths.totalScore[locale]}</span>
                   <ArrowUpRight className="ms-auto h-4 w-4 text-zinc-300 transition-colors group-hover:text-zinc-900" />
                 </div>
               </Glass>
@@ -558,7 +561,7 @@ function Chips<T extends string>({ label, options, value, onChange }: { label: s
           onClick={() => onChange(o.id)}
           className={cn(
             'shrink-0 rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors',
-            value === o.id ? 'border-emerald-600 bg-emerald-600 text-white' : 'border-white/70 bg-white/55 text-zinc-500 hover:text-zinc-900',
+            value === o.id ? 'border-zinc-900 bg-zinc-900 text-white' : 'border-white/70 bg-white/55 text-zinc-500 hover:text-zinc-900',
           )}
         >
           {o.label}
@@ -577,7 +580,7 @@ function NetworkPanel({ locale, count, onFile, onClear }: { locale: Loc; count: 
     return (
       <Glass className="mt-4 flex flex-wrap items-center justify-between gap-3 p-4">
         <div className="flex items-center gap-3">
-          <div className="grid h-10 w-10 place-items-center rounded-xl bg-emerald-500/15 text-emerald-700"><Network className="h-5 w-5" /></div>
+          <div className="grid h-10 w-10 place-items-center rounded-2xl bg-white/60 text-zinc-800"><Network className="h-5 w-5" /></div>
           <div>
             <div className="font-bold text-zinc-900">{ui.network.matched[locale](count)}</div>
             <div className="text-[12.5px] text-zinc-500">{count > 0 ? ui.network.ranked[locale] : ui.network.none[locale]}</div>
@@ -593,21 +596,21 @@ function NetworkPanel({ locale, count, onFile, onClear }: { locale: Loc; count: 
   return (
     <Glass className="mt-4 p-5">
       <div className="flex items-start gap-3">
-        <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-emerald-500/15 text-emerald-700"><Network className="h-5 w-5" /></div>
+        <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white/60 text-zinc-800"><Network className="h-5 w-5" /></div>
         <div>
           <h3 className="text-base font-semibold text-zinc-900">{ui.network.title[locale]}</h3>
           <p className="mt-1 text-[13px] leading-relaxed text-zinc-500">{ui.network.body[locale]}</p>
         </div>
       </div>
-      <div className="mt-4 rounded-2xl bg-amber-500/10 px-3 py-2.5 text-[12.5px] font-semibold text-amber-700">{ui.network.note[locale]}</div>
+      <div className="mt-4 rounded-2xl bg-amber-400/15 px-3 py-2.5 text-[12.5px] font-semibold text-amber-700">{ui.network.note[locale]}</div>
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
         {([['howPhone', 'phoneSteps'], ['howLaptop', 'laptopSteps']] as const).map(([h, s]) => (
-          <div key={h} className="rounded-2xl border border-white/60 bg-white/45 p-3.5">
+          <div key={h} className="rounded-2xl border border-white/60 bg-white/40 p-3.5">
             <div className="text-sm font-bold text-zinc-900">{ui.network[h][locale]}</div>
             <ol className="mt-2.5 space-y-2">
               {ui.network[s][locale].map((step, i) => (
                 <li key={i} className="flex gap-2 text-[12.5px] leading-relaxed text-zinc-500">
-                  <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-emerald-500/20 text-[11px] font-bold text-emerald-700 tabular-nums">{i + 1}</span>
+                  <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-zinc-900/[0.08] text-[11px] font-bold text-zinc-700 tabular-nums">{i + 1}</span>
                   <span className="flex-1">{step}</span>
                 </li>
               ))}
@@ -615,7 +618,7 @@ function NetworkPanel({ locale, count, onFile, onClear }: { locale: Loc; count: 
           </div>
         ))}
       </div>
-      <button type="button" onClick={() => inputRef.current?.click()} className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-emerald-600 px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-emerald-700">
+      <button type="button" onClick={() => inputRef.current?.click()} className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-zinc-900 px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-zinc-800">
         <Upload className="h-4 w-4" /> {ui.network.upload[locale]}
       </button>
       {Picker}
@@ -672,12 +675,12 @@ function Contacts({ locale }: { locale: Loc }) {
           const on = part === t.id;
           return (
             <button key={t.id} type="button" onClick={() => setPart(t.id)} className="text-start">
-              <Glass className={cn('flex items-center gap-3 p-4 transition-shadow', on ? 'ring-1 ring-emerald-500/40' : 'hover:shadow-[0_18px_60px_-18px_rgba(15,40,32,0.28)]')}>
-                <t.Icon className={cn('h-5 w-5 shrink-0', on ? 'text-emerald-600' : 'text-zinc-400')} />
+              <Glass className={cn('flex items-center gap-3 p-4 transition-shadow', on ? 'ring-2 ring-zinc-900/15' : 'hover:shadow-[0_34px_90px_-32px_rgba(20,22,48,0.5)]')}>
+                <t.Icon className={cn('h-5 w-5 shrink-0', on ? 'text-zinc-900' : 'text-zinc-400')} />
                 <span className="min-w-0 flex-1">
                   <span className="flex items-center gap-1.5">
                     <span className="text-sm font-bold text-zinc-900">{t.label}</span>
-                    {t.badge !== null && <span className="rounded-full bg-zinc-900/[0.06] px-1.5 py-0.5 text-[10px] font-bold text-zinc-500 tabular-nums">{t.badge}</span>}
+                    {t.badge !== null && <span className="rounded-full bg-zinc-900/[0.07] px-1.5 py-0.5 text-[10px] font-bold text-zinc-500 tabular-nums">{t.badge}</span>}
                   </span>
                   <span className="block truncate text-[11px] text-zinc-400">{t.hint}</span>
                 </span>
@@ -719,7 +722,7 @@ function Contacts({ locale }: { locale: Loc }) {
               <CardGrid items={main.slice(0, shown)} locale={locale} />
               {main.length > shown && (
                 <div className="mt-5 flex flex-col items-center gap-2">
-                  <button type="button" onClick={() => setShown((s) => s + 24)} className="rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-700">
+                  <button type="button" onClick={() => setShown((s) => s + 24)} className="rounded-full bg-zinc-900 px-5 py-2.5 text-sm font-bold text-white hover:bg-zinc-800">
                     {ui.contacts.showMore[locale](Math.min(24, main.length - shown))}
                   </button>
                   <span className="text-[11px] text-zinc-400">{ui.contacts.showing[locale](Math.min(shown, main.length), main.length)}</span>
@@ -743,15 +746,15 @@ function Tracker({ locale }: { locale: Loc }) {
   const sent = replied + followup + pending;
   const rate = sent ? Math.round((replied / sent) * 100) : 0;
   const cards = [
-    { v: sent, l: ui.tracker.sent[locale], c: 'text-emerald-700' },
-    { v: replied, l: ui.tracker.replied[locale], c: 'text-sky-600' },
+    { v: sent, l: ui.tracker.sent[locale], c: 'text-zinc-900' },
+    { v: replied, l: ui.tracker.replied[locale], c: 'text-blue-600' },
     { v: pending, l: ui.tracker.pending[locale], c: 'text-amber-600' },
     { v: followup, l: ui.tracker.followup[locale], c: 'text-rose-600' },
   ];
   const legend = [
-    { l: ui.tracker.replied[locale], cls: 'bg-sky-500', w: sent ? (replied / sent) * 100 : 0 },
-    { l: ui.tracker.followup[locale], cls: 'bg-rose-500', w: sent ? (followup / sent) * 100 : 0 },
-    { l: ui.tracker.pending[locale], cls: 'bg-amber-400', w: sent ? (pending / sent) * 100 : 0 },
+    { l: ui.tracker.replied[locale], cls: 'bg-blue-500', w: sent ? (replied / sent) * 100 : 0 },
+    { l: ui.tracker.followup[locale], cls: 'bg-amber-400', w: sent ? (followup / sent) * 100 : 0 },
+    { l: ui.tracker.pending[locale], cls: 'bg-zinc-400', w: sent ? (pending / sent) * 100 : 0 },
   ];
 
   return (
@@ -774,19 +777,19 @@ function Tracker({ locale }: { locale: Loc }) {
       ) : (
         <>
           <Glass className="mt-4 flex items-center gap-4 p-5">
-            <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-emerald-500/15 text-emerald-700"><TrendingUp className="h-6 w-6" /></div>
+            <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-white/60 text-zinc-800"><TrendingUp className="h-6 w-6" /></div>
             <div>
               <div className="flex items-baseline gap-1">
                 <span className="text-3xl font-semibold tabular-nums text-zinc-900">{rate}</span>
                 <span className="text-xl font-semibold text-zinc-900">%</span>
                 <span className="ms-2 text-sm text-zinc-500">{ui.tracker.replyRate[locale]}</span>
               </div>
-              <p className="mt-0.5 text-xs font-semibold text-emerald-700">{ui.tracker.vsBenchmark[locale]}</p>
+              <p className="mt-0.5 text-xs font-semibold text-zinc-500">{ui.tracker.vsBenchmark[locale]}</p>
             </div>
           </Glass>
           <Glass className="mt-4 p-5">
             <h3 className="text-sm font-bold text-zinc-700">{ui.tracker.breakdown[locale]}</h3>
-            <div className="mt-3 flex h-3 overflow-hidden rounded-full bg-zinc-900/[0.06]">
+            <div className="mt-3 flex h-3 overflow-hidden rounded-full bg-zinc-900/[0.07]">
               {legend.map((l, i) => <div key={i} className={l.cls} style={{ width: `${l.w}%` }} />)}
             </div>
             <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5">
@@ -825,20 +828,21 @@ function Shell() {
 
   return (
     <div className="relative min-h-dvh text-zinc-900">
-      {/* Soft light mesh, so the glass has something to refract */}
+      {/* Vivid cool wallpaper, so the clear glass has rich color to refract. */}
       <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute inset-0 bg-[#eef1f4]" />
-        <div className="absolute -top-32 start-1/4 h-[34rem] w-[34rem] rounded-full bg-emerald-300/45 blur-[120px]" />
-        <div className="absolute top-1/4 end-0 h-[30rem] w-[30rem] rounded-full bg-sky-300/40 blur-[120px]" />
-        <div className="absolute bottom-0 start-0 h-[30rem] w-[30rem] rounded-full bg-violet-300/35 blur-[120px]" />
-        <div className="absolute top-2/3 start-1/2 h-[24rem] w-[24rem] rounded-full bg-amber-200/45 blur-[120px]" />
+        <div className="absolute inset-0 bg-[#e7e9f1]" />
+        <div className="absolute -top-32 start-[15%] h-[34rem] w-[34rem] rounded-full bg-indigo-400/45 blur-[120px]" />
+        <div className="absolute top-[10%] end-[5%] h-[30rem] w-[30rem] rounded-full bg-sky-400/45 blur-[120px]" />
+        <div className="absolute top-[40%] start-[40%] h-[26rem] w-[26rem] rounded-full bg-fuchsia-300/40 blur-[120px]" />
+        <div className="absolute bottom-0 start-0 h-[30rem] w-[30rem] rounded-full bg-violet-400/40 blur-[120px]" />
+        <div className="absolute bottom-[5%] end-[10%] h-[26rem] w-[26rem] rounded-full bg-rose-300/40 blur-[120px]" />
       </div>
 
-      {/* Slim header */}
-      <header className="sticky top-0 z-50 border-b border-white/40 bg-white/40 backdrop-blur-2xl">
+      {/* Slim translucent header */}
+      <header className="sticky top-0 z-50 border-b border-white/40 bg-white/35 backdrop-blur-2xl">
         <div className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between px-5 sm:px-8">
           <div className="flex items-center gap-2.5">
-            <span className="grid h-8 w-8 place-items-center rounded-xl bg-emerald-600 font-extrabold text-white shadow-soft">م</span>
+            <span className="grid h-8 w-8 place-items-center rounded-2xl bg-zinc-900 font-extrabold text-white">م</span>
             <span className="text-lg font-semibold tracking-tight">مسار</span>
           </div>
           <div className="flex items-center gap-3">
@@ -847,7 +851,7 @@ function Shell() {
                 <div className="text-[11px] text-zinc-400">{ui.shell.greeting[locale]}</div>
                 <div className="text-sm font-semibold">{profile.name[locale]}</div>
               </div>
-              <span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-700 text-sm font-bold text-white">{profile.name[locale].charAt(0)}</span>
+              <span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-zinc-700 to-zinc-900 text-sm font-bold text-white">{profile.name[locale].charAt(0)}</span>
             </div>
             <Link href={pathname} locale={locale === 'ar' ? 'en' : 'ar'} className="grid h-9 w-9 place-items-center rounded-full border border-white/70 bg-white/50 text-xs font-bold text-zinc-600 hover:text-zinc-900">
               {locale === 'ar' ? 'EN' : 'ع'}
@@ -856,9 +860,9 @@ function Shell() {
         </div>
       </header>
 
-      {/* Floating glass nav pill */}
+      {/* Floating clear-glass nav pill */}
       <div className="sticky top-20 z-40 flex justify-center px-4">
-        <nav className="flex gap-1 rounded-full border border-white/70 bg-white/55 p-1 shadow-[0_10px_40px_-12px_rgba(15,40,32,0.25)] backdrop-blur-2xl">
+        <nav className="glass-edge flex gap-1 rounded-full border border-white/60 bg-white/45 p-1 shadow-[0_16px_50px_-16px_rgba(20,22,48,0.4)] ring-1 ring-white/40 backdrop-blur-2xl backdrop-saturate-[2]">
           {NAV.map((n) => {
             const on = tab === n.id;
             return (
@@ -868,7 +872,7 @@ function Shell() {
                 onClick={() => setTab(n.id)}
                 className={cn('relative flex items-center gap-2 rounded-full px-3.5 py-2 text-sm font-semibold transition-colors', on ? 'text-zinc-900' : 'text-zinc-500 hover:text-zinc-800')}
               >
-                {on && <motion.span layoutId="glass-nav" className="absolute inset-0 -z-10 rounded-full bg-white shadow-sm" transition={{ duration: 0.3, ease: EASE }} />}
+                {on && <motion.span layoutId="glass-nav" className="absolute inset-0 -z-10 rounded-full bg-white/90 shadow-sm" transition={{ duration: 0.3, ease: EASE }} />}
                 <n.Icon className="h-4 w-4" />
                 <span>{ui.nav[n.id][locale]}</span>
               </button>
