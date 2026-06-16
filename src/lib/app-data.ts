@@ -44,6 +44,7 @@ export type Cert = {
   desc: LS;
   gain: LS;
   scoreAdd: number;
+  official: string;
   status: 'done' | 'current' | 'future';
   cost: LS;
   duration: LS;
@@ -104,7 +105,14 @@ export const hrContacts: Contact[] = [
   { id: 'h6', name: { ar: 'سلطان المالكي', en: 'Sultan Almalki' }, role: { ar: 'أخصائي توظيف', en: 'Recruiter' }, company: { ar: 'وزارة الموارد البشرية', en: 'Ministry of HR' }, companyKey: 'gov', industry: 'government', status: 'new', when: { ar: 'جديد', en: 'New' } },
 ];
 
+export function contactById(id: string): Contact | undefined {
+  return connections.find((c) => c.id === id) ?? hrContacts.find((c) => c.id === id);
+}
+
 /* ------------------------------------------------------------------- paths -- */
+
+export type PickKind = 'top' | 'mid' | 'common';
+export type PathPick = { id: string; kind: PickKind; reason: LS };
 
 export type CareerPath = {
   id: string;
@@ -117,6 +125,7 @@ export type CareerPath = {
   primary?: boolean;
   trail: string;
   certs: Cert[];
+  picks: PathPick[];
 };
 
 export const paths: CareerPath[] = [
@@ -131,14 +140,15 @@ export const paths: CareerPath[] = [
     primary: true,
     trail: 'SOCPA → CME-1 → FMVA → CFA L1 → CFA L2',
     certs: [
-      { name: 'SOCPA', desc: { ar: 'الزمالة السعودية للمحاسبين القانونيين', en: 'Saudi CPA fellowship' }, gain: { ar: 'يفتح الأدوار المالية المعتمدة في القطاع الحكومي', en: 'Unlocks accredited finance roles in the public sector' }, scoreAdd: 8, status: 'done', cost: { ar: '3,500 ر.س', en: '3,500 SAR' }, duration: { ar: 'أنجزتها', en: 'Completed' }, hadaf: true },
-      { name: 'CME-1', desc: { ar: 'أساسيات الأسواق المالية من المعهد المالي', en: 'Capital markets foundations' }, gain: { ar: 'ترخيص للعمل في الأسواق المالية السعودية', en: 'License to work in Saudi capital markets' }, scoreAdd: 6, status: 'done', cost: { ar: '2,000 ر.س', en: '2,000 SAR' }, duration: { ar: 'أنجزتها', en: 'Completed' }, hadaf: true },
-      { name: 'FMVA', desc: { ar: 'محلّل نمذجة مالية وتقييم', en: 'Financial Modeling & Valuation Analyst' }, gain: { ar: 'إتقان النمذجة المالية المطلوبة في الصفقات', en: 'Deal-grade financial modeling skills' }, scoreAdd: 9, status: 'done', cost: { ar: '$497', en: '$497' }, duration: { ar: '3 أشهر', en: '3 months' } },
+      { name: 'SOCPA', desc: { ar: 'الزمالة السعودية للمحاسبين القانونيين، وهي أعلى اعتماد محاسبي في المملكة. تثبت إتقانك لمعايير المحاسبة والمراجعة السعودية، وتُعدّ شرطًا لكثير من الأدوار المالية العليا في الجهات الحكومية وشبه الحكومية.', en: 'The Saudi fellowship for chartered accountants, the highest accounting credential in the Kingdom. It proves command of Saudi accounting and audit standards and is often required for senior public-sector finance roles.' }, gain: { ar: 'يفتح الأدوار المالية المعتمدة في القطاع الحكومي', en: 'Unlocks accredited finance roles in the public sector' }, scoreAdd: 8, official: 'https://socpa.org.sa', status: 'done', cost: { ar: '3,500 ر.س', en: '3,500 SAR' }, duration: { ar: 'أنجزتها', en: 'Completed' }, hadaf: true },
+      { name: 'CME-1', desc: { ar: 'الشهادة التأسيسية من المعهد المالي، وهي مطلب تنظيمي للعمل في الأسواق المالية السعودية. تغطّي أساسيات الأنظمة والمنتجات المالية وقواعد هيئة السوق المالية.', en: 'The Financial Academy’s foundational license, a regulatory requirement to work in Saudi capital markets. It covers financial regulations, products, and CMA rules.' }, gain: { ar: 'ترخيص للعمل في الأسواق المالية السعودية', en: 'License to work in Saudi capital markets' }, scoreAdd: 6, official: 'https://fa.gov.sa', status: 'done', cost: { ar: '2,000 ر.س', en: '2,000 SAR' }, duration: { ar: 'أنجزتها', en: 'Completed' }, hadaf: true },
+      { name: 'FMVA', desc: { ar: 'برنامج معهد تمويل الشركات لبناء النماذج المالية وتقييم الشركات. عملي بالكامل: تتخرّج منه قادرًا على بناء نموذج مالي متكامل من الصفر، وهي من أكثر المهارات طلبًا في فرق الاستثمار والصفقات.', en: 'CFI’s hands-on program for financial modeling and company valuation. You finish able to build a full model from scratch, the most in-demand skill on investment and deals teams.' }, gain: { ar: 'إتقان النمذجة المالية المطلوبة في الصفقات', en: 'Deal-grade financial modeling skills' }, scoreAdd: 9, official: 'https://corporatefinanceinstitute.com/certifications/fmva-program/', status: 'done', cost: { ar: '$497', en: '$497' }, duration: { ar: '3 أشهر', en: '3 months' } },
       {
         name: 'CFA Level 1',
-        desc: { ar: 'الشهادة الأهم في عالم الاستثمار', en: 'Chartered Financial Analyst' },
+        desc: { ar: 'المستوى الأول من شهادة محلل مالي معتمد، المعيار العالمي الأرفع في إدارة الاستثمار. يغطّي الأخلاقيات والأدوات الكمية والاقتصاد وتحليل القوائم المالية، وهو حجر الأساس لأي دور استثماري في الصندوق.', en: 'Level 1 of the Chartered Financial Analyst program, the global gold standard in investment management. It spans ethics, quantitative methods, economics, and financial reporting, the foundation for any investment role at PIF.' },
         gain: { ar: 'المعيار الذهبي لوظائف الاستثمار في الصندوق', en: 'The gold standard for PIF investment roles' },
         scoreAdd: 15,
+        official: 'https://www.cfainstitute.org/en/programs/cfa',
         status: 'current',
         cost: { ar: '5,500 ر.س', en: '5,500 SAR' },
         duration: { ar: '6 أشهر · 300 ساعة', en: '6 months · 300h' },
@@ -149,7 +159,14 @@ export const paths: CareerPath[] = [
           en: 'The key credential for PIF investment roles. The exam is Feb 2027, so start studying in June.',
         },
       },
-      { name: 'CFA Level 2', desc: { ar: 'المستوى المتقدّم في التحليل المالي', en: 'The advanced level of financial analysis' }, gain: { ar: 'يميّزك للأدوار القيادية في الـ Big 4', en: 'Sets you apart for senior Big 4 roles' }, scoreAdd: 12, status: 'future', cost: { ar: '5,500 ر.س', en: '5,500 SAR' }, duration: { ar: '8 أشهر', en: '8 months' }, hadaf: true },
+      { name: 'CFA Level 2', desc: { ar: 'المستوى المتقدّم من برنامج CFA، ويركّز على تطبيق أدوات التقييم على فئات الأصول المختلفة. اجتيازه يضعك في نخبة المحللين ويميّزك للأدوار القيادية في الـ Big 4 وصناديق الاستثمار.', en: 'The advanced CFA level, focused on applying valuation tools across asset classes. Passing it puts you among elite analysts and sets you apart for senior Big 4 and fund roles.' }, gain: { ar: 'يميّزك للأدوار القيادية في الـ Big 4', en: 'Sets you apart for senior Big 4 roles' }, scoreAdd: 12, official: 'https://www.cfainstitute.org/en/programs/cfa', status: 'future', cost: { ar: '5,500 ر.س', en: '5,500 SAR' }, duration: { ar: '8 أشهر', en: '8 months' }, hadaf: true },
+    ],
+    picks: [
+      { id: 'n1', kind: 'top', reason: { ar: 'رئيس برامج القطاع — أعلى أهدافك منصبًا في الصندوق', en: 'Head of Sector Programs — your most senior target at PIF' } },
+      { id: 'n2', kind: 'top', reason: { ar: 'مدير محفظة أول في تحوّل الطاقة', en: 'Senior portfolio director in Energy Transition' } },
+      { id: 'n10', kind: 'mid', reason: { ar: 'مختصّ استثمار — نقطة دخول أسهل للتعارف', en: 'Investment associate — an easier first contact' } },
+      { id: 'n6', kind: 'common', reason: { ar: 'خرّيجة كورنيل مثلك', en: 'Cornell alum, like you' } },
+      { id: 'n3', kind: 'common', reason: { ar: 'عمل سابقًا في رأس الخير', en: 'Previously worked at Ras Al-Khair' } },
     ],
   },
   {
@@ -162,11 +179,18 @@ export const paths: CareerPath[] = [
     matchPercent: 88,
     trail: 'PMP → CEM → Six Sigma → ISO 50001 → MBA',
     certs: [
-      { name: 'PMP', desc: { ar: 'محترف إدارة المشاريع', en: 'Project Management Professional' }, gain: { ar: 'يؤهّلك لقيادة مشاريع الطاقة الكبرى', en: 'Qualifies you to lead major energy projects' }, scoreAdd: 10, status: 'future', cost: { ar: '4,000 ر.س', en: '4,000 SAR' }, duration: { ar: '4 أشهر', en: '4 months' }, hadaf: true },
-      { name: 'CEM', desc: { ar: 'مدير طاقة معتمد', en: 'Certified Energy Manager' }, gain: { ar: 'خبرة معتمدة في كفاءة الطاقة', en: 'Certified energy-efficiency expertise' }, scoreAdd: 9, status: 'future', cost: { ar: '$1,500', en: '$1,500' }, duration: { ar: '3 أشهر', en: '3 months' } },
-      { name: 'Six Sigma', desc: { ar: 'الحزام الأخضر في تحسين العمليات', en: 'Green Belt, process improvement' }, gain: { ar: 'تحسين العمليات المطلوب في أرامكو', en: 'Process improvement valued at Aramco' }, scoreAdd: 7, status: 'future', cost: { ar: '2,500 ر.س', en: '2,500 SAR' }, duration: { ar: 'شهران', en: '2 months' }, hadaf: true },
-      { name: 'ISO 50001', desc: { ar: 'مدقّق رئيسي لإدارة الطاقة', en: 'Energy management lead auditor' }, gain: { ar: 'تدقيق أنظمة إدارة الطاقة', en: 'Energy management system auditing' }, scoreAdd: 6, status: 'future', cost: { ar: '3,000 ر.س', en: '3,000 SAR' }, duration: { ar: 'شهر', en: '1 month' } },
-      { name: 'MBA', desc: { ar: 'تحضير ماجستير إدارة الأعمال', en: 'MBA preparation' }, gain: { ar: 'يفتح المسارات القيادية', en: 'Opens leadership tracks' }, scoreAdd: 14, status: 'future', cost: { ar: 'يختلف', en: 'Varies' }, duration: { ar: '6 أشهر', en: '6 months' } },
+      { name: 'PMP', desc: { ar: 'شهادة محترف إدارة المشاريع من معهد PMI، وهي الأكثر اعترافًا عالميًا في هذا المجال. مطلوبة لقيادة المشاريع الكبرى في أرامكو وأكوا باور ومبادرات رؤية 2030.', en: 'PMI’s Project Management Professional, the most globally recognized PM credential. Expected for leading major projects at Aramco, ACWA Power, and Vision 2030 initiatives.' }, gain: { ar: 'يؤهّلك لقيادة مشاريع الطاقة الكبرى', en: 'Qualifies you to lead major energy projects' }, scoreAdd: 10, official: 'https://www.pmi.org/certifications/project-management-pmp', status: 'future', cost: { ar: '4,000 ر.س', en: '4,000 SAR' }, duration: { ar: '4 أشهر', en: '4 months' }, hadaf: true },
+      { name: 'CEM', desc: { ar: 'مدير طاقة معتمد من جمعية مهندسي الطاقة (AEE). يثبت قدرتك على تحليل استهلاك الطاقة وتصميم حلول الكفاءة، وهي خبرة مطلوبة في قطاع الطاقة المتجددة.', en: 'Certified Energy Manager from the AEE. It proves you can analyze energy use and design efficiency solutions, sought-after in the renewables sector.' }, gain: { ar: 'خبرة معتمدة في كفاءة الطاقة', en: 'Certified energy-efficiency expertise' }, scoreAdd: 9, official: 'https://www.aeecenter.org/certified-energy-manager-cem/', status: 'future', cost: { ar: '$1,500', en: '$1,500' }, duration: { ar: '3 أشهر', en: '3 months' } },
+      { name: 'Six Sigma', desc: { ar: 'الحزام الأخضر في منهجية ستة سيجما لتحسين العمليات وتقليل الهدر. منهجية تعتمدها أرامكو وكبرى الشركات الصناعية لرفع الكفاءة التشغيلية.', en: 'Green Belt in the Six Sigma methodology for process improvement and waste reduction, relied on by Aramco and major industrial firms.' }, gain: { ar: 'تحسين العمليات المطلوب في أرامكو', en: 'Process improvement valued at Aramco' }, scoreAdd: 7, official: 'https://asq.org/cert/six-sigma-green-belt', status: 'future', cost: { ar: '2,500 ر.س', en: '2,500 SAR' }, duration: { ar: 'شهران', en: '2 months' }, hadaf: true },
+      { name: 'ISO 50001', desc: { ar: 'تأهيل مدقّق رئيسي لأنظمة إدارة الطاقة وفق معيار ISO 50001. يؤهّلك لتدقيق واعتماد أنظمة الطاقة في المنشآت الكبرى.', en: 'Lead-auditor qualification for energy management systems under ISO 50001. It qualifies you to audit and certify energy systems at large facilities.' }, gain: { ar: 'تدقيق أنظمة إدارة الطاقة', en: 'Energy management system auditing' }, scoreAdd: 6, official: 'https://www.iso.org/iso-50001-energy-management.html', status: 'future', cost: { ar: '3,000 ر.س', en: '3,000 SAR' }, duration: { ar: 'شهر', en: '1 month' } },
+      { name: 'MBA', desc: { ar: 'ماجستير إدارة الأعمال، البوابة الكلاسيكية للأدوار القيادية. يجمع بين الإستراتيجية والمالية والقيادة، ويوسّع شبكتك المهنية بشكل كبير.', en: 'The MBA, the classic gateway to leadership roles. It blends strategy, finance, and leadership and widens your network dramatically.' }, gain: { ar: 'يفتح المسارات القيادية', en: 'Opens leadership tracks' }, scoreAdd: 14, official: 'https://www.mba.com/', status: 'future', cost: { ar: 'يختلف', en: 'Varies' }, duration: { ar: '6 أشهر', en: '6 months' } },
+    ],
+    picks: [
+      { id: 'n4', kind: 'top', reason: { ar: 'رئيس تنفيذي لشركة مشروع في أكوا باور', en: 'CEO of an SPV at ACWA Power' } },
+      { id: 'n7', kind: 'top', reason: { ar: 'يقود التخطيط في وزارة الطاقة', en: 'Leads planning at the Ministry of Energy' } },
+      { id: 'n8', kind: 'mid', reason: { ar: 'استقطاب المواهب في نيوم', en: 'Talent acquisition at NEOM' } },
+      { id: 'n13', kind: 'common', reason: { ar: 'خبرة في رأس الخير مثلك', en: 'Ras Al-Khair background, like you' } },
+      { id: 'n2', kind: 'common', reason: { ar: 'يعمل في تحوّل الطاقة بالصندوق', en: 'Works in PIF Energy Transition' } },
     ],
   },
   {
@@ -179,11 +203,18 @@ export const paths: CareerPath[] = [
     matchPercent: 82,
     trail: 'Case prep → GMAT → FMVA → PSPO → MBA',
     certs: [
-      { name: 'Case Prep', desc: { ar: 'إتقان حلّ دراسات الحالة', en: 'Mastering case interviews' }, gain: { ar: 'تجتاز مقابلات الحالة في ماكنزي وBCG', en: 'Pass case interviews at McKinsey and BCG' }, scoreAdd: 8, status: 'future', cost: { ar: '$300', en: '$300' }, duration: { ar: 'شهران', en: '2 months' } },
-      { name: 'GMAT', desc: { ar: 'اختبار القبول للدراسات العليا', en: 'Graduate admissions test' }, gain: { ar: 'بوابة القبول في الاستشارات والـ MBA', en: 'Gateway to consulting and MBA admissions' }, scoreAdd: 9, status: 'future', cost: { ar: '$275', en: '$275' }, duration: { ar: '3 أشهر', en: '3 months' } },
-      { name: 'FMVA', desc: { ar: 'محلّل نمذجة مالية وتقييم', en: 'Financial Modeling & Valuation Analyst' }, gain: { ar: 'تحليل كمّي يقوّي ملفك الاستشاري', en: 'Quant skills that strengthen a consulting profile' }, scoreAdd: 9, status: 'future', cost: { ar: '$497', en: '$497' }, duration: { ar: '3 أشهر', en: '3 months' } },
-      { name: 'PSPO', desc: { ar: 'مالك منتج محترف', en: 'Professional Scrum Product Owner' }, gain: { ar: 'إدارة المنتجات الرشيقة', en: 'Agile product management' }, scoreAdd: 5, status: 'future', cost: { ar: '$200', en: '$200' }, duration: { ar: 'شهر', en: '1 month' } },
-      { name: 'MBA', desc: { ar: 'تحضير ماجستير إدارة الأعمال', en: 'MBA preparation' }, gain: { ar: 'يفتح أدوار ما بعد الاستشارات', en: 'Opens post-consulting roles' }, scoreAdd: 14, status: 'future', cost: { ar: 'يختلف', en: 'Varies' }, duration: { ar: '6 أشهر', en: '6 months' } },
+      { name: 'Case Prep', desc: { ar: 'تدريب مكثّف على حلّ دراسات الحالة، وهي جوهر مقابلات شركات الاستشارات. تتعلّم كيف تفكّك مشكلة عمل وتبني توصية منظّمة تحت الضغط.', en: 'Intensive case-interview training, the core of consulting hiring. You learn to break down a business problem and build a structured recommendation under pressure.' }, gain: { ar: 'تجتاز مقابلات الحالة في ماكنزي وBCG', en: 'Pass case interviews at McKinsey and BCG' }, scoreAdd: 8, official: 'https://www.preplounge.com/', status: 'future', cost: { ar: '$300', en: '$300' }, duration: { ar: 'شهران', en: '2 months' } },
+      { name: 'GMAT', desc: { ar: 'اختبار القبول المعياري لبرامج الإدارة العليا، وكثيرًا ما تطلبه شركات الاستشارات الكبرى. درجة قوية تفتح أبواب أفضل برامج الماجستير.', en: 'The standardized admissions test for top management programs, often requested by major consulting firms. A strong score opens the best master’s programs.' }, gain: { ar: 'بوابة القبول في الاستشارات والـ MBA', en: 'Gateway to consulting and MBA admissions' }, scoreAdd: 9, official: 'https://www.mba.com/exams/gmat-exam', status: 'future', cost: { ar: '$275', en: '$275' }, duration: { ar: '3 أشهر', en: '3 months' } },
+      { name: 'FMVA', desc: { ar: 'برنامج النمذجة المالية والتقييم، يمنحك ثقلًا كمّيًا يقوّي ملفك أمام شركات الاستشارات. عملي ويغطّي بناء النماذج وتحليل الصفقات.', en: 'The financial modeling and valuation program, giving you quantitative weight that strengthens a consulting profile. Hands-on across model building and deal analysis.' }, gain: { ar: 'تحليل كمّي يقوّي ملفك الاستشاري', en: 'Quant skills that strengthen a consulting profile' }, scoreAdd: 9, official: 'https://corporatefinanceinstitute.com/certifications/fmva-program/', status: 'future', cost: { ar: '$497', en: '$497' }, duration: { ar: '3 أشهر', en: '3 months' } },
+      { name: 'PSPO', desc: { ar: 'شهادة مالك المنتج المحترف في إطار سكرَم. تثبت إتقانك لإدارة المنتجات الرشيقة وتحديد الأولويات وقيادة الفرق.', en: 'Professional Scrum Product Owner certification. It proves command of agile product management, prioritization, and team leadership.' }, gain: { ar: 'إدارة المنتجات الرشيقة', en: 'Agile product management' }, scoreAdd: 5, official: 'https://www.scrum.org/professional-scrum-product-owner-certifications', status: 'future', cost: { ar: '$200', en: '$200' }, duration: { ar: 'شهر', en: '1 month' } },
+      { name: 'MBA', desc: { ar: 'ماجستير إدارة الأعمال، يفتح أدوار ما بعد الاستشارات في القيادة والاستثمار. يجمع الإستراتيجية والمالية والشبكة المهنية.', en: 'The MBA, opening post-consulting roles in leadership and investment. It combines strategy, finance, and a powerful network.' }, gain: { ar: 'يفتح أدوار ما بعد الاستشارات', en: 'Opens post-consulting roles' }, scoreAdd: 14, official: 'https://www.mba.com/', status: 'future', cost: { ar: 'يختلف', en: 'Varies' }, duration: { ar: '6 أشهر', en: '6 months' } },
+    ],
+    picks: [
+      { id: 'n3', kind: 'top', reason: { ar: 'مدير ارتباط أول في ماكنزي', en: 'Senior engagement manager at McKinsey' } },
+      { id: 'n5', kind: 'top', reason: { ar: 'مستشارة في BCG', en: 'Consultant at BCG' } },
+      { id: 'n9', kind: 'mid', reason: { ar: 'مساعد أول في بِين — مدخل جيد', en: 'Senior associate at Bain — a good way in' } },
+      { id: 'n6', kind: 'common', reason: { ar: 'خرّيجة كورنيل في فريق الصفقات', en: 'Cornell alum on the Deals team' } },
+      { id: 'n1', kind: 'common', reason: { ar: 'يقود برامج إستراتيجية في الصندوق', en: 'Leads strategy programs at PIF' } },
     ],
   },
   {
@@ -196,11 +227,18 @@ export const paths: CareerPath[] = [
     matchPercent: 76,
     trail: 'PMP → CGAP → السياسات → PgMP → DBA',
     certs: [
-      { name: 'PMP', desc: { ar: 'محترف إدارة المشاريع', en: 'Project Management Professional' }, gain: { ar: 'قيادة مشاريع رؤية 2030', en: 'Lead Vision 2030 projects' }, scoreAdd: 10, status: 'future', cost: { ar: '4,000 ر.س', en: '4,000 SAR' }, duration: { ar: '4 أشهر', en: '4 months' }, hadaf: true },
-      { name: 'CGAP', desc: { ar: 'مدقّق حكومي معتمد', en: 'Certified Government Auditing Professional' }, gain: { ar: 'التدقيق والرقابة الحكومية', en: 'Government audit and oversight' }, scoreAdd: 8, status: 'future', cost: { ar: '$600', en: '$600' }, duration: { ar: '3 أشهر', en: '3 months' } },
-      { name: 'دبلوم السياسات', desc: { ar: 'دبلوم السياسات العامة', en: 'Public policy diploma' }, gain: { ar: 'صياغة وتحليل السياسات العامة', en: 'Public policy design and analysis' }, scoreAdd: 9, status: 'future', cost: { ar: '5,000 ر.س', en: '5,000 SAR' }, duration: { ar: '5 أشهر', en: '5 months' }, hadaf: true },
-      { name: 'PgMP', desc: { ar: 'محترف إدارة البرامج', en: 'Program Management Professional' }, gain: { ar: 'إدارة البرامج الكبرى', en: 'Manage large programs' }, scoreAdd: 8, status: 'future', cost: { ar: '$800', en: '$800' }, duration: { ar: '4 أشهر', en: '4 months' } },
-      { name: 'DBA', desc: { ar: 'تحضير دكتوراه إدارة الأعمال', en: 'DBA preparation' }, gain: { ar: 'المؤهل الأعلى للأدوار القيادية', en: 'Top credential for senior leadership' }, scoreAdd: 12, status: 'future', cost: { ar: 'يختلف', en: 'Varies' }, duration: { ar: '12 شهرًا', en: '12 months' } },
+      { name: 'PMP', desc: { ar: 'شهادة محترف إدارة المشاريع من PMI، الأكثر اعترافًا عالميًا. لقيادة مشاريع التحول ضمن رؤية 2030 داخل الوزارات والهيئات.', en: 'PMI’s Project Management Professional, the most recognized PM credential, for leading Vision 2030 transformation projects in ministries and authorities.' }, gain: { ar: 'قيادة مشاريع رؤية 2030', en: 'Lead Vision 2030 projects' }, scoreAdd: 10, official: 'https://www.pmi.org/certifications/project-management-pmp', status: 'future', cost: { ar: '4,000 ر.س', en: '4,000 SAR' }, duration: { ar: '4 أشهر', en: '4 months' }, hadaf: true },
+      { name: 'CGAP', desc: { ar: 'مدقّق حكومي معتمد من معهد المدققين الداخليين، متخصّص في الرقابة والتدقيق على الجهات الحكومية. مطلوب في ديوان المراقبة والهيئات الرقابية.', en: 'Certified Government Auditing Professional from the IIA, specialized in oversight and audit of public entities. Sought in audit bureaus and regulators.' }, gain: { ar: 'التدقيق والرقابة الحكومية', en: 'Government audit and oversight' }, scoreAdd: 8, official: 'https://www.theiia.org/en/certifications/cgap/', status: 'future', cost: { ar: '$600', en: '$600' }, duration: { ar: '3 أشهر', en: '3 months' } },
+      { name: 'دبلوم السياسات', desc: { ar: 'دبلوم متخصّص في تحليل وصياغة السياسات العامة. يؤهّلك للعمل في مكاتب الإستراتيجية والتخطيط داخل الوزارات والهيئات.', en: 'A specialized diploma in public-policy analysis and design. It prepares you for strategy and planning offices inside ministries and authorities.' }, gain: { ar: 'صياغة وتحليل السياسات العامة', en: 'Public policy design and analysis' }, scoreAdd: 9, official: 'https://www.spsp.edu.sa/', status: 'future', cost: { ar: '5,000 ر.س', en: '5,000 SAR' }, duration: { ar: '5 أشهر', en: '5 months' }, hadaf: true },
+      { name: 'PgMP', desc: { ar: 'محترف إدارة البرامج من PMI، المستوى الأعلى من PMP. لقيادة محافظ من المشاريع المترابطة على مستوى المؤسسة.', en: 'PMI’s Program Management Professional, a step above PMP, for leading portfolios of interrelated projects at the enterprise level.' }, gain: { ar: 'إدارة البرامج الكبرى', en: 'Manage large programs' }, scoreAdd: 8, official: 'https://www.pmi.org/certifications/program-management-pgmp', status: 'future', cost: { ar: '$800', en: '$800' }, duration: { ar: '4 أشهر', en: '4 months' } },
+      { name: 'DBA', desc: { ar: 'دكتوراه إدارة الأعمال، أعلى مؤهل تطبيقي في الإدارة. للأدوار القيادية العليا والاستشارات رفيعة المستوى.', en: 'The Doctor of Business Administration, the top applied management qualification, for the most senior leadership and high-level advisory roles.' }, gain: { ar: 'المؤهل الأعلى للأدوار القيادية', en: 'Top credential for senior leadership' }, scoreAdd: 12, official: 'https://www.mba.com/', status: 'future', cost: { ar: 'يختلف', en: 'Varies' }, duration: { ar: '12 شهرًا', en: '12 months' } },
+    ],
+    picks: [
+      { id: 'n7', kind: 'top', reason: { ar: 'مدير تخطيط أول في وزارة الطاقة', en: 'Senior planning director, Ministry of Energy' } },
+      { id: 'n12', kind: 'top', reason: { ar: 'مديرة عامة في وزارة الاقتصاد والتخطيط', en: 'Director general, Ministry of Economy & Planning' } },
+      { id: 'n1', kind: 'mid', reason: { ar: 'برامج القطاع في الصندوق', en: 'Sector programs at PIF' } },
+      { id: 'n4', kind: 'common', reason: { ar: 'مشاريع طاقة كبرى قريبة من تخصصك', en: 'Major energy projects near your field' } },
+      { id: 'n13', kind: 'common', reason: { ar: 'خبرة في رأس الخير مثلك', en: 'Ras Al-Khair background, like you' } },
     ],
   },
   {
@@ -213,11 +251,18 @@ export const paths: CareerPath[] = [
     matchPercent: 71,
     trail: 'AWS SAA → PMP → Scrum → بيانات → MBA',
     certs: [
-      { name: 'AWS SAA', desc: { ar: 'مهندس حلول معتمد على AWS', en: 'AWS Solutions Architect Associate' }, gain: { ar: 'تصميم الحلول السحابية المطلوبة', en: 'In-demand cloud architecture' }, scoreAdd: 9, status: 'future', cost: { ar: '$150', en: '$150' }, duration: { ar: '3 أشهر', en: '3 months' } },
-      { name: 'PMP', desc: { ar: 'محترف إدارة المشاريع', en: 'Project Management Professional' }, gain: { ar: 'قيادة مشاريع التحول الرقمي', en: 'Lead digital transformation projects' }, scoreAdd: 10, status: 'future', cost: { ar: '4,000 ر.س', en: '4,000 SAR' }, duration: { ar: '4 أشهر', en: '4 months' }, hadaf: true },
-      { name: 'PSM', desc: { ar: 'سكرَم ماستر محترف', en: 'Professional Scrum Master' }, gain: { ar: 'قيادة فرق أجايل', en: 'Lead agile teams' }, scoreAdd: 6, status: 'future', cost: { ar: '$200', en: '$200' }, duration: { ar: 'شهر', en: '1 month' } },
-      { name: 'تحليل البيانات', desc: { ar: 'محلّل بيانات معتمد', en: 'Certified Data Analyst' }, gain: { ar: 'تحليل البيانات واتخاذ القرار', en: 'Data analysis and decision-making' }, scoreAdd: 9, status: 'future', cost: { ar: '3,500 ر.س', en: '3,500 SAR' }, duration: { ar: '3 أشهر', en: '3 months' }, hadaf: true },
-      { name: 'MBA', desc: { ar: 'تحضير ماجستير إدارة الأعمال', en: 'MBA preparation' }, gain: { ar: 'يجمع التقنية بالإدارة', en: 'Bridges tech and management' }, scoreAdd: 14, status: 'future', cost: { ar: 'يختلف', en: 'Varies' }, duration: { ar: '6 أشهر', en: '6 months' } },
+      { name: 'AWS SAA', desc: { ar: 'مهندس حلول معتمد على منصة AWS (المستوى المساعد). يثبت قدرتك على تصميم أنظمة سحابية موثوقة وفعّالة، وهي من أكثر الشهادات طلبًا في السوق التقني.', en: 'AWS Certified Solutions Architect – Associate. It proves you can design reliable, efficient cloud systems, one of the most in-demand credentials in tech.' }, gain: { ar: 'تصميم الحلول السحابية المطلوبة', en: 'In-demand cloud architecture' }, scoreAdd: 9, official: 'https://aws.amazon.com/certification/certified-solutions-architect-associate/', status: 'future', cost: { ar: '$150', en: '$150' }, duration: { ar: '3 أشهر', en: '3 months' } },
+      { name: 'PMP', desc: { ar: 'شهادة محترف إدارة المشاريع من PMI. لقيادة مشاريع التحول الرقمي وفرق المنتجات في الجهات التقنية الكبرى.', en: 'PMI’s Project Management Professional, for leading digital-transformation projects and product teams at major tech entities.' }, gain: { ar: 'قيادة مشاريع التحول الرقمي', en: 'Lead digital transformation projects' }, scoreAdd: 10, official: 'https://www.pmi.org/certifications/project-management-pmp', status: 'future', cost: { ar: '4,000 ر.س', en: '4,000 SAR' }, duration: { ar: '4 أشهر', en: '4 months' }, hadaf: true },
+      { name: 'PSM', desc: { ar: 'سكرَم ماستر محترف، لقيادة فرق التطوير الرشيقة وإزالة العوائق. أساس العمل في فرق المنتجات التقنية الحديثة.', en: 'Professional Scrum Master, for leading agile development teams and removing blockers. Foundational to modern tech product teams.' }, gain: { ar: 'قيادة فرق أجايل', en: 'Lead agile teams' }, scoreAdd: 6, official: 'https://www.scrum.org/professional-scrum-master-certifications', status: 'future', cost: { ar: '$200', en: '$200' }, duration: { ar: 'شهر', en: '1 month' } },
+      { name: 'تحليل البيانات', desc: { ar: 'برنامج معتمد في تحليل البيانات، يغطّي أدوات التحليل والتصوّر واتخاذ القرار بالبيانات. مهارة عابرة للقطاعات ومطلوبة بقوة في الجهات الحكومية والتقنية.', en: 'A certified data-analysis program covering analysis, visualization, and data-driven decisions. A cross-sector skill in strong demand across government and tech.' }, gain: { ar: 'تحليل البيانات واتخاذ القرار', en: 'Data analysis and decision-making' }, scoreAdd: 9, official: 'https://www.coursera.org/professional-certificates/google-data-analytics', status: 'future', cost: { ar: '3,500 ر.س', en: '3,500 SAR' }, duration: { ar: '3 أشهر', en: '3 months' }, hadaf: true },
+      { name: 'MBA', desc: { ar: 'ماجستير إدارة الأعمال، يجمع بين الخبرة التقنية والإدارة. للانتقال من الأدوار التقنية إلى القيادة وإدارة المنتجات.', en: 'The MBA, bridging technical expertise and management. For moving from technical roles into leadership and product management.' }, gain: { ar: 'يجمع التقنية بالإدارة', en: 'Bridges tech and management' }, scoreAdd: 14, official: 'https://www.mba.com/', status: 'future', cost: { ar: 'يختلف', en: 'Varies' }, duration: { ar: '6 أشهر', en: '6 months' } },
+    ],
+    picks: [
+      { id: 'n11', kind: 'top', reason: { ar: 'مدير منتج في stc', en: 'Product manager at stc' } },
+      { id: 'n14', kind: 'top', reason: { ar: 'قائدة هندسة برمجيات في علم', en: 'Engineering lead at Elm' } },
+      { id: 'n8', kind: 'mid', reason: { ar: 'استقطاب المواهب التقنية في نيوم', en: 'Tech talent acquisition at NEOM' } },
+      { id: 'n6', kind: 'common', reason: { ar: 'خرّيجة كورنيل مثلك', en: 'Cornell alum, like you' } },
+      { id: 'n4', kind: 'common', reason: { ar: 'تقاطع الطاقة والتقنية', en: 'Where energy meets tech' } },
     ],
   },
 ];
@@ -358,8 +403,8 @@ export const ui = {
     eyebrow: { ar: 'مساراتك المهنية', en: 'Your career paths' },
     title: { ar: 'خمسة مسارات مبنية على خلفيتك', en: 'Five paths built on your background' },
     sub: {
-      ar: 'افتح أيّ مسار لترى خارطة شهاداته، وما تضيفه كل شهادة لدرجتك.',
-      en: 'Open any path to see its certification roadmap and what each one adds to your score.',
+      ar: 'افتح أيّ مسار لترى خارطة شهاداته، وما تضيفه كل شهادة لدرجتك، وأهم من تتواصل معه.',
+      en: 'Open any path for its certification roadmap, what each adds to your score, and who to reach out to.',
     },
     match: { ar: 'ملاءمة', en: 'match' },
     primary: { ar: 'مسارك الرئيسي', en: 'Primary path' },
@@ -368,6 +413,16 @@ export const ui = {
     statCerts: { ar: 'شهادات', en: 'certs' },
     statMonths: { ar: 'شهرًا', en: 'months' },
     back: { ar: 'كل المسارات', en: 'All paths' },
+    progress: { ar: 'تقدّم المسار', en: 'Path progress' },
+    totalScore: { ar: 'إجمالي ما يضيفه لدرجتك', en: 'Total score boost' },
+    picksTitle: { ar: 'ابدأ بهؤلاء الخمسة', en: 'Start with these five' },
+    picksSub: {
+      ar: 'الأعلى منصبًا، ومن تشاركهم قاسمًا مشتركًا — مع رسالة جاهزة لكل واحد.',
+      en: 'The most senior, and people you share common ground with — each with a ready message.',
+    },
+    kindTop: { ar: 'منصب رفيع', en: 'Senior' },
+    kindMid: { ar: 'مستوى متوسط', en: 'Mid-level' },
+    kindCommon: { ar: 'قاسم مشترك', en: 'Common ground' },
   },
   certs: {
     title: { ar: 'خارطة الشهادات', en: 'Certification roadmap' },
@@ -379,6 +434,9 @@ export const ui = {
     gain: { ar: 'ماذا تضيف لك', en: 'What it gives you' },
     scoreAdd: { ar: 'للدرجة', en: 'to score' },
     whyNow: { ar: 'لماذا الآن؟', en: 'Why now?' },
+    official: { ar: 'الموقع الرسمي', en: 'Official site' },
+    markDone: { ar: 'تحديد كمنجزة', en: 'Mark done' },
+    markedDone: { ar: 'منجزة', en: 'Done' },
     bannerSub: { ar: 'تسترجع نحو نصف تكلفة كل شهادة معتمدة عبر هدف.', en: 'Reclaim about half of each approved certification via Hadaf.' },
   },
   contacts: {
@@ -402,6 +460,7 @@ export const ui = {
     shuffle: { ar: 'صيغة أخرى', en: 'Shuffle' },
     linkedin: { ar: 'لينكدإن', en: 'LinkedIn' },
     statusHint: { ar: 'اضغط الحالة لتحديثها', en: 'Tap the status to update it' },
+    importCta: { ar: 'استورد جهات اتصالك من لينكدإن', en: 'Import your LinkedIn connections' },
     empty: { ar: 'لا نتائج مطابقة.', en: 'No matching results.' },
     status_new: { ar: 'جديد', en: 'New' },
     status_sent: { ar: 'مُرسل', en: 'Sent' },

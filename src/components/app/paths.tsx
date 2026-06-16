@@ -1,11 +1,13 @@
 'use client';
 
+import { useState, type ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { TrendingUp, Zap, Briefcase, Landmark, Cpu, Route, ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { paths, ui, type CareerPath, type Loc } from '@/lib/app-data';
+import { paths, contactById, ui, type CareerPath, type Contact, type PathPick, type Loc } from '@/lib/app-data';
 import { accent, SectionHeading, Stagger, StaggerItem } from './ui';
 import { CertificationsSection } from './certifications';
+import { ConnectionCard } from './contacts';
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -17,7 +19,7 @@ const ICONS = {
   tech: Cpu,
 } as const;
 
-function Stat({ value, label }: { value: number; label: string }) {
+function Stat({ value, label }: { value: ReactNode; label: string }) {
   return (
     <div className="rounded-xl border border-white/50 bg-white/40 px-2 py-2.5 text-center">
       <div className="text-base font-extrabold tabular-nums">{value}</div>
@@ -51,6 +53,7 @@ function MatchBar({ path, locale }: { path: CareerPath; locale: Loc }) {
 function PathCard({ path, locale, onOpen }: { path: CareerPath; locale: Loc; onOpen: () => void }) {
   const a = accent[path.accent];
   const Icon = ICONS[path.icon];
+  const totalScore = path.certs.reduce((s, c) => s + c.scoreAdd, 0);
   return (
     <button
       type="button"
@@ -79,9 +82,10 @@ function PathCard({ path, locale, onOpen }: { path: CareerPath; locale: Loc; onO
         <MatchBar path={path} locale={locale} />
       </div>
 
-      <div className="mt-4 grid grid-cols-2 gap-2">
+      <div className="mt-4 grid grid-cols-3 gap-2">
         <Stat value={path.certs.length} label={ui.paths.statCerts[locale]} />
         <Stat value={path.months} label={ui.paths.statMonths[locale]} />
+        <Stat value={`+${totalScore}`} label={ui.paths.totalScore[locale]} />
       </div>
 
       <div className="mt-3 flex items-start gap-2 rounded-xl border border-dashed border-white/60 bg-white/30 px-3 py-2.5">
@@ -103,6 +107,23 @@ function PathCard({ path, locale, onOpen }: { path: CareerPath; locale: Loc; onO
 function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; onBack: () => void }) {
   const a = accent[path.accent];
   const Icon = ICONS[path.icon];
+  const [doneNames, setDoneNames] = useState<Set<string>>(
+    () => new Set(path.certs.filter((c) => c.status === 'done').map((c) => c.name)),
+  );
+  const toggleDone = (name: string) =>
+    setDoneNames((prev) => {
+      const next = new Set(prev);
+      if (next.has(name)) next.delete(name);
+      else next.add(name);
+      return next;
+    });
+  const done = doneNames.size;
+  const total = path.certs.length;
+  const totalScore = path.certs.reduce((s, c) => s + c.scoreAdd, 0);
+  const picks = path.picks
+    .map((p) => ({ pick: p, contact: contactById(p.id) }))
+    .filter((x): x is { pick: PathPick; contact: Contact } => x.contact !== undefined);
+
   return (
     <div>
       <button
@@ -135,15 +156,30 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
         <div className="mt-4">
           <MatchBar path={path} locale={locale} />
         </div>
-        <div className="mt-4 grid grid-cols-2 gap-2">
-          <Stat value={path.certs.length} label={ui.paths.statCerts[locale]} />
+        <div className="mt-4 grid grid-cols-3 gap-2">
+          <Stat value={`${done}/${total}`} label={ui.paths.statCerts[locale]} />
           <Stat value={path.months} label={ui.paths.statMonths[locale]} />
+          <Stat value={`+${totalScore}`} label={ui.paths.totalScore[locale]} />
         </div>
       </div>
 
       <div className="mt-6">
-        <CertificationsSection certs={path.certs} locale={locale} />
+        <CertificationsSection certs={path.certs} locale={locale} doneNames={doneNames} onToggle={toggleDone} />
       </div>
+
+      {/* Top connections to reach out to */}
+      {picks.length > 0 && (
+        <div className="mt-8">
+          <SectionHeading title={ui.paths.picksTitle[locale]} sub={ui.paths.picksSub[locale]} />
+          <Stagger className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {picks.map(({ pick, contact }) => (
+              <StaggerItem key={pick.id} className="h-full">
+                <ConnectionCard contact={contact} locale={locale} kind={pick.kind} reason={pick.reason[locale]} />
+              </StaggerItem>
+            ))}
+          </Stagger>
+        </div>
+      )}
     </div>
   );
 }
@@ -160,7 +196,7 @@ export function PathsSection({
   const selected = selectedId ? paths.find((p) => p.id === selectedId) : null;
 
   if (selected) {
-    return <PathDetail path={selected} locale={locale} onBack={() => onSelect(null)} />;
+    return <PathDetail key={selected.id} path={selected} locale={locale} onBack={() => onSelect(null)} />;
   }
 
   return (

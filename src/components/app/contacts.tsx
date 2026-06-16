@@ -1,8 +1,9 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Search, Users, Building2, Copy, Check, Shuffle, Linkedin } from 'lucide-react';
+import { Search, Users, Building2, Copy, Check, Shuffle, Linkedin, Crown, Sparkles, User, Upload } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Link } from '@/i18n/routing';
 import {
   connections,
   hrContacts,
@@ -15,12 +16,29 @@ import {
   type ContactStatus,
   type IndustryKey,
   type Loc,
+  type PickKind,
 } from '@/lib/app-data';
 import { Avatar, ScoreRing, StatusPill, SectionHeading, Stagger, StaggerItem } from './ui';
 
 const STATUS_ORDER: ContactStatus[] = ['new', 'sent', 'replied', 'followup'];
 
-export function ConnectionCard({ contact: c, locale }: { contact: Contact; locale: Loc }) {
+const KIND: Record<PickKind, { cls: string; Icon: typeof Crown; key: 'kindTop' | 'kindMid' | 'kindCommon' }> = {
+  top: { cls: 'bg-brand-50 text-brand-700', Icon: Crown, key: 'kindTop' },
+  mid: { cls: 'bg-amber-50 text-amber-700', Icon: User, key: 'kindMid' },
+  common: { cls: 'bg-violet-50 text-violet-700', Icon: Sparkles, key: 'kindCommon' },
+};
+
+export function ConnectionCard({
+  contact: c,
+  locale,
+  kind,
+  reason,
+}: {
+  contact: Contact;
+  locale: Loc;
+  kind?: PickKind;
+  reason?: string;
+}) {
   const [tpl, setTpl] = useState(0);
   const [copied, setCopied] = useState(false);
   const [status, setStatus] = useState<ContactStatus>(c.status); // manual self-logging
@@ -59,6 +77,18 @@ export function ConnectionCard({ contact: c, locale }: { contact: Contact; local
           <p className="mt-0.5 truncate text-xs font-semibold text-brand-700">{c.company[locale]}</p>
         </div>
       </div>
+
+      {kind && reason && (
+        <div className={cn('mt-3 flex items-start gap-1.5 rounded-lg px-2.5 py-1.5 text-[11px]', KIND[kind].cls)}>
+          {(() => {
+            const I = KIND[kind].Icon;
+            return <I className="mt-0.5 h-3 w-3 shrink-0" />;
+          })()}
+          <span>
+            <span className="font-bold">{ui.paths[KIND[kind].key][locale]}</span> · {reason}
+          </span>
+        </div>
+      )}
 
       <div className="mt-3 flex items-center justify-between gap-2 border-t border-white/40 pt-3">
         <button type="button" onClick={cycleStatus} title={ui.contacts.statusHint[locale]} className="transition-opacity hover:opacity-75">
@@ -143,6 +173,14 @@ export function ContactsSection({ locale }: { locale: Loc }) {
   return (
     <div>
       <SectionHeading eyebrow={ui.contacts.eyebrow[locale]} title={ui.contacts.title[locale]} sub={ui.contacts.sub[locale]} />
+
+      <Link
+        href="/app/import"
+        className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-white/60 bg-white/40 px-3.5 py-1.5 text-sm font-semibold text-brand-700 backdrop-blur transition-colors hover:text-brand-900"
+      >
+        <Upload className="h-4 w-4" />
+        {ui.contacts.importCta[locale]}
+      </Link>
 
       {/* Two-part toggle */}
       <div className="glass grid grid-cols-2 gap-1 rounded-2xl p-1">
