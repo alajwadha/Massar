@@ -5,7 +5,8 @@ import { useLocale } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LayoutDashboard, Compass, Users, Activity } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { profile, ui, type Loc } from '@/lib/app-data';
+import { ui, type Loc } from '@/lib/app-data';
+import { usePlan } from './plan-context';
 import { OverviewSection } from './overview';
 import { PathsSection } from './paths';
 import { ContactsSection } from './contacts';
@@ -24,6 +25,7 @@ const TABS = [
 
 export function Dashboard() {
   const locale = useLocale() as Loc;
+  const { profile } = usePlan();
   const [tab, setTab] = useState<TabId>('home');
   const [selectedPathId, setSelectedPathId] = useState<string | null>(null);
 

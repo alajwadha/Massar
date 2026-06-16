@@ -1,7 +1,8 @@
 'use client';
 
 import { Sparkles, ArrowLeft, GraduationCap, BadgeCheck, Gauge, TrendingUp } from 'lucide-react';
-import { primaryPath, journey, connections, cvScore, ui, type Loc } from '@/lib/app-data';
+import { ui, type Loc } from '@/lib/app-data';
+import { usePlan } from './plan-context';
 import { ProgressRing, Counter, SectionHeading, Stagger, StaggerItem } from './ui';
 import { ConnectionCard } from './contacts';
 
@@ -14,6 +15,7 @@ export function OverviewSection({
   onOpenPath: (id: string) => void;
   onOpenContacts: () => void;
 }) {
+  const { primaryPath, journey, connections, cvScore } = usePlan();
   const top = [...connections].sort((a, b) => (b.score ?? 0) - (a.score ?? 0)).slice(0, 3);
   const current = primaryPath.certs.find((c) => c.status === 'current');
 

@@ -22,10 +22,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
-  connections,
-  hrContacts,
   industries,
-  templates,
   fillTemplate,
   linkedinUrl,
   parseConnectionsCsv,
@@ -40,6 +37,7 @@ import {
   type NetworkData,
   type PickKind,
 } from '@/lib/app-data';
+import { usePlan } from './plan-context';
 import { Avatar, ScoreRing, StatusPill, SectionHeading, Stagger, StaggerItem } from './ui';
 
 const STATUS_ORDER: ContactStatus[] = ['new', 'sent', 'replied', 'followup'];
@@ -63,6 +61,7 @@ export function ConnectionCard({
   reason?: string;
   match?: NetMatch;
 }) {
+  const { templates } = usePlan();
   const [tpl, setTpl] = useState(0);
   const [copied, setCopied] = useState(false);
   const [status, setStatus] = useState<ContactStatus>(c.status); // manual self-logging
@@ -306,6 +305,7 @@ function NetworkPanel({
 type Part = 'connections' | 'hr';
 
 export function ContactsSection({ locale }: { locale: Loc }) {
+  const { connections, hrContacts } = usePlan();
   const [part, setPart] = useState<Part>('connections');
   const [industry, setIndustry] = useState<IndustryKey | 'all'>('all');
   const [query, setQuery] = useState('');

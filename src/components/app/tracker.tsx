@@ -3,7 +3,8 @@
 import { motion } from 'framer-motion';
 import { TrendingUp, Send, MessageSquare, GraduationCap } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { tracker, ui, type Loc } from '@/lib/app-data';
+import { ui, type Loc } from '@/lib/app-data';
+import { usePlan } from './plan-context';
 import { StatCard, SectionHeading } from './ui';
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -15,6 +16,7 @@ const ACTIVITY_ICON = {
 } as const;
 
 export function TrackerSection({ locale }: { locale: Loc }) {
+  const { tracker } = usePlan();
   const max = Math.max(...tracker.weekly.map((d) => d.value));
 
   return (

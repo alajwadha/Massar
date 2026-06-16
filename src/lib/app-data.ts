@@ -120,8 +120,8 @@ export const hrContacts: Contact[] = [
   { id: 'h6', name: { ar: 'سلطان المالكي', en: 'Sultan Almalki' }, role: { ar: 'أخصائي توظيف', en: 'Recruiter' }, company: { ar: 'سابك', en: 'SABIC' }, companyKey: 'sabic', industry: 'energy', status: 'new', when: { ar: 'جديد', en: 'New' } },
 ];
 
-export function contactById(id: string): Contact | undefined {
-  return connections.find((c) => c.id === id) ?? hrContacts.find((c) => c.id === id);
+export function contactById(plan: CustomerPlan, id: string): Contact | undefined {
+  return plan.connections.find((c) => c.id === id) ?? plan.hrContacts.find((c) => c.id === id);
 }
 
 /* ------------------------------------------------------------------- paths -- */
@@ -455,6 +455,47 @@ export const tracker = {
     { kind: 'cert', text: { ar: 'أنجزت شهادة تمويل المناخ · كابسارك', en: 'Completed Climate Finance · KAPSARC' }, when: { ar: 'أمس', en: 'Yesterday' } },
   ] as Activity[],
 };
+
+/* -------------------------------------------------------------- customer plan -- */
+// Everything that varies per customer. The dashboard renders ONE plan through
+// <PlanProvider>, so each customer is fully isolated and reachable at their own
+// /c/<slug> link. Shared copy (ui), generic industries, and the helper functions
+// stay module-level. Add a customer by adding an entry to `plans` (later this is
+// fetched from the database by slug instead of hard-coded here).
+
+export type CustomerPlan = {
+  slug: string;
+  profile: typeof profile;
+  cvScore: typeof cvScore;
+  journey: typeof journey;
+  connections: Contact[];
+  hrContacts: Contact[];
+  paths: CareerPath[];
+  primaryPath: CareerPath;
+  templates: Template[];
+  tracker: typeof tracker;
+};
+
+export const aliPlan: CustomerPlan = {
+  slug: 'ali-alajwad',
+  profile,
+  cvScore,
+  journey,
+  connections,
+  hrContacts,
+  paths,
+  primaryPath,
+  templates,
+  tracker,
+};
+
+export const plans: Record<string, CustomerPlan> = {
+  [aliPlan.slug]: aliPlan,
+};
+
+export function getPlan(slug: string): CustomerPlan | undefined {
+  return plans[slug];
+}
 
 /* ------------------------------------------------------------------- ui copy -- */
 

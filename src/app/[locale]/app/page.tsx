@@ -1,14 +1,19 @@
 import { setRequestLocale } from 'next-intl/server';
 import { Dashboard } from '@/components/app/dashboard';
+import { PlanProvider } from '@/components/app/plan-context';
+import { aliPlan } from '@/lib/app-data';
 
-// The product: the customer's personalised career-plan dashboard (paths,
-// certifications with Hadaf reimbursement, target contacts, outreach messages,
-// and a progress tracker). Demo data lives in src/lib/app-data.ts.
+// Public demo of the product. It renders the first real CustomerPlan (Ali's) as
+// the showcase. Each real customer gets their own isolated copy at /c/<slug>.
 export default function AppHome({
   params: { locale },
 }: {
   params: { locale: string };
 }) {
   setRequestLocale(locale);
-  return <Dashboard />;
+  return (
+    <PlanProvider plan={aliPlan}>
+      <Dashboard />
+    </PlanProvider>
+  );
 }

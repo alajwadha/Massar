@@ -4,7 +4,8 @@ import { useState, type ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { TrendingUp, Zap, Briefcase, Landmark, Cpu, Route, ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { paths, contactById, ui, type CareerPath, type Contact, type PathPick, type Loc } from '@/lib/app-data';
+import { contactById, ui, type CareerPath, type Contact, type PathPick, type Loc } from '@/lib/app-data';
+import { usePlan } from './plan-context';
 import { accent, SectionHeading, Stagger, StaggerItem } from './ui';
 import { CertificationsSection } from './certifications';
 import { ConnectionCard } from './contacts';
@@ -105,6 +106,7 @@ function PathCard({ path, locale, onOpen }: { path: CareerPath; locale: Loc; onO
 }
 
 function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; onBack: () => void }) {
+  const plan = usePlan();
   const a = accent[path.accent];
   const Icon = ICONS[path.icon];
   const [doneNames, setDoneNames] = useState<Set<string>>(
@@ -121,7 +123,7 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
   const total = path.certs.length;
   const totalScore = path.certs.reduce((s, c) => s + c.scoreAdd, 0);
   const picks = path.picks
-    .map((p) => ({ pick: p, contact: contactById(p.id) }))
+    .map((p) => ({ pick: p, contact: contactById(plan, p.id) }))
     .filter((x): x is { pick: PathPick; contact: Contact } => x.contact !== undefined);
 
   return (
@@ -193,6 +195,7 @@ export function PathsSection({
   selectedId: string | null;
   onSelect: (id: string | null) => void;
 }) {
+  const { paths } = usePlan();
   const selected = selectedId ? paths.find((p) => p.id === selectedId) : null;
 
   if (selected) {
