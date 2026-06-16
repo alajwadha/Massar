@@ -158,17 +158,30 @@
   "import": {
     "eyebrow": "Good Targets",
     "title": "How to export your LinkedIn connections",
-    "subtitle": "We need your connections file (CSV) to find the right decision-makers for you. Exporting takes a few minutes, and the file stays private to you.",
+    "subtitle": "We need your connections file (CSV) to find the right decision-makers for you. LinkedIn prepares it and emails you a download link — it can take 12 to 24 hours to arrive. Request it now, and come back to upload it once it lands in your inbox.",
     "steps_title": "Steps",
-    "steps": [
-      "Open LinkedIn, click your photo (Me), then “Settings & Privacy”.",
-      "In the side menu, choose “Data privacy”.",
+    "tab_laptop": "Computer / Laptop",
+    "tab_phone": "Phone",
+    "steps_laptop": [
+      "On linkedin.com, click your photo (Me) at the top right, then “Settings & Privacy”.",
+      "From the left menu, open the “Data privacy” tab.",
       "Click “Get a copy of your data”.",
-      "Select “Connections” specifically instead of the full archive — it arrives faster.",
+      "Choose “Want something in particular?” and tick “Connections” only — it's faster than the full archive.",
       "Click “Request archive” and enter your password if asked.",
-      "Within minutes LinkedIn emails you a download link — download the Connections.csv file.",
+      "LinkedIn emails you a download link — this usually takes 12–24 hours. Download the Connections.csv file from that email.",
       "Come back to Masaar and upload the file here."
     ],
+    "steps_phone": [
+      "Open the LinkedIn app and tap your profile photo, then the Settings gear icon.",
+      "Tap “Data privacy”.",
+      "Tap “Get a copy of your data”.",
+      "Select “Connections” only instead of the full archive — it arrives faster.",
+      "Tap “Request archive” and confirm your password if asked.",
+      "LinkedIn emails you a download link — this usually takes 12–24 hours. Open the email on your phone and download Connections.csv to your Files / Downloads.",
+      "Open Masaar and upload the file from your Downloads here."
+    ],
+    "timing_title": "Why is my list empty?",
+    "timing_body": "Your connections won't appear until you've uploaded the file. After you request it, LinkedIn emails a download link that can take 12–24 hours to arrive — check your inbox (and spam folder). The moment you upload Connections.csv, we match the right decision-makers to your goal.",
     "note": "Note: the file may have a few descriptive rows at the top — don't worry, we handle those automatically.",
     "privacy_title": "Your privacy",
     "privacy_body": "We use the file only to match decision-makers to your goal, and never share it. You can delete it anytime.",

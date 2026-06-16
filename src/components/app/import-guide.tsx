@@ -1,17 +1,36 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
-import { ArrowRight, ShieldCheck, Info, UploadCloud, Linkedin } from 'lucide-react';
+import {
+  ArrowRight,
+  ShieldCheck,
+  Info,
+  UploadCloud,
+  Linkedin,
+  Laptop,
+  Smartphone,
+  Clock,
+} from 'lucide-react';
 import { Link } from '@/i18n/routing';
 import { Button } from '@/components/ui/button';
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
+type Device = 'laptop' | 'phone';
+
 export function ImportGuide() {
   const t = useTranslations('import');
   const tc = useTranslations('common');
-  const steps = t.raw('steps') as string[];
+  const [device, setDevice] = useState<Device>('laptop');
+
+  const steps = t.raw(device === 'laptop' ? 'steps_laptop' : 'steps_phone') as string[];
+
+  const tabs: { id: Device; label: string; icon: typeof Laptop }[] = [
+    { id: 'laptop', label: t('tab_laptop'), icon: Laptop },
+    { id: 'phone', label: t('tab_phone'), icon: Smartphone },
+  ];
 
   return (
     <div className="container-page py-10 sm:py-14">
@@ -39,19 +58,59 @@ export function ImportGuide() {
         <p className="mt-3 text-lg leading-relaxed text-ink-soft">{t('subtitle')}</p>
       </motion.div>
 
+      {/* Why is my list empty? — explains the 12–24h wait */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.08, ease }}
+        className="mt-6 flex max-w-2xl items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4"
+      >
+        <Clock className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
+        <div>
+          <h2 className="font-bold text-amber-900">{t('timing_title')}</h2>
+          <p className="mt-1 text-sm leading-relaxed text-amber-900/80">{t('timing_body')}</p>
+        </div>
+      </motion.div>
+
       <div className="mt-10 grid gap-6 lg:grid-cols-[1.4fr_1fr]">
         {/* Steps */}
         <div className="rounded-3xl border border-line bg-canvas-raised p-6 shadow-soft sm:p-8">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-ink-muted">
-            {t('steps_title')}
-          </h2>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-ink-muted">
+              {t('steps_title')}
+            </h2>
+
+            {/* Device toggle */}
+            <div className="inline-flex rounded-xl border border-line bg-canvas p-1">
+              {tabs.map((tab) => {
+                const active = device === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setDevice(tab.id)}
+                    aria-pressed={active}
+                    className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+                      active
+                        ? 'bg-brand-600 text-white shadow-soft'
+                        : 'text-ink-soft hover:text-ink'
+                    }`}
+                  >
+                    <tab.icon className="h-4 w-4" />
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           <ol className="mt-5 space-y-4">
             {steps.map((step, i) => (
               <motion.li
-                key={i}
+                key={`${device}-${i}`}
                 initial={{ opacity: 0, x: 10 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: 0.1 + i * 0.07, ease }}
+                transition={{ duration: 0.4, delay: 0.05 + i * 0.06, ease }}
                 className="flex items-start gap-3.5"
               >
                 <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-brand-600 text-sm font-bold text-white tabular-nums">
