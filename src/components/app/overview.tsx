@@ -1,7 +1,7 @@
 'use client';
 
-import { Sparkles, ArrowLeft, GraduationCap, BadgeCheck } from 'lucide-react';
-import { primaryPath, journey, connections, ui, type Loc } from '@/lib/app-data';
+import { Sparkles, ArrowLeft, GraduationCap, BadgeCheck, Gauge, TrendingUp } from 'lucide-react';
+import { primaryPath, journey, connections, cvScore, ui, type Loc } from '@/lib/app-data';
 import { ProgressRing, Counter, SectionHeading, Stagger, StaggerItem } from './ui';
 import { ConnectionCard } from './contacts';
 
@@ -59,6 +59,46 @@ export function OverviewSection({
         </div>
       </div>
 
+      {/* CV competitiveness score */}
+      <div className="glass mt-4 rounded-3xl p-5 sm:p-6">
+        <div className="flex flex-col items-center gap-5 sm:flex-row sm:items-start sm:gap-6">
+          <ProgressRing value={cvScore.value} size={108} stroke={10}>
+            <div className="leading-none">
+              <Counter to={cvScore.value} className="text-3xl font-extrabold" />
+              <div className="mt-1 text-[10px] font-medium text-ink-muted">/ 100</div>
+            </div>
+          </ProgressRing>
+
+          <div className="min-w-0 flex-1 text-center sm:text-start">
+            <div className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-brand-700">
+              <Gauge className="h-3.5 w-3.5" />
+              {ui.overview.scoreLabel[locale]}
+            </div>
+            <p className="mt-1 text-sm text-ink-soft">
+              {ui.overview.scoreFor[locale]} <span className="font-bold text-ink">{cvScore.target[locale]}</span>
+            </p>
+
+            <div className="mt-4 border-t border-white/40 pt-3 text-start">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-ink">
+                <TrendingUp className="h-3.5 w-3.5 text-brand-600" />
+                {ui.overview.improvementsTitle[locale]}
+              </div>
+              <ul className="mt-2.5 space-y-2">
+                {cvScore.improvements.map((imp, i) => (
+                  <li key={i} className="flex items-center gap-2.5 text-[13px]">
+                    <span className="inline-flex shrink-0 items-baseline gap-0.5 rounded-md bg-brand-600 px-1.5 py-0.5 text-[11px] font-bold text-white tabular-nums">
+                      +{imp.delta}
+                    </span>
+                    <span className="min-w-0 flex-1 text-ink-soft">{imp.action[locale]}</span>
+                    <span className="shrink-0 text-[11px] font-medium text-ink-muted">{imp.effort[locale]}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Today's top move */}
       <div className="mt-4 flex items-start gap-3 rounded-2xl border border-brand-100 bg-brand-50/70 p-4 backdrop-blur-sm">
         <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-white text-brand-600 shadow-soft">
@@ -84,7 +124,7 @@ export function OverviewSection({
             <div className="text-[11px] font-semibold uppercase tracking-wider text-ink-muted">
               {ui.overview.nextCert[locale]}
             </div>
-            <div className="mt-0.5 truncate font-bold">{current.name}</div>
+            <div className="mt-0.5 truncate font-bold">{current.name[locale]}</div>
             {current.hadafNote && (
               <div className="mt-0.5 inline-flex items-center gap-1 text-xs font-semibold text-brand-700">
                 <BadgeCheck className="h-3.5 w-3.5" />

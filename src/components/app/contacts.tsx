@@ -1,9 +1,26 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { Search, Users, Building2, Copy, Check, Shuffle, Linkedin, Crown, Sparkles, User, Upload } from 'lucide-react';
+import { useMemo, useRef, useState } from 'react';
+import {
+  Search,
+  Users,
+  Building2,
+  Copy,
+  Check,
+  Shuffle,
+  Linkedin,
+  Crown,
+  Sparkles,
+  User,
+  Upload,
+  Network,
+  UserCheck,
+  Smartphone,
+  Laptop,
+  Info,
+  X,
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Link } from '@/i18n/routing';
 import {
   connections,
   hrContacts,
@@ -11,11 +28,16 @@ import {
   templates,
   fillTemplate,
   linkedinUrl,
+  parseConnectionsCsv,
+  rankByNetwork,
+  countMatches,
   ui,
   type Contact,
   type ContactStatus,
   type IndustryKey,
   type Loc,
+  type NetMatch,
+  type NetworkData,
   type PickKind,
 } from '@/lib/app-data';
 import { Avatar, ScoreRing, StatusPill, SectionHeading, Stagger, StaggerItem } from './ui';
@@ -33,11 +55,13 @@ export function ConnectionCard({
   locale,
   kind,
   reason,
+  match,
 }: {
   contact: Contact;
   locale: Loc;
   kind?: PickKind;
   reason?: string;
+  match?: NetMatch;
 }) {
   const [tpl, setTpl] = useState(0);
   const [copied, setCopied] = useState(false);
@@ -59,7 +83,12 @@ export function ConnectionCard({
     setStatus((s) => STATUS_ORDER[(STATUS_ORDER.indexOf(s) + 1) % STATUS_ORDER.length]);
 
   return (
-    <div className="glass glass-edge flex h-full flex-col rounded-2xl p-4 transition-shadow duration-300 hover:shadow-lift">
+    <div
+      className={cn(
+        'glass glass-edge flex h-full flex-col rounded-2xl p-4 transition-shadow duration-300 hover:shadow-lift',
+        match && 'ring-1 ring-brand-200',
+      )}
+    >
       <div className="flex items-start gap-3">
         <Avatar initials={c.name[locale].charAt(0)} companyKey={c.companyKey} />
         <div className="min-w-0 flex-1">
@@ -77,6 +106,21 @@ export function ConnectionCard({
           <p className="mt-0.5 truncate text-xs font-semibold text-brand-700">{c.company[locale]}</p>
         </div>
       </div>
+
+      {/* Warm-intro flag from the user's uploaded LinkedIn network */}
+      {match && (
+        <div
+          className={cn(
+            'mt-3 inline-flex items-center gap-1.5 self-start rounded-full px-2.5 py-1 text-[11px] font-bold ring-1 ring-inset',
+            match === 'you'
+              ? 'bg-brand-50 text-brand-700 ring-brand-100'
+              : 'bg-violet-50 text-violet-700 ring-violet-100',
+          )}
+        >
+          {match === 'you' ? <UserCheck className="h-3 w-3" /> : <Users className="h-3 w-3" />}
+          {match === 'you' ? ui.contacts.inNetwork[locale] : ui.contacts.sameCompany[locale]}
+        </div>
+      )}
 
       {kind && reason && (
         <div className={cn('mt-3 flex items-start gap-1.5 rounded-lg px-2.5 py-1.5 text-[11px]', KIND[kind].cls)}>
@@ -141,12 +185,137 @@ export function ConnectionCard({
   );
 }
 
+/* ------------------------------------------------------- network CSV panel -- */
+
+function Steps({ title, Icon, steps }: { title: string; Icon: typeof Smartphone; steps: readonly string[] }) {
+  return (
+    <div className="rounded-xl border border-white/50 bg-white/40 p-3.5">
+      <div className="flex items-center gap-2 text-sm font-bold">
+        <Icon className="h-4 w-4 text-brand-600" />
+        {title}
+      </div>
+      <ol className="mt-2.5 space-y-2">
+        {steps.map((s, i) => (
+          <li key={i} className="flex gap-2 text-[12.5px] leading-relaxed text-ink-soft">
+            <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-brand-600 text-[11px] font-bold text-white tabular-nums">
+              {i + 1}
+            </span>
+            <span className="flex-1">{s}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
+function NetworkPanel({
+  locale,
+  net,
+  matchCount,
+  onFile,
+  onClear,
+}: {
+  locale: Loc;
+  net: NetworkData | null;
+  matchCount: number;
+  onFile: (file: File) => void;
+  onClear: () => void;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const Picker = (
+    <input
+      ref={inputRef}
+      type="file"
+      accept=".csv,text/csv"
+      className="hidden"
+      onChange={(e) => {
+        const file = e.target.files?.[0];
+        if (file) onFile(file);
+        e.target.value = ''; // allow re-uploading the same file
+      }}
+    />
+  );
+
+  // After upload: a compact summary with the match count.
+  if (net) {
+    return (
+      <div className="glass mt-3 flex flex-wrap items-center justify-between gap-3 rounded-2xl p-4">
+        <div className="flex items-center gap-3">
+          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand-600 text-white shadow-soft">
+            <Network className="h-5 w-5" />
+          </div>
+          <div className="min-w-0">
+            <div className="font-bold">{ui.network.matched[locale](matchCount)}</div>
+            <div className="text-[12.5px] text-ink-soft">
+              {matchCount > 0 ? ui.network.ranked[locale] : ui.network.none[locale]}
+            </div>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={onClear}
+          className="inline-flex items-center gap-1.5 rounded-full border border-white/60 bg-white/40 px-3.5 py-1.5 text-sm font-semibold text-ink-soft transition-colors hover:text-ink"
+        >
+          <X className="h-4 w-4" />
+          {ui.network.clear[locale]}
+        </button>
+        {Picker}
+      </div>
+    );
+  }
+
+  // Empty state: explain how to export, then let them upload.
+  return (
+    <div className="glass mt-3 overflow-hidden rounded-3xl p-5">
+      <div className="flex items-start gap-3">
+        <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-soft">
+          <Network className="h-5 w-5" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <h3 className="text-base font-extrabold tracking-tight">{ui.network.title[locale]}</h3>
+          <p className="mt-1 text-[13px] leading-relaxed text-ink-soft">{ui.network.body[locale]}</p>
+        </div>
+      </div>
+
+      <div className="mt-4 flex items-start gap-2 rounded-xl border border-amber-100 bg-amber-50/70 px-3 py-2.5">
+        <Info className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+        <p className="text-[12.5px] font-semibold leading-relaxed text-amber-800">{ui.network.note[locale]}</p>
+      </div>
+
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        <Steps title={ui.network.howPhone[locale]} Icon={Smartphone} steps={ui.network.phoneSteps[locale]} />
+        <Steps title={ui.network.howLaptop[locale]} Icon={Laptop} steps={ui.network.laptopSteps[locale]} />
+      </div>
+
+      <button
+        type="button"
+        onClick={() => inputRef.current?.click()}
+        className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-brand-600 px-4 py-3 text-sm font-bold text-white shadow-soft transition-colors hover:bg-brand-700"
+      >
+        <Upload className="h-4 w-4" />
+        {ui.network.upload[locale]}
+      </button>
+      {Picker}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------ contacts page -- */
+
 type Part = 'connections' | 'hr';
 
 export function ContactsSection({ locale }: { locale: Loc }) {
   const [part, setPart] = useState<Part>('connections');
   const [industry, setIndustry] = useState<IndustryKey | 'all'>('all');
   const [query, setQuery] = useState('');
+  const [net, setNet] = useState<NetworkData | null>(null);
+
+  const onFile = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = () => setNet(parseConnectionsCsv(String(reader.result ?? '')));
+    reader.readAsText(file);
+  };
 
   const base = part === 'connections' ? connections : hrContacts;
 
@@ -165,6 +334,13 @@ export function ContactsSection({ locale }: { locale: Loc }) {
     });
   }, [base, part, industry, query]);
 
+  // Network matching applies to connections only; HR keeps its own order.
+  const ranked = useMemo(
+    () => rankByNetwork(filtered, part === 'connections' ? net : null),
+    [filtered, net, part],
+  );
+  const matchCount = useMemo(() => countMatches(connections, net), [net]);
+
   const parts: { id: Part; Icon: typeof Users; label: string; hint: string }[] = [
     { id: 'connections', Icon: Users, label: ui.contacts.tabConnections[locale], hint: ui.contacts.connectionsHint[locale] },
     { id: 'hr', Icon: Building2, label: ui.contacts.tabHr[locale], hint: ui.contacts.hrHint[locale] },
@@ -173,14 +349,6 @@ export function ContactsSection({ locale }: { locale: Loc }) {
   return (
     <div>
       <SectionHeading eyebrow={ui.contacts.eyebrow[locale]} title={ui.contacts.title[locale]} sub={ui.contacts.sub[locale]} />
-
-      <Link
-        href="/app/import"
-        className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-white/60 bg-white/40 px-3.5 py-1.5 text-sm font-semibold text-brand-700 backdrop-blur transition-colors hover:text-brand-900"
-      >
-        <Upload className="h-4 w-4" />
-        {ui.contacts.importCta[locale]}
-      </Link>
 
       {/* Two-part toggle */}
       <div className="glass grid grid-cols-2 gap-1 rounded-2xl p-1">
@@ -207,6 +375,11 @@ export function ContactsSection({ locale }: { locale: Loc }) {
           );
         })}
       </div>
+
+      {/* LinkedIn network import (connections only) */}
+      {part === 'connections' && (
+        <NetworkPanel locale={locale} net={net} matchCount={matchCount} onFile={onFile} onClear={() => setNet(null)} />
+      )}
 
       {/* Search */}
       <div className="glass mt-3 flex items-center gap-2.5 rounded-2xl px-4 py-3">
@@ -241,13 +414,13 @@ export function ContactsSection({ locale }: { locale: Loc }) {
         </div>
       )}
 
-      {filtered.length === 0 ? (
+      {ranked.length === 0 ? (
         <p className="mt-10 text-center text-sm text-ink-muted">{ui.contacts.empty[locale]}</p>
       ) : (
         <Stagger className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((c) => (
-            <StaggerItem key={c.id} className="h-full">
-              <ConnectionCard contact={c} locale={locale} />
+          {ranked.map(({ contact, match }) => (
+            <StaggerItem key={contact.id} className="h-full">
+              <ConnectionCard contact={contact} locale={locale} match={part === 'connections' ? match : null} />
             </StaggerItem>
           ))}
         </Stagger>

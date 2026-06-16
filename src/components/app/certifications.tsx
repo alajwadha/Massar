@@ -78,7 +78,7 @@ function CertCard({
     >
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-2">
-          <h3 className="font-extrabold" dir="ltr">{cert.name}</h3>
+          <h3 className="font-extrabold">{cert.name[locale]}</h3>
           <StatusChip status={display} locale={locale} />
         </div>
         <span className="inline-flex shrink-0 items-baseline gap-1 rounded-lg bg-brand-600 px-2 py-1 text-white">
@@ -197,8 +197,8 @@ export function CertificationsSection({
         <div className="absolute bottom-4 top-4 start-[15px] w-0.5 bg-black/10" aria-hidden />
         <Stagger className="space-y-3">
           {certs.map((cert) => (
-            <StaggerItem key={cert.name}>
-              <CertRow cert={cert} locale={locale} done={doneNames.has(cert.name)} onToggle={() => onToggle(cert.name)} />
+            <StaggerItem key={cert.name.en}>
+              <CertRow cert={cert} locale={locale} done={doneNames.has(cert.name.en)} onToggle={() => onToggle(cert.name.en)} />
             </StaggerItem>
           ))}
         </Stagger>

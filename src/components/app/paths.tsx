@@ -92,7 +92,7 @@ function PathCard({ path, locale, onOpen }: { path: CareerPath; locale: Loc; onO
         <Route className="mt-0.5 h-3.5 w-3.5 shrink-0 text-ink-muted" />
         <p className="text-[11px] leading-relaxed text-ink-soft" dir="ltr">
           <span className="font-semibold text-ink">{ui.paths.roadmap[locale]}: </span>
-          {path.trail}
+          {path.trail[locale]}
         </p>
       </div>
 
@@ -108,7 +108,7 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
   const a = accent[path.accent];
   const Icon = ICONS[path.icon];
   const [doneNames, setDoneNames] = useState<Set<string>>(
-    () => new Set(path.certs.filter((c) => c.status === 'done').map((c) => c.name)),
+    () => new Set(path.certs.filter((c) => c.status === 'done').map((c) => c.name.en)),
   );
   const toggleDone = (name: string) =>
     setDoneNames((prev) => {

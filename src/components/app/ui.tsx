@@ -27,14 +27,15 @@ export const companyGrad: Record<CompanyKey, string> = {
   acwa: 'from-cyan-500 to-teal-600',
   neom: 'from-teal-500 to-emerald-600',
   gov: 'from-blue-600 to-indigo-700',
+  kapsarc: 'from-teal-600 to-cyan-700',
+  swcc: 'from-cyan-600 to-sky-700',
+  sabic: 'from-blue-500 to-indigo-600',
   mck: 'from-violet-500 to-purple-700',
   bcg: 'from-indigo-500 to-violet-700',
-  bain: 'from-fuchsia-500 to-purple-700',
   strat: 'from-violet-600 to-indigo-700',
-  pwc: 'from-orange-500 to-red-600',
+  snb: 'from-green-600 to-emerald-700',
   stc: 'from-rose-500 to-pink-600',
   elm: 'from-sky-500 to-blue-600',
-  cst: 'from-slate-500 to-slate-700',
 };
 
 /* ------------------------------------------------------------------ counter -- */
