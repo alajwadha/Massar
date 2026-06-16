@@ -35,6 +35,9 @@ const config: Config = {
       fontFamily: {
         sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
         arabic: ['var(--font-arabic)', 'system-ui', 'sans-serif'],
+        // Editorial display face used only by v4. Falls back to the Arabic stack so
+        // Arabic glyphs (which the Latin serif lacks) still render in Tajawal.
+        serif: ['var(--font-serif)', 'var(--font-arabic)', 'Georgia', 'serif'],
       },
       borderRadius: {
         xl: '0.875rem',

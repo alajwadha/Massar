@@ -693,4 +693,9 @@ export const ui = {
     breakdown: { ar: 'توزيع تواصلك', en: 'Your outreach breakdown' },
     empty: { ar: 'حدّث حالة كل تواصل من بطاقات «التواصل»، وستظهر أرقامك هنا.', en: 'Update each outreach from the Contacts cards and your numbers appear here.' },
   },
+  cmd: {
+    placeholder: { ar: 'ابحث أو انتقل…', en: 'Search or jump to…' },
+    go: { ar: 'انتقال', en: 'Go' },
+    openPath: { ar: 'افتح المسار', en: 'Open path' },
+  },
 } as const;
