@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Search, Users, Building2, Copy, Check, Shuffle } from 'lucide-react';
+import { Search, Users, Building2, Copy, Check, Shuffle, Linkedin } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   connections,
@@ -9,16 +9,21 @@ import {
   industries,
   templates,
   fillTemplate,
+  linkedinUrl,
   ui,
   type Contact,
+  type ContactStatus,
   type IndustryKey,
   type Loc,
 } from '@/lib/app-data';
 import { Avatar, ScoreRing, StatusPill, SectionHeading, Stagger, StaggerItem } from './ui';
 
+const STATUS_ORDER: ContactStatus[] = ['new', 'sent', 'replied', 'followup'];
+
 export function ConnectionCard({ contact: c, locale }: { contact: Contact; locale: Loc }) {
   const [tpl, setTpl] = useState(0);
   const [copied, setCopied] = useState(false);
+  const [status, setStatus] = useState<ContactStatus>(c.status); // manual self-logging
   const template = templates[tpl % templates.length];
   const message = fillTemplate(template.preview[locale], c, locale);
 
@@ -32,8 +37,11 @@ export function ConnectionCard({ contact: c, locale }: { contact: Contact; local
     setTimeout(() => setCopied(false), 1600);
   };
 
+  const cycleStatus = () =>
+    setStatus((s) => STATUS_ORDER[(STATUS_ORDER.indexOf(s) + 1) % STATUS_ORDER.length]);
+
   return (
-    <div className="glass flex h-full flex-col rounded-2xl p-4 transition-shadow duration-300 hover:shadow-lift">
+    <div className="glass glass-edge flex h-full flex-col rounded-2xl p-4 transition-shadow duration-300 hover:shadow-lift">
       <div className="flex items-start gap-3">
         <Avatar initials={c.name[locale].charAt(0)} companyKey={c.companyKey} />
         <div className="min-w-0 flex-1">
@@ -53,7 +61,9 @@ export function ConnectionCard({ contact: c, locale }: { contact: Contact; local
       </div>
 
       <div className="mt-3 flex items-center justify-between gap-2 border-t border-white/40 pt-3">
-        <StatusPill status={c.status} locale={locale} />
+        <button type="button" onClick={cycleStatus} title={ui.contacts.statusHint[locale]} className="transition-opacity hover:opacity-75">
+          <StatusPill status={status} locale={locale} />
+        </button>
         <span className="shrink-0 text-[11px] text-ink-muted">{c.when[locale]}</span>
       </div>
 
@@ -80,11 +90,22 @@ export function ConnectionCard({ contact: c, locale }: { contact: Contact; local
         <button
           type="button"
           onClick={() => setTpl((i) => i + 1)}
-          className="flex items-center justify-center gap-1.5 rounded-xl border border-white/60 bg-white/40 px-3 py-2.5 text-[13px] font-semibold text-ink-soft transition-colors hover:text-ink"
+          aria-label={ui.contacts.shuffle[locale]}
+          title={ui.contacts.shuffle[locale]}
+          className="grid w-11 shrink-0 place-items-center rounded-xl border border-white/60 bg-white/40 text-ink-soft transition-colors hover:text-ink"
         >
           <Shuffle className="h-4 w-4" />
-          {ui.contacts.shuffle[locale]}
         </button>
+        <a
+          href={linkedinUrl(c)}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={ui.contacts.linkedin[locale]}
+          title={ui.contacts.linkedin[locale]}
+          className="grid w-11 shrink-0 place-items-center rounded-xl border border-white/60 bg-white/40 text-[#0A66C2] transition-colors hover:bg-white/70"
+        >
+          <Linkedin className="h-4 w-4" />
+        </a>
       </div>
     </div>
   );

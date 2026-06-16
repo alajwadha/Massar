@@ -42,6 +42,8 @@ export type CompanyKey =
 export type Cert = {
   name: string;
   desc: LS;
+  gain: LS;
+  scoreAdd: number;
   status: 'done' | 'current' | 'future';
   cost: LS;
   duration: LS;
@@ -129,12 +131,14 @@ export const paths: CareerPath[] = [
     primary: true,
     trail: 'SOCPA → CME-1 → FMVA → CFA L1 → CFA L2',
     certs: [
-      { name: 'SOCPA', desc: { ar: 'الزمالة السعودية للمحاسبين القانونيين', en: 'Saudi CPA fellowship' }, status: 'done', cost: { ar: '3,500 ر.س', en: '3,500 SAR' }, duration: { ar: 'أنجزتها', en: 'Completed' }, hadaf: true },
-      { name: 'CME-1', desc: { ar: 'أساسيات الأسواق المالية من المعهد المالي', en: 'Capital markets foundations' }, status: 'done', cost: { ar: '2,000 ر.س', en: '2,000 SAR' }, duration: { ar: 'أنجزتها', en: 'Completed' }, hadaf: true },
-      { name: 'FMVA', desc: { ar: 'محلّل نمذجة مالية وتقييم', en: 'Financial Modeling & Valuation Analyst' }, status: 'done', cost: { ar: '$497', en: '$497' }, duration: { ar: '3 أشهر', en: '3 months' } },
+      { name: 'SOCPA', desc: { ar: 'الزمالة السعودية للمحاسبين القانونيين', en: 'Saudi CPA fellowship' }, gain: { ar: 'يفتح الأدوار المالية المعتمدة في القطاع الحكومي', en: 'Unlocks accredited finance roles in the public sector' }, scoreAdd: 8, status: 'done', cost: { ar: '3,500 ر.س', en: '3,500 SAR' }, duration: { ar: 'أنجزتها', en: 'Completed' }, hadaf: true },
+      { name: 'CME-1', desc: { ar: 'أساسيات الأسواق المالية من المعهد المالي', en: 'Capital markets foundations' }, gain: { ar: 'ترخيص للعمل في الأسواق المالية السعودية', en: 'License to work in Saudi capital markets' }, scoreAdd: 6, status: 'done', cost: { ar: '2,000 ر.س', en: '2,000 SAR' }, duration: { ar: 'أنجزتها', en: 'Completed' }, hadaf: true },
+      { name: 'FMVA', desc: { ar: 'محلّل نمذجة مالية وتقييم', en: 'Financial Modeling & Valuation Analyst' }, gain: { ar: 'إتقان النمذجة المالية المطلوبة في الصفقات', en: 'Deal-grade financial modeling skills' }, scoreAdd: 9, status: 'done', cost: { ar: '$497', en: '$497' }, duration: { ar: '3 أشهر', en: '3 months' } },
       {
         name: 'CFA Level 1',
         desc: { ar: 'الشهادة الأهم في عالم الاستثمار', en: 'Chartered Financial Analyst' },
+        gain: { ar: 'المعيار الذهبي لوظائف الاستثمار في الصندوق', en: 'The gold standard for PIF investment roles' },
+        scoreAdd: 15,
         status: 'current',
         cost: { ar: '5,500 ر.س', en: '5,500 SAR' },
         duration: { ar: '6 أشهر · 300 ساعة', en: '6 months · 300h' },
@@ -145,7 +149,7 @@ export const paths: CareerPath[] = [
           en: 'The key credential for PIF investment roles. The exam is Feb 2027, so start studying in June.',
         },
       },
-      { name: 'CFA Level 2', desc: { ar: 'المستوى المتقدّم الذي يميّزك في الـ Big 4', en: 'Advanced level that sets you apart at the Big 4' }, status: 'future', cost: { ar: '5,500 ر.س', en: '5,500 SAR' }, duration: { ar: '8 أشهر', en: '8 months' }, hadaf: true },
+      { name: 'CFA Level 2', desc: { ar: 'المستوى المتقدّم في التحليل المالي', en: 'The advanced level of financial analysis' }, gain: { ar: 'يميّزك للأدوار القيادية في الـ Big 4', en: 'Sets you apart for senior Big 4 roles' }, scoreAdd: 12, status: 'future', cost: { ar: '5,500 ر.س', en: '5,500 SAR' }, duration: { ar: '8 أشهر', en: '8 months' }, hadaf: true },
     ],
   },
   {
@@ -158,11 +162,11 @@ export const paths: CareerPath[] = [
     matchPercent: 88,
     trail: 'PMP → CEM → Six Sigma → ISO 50001 → MBA',
     certs: [
-      { name: 'PMP', desc: { ar: 'محترف إدارة المشاريع', en: 'Project Management Professional' }, status: 'future', cost: { ar: '4,000 ر.س', en: '4,000 SAR' }, duration: { ar: '4 أشهر', en: '4 months' }, hadaf: true },
-      { name: 'CEM', desc: { ar: 'مدير طاقة معتمد', en: 'Certified Energy Manager' }, status: 'future', cost: { ar: '$1,500', en: '$1,500' }, duration: { ar: '3 أشهر', en: '3 months' } },
-      { name: 'Six Sigma', desc: { ar: 'الحزام الأخضر في تحسين العمليات', en: 'Green Belt, process improvement' }, status: 'future', cost: { ar: '2,500 ر.س', en: '2,500 SAR' }, duration: { ar: 'شهران', en: '2 months' }, hadaf: true },
-      { name: 'ISO 50001', desc: { ar: 'مدقّق رئيسي لإدارة الطاقة', en: 'Energy management lead auditor' }, status: 'future', cost: { ar: '3,000 ر.س', en: '3,000 SAR' }, duration: { ar: 'شهر', en: '1 month' } },
-      { name: 'MBA', desc: { ar: 'تحضير ماجستير إدارة الأعمال', en: 'MBA preparation' }, status: 'future', cost: { ar: 'يختلف', en: 'Varies' }, duration: { ar: '6 أشهر', en: '6 months' } },
+      { name: 'PMP', desc: { ar: 'محترف إدارة المشاريع', en: 'Project Management Professional' }, gain: { ar: 'يؤهّلك لقيادة مشاريع الطاقة الكبرى', en: 'Qualifies you to lead major energy projects' }, scoreAdd: 10, status: 'future', cost: { ar: '4,000 ر.س', en: '4,000 SAR' }, duration: { ar: '4 أشهر', en: '4 months' }, hadaf: true },
+      { name: 'CEM', desc: { ar: 'مدير طاقة معتمد', en: 'Certified Energy Manager' }, gain: { ar: 'خبرة معتمدة في كفاءة الطاقة', en: 'Certified energy-efficiency expertise' }, scoreAdd: 9, status: 'future', cost: { ar: '$1,500', en: '$1,500' }, duration: { ar: '3 أشهر', en: '3 months' } },
+      { name: 'Six Sigma', desc: { ar: 'الحزام الأخضر في تحسين العمليات', en: 'Green Belt, process improvement' }, gain: { ar: 'تحسين العمليات المطلوب في أرامكو', en: 'Process improvement valued at Aramco' }, scoreAdd: 7, status: 'future', cost: { ar: '2,500 ر.س', en: '2,500 SAR' }, duration: { ar: 'شهران', en: '2 months' }, hadaf: true },
+      { name: 'ISO 50001', desc: { ar: 'مدقّق رئيسي لإدارة الطاقة', en: 'Energy management lead auditor' }, gain: { ar: 'تدقيق أنظمة إدارة الطاقة', en: 'Energy management system auditing' }, scoreAdd: 6, status: 'future', cost: { ar: '3,000 ر.س', en: '3,000 SAR' }, duration: { ar: 'شهر', en: '1 month' } },
+      { name: 'MBA', desc: { ar: 'تحضير ماجستير إدارة الأعمال', en: 'MBA preparation' }, gain: { ar: 'يفتح المسارات القيادية', en: 'Opens leadership tracks' }, scoreAdd: 14, status: 'future', cost: { ar: 'يختلف', en: 'Varies' }, duration: { ar: '6 أشهر', en: '6 months' } },
     ],
   },
   {
@@ -175,11 +179,11 @@ export const paths: CareerPath[] = [
     matchPercent: 82,
     trail: 'Case prep → GMAT → FMVA → PSPO → MBA',
     certs: [
-      { name: 'Case Prep', desc: { ar: 'إتقان حلّ دراسات الحالة', en: 'Mastering case interviews' }, status: 'future', cost: { ar: '$300', en: '$300' }, duration: { ar: 'شهران', en: '2 months' } },
-      { name: 'GMAT', desc: { ar: 'اختبار القبول للدراسات العليا', en: 'Graduate admissions test' }, status: 'future', cost: { ar: '$275', en: '$275' }, duration: { ar: '3 أشهر', en: '3 months' } },
-      { name: 'FMVA', desc: { ar: 'محلّل نمذجة مالية وتقييم', en: 'Financial Modeling & Valuation Analyst' }, status: 'future', cost: { ar: '$497', en: '$497' }, duration: { ar: '3 أشهر', en: '3 months' } },
-      { name: 'PSPO', desc: { ar: 'مالك منتج محترف', en: 'Professional Scrum Product Owner' }, status: 'future', cost: { ar: '$200', en: '$200' }, duration: { ar: 'شهر', en: '1 month' } },
-      { name: 'MBA', desc: { ar: 'تحضير ماجستير إدارة الأعمال', en: 'MBA preparation' }, status: 'future', cost: { ar: 'يختلف', en: 'Varies' }, duration: { ar: '6 أشهر', en: '6 months' } },
+      { name: 'Case Prep', desc: { ar: 'إتقان حلّ دراسات الحالة', en: 'Mastering case interviews' }, gain: { ar: 'تجتاز مقابلات الحالة في ماكنزي وBCG', en: 'Pass case interviews at McKinsey and BCG' }, scoreAdd: 8, status: 'future', cost: { ar: '$300', en: '$300' }, duration: { ar: 'شهران', en: '2 months' } },
+      { name: 'GMAT', desc: { ar: 'اختبار القبول للدراسات العليا', en: 'Graduate admissions test' }, gain: { ar: 'بوابة القبول في الاستشارات والـ MBA', en: 'Gateway to consulting and MBA admissions' }, scoreAdd: 9, status: 'future', cost: { ar: '$275', en: '$275' }, duration: { ar: '3 أشهر', en: '3 months' } },
+      { name: 'FMVA', desc: { ar: 'محلّل نمذجة مالية وتقييم', en: 'Financial Modeling & Valuation Analyst' }, gain: { ar: 'تحليل كمّي يقوّي ملفك الاستشاري', en: 'Quant skills that strengthen a consulting profile' }, scoreAdd: 9, status: 'future', cost: { ar: '$497', en: '$497' }, duration: { ar: '3 أشهر', en: '3 months' } },
+      { name: 'PSPO', desc: { ar: 'مالك منتج محترف', en: 'Professional Scrum Product Owner' }, gain: { ar: 'إدارة المنتجات الرشيقة', en: 'Agile product management' }, scoreAdd: 5, status: 'future', cost: { ar: '$200', en: '$200' }, duration: { ar: 'شهر', en: '1 month' } },
+      { name: 'MBA', desc: { ar: 'تحضير ماجستير إدارة الأعمال', en: 'MBA preparation' }, gain: { ar: 'يفتح أدوار ما بعد الاستشارات', en: 'Opens post-consulting roles' }, scoreAdd: 14, status: 'future', cost: { ar: 'يختلف', en: 'Varies' }, duration: { ar: '6 أشهر', en: '6 months' } },
     ],
   },
   {
@@ -192,11 +196,11 @@ export const paths: CareerPath[] = [
     matchPercent: 76,
     trail: 'PMP → CGAP → السياسات → PgMP → DBA',
     certs: [
-      { name: 'PMP', desc: { ar: 'محترف إدارة المشاريع', en: 'Project Management Professional' }, status: 'future', cost: { ar: '4,000 ر.س', en: '4,000 SAR' }, duration: { ar: '4 أشهر', en: '4 months' }, hadaf: true },
-      { name: 'CGAP', desc: { ar: 'مدقّق حكومي معتمد', en: 'Certified Government Auditing Professional' }, status: 'future', cost: { ar: '$600', en: '$600' }, duration: { ar: '3 أشهر', en: '3 months' } },
-      { name: 'دبلوم السياسات', desc: { ar: 'دبلوم السياسات العامة', en: 'Public policy diploma' }, status: 'future', cost: { ar: '5,000 ر.س', en: '5,000 SAR' }, duration: { ar: '5 أشهر', en: '5 months' }, hadaf: true },
-      { name: 'PgMP', desc: { ar: 'محترف إدارة البرامج', en: 'Program Management Professional' }, status: 'future', cost: { ar: '$800', en: '$800' }, duration: { ar: '4 أشهر', en: '4 months' } },
-      { name: 'DBA', desc: { ar: 'تحضير دكتوراه إدارة الأعمال', en: 'DBA preparation' }, status: 'future', cost: { ar: 'يختلف', en: 'Varies' }, duration: { ar: '12 شهرًا', en: '12 months' } },
+      { name: 'PMP', desc: { ar: 'محترف إدارة المشاريع', en: 'Project Management Professional' }, gain: { ar: 'قيادة مشاريع رؤية 2030', en: 'Lead Vision 2030 projects' }, scoreAdd: 10, status: 'future', cost: { ar: '4,000 ر.س', en: '4,000 SAR' }, duration: { ar: '4 أشهر', en: '4 months' }, hadaf: true },
+      { name: 'CGAP', desc: { ar: 'مدقّق حكومي معتمد', en: 'Certified Government Auditing Professional' }, gain: { ar: 'التدقيق والرقابة الحكومية', en: 'Government audit and oversight' }, scoreAdd: 8, status: 'future', cost: { ar: '$600', en: '$600' }, duration: { ar: '3 أشهر', en: '3 months' } },
+      { name: 'دبلوم السياسات', desc: { ar: 'دبلوم السياسات العامة', en: 'Public policy diploma' }, gain: { ar: 'صياغة وتحليل السياسات العامة', en: 'Public policy design and analysis' }, scoreAdd: 9, status: 'future', cost: { ar: '5,000 ر.س', en: '5,000 SAR' }, duration: { ar: '5 أشهر', en: '5 months' }, hadaf: true },
+      { name: 'PgMP', desc: { ar: 'محترف إدارة البرامج', en: 'Program Management Professional' }, gain: { ar: 'إدارة البرامج الكبرى', en: 'Manage large programs' }, scoreAdd: 8, status: 'future', cost: { ar: '$800', en: '$800' }, duration: { ar: '4 أشهر', en: '4 months' } },
+      { name: 'DBA', desc: { ar: 'تحضير دكتوراه إدارة الأعمال', en: 'DBA preparation' }, gain: { ar: 'المؤهل الأعلى للأدوار القيادية', en: 'Top credential for senior leadership' }, scoreAdd: 12, status: 'future', cost: { ar: 'يختلف', en: 'Varies' }, duration: { ar: '12 شهرًا', en: '12 months' } },
     ],
   },
   {
@@ -209,11 +213,11 @@ export const paths: CareerPath[] = [
     matchPercent: 71,
     trail: 'AWS SAA → PMP → Scrum → بيانات → MBA',
     certs: [
-      { name: 'AWS SAA', desc: { ar: 'مهندس حلول معتمد على AWS', en: 'AWS Solutions Architect Associate' }, status: 'future', cost: { ar: '$150', en: '$150' }, duration: { ar: '3 أشهر', en: '3 months' } },
-      { name: 'PMP', desc: { ar: 'محترف إدارة المشاريع', en: 'Project Management Professional' }, status: 'future', cost: { ar: '4,000 ر.س', en: '4,000 SAR' }, duration: { ar: '4 أشهر', en: '4 months' }, hadaf: true },
-      { name: 'PSM', desc: { ar: 'سكرَم ماستر محترف', en: 'Professional Scrum Master' }, status: 'future', cost: { ar: '$200', en: '$200' }, duration: { ar: 'شهر', en: '1 month' } },
-      { name: 'تحليل البيانات', desc: { ar: 'محلّل بيانات معتمد', en: 'Certified Data Analyst' }, status: 'future', cost: { ar: '3,500 ر.س', en: '3,500 SAR' }, duration: { ar: '3 أشهر', en: '3 months' }, hadaf: true },
-      { name: 'MBA', desc: { ar: 'تحضير ماجستير إدارة الأعمال', en: 'MBA preparation' }, status: 'future', cost: { ar: 'يختلف', en: 'Varies' }, duration: { ar: '6 أشهر', en: '6 months' } },
+      { name: 'AWS SAA', desc: { ar: 'مهندس حلول معتمد على AWS', en: 'AWS Solutions Architect Associate' }, gain: { ar: 'تصميم الحلول السحابية المطلوبة', en: 'In-demand cloud architecture' }, scoreAdd: 9, status: 'future', cost: { ar: '$150', en: '$150' }, duration: { ar: '3 أشهر', en: '3 months' } },
+      { name: 'PMP', desc: { ar: 'محترف إدارة المشاريع', en: 'Project Management Professional' }, gain: { ar: 'قيادة مشاريع التحول الرقمي', en: 'Lead digital transformation projects' }, scoreAdd: 10, status: 'future', cost: { ar: '4,000 ر.س', en: '4,000 SAR' }, duration: { ar: '4 أشهر', en: '4 months' }, hadaf: true },
+      { name: 'PSM', desc: { ar: 'سكرَم ماستر محترف', en: 'Professional Scrum Master' }, gain: { ar: 'قيادة فرق أجايل', en: 'Lead agile teams' }, scoreAdd: 6, status: 'future', cost: { ar: '$200', en: '$200' }, duration: { ar: 'شهر', en: '1 month' } },
+      { name: 'تحليل البيانات', desc: { ar: 'محلّل بيانات معتمد', en: 'Certified Data Analyst' }, gain: { ar: 'تحليل البيانات واتخاذ القرار', en: 'Data analysis and decision-making' }, scoreAdd: 9, status: 'future', cost: { ar: '3,500 ر.س', en: '3,500 SAR' }, duration: { ar: '3 أشهر', en: '3 months' }, hadaf: true },
+      { name: 'MBA', desc: { ar: 'تحضير ماجستير إدارة الأعمال', en: 'MBA preparation' }, gain: { ar: 'يجمع التقنية بالإدارة', en: 'Bridges tech and management' }, scoreAdd: 14, status: 'future', cost: { ar: 'يختلف', en: 'Varies' }, duration: { ar: '6 أشهر', en: '6 months' } },
     ],
   },
 ];
@@ -285,6 +289,12 @@ export function fillTemplate(preview: string, c: Contact, locale: Loc): string {
   return out;
 }
 
+// LinkedIn people-search URL for a contact (best-effort, no LinkedIn API needed).
+export function linkedinUrl(c: Contact): string {
+  const q = encodeURIComponent(`${c.name.en} ${c.company.en}`);
+  return `https://www.linkedin.com/search/results/people/?keywords=${q}`;
+}
+
 /* ------------------------------------------------------------------ tracker -- */
 
 export type Activity = {
@@ -348,8 +358,8 @@ export const ui = {
     eyebrow: { ar: 'مساراتك المهنية', en: 'Your career paths' },
     title: { ar: 'خمسة مسارات مبنية على خلفيتك', en: 'Five paths built on your background' },
     sub: {
-      ar: 'افتح أيّ مسار لترى خارطة شهاداته وتكلفتها بعد دعم هدف.',
-      en: 'Open any path to see its certification roadmap and cost after Hadaf support.',
+      ar: 'افتح أيّ مسار لترى خارطة شهاداته، وما تضيفه كل شهادة لدرجتك.',
+      en: 'Open any path to see its certification roadmap and what each one adds to your score.',
     },
     match: { ar: 'ملاءمة', en: 'match' },
     primary: { ar: 'مسارك الرئيسي', en: 'Primary path' },
@@ -361,11 +371,13 @@ export const ui = {
   },
   certs: {
     title: { ar: 'خارطة الشهادات', en: 'Certification roadmap' },
-    sub: { ar: 'مرتّبة بذكاء، مع تكلفتها بعد دعم هدف.', en: 'Smartly sequenced, with cost after Hadaf support.' },
+    sub: { ar: 'مرتّبة بذكاء، مع ما تضيفه كل شهادة لدرجتك وتكلفتها بعد دعم هدف.', en: 'Smartly sequenced, with what each adds to your score and its cost after Hadaf.' },
     done: { ar: 'منجزة', en: 'Done' },
     current: { ar: 'الحالية', en: 'Current' },
     next: { ar: 'قادمة', en: 'Next' },
     hadaf: { ar: 'يدعمها هدف', en: 'Hadaf supported' },
+    gain: { ar: 'ماذا تضيف لك', en: 'What it gives you' },
+    scoreAdd: { ar: 'للدرجة', en: 'to score' },
     whyNow: { ar: 'لماذا الآن؟', en: 'Why now?' },
     bannerSub: { ar: 'تسترجع نحو نصف تكلفة كل شهادة معتمدة عبر هدف.', en: 'Reclaim about half of each approved certification via Hadaf.' },
   },
@@ -388,6 +400,8 @@ export const ui = {
     copy: { ar: 'نسخ', en: 'Copy' },
     copied: { ar: 'تم النسخ', en: 'Copied' },
     shuffle: { ar: 'صيغة أخرى', en: 'Shuffle' },
+    linkedin: { ar: 'لينكدإن', en: 'LinkedIn' },
+    statusHint: { ar: 'اضغط الحالة لتحديثها', en: 'Tap the status to update it' },
     empty: { ar: 'لا نتائج مطابقة.', en: 'No matching results.' },
     status_new: { ar: 'جديد', en: 'New' },
     status_sent: { ar: 'مُرسل', en: 'Sent' },
@@ -396,8 +410,11 @@ export const ui = {
   },
   tracker: {
     eyebrow: { ar: 'المتتبّع', en: 'Tracker' },
-    title: { ar: 'تقدّمك الكامل', en: 'Your full progress' },
-    sub: { ar: 'أرقام حقيقية، بلا تنبيهات مزعجة.', en: 'Real numbers, no noisy alerts.' },
+    title: { ar: 'سجلّك الشخصي', en: 'Your personal log' },
+    sub: {
+      ar: 'أنت تحدّث حالة كل تواصل بنفسك (لا نصل إلى لينكدإن)، وهنا تتجمّع أرقامك.',
+      en: 'You update each outreach status yourself (we never touch LinkedIn); your numbers add up here.',
+    },
     sent: { ar: 'رسائل أرسلتها', en: 'Messages sent' },
     replied: { ar: 'ردود إيجابية', en: 'Positive replies' },
     pending: { ar: 'بانتظار الردّ', en: 'Awaiting reply' },

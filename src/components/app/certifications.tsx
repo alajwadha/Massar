@@ -1,7 +1,7 @@
 'use client';
 
 import { type ReactNode } from 'react';
-import { Check, BadgeCheck, Wallet, Clock, Lightbulb } from 'lucide-react';
+import { Check, BadgeCheck, Wallet, Clock, Lightbulb, TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ui, type Cert, type Loc } from '@/lib/app-data';
 import { SectionHeading, Stagger, StaggerItem } from './ui';
@@ -62,11 +62,25 @@ function CertCard({ cert, locale }: { cert: Cert; locale: Loc }) {
         cert.status === 'future' && 'opacity-80',
       )}
     >
-      <div className="flex items-center gap-2">
-        <h3 className="font-extrabold" dir="ltr">{cert.name}</h3>
-        <StatusChip status={cert.status} locale={locale} />
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <h3 className="font-extrabold" dir="ltr">{cert.name}</h3>
+          <StatusChip status={cert.status} locale={locale} />
+        </div>
+        <span className="inline-flex shrink-0 items-baseline gap-1 rounded-lg bg-brand-600 px-2 py-1 text-white">
+          <span className="text-sm font-extrabold tabular-nums">+{cert.scoreAdd}</span>
+          <span className="text-[9px] font-semibold opacity-90">{ui.certs.scoreAdd[locale]}</span>
+        </span>
       </div>
       <p className="mt-1 text-[13px] text-ink-soft">{cert.desc[locale]}</p>
+
+      <div className="mt-2 flex items-start gap-1.5">
+        <TrendingUp className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand-600" />
+        <p className="text-[12.5px] leading-relaxed">
+          <span className="font-semibold text-ink">{ui.certs.gain[locale]}: </span>
+          <span className="text-ink-soft">{cert.gain[locale]}</span>
+        </p>
+      </div>
 
       <div className="mt-3 flex flex-wrap gap-2">
         {cert.hadaf && (

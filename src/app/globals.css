@@ -32,15 +32,20 @@
 }
 
 @layer components {
-  /* Apple-style "liquid glass": translucent, blurred, with a soft light edge. */
+  /* Apple "liquid glass": translucent material, heavy blur + saturation, a bright
+     light edge, and a soft green-tinted drop shadow for floating depth. */
   .glass {
-    @apply border border-white/60 bg-white/55 shadow-soft backdrop-blur-xl backdrop-saturate-150;
+    @apply border border-white/60 bg-white/40 shadow-[0_10px_40px_-12px_rgba(2,40,30,0.22)] backdrop-blur-2xl backdrop-saturate-[1.8];
   }
   .glass-lift {
-    @apply border border-white/70 bg-white/65 shadow-lift backdrop-blur-2xl backdrop-saturate-150;
+    @apply border border-white/70 bg-white/50 shadow-[0_18px_55px_-12px_rgba(2,40,30,0.32)] backdrop-blur-2xl backdrop-saturate-[1.8];
   }
   .glass-soft {
-    @apply border border-white/50 bg-white/40 backdrop-blur-md backdrop-saturate-150;
+    @apply border border-white/50 bg-white/30 backdrop-blur-xl backdrop-saturate-[1.8];
+  }
+  /* A thin specular highlight along the top edge, like light catching glass. */
+  .glass-edge {
+    @apply relative before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:h-px before:rounded-t-[inherit] before:bg-gradient-to-r before:from-transparent before:via-white/80 before:to-transparent;
   }
 }
 
