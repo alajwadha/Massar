@@ -1,9 +1,11 @@
 'use client';
 
 import { Sparkles, ArrowLeft, GraduationCap, BadgeCheck, Gauge, TrendingUp } from 'lucide-react';
-import { ui, type Loc } from '@/lib/app-data';
+import { cn } from '@/lib/utils';
+import { rankConnections, planTargets, dailyPicks, ui, type Loc } from '@/lib/app-data';
 import { usePlan } from './plan-context';
-import { ProgressRing, Counter, SectionHeading, Stagger, StaggerItem } from './ui';
+import { useNetwork } from './dashboard-state';
+import { accent, ProgressRing, Counter, SectionHeading, Stagger, StaggerItem } from './ui';
 import { ConnectionCard } from './contacts';
 
 export function OverviewSection({
@@ -15,9 +17,16 @@ export function OverviewSection({
   onOpenPath: (id: string) => void;
   onOpenContacts: () => void;
 }) {
-  const { primaryPath, journey, connections, cvScore } = usePlan();
-  const top = [...connections].sort((a, b) => (b.score ?? 0) - (a.score ?? 0)).slice(0, 3);
+  const plan = usePlan();
+  const { primaryPath, journey, cvScore, paths } = plan;
+  const { network } = useNetwork();
   const current = primaryPath.certs.find((c) => c.status === 'current');
+  const topAreas = [...paths].sort((a, b) => b.score - a.score).slice(0, 3);
+  const potential = Math.min(100, cvScore.value + cvScore.improvements.reduce((s, i) => s + i.delta, 0));
+  // Today's outreach: a daily-rotating 5 from the customer's ranked network.
+  const todays = network
+    ? dailyPicks(rankConnections(network, planTargets(plan)), 5, Math.floor(Date.now() / 86_400_000))
+    : [];
 
   return (
     <div>
@@ -91,14 +100,73 @@ export function OverviewSection({
                     <span className="inline-flex shrink-0 items-baseline gap-0.5 rounded-md bg-brand-600 px-1.5 py-0.5 text-[11px] font-bold text-white tabular-nums">
                       +{imp.delta}
                     </span>
-                    <span className="min-w-0 flex-1 text-ink-soft">{imp.action[locale]}</span>
+                    <span className="min-w-0 flex-1 text-ink-soft">
+                      {imp.action[locale]}
+                      {i === 0 && (
+                        <span className="ms-2 whitespace-nowrap rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-700">
+                          {ui.overview.quickWin[locale]}
+                        </span>
+                      )}
+                    </span>
                     <span className="shrink-0 text-[11px] font-medium text-ink-muted">{imp.effort[locale]}</span>
                   </li>
                 ))}
               </ul>
+
+              {/* Reachable score if all the above are completed */}
+              <div className="mt-3.5">
+                <div className="flex items-center justify-between text-[11px] font-semibold">
+                  <span className="text-ink-muted">{ui.overview.reachable[locale]}</span>
+                  <span className="tabular-nums">
+                    <span className="text-ink-soft">{cvScore.value}</span>
+                    <span className="mx-1 text-ink-muted">→</span>
+                    <span className="font-extrabold text-brand-700">{potential}</span>
+                  </span>
+                </div>
+                <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-black/5">
+                  <div className="h-full rounded-full bg-brand-200" style={{ width: `${potential}%` }}>
+                    <div className="h-full rounded-full bg-brand-600" style={{ width: `${(cvScore.value / potential) * 100}%` }} />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Top areas, ranked by score */}
+      <div className="mt-8">
+        <div className="mb-3">
+          <h3 className="text-lg font-extrabold tracking-tight">{ui.overview.areasTitle[locale]}</h3>
+          <p className="mt-0.5 text-sm text-ink-muted">{ui.overview.areasSub[locale]}</p>
+        </div>
+        <Stagger className="space-y-2.5">
+          {topAreas.map((p) => {
+            const a = accent[p.accent];
+            return (
+              <StaggerItem key={p.id}>
+                <button
+                  type="button"
+                  onClick={() => onOpenPath(p.id)}
+                  className="group glass flex w-full items-center gap-3 rounded-2xl p-3.5 text-start transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift"
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="truncate text-sm font-bold">{p.name[locale]}</span>
+                      <span className="shrink-0 text-sm font-extrabold tabular-nums" style={{ color: a.stroke }}>
+                        {p.score}
+                      </span>
+                    </div>
+                    <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-black/5">
+                      <div className={cn('h-full rounded-full', a.bar)} style={{ width: `${p.score}%` }} />
+                    </div>
+                  </div>
+                  <ArrowLeft className="h-4 w-4 shrink-0 text-ink-muted transition-transform group-hover:-translate-x-1 ltr:rotate-180 ltr:group-hover:translate-x-1" />
+                </button>
+              </StaggerItem>
+            );
+          })}
+        </Stagger>
       </div>
 
       {/* Today's top move */}
@@ -154,13 +222,24 @@ export function OverviewSection({
         </button>
       </div>
 
-      <Stagger className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {top.map((c) => (
-          <StaggerItem key={c.id} className="h-full">
-            <ConnectionCard contact={c} locale={locale} />
-          </StaggerItem>
-        ))}
-      </Stagger>
+      {todays.length > 0 ? (
+        <Stagger className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {todays.map((r) => (
+            <StaggerItem key={r.contact.id} className="h-full">
+              <ConnectionCard contact={r.contact} locale={locale} kind={r.kind} reason={r.reason[locale]} />
+            </StaggerItem>
+          ))}
+        </Stagger>
+      ) : (
+        <button
+          type="button"
+          onClick={onOpenContacts}
+          className="glass flex w-full flex-col items-center gap-1 rounded-2xl p-6 text-center transition-shadow hover:shadow-lift"
+        >
+          <span className="text-sm font-semibold text-ink">{ui.network.locked[locale]}</span>
+          <span className="text-xs font-bold text-brand-700">{ui.network.upload[locale]}</span>
+        </button>
+      )}
 
       <button
         type="button"

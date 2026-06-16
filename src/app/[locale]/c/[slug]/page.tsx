@@ -4,6 +4,7 @@ import { Dashboard } from '@/components/app/dashboard';
 import { PlanProvider } from '@/components/app/plan-context';
 import { AppShell } from '@/components/app/app-shell';
 import { getPlan, plans } from '@/lib/app-data';
+import { withHr } from '@/lib/hr-db';
 
 // Each customer's private link. The slug selects one CustomerPlan and the whole
 // dashboard renders only that person's data, so customers are fully separated
@@ -23,7 +24,7 @@ export default function CustomerPlanPage({
 
   return (
     <AppShell homeHref={`/c/${slug}`}>
-      <PlanProvider plan={plan}>
+      <PlanProvider plan={withHr(plan)}>
         <Dashboard />
       </PlanProvider>
     </AppShell>

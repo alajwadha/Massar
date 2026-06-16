@@ -7,6 +7,7 @@ import { LayoutDashboard, Compass, Users, Activity } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ui, type Loc } from '@/lib/app-data';
 import { usePlan } from './plan-context';
+import { DashboardState } from './dashboard-state';
 import { OverviewSection } from './overview';
 import { PathsSection } from './paths';
 import { ContactsSection } from './contacts';
@@ -25,7 +26,12 @@ const TABS = [
 
 export function Dashboard() {
   const locale = useLocale() as Loc;
-  const { profile } = usePlan();
+  const plan = usePlan();
+  const { profile } = plan;
+  const initialCertsDone = plan.paths
+    .flatMap((p) => p.certs)
+    .filter((c) => c.status === 'done')
+    .map((c) => c.name.en);
   const [tab, setTab] = useState<TabId>('home');
   const [selectedPathId, setSelectedPathId] = useState<string | null>(null);
 
@@ -40,6 +46,7 @@ export function Dashboard() {
   };
 
   return (
+    <DashboardState slug={plan.slug} initialCertsDone={initialCertsDone}>
     <div className="container-page py-6 sm:py-8">
       {/* Welcome band */}
       <div className="flex items-center justify-between gap-4">
@@ -115,5 +122,6 @@ export function Dashboard() {
         </AnimatePresence>
       </div>
     </div>
+    </DashboardState>
   );
 }

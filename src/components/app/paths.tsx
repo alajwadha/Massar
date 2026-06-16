@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, type ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { TrendingUp, Zap, Briefcase, Landmark, Cpu, Route, ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { contactById, ui, type CareerPath, type Contact, type PathPick, type Loc } from '@/lib/app-data';
+import { rankConnections, ui, type CareerPath, type Loc } from '@/lib/app-data';
 import { usePlan } from './plan-context';
+import { useNetwork, useProgress } from './dashboard-state';
 import { accent, SectionHeading, Stagger, StaggerItem } from './ui';
 import { CertificationsSection } from './certifications';
 import { ConnectionCard } from './contacts';
@@ -29,21 +30,22 @@ function Stat({ value, label }: { value: ReactNode; label: string }) {
   );
 }
 
-function MatchBar({ path, locale }: { path: CareerPath; locale: Loc }) {
+function ScoreBar({ path, locale }: { path: CareerPath; locale: Loc }) {
   const a = accent[path.accent];
   return (
     <div>
       <div className="flex items-center justify-between text-xs">
-        <span className="font-semibold text-ink-soft">{ui.paths.match[locale]}</span>
+        <span className="font-semibold text-ink-soft">{ui.paths.score[locale]}</span>
         <span className="font-extrabold tabular-nums" style={{ color: a.stroke }}>
-          {path.matchPercent}%
+          {path.score}
+          <span className="ms-1 text-[10px] font-semibold text-ink-muted">{ui.paths.scoreOf[locale]}</span>
         </span>
       </div>
       <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-black/5">
         <motion.div
           className={cn('h-full rounded-full', a.bar)}
           initial={{ width: 0 }}
-          animate={{ width: `${path.matchPercent}%` }}
+          animate={{ width: `${path.score}%` }}
           transition={{ duration: 1, delay: 0.15, ease: EASE }}
         />
       </div>
@@ -80,7 +82,7 @@ function PathCard({ path, locale, onOpen }: { path: CareerPath; locale: Loc; onO
       </div>
 
       <div className="mt-4">
-        <MatchBar path={path} locale={locale} />
+        <ScoreBar path={path} locale={locale} />
       </div>
 
       <div className="mt-4 grid grid-cols-3 gap-2">
@@ -106,25 +108,18 @@ function PathCard({ path, locale, onOpen }: { path: CareerPath; locale: Loc; onO
 }
 
 function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; onBack: () => void }) {
-  const plan = usePlan();
   const a = accent[path.accent];
   const Icon = ICONS[path.icon];
-  const [doneNames, setDoneNames] = useState<Set<string>>(
-    () => new Set(path.certs.filter((c) => c.status === 'done').map((c) => c.name.en)),
-  );
-  const toggleDone = (name: string) =>
-    setDoneNames((prev) => {
-      const next = new Set(prev);
-      if (next.has(name)) next.delete(name);
-      else next.add(name);
-      return next;
-    });
+  const { network } = useNetwork();
+  const { certsDone, toggleCert } = useProgress();
+
+  const doneNames = new Set(path.certs.filter((c) => certsDone[c.name.en]).map((c) => c.name.en));
   const done = doneNames.size;
   const total = path.certs.length;
   const totalScore = path.certs.reduce((s, c) => s + c.scoreAdd, 0);
-  const picks = path.picks
-    .map((p) => ({ pick: p, contact: contactById(plan, p.id) }))
-    .filter((x): x is { pick: PathPick; contact: Contact } => x.contact !== undefined);
+  // The 5 warm intros come from the customer's own uploaded network, ranked for
+  // this area's target companies.
+  const picks = network ? rankConnections(network, path.targetCompanies).slice(0, 5) : [];
 
   return (
     <div>
@@ -156,7 +151,7 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
           </div>
         </div>
         <div className="mt-4">
-          <MatchBar path={path} locale={locale} />
+          <ScoreBar path={path} locale={locale} />
         </div>
         <div className="mt-4 grid grid-cols-3 gap-2">
           <Stat value={`${done}/${total}`} label={ui.paths.statCerts[locale]} />
@@ -166,22 +161,24 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
       </div>
 
       <div className="mt-6">
-        <CertificationsSection certs={path.certs} locale={locale} doneNames={doneNames} onToggle={toggleDone} />
+        <CertificationsSection certs={path.certs} locale={locale} doneNames={doneNames} onToggle={toggleCert} />
       </div>
 
-      {/* Top connections to reach out to */}
-      {picks.length > 0 && (
-        <div className="mt-8">
-          <SectionHeading title={ui.paths.picksTitle[locale]} sub={ui.paths.picksSub[locale]} />
+      {/* The 5 warm intros for this path, ranked from the customer's network */}
+      <div className="mt-8">
+        <SectionHeading title={ui.paths.picksTitle[locale]} sub={ui.paths.picksSub[locale]} />
+        {picks.length > 0 ? (
           <Stagger className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {picks.map(({ pick, contact }) => (
-              <StaggerItem key={pick.id} className="h-full">
-                <ConnectionCard contact={contact} locale={locale} kind={pick.kind} reason={pick.reason[locale]} />
+            {picks.map((r) => (
+              <StaggerItem key={r.contact.id} className="h-full">
+                <ConnectionCard contact={r.contact} locale={locale} kind={r.kind} reason={r.reason[locale]} />
               </StaggerItem>
             ))}
           </Stagger>
-        </div>
-      )}
+        ) : (
+          <div className="glass rounded-2xl p-6 text-center text-sm text-ink-soft">{ui.network.locked[locale]}</div>
+        )}
+      </div>
     </div>
   );
 }

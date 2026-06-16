@@ -38,6 +38,25 @@ export const companyGrad: Record<CompanyKey, string> = {
   elm: 'from-sky-500 to-blue-600',
 };
 
+// Deterministic gradient for contacts with no known brand key (real HR rows and
+// uploaded connections): hash the seed (company name) into a fixed palette.
+const SEED_GRADS = [
+  'from-emerald-500 to-teal-700',
+  'from-sky-500 to-blue-700',
+  'from-violet-500 to-purple-700',
+  'from-amber-500 to-orange-600',
+  'from-rose-500 to-pink-600',
+  'from-cyan-500 to-sky-700',
+  'from-indigo-500 to-violet-700',
+  'from-fuchsia-500 to-purple-700',
+];
+
+export function gradientFor(seed: string): string {
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+  return SEED_GRADS[h % SEED_GRADS.length];
+}
+
 /* ------------------------------------------------------------------ counter -- */
 
 export function Counter({
@@ -193,17 +212,20 @@ export function StatusPill({ status, locale }: { status: ContactStatus; locale: 
 export function Avatar({
   initials,
   companyKey,
+  seed,
   className = 'h-11 w-11 text-sm',
 }: {
   initials: string;
-  companyKey: CompanyKey;
+  companyKey?: CompanyKey;
+  seed?: string;
   className?: string;
 }) {
+  const grad = companyKey ? companyGrad[companyKey] : gradientFor(seed ?? initials);
   return (
     <div
       className={cn(
         'grid shrink-0 place-items-center rounded-xl bg-gradient-to-br font-extrabold text-white shadow-soft',
-        companyGrad[companyKey],
+        grad,
         className,
       )}
     >

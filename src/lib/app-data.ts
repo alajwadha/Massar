@@ -65,17 +65,21 @@ export type Cert = {
 };
 
 export type ContactStatus = 'new' | 'sent' | 'replied' | 'followup';
+export type CompanyTier = 'giant' | 'large' | 'mid_market' | 'sme' | 'agency';
 
 export type Contact = {
   id: string;
   name: LS;
   role: LS;
   company: LS;
-  companyKey: CompanyKey;
-  industry: IndustryKey;
+  companyKey?: CompanyKey; // known brands only; real HR / uploaded contacts omit it
+  sector?: string; // HR DB sector key (for the HR category filter)
+  companyTier?: CompanyTier; // HR DB company-size tier
+  industry?: IndustryKey;
   score?: number;
   status: ContactStatus;
   when: LS;
+  linkedin?: string; // real profile URL (HR DB + uploaded connections); else we search
 };
 
 export const industries: { id: IndustryKey; label: LS }[] = [
@@ -86,48 +90,52 @@ export const industries: { id: IndustryKey; label: LS }[] = [
   { id: 'tech', label: { ar: 'التقنية', en: 'Tech' } },
 ];
 
-/* ----------------------------------------------------- connections (targets) -- */
+// HR database taxonomy (matches data/hr_contacts.clean.csv `sector` column).
+export const SECTOR_LABELS: Record<string, LS> = {
+  investment_finance: { ar: 'الاستثمار والتمويل', en: 'Investment & Finance' },
+  energy_petrochem: { ar: 'الطاقة والبتروكيماويات', en: 'Energy & Petrochem' },
+  consulting: { ar: 'الاستشارات', en: 'Consulting' },
+  government: { ar: 'الجهات الحكومية', en: 'Government' },
+  tech_startups: { ar: 'التقنية والشركات الناشئة', en: 'Tech & Startups' },
+  telecom_it: { ar: 'الاتصالات وتقنية المعلومات', en: 'Telecom & IT' },
+  recruitment_agencies: { ar: 'وكالات التوظيف', en: 'Recruitment Agencies' },
+  retail_fmcg: { ar: 'التجزئة والسلع الاستهلاكية', en: 'Retail & FMCG' },
+  gigaprojects_realestate: { ar: 'المشاريع الكبرى والعقار', en: 'Gigaprojects & Real Estate' },
+  healthcare_pharma: { ar: 'الصحة والدواء', en: 'Healthcare & Pharma' },
+  manufacturing_mining: { ar: 'التصنيع والتعدين', en: 'Manufacturing & Mining' },
+  tourism_entertainment: { ar: 'السياحة والترفيه', en: 'Tourism & Entertainment' },
+  education_training: { ar: 'التعليم والتدريب', en: 'Education & Training' },
+  transport_logistics: { ar: 'النقل والخدمات اللوجستية', en: 'Transport & Logistics' },
+  insurance: { ar: 'التأمين', en: 'Insurance' },
+  aerospace_defense: { ar: 'الطيران والدفاع', en: 'Aerospace & Defense' },
+};
 
-export const connections: Contact[] = [
-  { id: 'n1', name: { ar: 'عبدالعزيز القصبي', en: 'Abdulaziz Alqasabi' }, role: { ar: 'مدير استثمار · تحوّل الطاقة', en: 'Investment Director · Energy Transition' }, company: { ar: 'صندوق الاستثمارات العامة', en: 'PIF' }, companyKey: 'pif', industry: 'finance', score: 191, status: 'new', when: { ar: 'جديد', en: 'New' } },
-  { id: 'n2', name: { ar: 'ريم الدخيل', en: 'Reem Aldakhil' }, role: { ar: 'باحثة أولى · تمويل الطاقة', en: 'Senior Fellow · Energy Finance' }, company: { ar: 'كابسارك', en: 'KAPSARC' }, companyKey: 'kapsarc', industry: 'finance', score: 186, status: 'new', when: { ar: 'جديد', en: 'New' } },
-  { id: 'n3', name: { ar: 'فهد العمري', en: 'Fahad Alamri' }, role: { ar: 'نائب رئيس · تطوير المشاريع', en: 'VP · Project Development' }, company: { ar: 'أكوا باور', en: 'ACWA Power' }, companyKey: 'acwa', industry: 'energy', score: 184, status: 'replied', when: { ar: 'قبل ساعتين', en: '2h ago' } },
-  { id: 'n4', name: { ar: 'سعود المهنا', en: 'Saud Almohanna' }, role: { ar: 'مدير محطة', en: 'Plant Manager' }, company: { ar: 'المؤسسة العامة لتحلية المياه', en: 'Saudi Water Authority' }, companyKey: 'swcc', industry: 'energy', score: 178, status: 'new', when: { ar: 'جديد', en: 'New' } },
-  { id: 'n5', name: { ar: 'نورة الفايز', en: 'Noura Alfayez' }, role: { ar: 'مديرة ارتباط · الطاقة', en: 'Engagement Manager · Energy' }, company: { ar: 'ماكنزي وشركاه', en: 'McKinsey & Company' }, companyKey: 'mck', industry: 'consulting', score: 176, status: 'new', when: { ar: 'جديد', en: 'New' } },
-  { id: 'n6', name: { ar: 'خالد الزهراني', en: 'Khalid Alzahrani' }, role: { ar: 'قائد تحوّل الطاقة', en: 'Energy Transition Lead' }, company: { ar: 'أرامكو السعودية', en: 'Saudi Aramco' }, companyKey: 'aramco', industry: 'energy', score: 173, status: 'sent', when: { ar: 'قبل 4 أيام', en: '4 days ago' } },
-  { id: 'n7', name: { ar: 'لينا الحمدان', en: 'Lina Alhamdan' }, role: { ar: 'مديرة استثمار', en: 'Investment Manager' }, company: { ar: 'نيوم · الطاقة', en: 'NEOM · Energy' }, companyKey: 'neom', industry: 'finance', score: 171, status: 'new', when: { ar: 'جديد', en: 'New' } },
-  { id: 'n8', name: { ar: 'عبدالله الشمري', en: 'Abdullah Alshammari' }, role: { ar: 'مدير الاستراتيجية', en: 'Director, Strategy' }, company: { ar: 'وزارة الطاقة', en: 'Ministry of Energy' }, companyKey: 'gov', industry: 'government', score: 168, status: 'followup', when: { ar: 'متابعة · 9 أيام', en: 'Follow-up · 9d' } },
-  { id: 'n9', name: { ar: 'مازن العتيبي', en: 'Mazen Alotaibi' }, role: { ar: 'مدير أول · الأسواق العامة', en: 'Senior Associate · Public Markets' }, company: { ar: 'الصندوق · الأسواق العامة', en: 'PIF · Public Markets' }, companyKey: 'pif', industry: 'finance', score: 166, status: 'sent', when: { ar: 'قبل 5 ساعات', en: '5h ago' } },
-  { id: 'n10', name: { ar: 'هيا السبيعي', en: 'Haya Alsubaie' }, role: { ar: 'رئيسة التمويل المستدام', en: 'Head of Sustainable Finance' }, company: { ar: 'البنك الأهلي السعودي', en: 'Saudi National Bank' }, companyKey: 'snb', industry: 'finance', score: 164, status: 'new', when: { ar: 'جديد', en: 'New' } },
-  { id: 'n11', name: { ar: 'تركي الدوسري', en: 'Turki Aldossari' }, role: { ar: 'مدير الاستراتيجية', en: 'Strategy Manager' }, company: { ar: 'سابك', en: 'SABIC' }, companyKey: 'sabic', industry: 'energy', score: 162, status: 'new', when: { ar: 'جديد', en: 'New' } },
-  { id: 'n12', name: { ar: 'سارة القرني', en: 'Sara Alqarni' }, role: { ar: 'مستشارة · ممارسة الطاقة', en: 'Consultant · Energy Practice' }, company: { ar: 'BCG', en: 'BCG' }, companyKey: 'bcg', industry: 'consulting', score: 160, status: 'new', when: { ar: 'جديد', en: 'New' } },
-  { id: 'n13', name: { ar: 'بدر الغامدي', en: 'Badr Alghamdi' }, role: { ar: 'مدير منتجات رقمية', en: 'Digital Product Lead' }, company: { ar: 'أرامكو الرقمية', en: 'Aramco Digital' }, companyKey: 'aramco', industry: 'tech', score: 158, status: 'new', when: { ar: 'جديد', en: 'New' } },
-  { id: 'n14', name: { ar: 'منى العنزي', en: 'Mona Alanazi' }, role: { ar: 'مديرة بيانات وذكاء اصطناعي', en: 'Data & AI Manager' }, company: { ar: 'stc', en: 'stc' }, companyKey: 'stc', industry: 'tech', score: 156, status: 'new', when: { ar: 'جديد', en: 'New' } },
-  { id: 'n15', name: { ar: 'ياسر الحربي', en: 'Yasser Alharbi' }, role: { ar: 'مبدأ · الطاقة', en: 'Principal · Energy' }, company: { ar: 'Strategy&', en: 'Strategy&' }, companyKey: 'strat', industry: 'consulting', score: 154, status: 'new', when: { ar: 'جديد', en: 'New' } },
-  { id: 'n16', name: { ar: 'أحمد باوزير', en: 'Ahmed Bawazir' }, role: { ar: 'باحث سياسات الطاقة', en: 'Energy Policy Researcher' }, company: { ar: 'كابسارك', en: 'KAPSARC' }, companyKey: 'kapsarc', industry: 'government', score: 152, status: 'new', when: { ar: 'جديد', en: 'New' } },
-  { id: 'n17', name: { ar: 'عمر الشهري', en: 'Omar Alshehri' }, role: { ar: 'مهندس أول · العمليات', en: 'Senior Operations Engineer' }, company: { ar: 'المؤسسة العامة لتحلية المياه', en: 'Saudi Water Authority' }, companyKey: 'swcc', industry: 'energy', score: 150, status: 'new', when: { ar: 'جديد', en: 'New' } },
-  { id: 'n18', name: { ar: 'دانة المطيري', en: 'Dana Almutairi' }, role: { ar: 'قائدة هندسة', en: 'Engineering Lead' }, company: { ar: 'علم', en: 'Elm' }, companyKey: 'elm', industry: 'tech', score: 148, status: 'new', when: { ar: 'جديد', en: 'New' } },
-];
+export const TIER_LABELS: Record<CompanyTier, LS> = {
+  giant: { ar: 'شركات عملاقة', en: 'Giant' },
+  large: { ar: 'شركات كبيرة', en: 'Large' },
+  mid_market: { ar: 'شركات متوسطة', en: 'Mid-market' },
+  sme: { ar: 'منشآت صغيرة', en: 'SME' },
+  agency: { ar: 'وكالات توظيف', en: 'Agency' },
+};
+
+// Number of HR contacts delivered per package tier.
+export const TIER_CAP = { starter: 100, pro: 300 } as const;
+export type PlanTier = keyof typeof TIER_CAP;
+
+/* ----------------------------------------------------- connections (targets) -- */
+// Connections (the people to reach out to) come from the CUSTOMER'S OWN uploaded
+// LinkedIn Connections.csv, parsed client-side and never stored. There is no seeded
+// list. See parseUploadedConnections() and rankConnections() below, surfaced through
+// src/components/app/network-context.tsx.
 
 /* ----------------------------------------------------------- HR / recruiters -- */
-
-export const hrContacts: Contact[] = [
-  { id: 'h1', name: { ar: 'لمى الراجحي', en: 'Lama Alrajhi' }, role: { ar: 'شريكة استقطاب المواهب', en: 'Talent Acquisition Partner' }, company: { ar: 'صندوق الاستثمارات العامة', en: 'PIF' }, companyKey: 'pif', industry: 'finance', status: 'new', when: { ar: 'جديد', en: 'New' } },
-  { id: 'h2', name: { ar: 'بدر الدوسري', en: 'Badr Aldossari' }, role: { ar: 'قائد التوظيف', en: 'Recruitment Lead' }, company: { ar: 'أرامكو السعودية', en: 'Saudi Aramco' }, companyKey: 'aramco', industry: 'energy', status: 'sent', when: { ar: 'قبل 3 أيام', en: '3 days ago' } },
-  { id: 'h3', name: { ar: 'جواهر السبيعي', en: 'Jawaher Alsubaie' }, role: { ar: 'أخصائية توظيف أولى', en: 'Senior Recruiter' }, company: { ar: 'نيوم', en: 'NEOM' }, companyKey: 'neom', industry: 'energy', status: 'new', when: { ar: 'جديد', en: 'New' } },
-  { id: 'h4', name: { ar: 'طلال العنزي', en: 'Talal Alanazi' }, role: { ar: 'شريك موارد بشرية', en: 'HR Business Partner' }, company: { ar: 'أكوا باور', en: 'ACWA Power' }, companyKey: 'acwa', industry: 'energy', status: 'new', when: { ar: 'جديد', en: 'New' } },
-  { id: 'h5', name: { ar: 'عبير الزهراني', en: 'Abeer Alzahrani' }, role: { ar: 'مسؤولة استقطاب', en: 'Talent Sourcer' }, company: { ar: 'كابسارك', en: 'KAPSARC' }, companyKey: 'kapsarc', industry: 'government', status: 'new', when: { ar: 'جديد', en: 'New' } },
-  { id: 'h6', name: { ar: 'سلطان المالكي', en: 'Sultan Almalki' }, role: { ar: 'أخصائي توظيف', en: 'Recruiter' }, company: { ar: 'سابك', en: 'SABIC' }, companyKey: 'sabic', industry: 'energy', status: 'new', when: { ar: 'جديد', en: 'New' } },
-];
-
-export function contactById(plan: CustomerPlan, id: string): Contact | undefined {
-  return plan.connections.find((c) => c.id === id) ?? plan.hrContacts.find((c) => c.id === id);
-}
+// HR recruiters are RETRIEVED from the real database (data/hr_contacts.clean.csv,
+// 1,209 rows), filtered to the customer's sectors and capped at their tier. The
+// plan's hrContacts is filled per request by the page (server) via src/lib/hr-db.ts.
 
 /* ------------------------------------------------------------------- paths -- */
 
 export type PickKind = 'top' | 'mid' | 'common';
-export type PathPick = { id: string; kind: PickKind; reason: LS };
 
 export type CareerPath = {
   id: string;
@@ -136,11 +144,13 @@ export type CareerPath = {
   accent: AccentKey;
   icon: 'finance' | 'energy' | 'consulting' | 'government' | 'tech';
   months: number;
-  matchPercent: number;
+  score: number; // CV competitiveness for this area, 0-100 (SCORING.md rubric)
   primary?: boolean;
   trail: LS;
   certs: Cert[];
-  picks: PathPick[];
+  // Real company names this area targets; used to rank the customer's uploaded
+  // network into the 5 warm intros shown under the path.
+  targetCompanies: string[];
 };
 
 const CFA = 'https://www.cfainstitute.org/en/programs/cfa';
@@ -153,7 +163,7 @@ export const paths: CareerPath[] = [
     accent: 'brand',
     icon: 'finance',
     months: 16,
-    matchPercent: 92,
+    score: 72,
     primary: true,
     trail: { ar: 'تمويل المناخ → CME-1 → FMVA → CFA L1 → CFA L2', en: 'Climate Finance → CME-1 → FMVA → CFA L1 → CFA L2' },
     certs: [
@@ -163,13 +173,7 @@ export const paths: CareerPath[] = [
       { name: { ar: 'CFA المستوى الأول', en: 'CFA Level 1' }, desc: { ar: 'المستوى الأول من شهادة محلل مالي معتمد، المعيار العالمي الأرفع في إدارة الاستثمار. يغطّي الأخلاقيات والأدوات الكمية والاقتصاد وتحليل القوائم المالية، وهو حجر الأساس لأي دور استثماري في الصندوق.', en: 'Level 1 of the Chartered Financial Analyst program, the global gold standard in investment management. It spans ethics, quantitative methods, economics, and financial reporting — the foundation for any investment role at PIF.' }, gain: { ar: 'المعيار الذهبي لوظائف الاستثمار في الصندوق', en: 'The gold standard for PIF investment roles' }, scoreAdd: 15, official: CFA, status: 'future', cost: { ar: '5,500 ر.س', en: '5,500 SAR' }, duration: { ar: '6 أشهر · 300 ساعة', en: '6 months · 300h' }, hadaf: true, hadafNote: { ar: 'تسترجع نحو 2,750 ر.س عبر هدف', en: 'Reclaim ~2,750 SAR via Hadaf' } },
       { name: { ar: 'CFA المستوى الثاني', en: 'CFA Level 2' }, desc: { ar: 'المستوى المتقدّم من برنامج CFA، ويركّز على تطبيق أدوات التقييم على فئات الأصول المختلفة. اجتيازه يضعك في نخبة المحللين ويفتح الأدوار القيادية في صناديق الاستثمار.', en: 'The advanced CFA level, focused on applying valuation tools across asset classes. Passing it puts you among elite analysts and opens senior fund roles.' }, gain: { ar: 'يفتح الأدوار القيادية في صناديق الاستثمار', en: 'Opens senior investment-fund roles' }, scoreAdd: 12, official: CFA, status: 'future', cost: { ar: '5,500 ر.س', en: '5,500 SAR' }, duration: { ar: '8 أشهر', en: '8 months' }, hadaf: true },
     ],
-    picks: [
-      { id: 'n1', kind: 'top', reason: { ar: 'مدير استثمار في تحوّل الطاقة بالصندوق — أعلى أهدافك', en: 'Investment Director, PIF Energy Transition — your top target' } },
-      { id: 'n2', kind: 'top', reason: { ar: 'باحثة أولى في تمويل الطاقة بكابسارك', en: 'Senior Energy-Finance Fellow at KAPSARC' } },
-      { id: 'n9', kind: 'mid', reason: { ar: 'مدير في الأسواق العامة — نقطة دخول أسهل', en: 'Public Markets associate — an easier way in' } },
-      { id: 'n7', kind: 'common', reason: { ar: 'مديرة استثمار في طاقة نيوم — انتقلت من الهندسة إلى الاستثمار مثل مسارك', en: 'NEOM energy-investment manager — made the engineer-to-investing move you are making' } },
-      { id: 'n10', kind: 'common', reason: { ar: 'تقود التمويل المستدام في الأهلي — تخصصك بعد شهادة تمويل المناخ', en: 'Leads sustainable finance at SNB — your niche after Climate Finance' } },
-    ],
+    targetCompanies: ['Public Investment Fund', 'PIF', 'KAPSARC', 'Saudi National Bank', 'Sanabil', 'Jadwa', 'NEOM'],
   },
   {
     id: 'power-renewables',
@@ -178,7 +182,7 @@ export const paths: CareerPath[] = [
     accent: 'sky',
     icon: 'energy',
     months: 12,
-    matchPercent: 90,
+    score: 69,
     trail: { ar: 'التناضح العكسي → الطاقة الشمسية → PMP → CEM → Six Sigma', en: 'Reverse Osmosis → Solar PV → PMP → CEM → Six Sigma' },
     certs: [
       { name: { ar: 'التناضح العكسي', en: 'Reverse Osmosis' }, desc: { ar: 'شهادة مهندس متخصص في التناضح العكسي من أكاديمية المياه. تثبت خبرتك التشغيلية في أكبر محطات التحلية — أساس قوي لأدوار الطاقة والمياه.', en: 'Reverse Osmosis Specialist Engineer from the Water Academy. It certifies your operational expertise at the largest desalination plants — a strong base for power and water roles.' }, gain: { ar: 'تثبت خبرتك في أكبر محطات التحلية', en: 'Certifies your large-scale desalination expertise' }, scoreAdd: 7, official: 'https://wa.edu.sa', status: 'done', cost: { ar: 'منجزة', en: 'Completed' }, duration: { ar: 'أنجزتها', en: 'Completed' } },
@@ -187,13 +191,7 @@ export const paths: CareerPath[] = [
       { name: { ar: 'CEM', en: 'CEM' }, desc: { ar: 'مدير طاقة معتمد من جمعية مهندسي الطاقة (AEE). يثبت قدرتك على تحليل استهلاك الطاقة وتصميم حلول الكفاءة.', en: 'Certified Energy Manager from the AEE. It proves you can analyze energy use and design efficiency solutions.' }, gain: { ar: 'خبرة معتمدة في كفاءة الطاقة', en: 'Certified energy-efficiency expertise' }, scoreAdd: 9, official: 'https://www.aeecenter.org/certified-energy-manager-cem/', status: 'future', cost: { ar: '$1,500', en: '$1,500' }, duration: { ar: '3 أشهر', en: '3 months' } },
       { name: { ar: 'Six Sigma', en: 'Six Sigma' }, desc: { ar: 'الحزام الأخضر في منهجية ستة سيجما لتحسين العمليات وتقليل الهدر، وهي منهجية تعتمدها أرامكو وكبرى الشركات الصناعية.', en: 'Green Belt in Six Sigma for process improvement and waste reduction — relied on by Aramco and major industrial firms.' }, gain: { ar: 'تحسين العمليات المطلوب في أرامكو', en: 'Process improvement valued at Aramco' }, scoreAdd: 7, official: 'https://asq.org/cert/six-sigma-green-belt', status: 'future', cost: { ar: '2,500 ر.س', en: '2,500 SAR' }, duration: { ar: 'شهران', en: '2 months' }, hadaf: true },
     ],
-    picks: [
-      { id: 'n3', kind: 'top', reason: { ar: 'نائب رئيس تطوير المشاريع في أكوا باور', en: 'VP Project Development at ACWA Power' } },
-      { id: 'n6', kind: 'top', reason: { ar: 'يقود تحوّل الطاقة في أرامكو', en: 'Leads Energy Transition at Aramco' } },
-      { id: 'n17', kind: 'mid', reason: { ar: 'مهندس عمليات أول — مدخل سهل', en: 'Senior ops engineer — an easy entry' } },
-      { id: 'n4', kind: 'common', reason: { ar: 'مدير محطة في المؤسسة العامة للتحلية — زميل سابق محتمل', en: 'Plant Manager at the Water Authority — a likely former colleague' } },
-      { id: 'n7', kind: 'common', reason: { ar: 'الاستثمار في طاقة نيوم — تقاطع تخصصك', en: 'NEOM energy investment — your crossover' } },
-    ],
+    targetCompanies: ['Saudi Aramco', 'Aramco', 'ACWA Power', 'NEOM', 'Water Authority', 'SWCC', 'Marafiq', 'SABIC'],
   },
   {
     id: 'consulting',
@@ -202,7 +200,7 @@ export const paths: CareerPath[] = [
     accent: 'violet',
     icon: 'consulting',
     months: 12,
-    matchPercent: 85,
+    score: 57,
     trail: { ar: 'مهارات الاستشارات → دراسات الحالة → GMAT → FMVA', en: 'Consulting Skills → Case Prep → GMAT → FMVA' },
     certs: [
       { name: { ar: 'مهارات الاستشارات', en: 'Consulting Skills' }, desc: { ar: 'برنامج مهارات الاستشارات الأساسية من مسرّعة مستشار. يمنحك إطار حلّ المشكلات والتواصل التنفيذي المطلوب في المقابلات.', en: 'Foundational consulting skills from the Mustashar accelerator. It gives you the problem-solving and executive-communication frame interviews demand.' }, gain: { ar: 'أساس حلّ المشكلات والتواصل التنفيذي', en: 'Problem-solving and executive-communication base' }, scoreAdd: 6, official: 'https://mustashar.org', status: 'done', cost: { ar: 'منجزة', en: 'Completed' }, duration: { ar: 'أنجزتها', en: 'Completed' } },
@@ -211,13 +209,7 @@ export const paths: CareerPath[] = [
       { name: { ar: 'FMVA', en: 'FMVA' }, desc: { ar: 'برنامج النمذجة المالية والتقييم، يمنحك ثقلًا كمّيًا يقوّي ملفك أمام شركات الاستشارات. عملي ويغطّي بناء النماذج وتحليل الصفقات.', en: 'The financial modeling and valuation program, giving you quantitative weight that strengthens a consulting profile.' }, gain: { ar: 'تحليل كمّي يميّز ملفك الاستشاري', en: 'Quant edge for a consulting profile' }, scoreAdd: 8, official: 'https://corporatefinanceinstitute.com/certifications/fmva-program/', status: 'future', cost: { ar: '$497', en: '$497' }, duration: { ar: '3 أشهر', en: '3 months' } },
       { name: { ar: 'ماجستير إدارة الأعمال', en: 'MBA' }, desc: { ar: 'ماجستير إدارة الأعمال، يفتح أدوار ما بعد الاستشارات في القيادة والاستثمار، ويوسّع شبكتك بشكل كبير.', en: 'The MBA, opening post-consulting leadership and investment roles and widening your network.' }, gain: { ar: 'يفتح أدوار ما بعد الاستشارات', en: 'Opens post-consulting roles' }, scoreAdd: 12, official: 'https://www.mba.com/', status: 'future', cost: { ar: 'يختلف', en: 'Varies' }, duration: { ar: '6 أشهر', en: '6 months' } },
     ],
-    picks: [
-      { id: 'n5', kind: 'top', reason: { ar: 'مديرة ارتباط في ممارسة الطاقة بماكنزي', en: 'Energy-practice EM at McKinsey' } },
-      { id: 'n15', kind: 'top', reason: { ar: 'مبدأ في ممارسة الطاقة بستراتيجي&', en: 'Energy Principal at Strategy&' } },
-      { id: 'n12', kind: 'mid', reason: { ar: 'مستشارة طاقة في BCG — مدخل جيد', en: 'Energy consultant at BCG — a good way in' } },
-      { id: 'n2', kind: 'common', reason: { ar: 'باحثة كابسارك — تتقاطع مع تحليلك للطاقة', en: 'KAPSARC researcher — overlaps your energy analysis' } },
-      { id: 'n1', kind: 'common', reason: { ar: 'يقود استثمارات الطاقة في الصندوق', en: 'Leads energy investments at PIF' } },
-    ],
+    targetCompanies: ['McKinsey', 'BCG', 'Boston Consulting', 'Strategy&', 'Bain', 'Kearney', 'Oliver Wyman', 'PwC'],
   },
   {
     id: 'government',
@@ -226,7 +218,7 @@ export const paths: CareerPath[] = [
     accent: 'amber',
     icon: 'government',
     months: 18,
-    matchPercent: 82,
+    score: 61,
     trail: { ar: 'تمويل المناخ → دبلوم السياسات → PMP → PgMP', en: 'Climate Finance → Policy Diploma → PMP → PgMP' },
     certs: [
       { name: { ar: 'تمويل المناخ', en: 'Climate Finance' }, desc: { ar: 'برنامج تمويل المناخ والاستدامة من كابسارك. يربط نمذجتك لمسار 2060 بأدوات السياسة والتمويل المناخي.', en: 'KAPSARC’s climate finance and sustainability program. It ties your 2060-pathway modeling to policy and climate-finance tools.' }, gain: { ar: 'يربط نمذجتك بالسياسة والتمويل المناخي', en: 'Links your modeling to climate policy and finance' }, scoreAdd: 7, official: 'https://www.kapsarc.org', status: 'done', cost: { ar: 'منجزة', en: 'Completed' }, duration: { ar: 'أنجزتها', en: 'Completed' } },
@@ -235,13 +227,7 @@ export const paths: CareerPath[] = [
       { name: { ar: 'PgMP', en: 'PgMP' }, desc: { ar: 'محترف إدارة البرامج من PMI، المستوى الأعلى من PMP، لقيادة محافظ المشاريع على مستوى المؤسسة.', en: 'PMI’s Program Management Professional, above PMP — for leading enterprise-level project portfolios.' }, gain: { ar: 'إدارة برامج الطاقة الكبرى', en: 'Manage large energy programs' }, scoreAdd: 8, official: 'https://www.pmi.org/certifications/program-management-pgmp', status: 'future', cost: { ar: '$800', en: '$800' }, duration: { ar: '4 أشهر', en: '4 months' } },
       { name: { ar: 'دكتوراه إدارة الأعمال', en: 'DBA' }, desc: { ar: 'دكتوراه إدارة الأعمال، أعلى مؤهل تطبيقي للأدوار القيادية العليا في السياسات والاستراتيجية.', en: 'The Doctor of Business Administration, the top applied qualification for senior policy and strategy leadership.' }, gain: { ar: 'المؤهل الأعلى للقيادة', en: 'Top leadership credential' }, scoreAdd: 12, official: 'https://www.mba.com/', status: 'future', cost: { ar: 'يختلف', en: 'Varies' }, duration: { ar: '12 شهرًا', en: '12 months' } },
     ],
-    picks: [
-      { id: 'n8', kind: 'top', reason: { ar: 'مدير الاستراتيجية في وزارة الطاقة', en: 'Director of Strategy, Ministry of Energy' } },
-      { id: 'n2', kind: 'top', reason: { ar: 'باحثة أولى في كابسارك', en: 'Senior Fellow at KAPSARC' } },
-      { id: 'n16', kind: 'mid', reason: { ar: 'باحث سياسات في كابسارك — مدخل بحثي', en: 'Policy researcher at KAPSARC — a research entry' } },
-      { id: 'n1', kind: 'common', reason: { ar: 'تحوّل الطاقة في الصندوق — قريب من نمذجتك', en: 'PIF Energy Transition — close to your modeling' } },
-      { id: 'n7', kind: 'common', reason: { ar: 'استثمار طاقة نيوم — مشاريع رؤية 2030', en: 'NEOM energy investment — Vision 2030 projects' } },
-    ],
+    targetCompanies: ['Ministry of Energy', 'KAPSARC', 'Ministry', 'Royal Commission', 'SEEC', 'Energy Efficiency', 'Vision 2030'],
   },
   {
     id: 'tech',
@@ -250,7 +236,7 @@ export const paths: CareerPath[] = [
     accent: 'rose',
     icon: 'tech',
     months: 12,
-    matchPercent: 80,
+    score: 54,
     trail: { ar: 'تحليل البيانات → AWS → Scrum → تحليلات متقدمة', en: 'Data Analyst → AWS → Scrum → Advanced Analytics' },
     certs: [
       { name: { ar: 'تحليل البيانات', en: 'Data Analyst' }, desc: { ar: 'شهادة محلل بيانات من IBM، تغطّي أدوات التحليل والتصوّر واتخاذ القرار بالبيانات. تكمّل خلفيتك في الذكاء الاصطناعي ومشروع نموذجك التنبؤي.', en: 'IBM’s Data Analyst certificate covering analysis, visualization, and data-driven decisions. It complements your AI background and your predictive-model project.' }, gain: { ar: 'تحليل البيانات واتخاذ القرار', en: 'Data analysis and decision-making' }, scoreAdd: 6, official: 'https://www.ibm.com/training/badge/data-analyst', status: 'done', cost: { ar: 'منجزة', en: 'Completed' }, duration: { ar: 'أنجزتها', en: 'Completed' } },
@@ -259,13 +245,7 @@ export const paths: CareerPath[] = [
       { name: { ar: 'تحليلات متقدمة', en: 'Advanced Analytics' }, desc: { ar: 'برنامج تحليلات وتعلّم آلة متقدم يبني على أساسك في الذكاء الاصطناعي ومشروعك التنبؤي لمحطة كورنيل.', en: 'An advanced analytics and machine-learning program building on your AI foundation and your Cornell-plant predictive project.' }, gain: { ar: 'نمذجة تنبؤية لأنظمة الطاقة', en: 'Predictive modeling for energy systems' }, scoreAdd: 9, official: 'https://www.coursera.org/professional-certificates/google-data-analytics', status: 'future', cost: { ar: '3,500 ر.س', en: '3,500 SAR' }, duration: { ar: '3 أشهر', en: '3 months' }, hadaf: true },
       { name: { ar: 'ماجستير إدارة الأعمال', en: 'MBA' }, desc: { ar: 'ماجستير إدارة الأعمال، يجمع بين خبرتك التقنية والإدارة للانتقال إلى قيادة المنتجات والاستراتيجية الرقمية.', en: 'The MBA, bridging your technical expertise and management for product leadership and digital strategy.' }, gain: { ar: 'يجمع التقنية بالإدارة', en: 'Bridges tech and management' }, scoreAdd: 12, official: 'https://www.mba.com/', status: 'future', cost: { ar: 'يختلف', en: 'Varies' }, duration: { ar: '6 أشهر', en: '6 months' } },
     ],
-    picks: [
-      { id: 'n13', kind: 'top', reason: { ar: 'مدير منتجات رقمية في أرامكو الرقمية', en: 'Digital Product Lead at Aramco Digital' } },
-      { id: 'n14', kind: 'top', reason: { ar: 'مديرة بيانات وذكاء اصطناعي في stc', en: 'Data & AI Manager at stc' } },
-      { id: 'n18', kind: 'mid', reason: { ar: 'قائدة هندسة في علم — مدخل تقني', en: 'Engineering lead at Elm — a technical entry' } },
-      { id: 'n6', kind: 'common', reason: { ar: 'تحوّل الطاقة في أرامكو — تقاطع طاقة وتقنية', en: 'Aramco energy transition — energy-meets-tech' } },
-      { id: 'n2', kind: 'common', reason: { ar: 'تحليلات الطاقة في كابسارك', en: 'Energy analytics at KAPSARC' } },
-    ],
+    targetCompanies: ['Aramco Digital', 'stc', 'Elm', 'SDAIA', 'Lean', 'Tonomus', 'Google', 'Microsoft'],
   },
 ];
 
@@ -331,21 +311,15 @@ export function fillTemplate(preview: string, c: Contact, locale: Loc): string {
 }
 
 export function linkedinUrl(c: Contact): string {
+  if (c.linkedin) return c.linkedin; // real profile from the DB or the uploaded CSV
   const q = encodeURIComponent(`${c.name.en} ${c.company.en}`);
   return `https://www.linkedin.com/search/results/people/?keywords=${q}`;
 }
 
-/* ----------------------------------------- LinkedIn network CSV matching -- */
-// The customer's Connections.csv is parsed entirely in the browser: it is never
-// uploaded or stored (PDPL). We use it only to flag who they already know and to
-// float warm intros to the top of the list.
-
-export type NetworkData = { names: Set<string>; companies: Set<string> };
-export type NetMatch = 'you' | 'company' | null;
-
-function normName(s: string): string {
-  return s.toLowerCase().replace(/[^a-z\s]/g, ' ').replace(/\s+/g, ' ').trim();
-}
+/* ------------------------------------------- uploaded LinkedIn network -- */
+// The customer's Connections.csv is parsed entirely in the browser and never
+// uploaded or stored (PDPL). Every connection shown comes from this file; we rank
+// it against the customer's target companies to surface the warmest intros first.
 
 function normCompany(s: string): string {
   return s.toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -373,9 +347,7 @@ function splitCsvLine(line: string): string[] {
 
 // LinkedIn's export prepends a few "Notes:" lines before the real header row
 // (First Name, Last Name, URL, Email Address, Company, Position, Connected On).
-export function parseConnectionsCsv(text: string): NetworkData {
-  const names = new Set<string>();
-  const companies = new Set<string>();
+export function parseUploadedConnections(text: string): Contact[] {
   const lines = text.split(/\r?\n/);
   let headerIdx = lines.findIndex((l) => /first name/i.test(l) && /last name/i.test(l));
   if (headerIdx === -1) headerIdx = 0;
@@ -383,54 +355,68 @@ export function parseConnectionsCsv(text: string): NetworkData {
   const iFirst = header.indexOf('first name');
   const iLast = header.indexOf('last name');
   const iCompany = header.indexOf('company');
+  const iPosition = header.indexOf('position');
+  const iUrl = header.indexOf('url');
 
+  const out: Contact[] = [];
   for (let i = headerIdx + 1; i < lines.length; i++) {
     const raw = lines[i];
     if (!raw || !raw.trim()) continue;
     const cells = splitCsvLine(raw);
-    const first = (iFirst >= 0 ? cells[iFirst] : cells[0]) ?? '';
-    const last = (iLast >= 0 ? cells[iLast] : cells[1]) ?? '';
-    const full = normName(`${first} ${last}`);
-    if (full) names.add(full);
-    const company = (iCompany >= 0 ? cells[iCompany] : '') ?? '';
-    const nc = normCompany(company);
-    if (nc.length >= 3) companies.add(nc);
+    const first = ((iFirst >= 0 ? cells[iFirst] : cells[0]) ?? '').trim();
+    const last = ((iLast >= 0 ? cells[iLast] : cells[1]) ?? '').trim();
+    const name = `${first} ${last}`.trim();
+    if (!name) continue;
+    const company = ((iCompany >= 0 ? cells[iCompany] : '') ?? '').trim();
+    const position = ((iPosition >= 0 ? cells[iPosition] : '') ?? '').trim();
+    const url = ((iUrl >= 0 ? cells[iUrl] : '') ?? '').trim();
+    out.push({
+      id: `up-${i}`,
+      name: { ar: name, en: name },
+      role: { ar: position || '—', en: position || '—' },
+      company: { ar: company || '—', en: company || '—' },
+      status: 'new',
+      when: { ar: 'من شبكتك', en: 'In your network' },
+      linkedin: url || undefined,
+    });
   }
-  return { names, companies };
+  return out;
 }
 
-export function matchContact(c: Contact, net: NetworkData | null): NetMatch {
-  if (!net) return null;
-  if (net.names.has(normName(c.name.en))) return 'you';
-  const comp = normCompany(c.company.en);
-  if (comp.length >= 3) {
-    for (const cc of net.companies) {
-      const [short, long] = comp.length <= cc.length ? [comp, cc] : [cc, comp];
-      if (short.length >= 3 && long.includes(short)) return 'company';
-    }
-  }
-  return null;
-}
+const SENIOR_RE = /chief|vice president|\bvp\b|head of|director|partner|managing|principal|\blead\b|founder|owner|\bceo\b|\bcfo\b|\bcoo\b|\bcto\b|general manager/i;
 
-// Attach a match flag to each contact and float warm intros (you > company) to
-// the top, keeping the score order within each band.
-export function rankByNetwork(
-  list: Contact[],
-  net: NetworkData | null,
-): { contact: Contact; match: NetMatch }[] {
-  const withMatch = list.map((contact) => ({ contact, match: matchContact(contact, net) }));
-  if (!net) return withMatch;
-  const rank = (m: NetMatch) => (m === 'you' ? 0 : m === 'company' ? 1 : 2);
-  return withMatch.sort((a, b) => {
-    const r = rank(a.match) - rank(b.match);
-    if (r !== 0) return r;
-    return (b.contact.score ?? 0) - (a.contact.score ?? 0);
+export type ScoredContact = { contact: Contact; relevance: number; reason: LS; kind: PickKind };
+
+// Rank the uploaded network against target companies: at a target company + senior
+// is the warmest (top), at a target OR senior is mid, the rest stay common.
+export function rankConnections(contacts: Contact[], targets: string[]): ScoredContact[] {
+  const t = targets.map(normCompany).filter((x) => x.length >= 3);
+  const scored = contacts.map((c): ScoredContact => {
+    const comp = normCompany(c.company.en);
+    const hit = comp.length >= 3 && t.some((x) => comp.includes(x) || x.includes(comp));
+    const senior = SENIOR_RE.test(c.role.en);
+    const relevance = (hit ? 2 : 0) + (senior ? 1 : 0);
+    const kind: PickKind = hit && senior ? 'top' : hit || senior ? 'mid' : 'common';
+    const reason: LS = hit
+      ? { ar: `يعمل في ${c.company.en}`, en: `Works at ${c.company.en}` }
+      : senior
+        ? { ar: 'جهة اتصال قيادية', en: 'Senior contact' }
+        : { ar: 'ضمن شبكتك', en: 'In your network' };
+    return { contact: c, relevance, reason, kind };
   });
+  return scored.sort((a, b) => b.relevance - a.relevance);
 }
 
-export function countMatches(list: Contact[], net: NetworkData | null): number {
-  if (!net) return 0;
-  return list.reduce((n, c) => (matchContact(c, net) ? n + 1 : n), 0);
+// Every target company across the plan's areas (for the all-connections view).
+export function planTargets(plan: CustomerPlan): string[] {
+  return Array.from(new Set(plan.paths.flatMap((p) => p.targetCompanies)));
+}
+
+// Deterministic daily rotation: a different slice each day, cycling through all.
+export function dailyPicks<T>(items: T[], count: number, dayNumber: number): T[] {
+  if (items.length <= count) return items;
+  const start = (dayNumber * count) % items.length;
+  return Array.from({ length: count }, (_, i) => items[(start + i) % items.length]);
 }
 
 /* ------------------------------------------------------------------ tracker -- */
@@ -465,11 +451,13 @@ export const tracker = {
 
 export type CustomerPlan = {
   slug: string;
+  tier: PlanTier; // Starter (100 HR) or Pro (300 HR)
+  sectors: string[]; // HR DB sectors relevant to this customer (SECTOR_LABELS keys)
   profile: typeof profile;
   cvScore: typeof cvScore;
   journey: typeof journey;
   connections: Contact[];
-  hrContacts: Contact[];
+  hrContacts: Contact[]; // filled per request from the real DB by the page
   paths: CareerPath[];
   primaryPath: CareerPath;
   templates: Template[];
@@ -478,11 +466,22 @@ export type CustomerPlan = {
 
 export const aliPlan: CustomerPlan = {
   slug: 'ali-alajwad',
+  tier: 'pro',
+  sectors: [
+    'investment_finance',
+    'energy_petrochem',
+    'consulting',
+    'government',
+    'tech_startups',
+    'telecom_it',
+    'gigaprojects_realestate',
+    'recruitment_agencies',
+  ],
   profile,
   cvScore,
   journey,
-  connections,
-  hrContacts,
+  connections: [], // the customer's own network, loaded client-side from their CSV
+  hrContacts: [], // injected by the page from hr-db.ts (real, tier-capped)
   paths,
   primaryPath,
   templates,
@@ -522,13 +521,17 @@ export const ui = {
     scoreLabel: { ar: 'درجة تنافسية سيرتك', en: 'Your CV competitiveness' },
     scoreFor: { ar: 'لهدف', en: 'for' },
     improvementsTitle: { ar: 'ما الذي يرفع درجتك', en: 'What raises your score' },
+    quickWin: { ar: 'أسرع مكسب', en: 'Quickest win' },
+    reachable: { ar: 'درجتك إن أكملت هذه الخطوات', en: 'Your reachable score' },
+    areasTitle: { ar: 'أعلى مساراتك', en: 'Your top areas' },
+    areasSub: { ar: 'مرتّبة حسب درجتك التنافسية فيها', en: 'Ranked by your competitiveness' },
     tipTitle: { ar: 'أهمّ خطوة اليوم', en: "Today's top move" },
     tip: {
-      ar: 'ابدأ بعبدالعزيز القصبي في تحوّل الطاقة بالصندوق — أعلى أهدافك ملاءمةً (191).',
-      en: 'Start with Abdulaziz Alqasabi at PIF Energy Transition — your strongest match (191).',
+      ar: 'أسرع مكسب اليوم: أعد صياغة أبرز 3 إنجازات بصيغة مالية لرفع درجتك +6 فورًا.',
+      en: 'Your quickest win today: reframe your top 3 bullets for finance to add +6 to your score now.',
     },
     actionsTitle: { ar: 'ابدأ بهؤلاء اليوم', en: 'Start with these today' },
-    actionsSub: { ar: 'الأعلى ملاءمةً أولًا', en: 'Highest match first' },
+    actionsSub: { ar: 'من شبكتك، تتجدّد يوميًا', en: 'From your network, refreshed daily' },
     openContacts: { ar: 'كل صنّاع القرار', en: 'All decision-makers' },
     nextCert: { ar: 'شهادتك الحالية', en: 'Your current certification' },
   },
@@ -539,7 +542,8 @@ export const ui = {
       ar: 'افتح أيّ مسار لترى خارطة شهاداته، وما تضيفه كل شهادة لدرجتك، وأهم من تتواصل معه.',
       en: 'Open any path for its certification roadmap, what each adds to your score, and who to reach out to.',
     },
-    match: { ar: 'ملاءمة', en: 'match' },
+    score: { ar: 'الدرجة', en: 'Score' },
+    scoreOf: { ar: 'من 100', en: 'of 100' },
     primary: { ar: 'مسارك الرئيسي', en: 'Primary path' },
     roadmap: { ar: 'خارطة الشهادات', en: 'Roadmap' },
     open: { ar: 'افتح المسار', en: 'Open path' },
@@ -592,9 +596,20 @@ export const ui = {
     copied: { ar: 'تم النسخ', en: 'Copied' },
     shuffle: { ar: 'صيغة أخرى', en: 'Shuffle' },
     linkedin: { ar: 'لينكدإن', en: 'LinkedIn' },
-    statusHint: { ar: 'اضغط الحالة لتحديثها', en: 'Tap the status to update it' },
+    statusHint: { ar: 'حدّث الحالة بعد كل خطوة', en: 'Update the status after each step' },
     inNetwork: { ar: 'في شبكتك', en: 'In your network' },
     sameCompany: { ar: 'تعرف من في شركته', en: 'You know someone here' },
+    sector: { ar: 'القطاع', en: 'Sector' },
+    companySize: { ar: 'حجم الشركة', en: 'Company size' },
+    allSectors: { ar: 'كل القطاعات', en: 'All sectors' },
+    allSizes: { ar: 'كل الأحجام', en: 'All sizes' },
+    handwrite: {
+      ar: 'الأفضل أن تعيد صياغتها بأسلوبك؛ الرسائل المكتوبة بخط اليد تحصل على ردود أكثر.',
+      en: 'Best to rewrite this in your own words; handwritten messages get more replies.',
+    },
+    msgLangHint: { ar: 'لغة الرسالة', en: 'Message language' },
+    showMore: { ar: (n: number) => `عرض المزيد (${n})`, en: (n: number) => `Show ${n} more` },
+    showing: { ar: (a: number, b: number) => `تعرض ${a} من ${b}`, en: (a: number, b: number) => `Showing ${a} of ${b}` },
     empty: { ar: 'لا نتائج مطابقة.', en: 'No matching results.' },
     status_new: { ar: 'جديد', en: 'New' },
     status_sent: { ar: 'مُرسل', en: 'Sent' },
@@ -604,15 +619,16 @@ export const ui = {
   network: {
     title: { ar: 'اربط شبكتك في لينكدإن', en: 'Connect your LinkedIn network' },
     body: {
-      ar: 'ارفع ملف جهات اتصالك (Connections.csv) لنبيّن لك مَن من هؤلاء تعرفه أصلًا أو تعرف زميلًا له — فالمقدمة الدافئة تتفوّق على الرسالة الباردة. الملف يبقى في متصفحك ولا نخزّنه.',
-      en: 'Upload your Connections.csv to see which of these people you already know — or know a colleague of. A warm intro beats a cold message. The file stays in your browser; we never store it.',
+      ar: 'ارفع ملف جهات اتصالك (Connections.csv) لنرتّب شبكتك ونُبرز أقرب الأشخاص إلى أهدافك للتواصل معهم أولًا. المقدمة الدافئة تتفوّق على الرسالة الباردة، والملف يبقى في متصفحك ولا نخزّنه.',
+      en: 'Upload your Connections.csv so we can rank your network and surface the people closest to your targets to reach out to first. A warm intro beats a cold message, and the file stays in your browser; we never store it.',
     },
     note: { ar: 'يستغرق لينكدإن من 12 إلى 24 ساعة لإرسال الملف إلى بريدك.', en: 'LinkedIn takes 12–24 hours to email you the file.' },
     upload: { ar: 'ارفع Connections.csv', en: 'Upload Connections.csv' },
-    matched: { ar: (n: number) => `تعرف ${n} من قائمتك`, en: (n: number) => `You know ${n} on your list` },
-    ranked: { ar: 'رفعنا المقدمات الدافئة إلى أعلى القائمة.', en: 'Warm intros moved to the top of your list.' },
-    none: { ar: 'لم نطابق أحدًا بعد — جرّب ملفًا آخر.', en: 'No matches yet — try another file.' },
+    matched: { ar: (n: number) => `حمّلنا ${n} جهة من شبكتك`, en: (n: number) => `Loaded ${n} of your connections` },
+    ranked: { ar: 'رتّبنا الأقرب إلى أهدافك في الأعلى.', en: 'The closest matches to your targets are on top.' },
+    none: { ar: 'لم نتعرّف على أي جهة — جرّب ملفًا آخر.', en: 'No connections found — try another file.' },
     clear: { ar: 'إزالة الملف', en: 'Clear file' },
+    locked: { ar: 'ارفع جهات اتصالك لعرض أقرب من تعرفهم هنا', en: 'Upload your connections to reveal who you know here' },
     howPhone: { ar: '📱 من تطبيق الجوال', en: '📱 On the phone app' },
     howLaptop: { ar: '💻 من المتصفح', en: '💻 On a laptop' },
     phoneSteps: {
@@ -656,8 +672,8 @@ export const ui = {
     pending: { ar: 'بانتظار الردّ', en: 'Awaiting reply' },
     followup: { ar: 'تحتاج متابعة', en: 'Need follow-up' },
     replyRate: { ar: 'معدّل الردّ', en: 'Reply rate' },
-    vsBenchmark: { ar: 'أعلى بكثير من المتوسط', en: 'Well above average' },
-    weekly: { ar: 'نشاطك هذا الأسبوع', en: 'This week' },
-    recent: { ar: 'آخر النشاط', en: 'Recent activity' },
+    vsBenchmark: { ar: 'كل ما تحدّثه ينعكس هنا فورًا', en: 'Everything you log shows up here instantly' },
+    breakdown: { ar: 'توزيع تواصلك', en: 'Your outreach breakdown' },
+    empty: { ar: 'حدّث حالة كل تواصل من بطاقات «التواصل»، وستظهر أرقامك هنا.', en: 'Update each outreach from the Contacts cards and your numbers appear here.' },
   },
 } as const;

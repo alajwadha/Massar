@@ -2,6 +2,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { Dashboard } from '@/components/app/dashboard';
 import { PlanProvider } from '@/components/app/plan-context';
 import { aliPlan } from '@/lib/app-data';
+import { withHr } from '@/lib/hr-db';
 
 // Public demo of the product. It renders the first real CustomerPlan (Ali's) as
 // the showcase. Each real customer gets their own isolated copy at /c/<slug>.
@@ -12,7 +13,7 @@ export default function AppHome({
 }) {
   setRequestLocale(locale);
   return (
-    <PlanProvider plan={aliPlan}>
+    <PlanProvider plan={withHr(aliPlan)}>
       <Dashboard />
     </PlanProvider>
   );
