@@ -1,6 +1,7 @@
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
+  darkMode: 'class',
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -9,15 +10,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Premium emerald + ink palette (light theme).
+        // Semantic colors are CSS variables so the same utilities theme light/dark.
         ink: {
-          DEFAULT: '#0F1115',
-          soft: '#3A3F47',
-          muted: '#6B7280',
+          DEFAULT: 'rgb(var(--ink) / <alpha-value>)',
+          soft: 'rgb(var(--ink-soft) / <alpha-value>)',
+          muted: 'rgb(var(--ink-muted) / <alpha-value>)',
         },
         canvas: {
-          DEFAULT: '#FAFAF8',
-          raised: '#FFFFFF',
+          DEFAULT: 'rgb(var(--canvas) / <alpha-value>)',
+          raised: 'rgb(var(--canvas-raised) / <alpha-value>)',
         },
         brand: {
           50: '#ECFDF5',
@@ -29,7 +30,7 @@ const config: Config = {
           700: '#0B7A55',
           900: '#064E3B',
         },
-        line: '#ECEAE4',
+        line: 'rgb(var(--line) / <alpha-value>)',
       },
       fontFamily: {
         sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],

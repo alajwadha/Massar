@@ -32,12 +32,14 @@ function Stat({ value, label }: { value: ReactNode; label: string }) {
 
 function ScoreBar({ path, locale }: { path: CareerPath; locale: Loc }) {
   const a = accent[path.accent];
+  const { level } = useProgress();
+  const score = path.scoreByLevel[level];
   return (
     <div>
       <div className="flex items-center justify-between text-xs">
         <span className="font-semibold text-ink-soft">{ui.paths.score[locale]}</span>
         <span className="font-extrabold tabular-nums" style={{ color: a.stroke }}>
-          {path.score}
+          {score}
           <span className="ms-1 text-[10px] font-semibold text-ink-muted">{ui.paths.scoreOf[locale]}</span>
         </span>
       </div>
@@ -45,7 +47,7 @@ function ScoreBar({ path, locale }: { path: CareerPath; locale: Loc }) {
         <motion.div
           className={cn('h-full rounded-full', a.bar)}
           initial={{ width: 0 }}
-          animate={{ width: `${path.score}%` }}
+          animate={{ width: `${score}%` }}
           transition={{ duration: 1, delay: 0.15, ease: EASE }}
         />
       </div>

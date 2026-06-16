@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { parseUploadedConnections, type Contact, type ContactStatus } from '@/lib/app-data';
+import { parseUploadedConnections, type Contact, type ContactStatus, type Level } from '@/lib/app-data';
 
 /* ------------------------------------------------------------ network -- */
 // The customer's uploaded LinkedIn network. Kept in sessionStorage (per link) so a
@@ -25,6 +25,8 @@ type ProgressCtx = {
   setStatus: (id: string, s: ContactStatus) => void;
   certsDone: Record<string, boolean>;
   toggleCert: (nameEn: string) => void;
+  level: Level;
+  setLevel: (l: Level) => void;
 };
 const ProgressContext = createContext<ProgressCtx | null>(null);
 
@@ -68,15 +70,21 @@ export function DashboardState({
   const [certsDone, setCertsDone] = useState<Record<string, boolean>>(() =>
     Object.fromEntries(initialCertsDone.map((n) => [n, true])),
   );
+  const [level, setLevel] = useState<Level>('entry');
   const hydrated = useRef(false);
 
   useEffect(() => {
     try {
       const raw = localStorage.getItem(`masaar:progress:${slug}`);
       if (raw) {
-        const p = JSON.parse(raw) as { statuses?: Record<string, ContactStatus>; certsDone?: Record<string, boolean> };
+        const p = JSON.parse(raw) as {
+          statuses?: Record<string, ContactStatus>;
+          certsDone?: Record<string, boolean>;
+          level?: Level;
+        };
         if (p.statuses) setStatuses(p.statuses);
         if (p.certsDone) setCertsDone((prev) => ({ ...prev, ...p.certsDone }));
+        if (p.level) setLevel(p.level);
       }
     } catch {
       /* ignore */
@@ -87,11 +95,11 @@ export function DashboardState({
   useEffect(() => {
     if (!hydrated.current) return;
     try {
-      localStorage.setItem(`masaar:progress:${slug}`, JSON.stringify({ statuses, certsDone }));
+      localStorage.setItem(`masaar:progress:${slug}`, JSON.stringify({ statuses, certsDone, level }));
     } catch {
       /* ignore */
     }
-  }, [statuses, certsDone, slug]);
+  }, [statuses, certsDone, level, slug]);
 
   const network_ = useMemo<NetworkCtx>(
     () => ({ network, setFromCsv, clear: clearNetwork }),
@@ -101,10 +109,12 @@ export function DashboardState({
     () => ({
       statuses,
       certsDone,
+      level,
+      setLevel,
       setStatus: (id, s) => setStatuses((prev) => ({ ...prev, [id]: s })),
       toggleCert: (n) => setCertsDone((prev) => ({ ...prev, [n]: !prev[n] })),
     }),
-    [statuses, certsDone],
+    [statuses, certsDone, level],
   );
 
   return (

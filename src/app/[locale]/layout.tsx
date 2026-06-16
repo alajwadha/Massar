@@ -66,6 +66,12 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} dir={dir} className={`${inter.variable} ${tajawal.variable}`}>
       <body>
+        {/* Apply the saved dark choice before paint (light by default). */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: "try{if(localStorage.getItem('masaar:theme')==='dark')document.documentElement.classList.add('dark')}catch(e){}",
+          }}
+        />
         <NextIntlClientProvider messages={messages}>
           {children}
         </NextIntlClientProvider>

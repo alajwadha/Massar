@@ -2,10 +2,10 @@
 
 import { Sparkles, ArrowLeft, GraduationCap, BadgeCheck, Gauge, TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { rankConnections, planTargets, dailyPicks, ui, type Loc } from '@/lib/app-data';
+import { rankConnections, planTargets, dailyPicks, LEVELS, ui, type Loc } from '@/lib/app-data';
 import { usePlan } from './plan-context';
-import { useNetwork } from './dashboard-state';
-import { accent, ProgressRing, Counter, SectionHeading, Stagger, StaggerItem } from './ui';
+import { useNetwork, useProgress } from './dashboard-state';
+import { ProgressRing, Counter, SectionHeading, Stagger, StaggerItem } from './ui';
 import { ConnectionCard } from './contacts';
 
 export function OverviewSection({
@@ -18,11 +18,19 @@ export function OverviewSection({
   onOpenContacts: () => void;
 }) {
   const plan = usePlan();
-  const { primaryPath, journey, cvScore, paths } = plan;
+  const { primaryPath, cvScore } = plan;
   const { network } = useNetwork();
+  const { level, setLevel, statuses, certsDone } = useProgress();
   const current = primaryPath.certs.find((c) => c.status === 'current');
-  const topAreas = [...paths].sort((a, b) => b.score - a.score).slice(0, 3);
-  const potential = Math.min(100, cvScore.value + cvScore.improvements.reduce((s, i) => s + i.delta, 0));
+  const score = primaryPath.scoreByLevel[level];
+  const potential = Math.min(100, score + cvScore.improvements.reduce((s, i) => s + i.delta, 0));
+  // Plan-progress hero, computed from real progress (kept in sync with the Tracker).
+  const certsTotal = primaryPath.certs.length;
+  const certsDoneCount = primaryPath.certs.filter((c) => certsDone[c.name.en]).length;
+  const planPercent = certsTotal ? Math.round((certsDoneCount / certsTotal) * 100) : 0;
+  const statusVals = Object.values(statuses);
+  const messagesSent = statusVals.filter((s) => s === 'sent' || s === 'replied' || s === 'followup').length;
+  const replies = statusVals.filter((s) => s === 'replied').length;
   // Today's outreach: a daily-rotating 5 from the customer's ranked network.
   const todays = network
     ? dailyPicks(rankConnections(network, planTargets(plan)), 5, Math.floor(Date.now() / 86_400_000))
@@ -37,9 +45,9 @@ export function OverviewSection({
         <div aria-hidden className="pointer-events-none absolute -end-16 -top-20 h-56 w-56 rounded-full bg-white/10 blur-2xl" />
         <div aria-hidden className="pointer-events-none absolute -bottom-24 -start-10 h-52 w-52 rounded-full bg-brand-400/20 blur-2xl" />
         <div className="relative flex flex-col items-center gap-6 sm:flex-row sm:gap-8">
-          <ProgressRing value={journey.percent} color="#ffffff" track="rgba(255,255,255,0.22)">
+          <ProgressRing value={planPercent} color="#ffffff" track="rgba(255,255,255,0.22)">
             <div className="leading-none">
-              <Counter to={journey.percent} suffix="%" className="text-3xl font-extrabold" />
+              <Counter to={planPercent} suffix="%" className="text-3xl font-extrabold" />
               <div className="mt-1 text-[10px] font-medium text-white/75">{ui.overview.journeyLabel[locale]}</div>
             </div>
           </ProgressRing>
@@ -49,19 +57,19 @@ export function OverviewSection({
             <div className="mt-4 grid grid-cols-3 gap-3">
               <div>
                 <div className="text-2xl font-extrabold">
-                  <Counter to={journey.certsDone} suffix={`/${journey.certsTotal}`} />
+                  <Counter to={certsDoneCount} suffix={`/${certsTotal}`} />
                 </div>
                 <div className="mt-0.5 text-[11px] text-white/75">{ui.overview.certsLabel[locale]}</div>
               </div>
               <div>
                 <div className="text-2xl font-extrabold">
-                  <Counter to={journey.messagesSent} />
+                  <Counter to={messagesSent} />
                 </div>
                 <div className="mt-0.5 text-[11px] text-white/75">{ui.overview.sentLabel[locale]}</div>
               </div>
               <div>
                 <div className="text-2xl font-extrabold">
-                  <Counter to={journey.replies} />
+                  <Counter to={replies} />
                 </div>
                 <div className="mt-0.5 text-[11px] text-white/75">{ui.overview.repliesLabel[locale]}</div>
               </div>
@@ -73,9 +81,9 @@ export function OverviewSection({
       {/* CV competitiveness score */}
       <div className="glass mt-4 rounded-3xl p-5 sm:p-6">
         <div className="flex flex-col items-center gap-5 sm:flex-row sm:items-start sm:gap-6">
-          <ProgressRing value={cvScore.value} size={108} stroke={10}>
+          <ProgressRing value={score} size={108} stroke={10}>
             <div className="leading-none">
-              <Counter to={cvScore.value} className="text-3xl font-extrabold" />
+              <Counter to={score} className="text-3xl font-extrabold" />
               <div className="mt-1 text-[10px] font-medium text-ink-muted">/ 100</div>
             </div>
           </ProgressRing>
@@ -88,6 +96,26 @@ export function OverviewSection({
             <p className="mt-1 text-sm text-ink-soft">
               {ui.overview.scoreFor[locale]} <span className="font-bold text-ink">{cvScore.target[locale]}</span>
             </p>
+
+            {/* Seniority level: the score is for the level you are targeting */}
+            <div className="mt-3">
+              <div className="mb-1.5 text-[11px] font-semibold text-ink-muted">{ui.overview.levelLabel[locale]}</div>
+              <div className="inline-flex rounded-xl border border-white/60 bg-white/40 p-0.5">
+                {LEVELS.map((lv) => (
+                  <button
+                    key={lv.id}
+                    type="button"
+                    onClick={() => setLevel(lv.id)}
+                    className={cn(
+                      'rounded-lg px-3 py-1.5 text-xs font-bold transition-colors',
+                      level === lv.id ? 'bg-brand-600 text-white shadow-soft' : 'text-ink-soft hover:text-ink',
+                    )}
+                  >
+                    {lv.label[locale]}
+                  </button>
+                ))}
+              </div>
+            </div>
 
             <div className="mt-4 border-t border-white/40 pt-3 text-start">
               <div className="flex items-center gap-1.5 text-xs font-bold text-ink">
@@ -118,55 +146,20 @@ export function OverviewSection({
                 <div className="flex items-center justify-between text-[11px] font-semibold">
                   <span className="text-ink-muted">{ui.overview.reachable[locale]}</span>
                   <span className="tabular-nums">
-                    <span className="text-ink-soft">{cvScore.value}</span>
+                    <span className="text-ink-soft">{score}</span>
                     <span className="mx-1 text-ink-muted">→</span>
                     <span className="font-extrabold text-brand-700">{potential}</span>
                   </span>
                 </div>
                 <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-black/5">
                   <div className="h-full rounded-full bg-brand-200" style={{ width: `${potential}%` }}>
-                    <div className="h-full rounded-full bg-brand-600" style={{ width: `${(cvScore.value / potential) * 100}%` }} />
+                    <div className="h-full rounded-full bg-brand-600" style={{ width: `${(score / potential) * 100}%` }} />
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Top areas, ranked by score */}
-      <div className="mt-8">
-        <div className="mb-3">
-          <h3 className="text-lg font-extrabold tracking-tight">{ui.overview.areasTitle[locale]}</h3>
-          <p className="mt-0.5 text-sm text-ink-muted">{ui.overview.areasSub[locale]}</p>
-        </div>
-        <Stagger className="space-y-2.5">
-          {topAreas.map((p) => {
-            const a = accent[p.accent];
-            return (
-              <StaggerItem key={p.id}>
-                <button
-                  type="button"
-                  onClick={() => onOpenPath(p.id)}
-                  className="group glass flex w-full items-center gap-3 rounded-2xl p-3.5 text-start transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift"
-                >
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="truncate text-sm font-bold">{p.name[locale]}</span>
-                      <span className="shrink-0 text-sm font-extrabold tabular-nums" style={{ color: a.stroke }}>
-                        {p.score}
-                      </span>
-                    </div>
-                    <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-black/5">
-                      <div className={cn('h-full rounded-full', a.bar)} style={{ width: `${p.score}%` }} />
-                    </div>
-                  </div>
-                  <ArrowLeft className="h-4 w-4 shrink-0 text-ink-muted transition-transform group-hover:-translate-x-1 ltr:rotate-180 ltr:group-hover:translate-x-1" />
-                </button>
-              </StaggerItem>
-            );
-          })}
-        </Stagger>
       </div>
 
       {/* Today's top move */}

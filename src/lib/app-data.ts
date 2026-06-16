@@ -22,8 +22,10 @@ export const profile = {
 
 // CV competitiveness for the primary target, plus the cheapest-first improvements
 // (the "what raises it" from SCORING.md).
+// The headline score now comes from the primary path's score at the selected
+// level (see paths[].scoreByLevel); this object only carries the target + the
+// level-agnostic improvements.
 export const cvScore = {
-  value: 72,
   target: { ar: 'الاستثمار والاستراتيجية في الطاقة', en: 'Energy Investment & Strategy' } satisfies LS,
   improvements: [
     { action: { ar: 'أعد صياغة أبرز 3 إنجازات بصيغة مالية', en: 'Reframe your top 3 bullets for finance' }, delta: 6, effort: { ar: '30 دقيقة', en: '30 min' } },
@@ -66,6 +68,17 @@ export type Cert = {
 
 export type ContactStatus = 'new' | 'sent' | 'replied' | 'followup';
 export type CompanyTier = 'giant' | 'large' | 'mid_market' | 'sme' | 'agency';
+
+// CV competitiveness is scored against a target seniority. The same person is very
+// competitive for Entry but not for Director (the gap is experience), so the score
+// is shown per level and the customer picks which one they're aiming at.
+export type Level = 'entry' | 'mid' | 'senior' | 'director';
+export const LEVELS: { id: Level; label: LS }[] = [
+  { id: 'entry', label: { ar: 'مبتدئ', en: 'Entry' } },
+  { id: 'mid', label: { ar: 'متوسط', en: 'Mid' } },
+  { id: 'senior', label: { ar: 'خبير', en: 'Senior' } },
+  { id: 'director', label: { ar: 'قيادي', en: 'Director' } },
+];
 
 export type Contact = {
   id: string;
@@ -144,7 +157,7 @@ export type CareerPath = {
   accent: AccentKey;
   icon: 'finance' | 'energy' | 'consulting' | 'government' | 'tech';
   months: number;
-  score: number; // CV competitiveness for this area, 0-100 (SCORING.md rubric)
+  scoreByLevel: Record<Level, number>; // CV competitiveness 0-100 per seniority
   primary?: boolean;
   trail: LS;
   certs: Cert[];
@@ -163,7 +176,7 @@ export const paths: CareerPath[] = [
     accent: 'brand',
     icon: 'finance',
     months: 16,
-    score: 72,
+    scoreByLevel: { entry: 88, mid: 72, senior: 52, director: 34 },
     primary: true,
     trail: { ar: 'تمويل المناخ → CME-1 → FMVA → CFA L1 → CFA L2', en: 'Climate Finance → CME-1 → FMVA → CFA L1 → CFA L2' },
     certs: [
@@ -182,7 +195,7 @@ export const paths: CareerPath[] = [
     accent: 'sky',
     icon: 'energy',
     months: 12,
-    score: 69,
+    scoreByLevel: { entry: 90, mid: 70, senior: 50, director: 32 },
     trail: { ar: 'التناضح العكسي → الطاقة الشمسية → PMP → CEM → Six Sigma', en: 'Reverse Osmosis → Solar PV → PMP → CEM → Six Sigma' },
     certs: [
       { name: { ar: 'التناضح العكسي', en: 'Reverse Osmosis' }, desc: { ar: 'شهادة مهندس متخصص في التناضح العكسي من أكاديمية المياه. تثبت خبرتك التشغيلية في أكبر محطات التحلية — أساس قوي لأدوار الطاقة والمياه.', en: 'Reverse Osmosis Specialist Engineer from the Water Academy. It certifies your operational expertise at the largest desalination plants — a strong base for power and water roles.' }, gain: { ar: 'تثبت خبرتك في أكبر محطات التحلية', en: 'Certifies your large-scale desalination expertise' }, scoreAdd: 7, official: 'https://wa.edu.sa', status: 'done', cost: { ar: 'منجزة', en: 'Completed' }, duration: { ar: 'أنجزتها', en: 'Completed' } },
@@ -200,7 +213,7 @@ export const paths: CareerPath[] = [
     accent: 'violet',
     icon: 'consulting',
     months: 12,
-    score: 57,
+    scoreByLevel: { entry: 74, mid: 56, senior: 40, director: 26 },
     trail: { ar: 'مهارات الاستشارات → دراسات الحالة → GMAT → FMVA', en: 'Consulting Skills → Case Prep → GMAT → FMVA' },
     certs: [
       { name: { ar: 'مهارات الاستشارات', en: 'Consulting Skills' }, desc: { ar: 'برنامج مهارات الاستشارات الأساسية من مسرّعة مستشار. يمنحك إطار حلّ المشكلات والتواصل التنفيذي المطلوب في المقابلات.', en: 'Foundational consulting skills from the Mustashar accelerator. It gives you the problem-solving and executive-communication frame interviews demand.' }, gain: { ar: 'أساس حلّ المشكلات والتواصل التنفيذي', en: 'Problem-solving and executive-communication base' }, scoreAdd: 6, official: 'https://mustashar.org', status: 'done', cost: { ar: 'منجزة', en: 'Completed' }, duration: { ar: 'أنجزتها', en: 'Completed' } },
@@ -218,7 +231,7 @@ export const paths: CareerPath[] = [
     accent: 'amber',
     icon: 'government',
     months: 18,
-    score: 61,
+    scoreByLevel: { entry: 79, mid: 61, senior: 44, director: 28 },
     trail: { ar: 'تمويل المناخ → دبلوم السياسات → PMP → PgMP', en: 'Climate Finance → Policy Diploma → PMP → PgMP' },
     certs: [
       { name: { ar: 'تمويل المناخ', en: 'Climate Finance' }, desc: { ar: 'برنامج تمويل المناخ والاستدامة من كابسارك. يربط نمذجتك لمسار 2060 بأدوات السياسة والتمويل المناخي.', en: 'KAPSARC’s climate finance and sustainability program. It ties your 2060-pathway modeling to policy and climate-finance tools.' }, gain: { ar: 'يربط نمذجتك بالسياسة والتمويل المناخي', en: 'Links your modeling to climate policy and finance' }, scoreAdd: 7, official: 'https://www.kapsarc.org', status: 'done', cost: { ar: 'منجزة', en: 'Completed' }, duration: { ar: 'أنجزتها', en: 'Completed' } },
@@ -236,7 +249,7 @@ export const paths: CareerPath[] = [
     accent: 'rose',
     icon: 'tech',
     months: 12,
-    score: 54,
+    scoreByLevel: { entry: 73, mid: 54, senior: 38, director: 24 },
     trail: { ar: 'تحليل البيانات → AWS → Scrum → تحليلات متقدمة', en: 'Data Analyst → AWS → Scrum → Advanced Analytics' },
     certs: [
       { name: { ar: 'تحليل البيانات', en: 'Data Analyst' }, desc: { ar: 'شهادة محلل بيانات من IBM، تغطّي أدوات التحليل والتصوّر واتخاذ القرار بالبيانات. تكمّل خلفيتك في الذكاء الاصطناعي ومشروع نموذجك التنبؤي.', en: 'IBM’s Data Analyst certificate covering analysis, visualization, and data-driven decisions. It complements your AI background and your predictive-model project.' }, gain: { ar: 'تحليل البيانات واتخاذ القرار', en: 'Data analysis and decision-making' }, scoreAdd: 6, official: 'https://www.ibm.com/training/badge/data-analyst', status: 'done', cost: { ar: 'منجزة', en: 'Completed' }, duration: { ar: 'أنجزتها', en: 'Completed' } },
@@ -520,6 +533,8 @@ export const ui = {
     repliesLabel: { ar: 'ردود وصلتك', en: 'Replies' },
     scoreLabel: { ar: 'درجة تنافسية سيرتك', en: 'Your CV competitiveness' },
     scoreFor: { ar: 'لهدف', en: 'for' },
+    levelLabel: { ar: 'المستوى الوظيفي المستهدف', en: 'Target seniority' },
+    levelHint: { ar: 'درجتك تتغيّر حسب المستوى الذي تستهدفه', en: 'Your score changes with the level you aim for' },
     improvementsTitle: { ar: 'ما الذي يرفع درجتك', en: 'What raises your score' },
     quickWin: { ar: 'أسرع مكسب', en: 'Quickest win' },
     reachable: { ar: 'درجتك إن أكملت هذه الخطوات', en: 'Your reachable score' },
@@ -604,12 +619,14 @@ export const ui = {
     allSectors: { ar: 'كل القطاعات', en: 'All sectors' },
     allSizes: { ar: 'كل الأحجام', en: 'All sizes' },
     handwrite: {
-      ar: 'الأفضل أن تعيد صياغتها بأسلوبك؛ الرسائل المكتوبة بخط اليد تحصل على ردود أكثر.',
-      en: 'Best to rewrite this in your own words; handwritten messages get more replies.',
+      ar: 'الأفضل أن تعيد صياغتها بأسلوبك!',
+      en: 'Best to rewrite this in your own words!',
     },
     msgLangHint: { ar: 'لغة الرسالة', en: 'Message language' },
     showMore: { ar: (n: number) => `عرض المزيد (${n})`, en: (n: number) => `Show ${n} more` },
     showing: { ar: (a: number, b: number) => `تعرض ${a} من ${b}`, en: (a: number, b: number) => `Showing ${a} of ${b}` },
+    inProgress: { ar: 'قيد المتابعة', en: 'In progress' },
+    notContacted: { ar: 'لم تتواصل معهم بعد', en: 'Not contacted yet' },
     empty: { ar: 'لا نتائج مطابقة.', en: 'No matching results.' },
     status_new: { ar: 'جديد', en: 'New' },
     status_sent: { ar: 'مُرسل', en: 'Sent' },

@@ -376,6 +376,20 @@ function Chips<T extends string>({
   );
 }
 
+type GridItem = { contact: Contact; kind?: PickKind; reason?: string };
+
+function CardGrid({ items, locale }: { items: GridItem[]; locale: Loc }) {
+  return (
+    <Stagger className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {items.map((it) => (
+        <StaggerItem key={it.contact.id} className="h-full">
+          <ConnectionCard contact={it.contact} locale={locale} kind={it.kind} reason={it.reason} />
+        </StaggerItem>
+      ))}
+    </Stagger>
+  );
+}
+
 function ListFooter({ total, shown, onMore, locale }: { total: number; shown: number; onMore: () => void; locale: Loc }) {
   if (total <= shown) return null;
   const remaining = Math.min(24, total - shown);
@@ -396,6 +410,7 @@ function ListFooter({ total, shown, onMore, locale }: { total: number; shown: nu
 export function ContactsSection({ locale }: { locale: Loc }) {
   const plan = usePlan();
   const { network, setFromCsv, clear } = useNetwork();
+  const { statuses } = useProgress();
   const [part, setPart] = useState<Part>('connections');
   const [query, setQuery] = useState('');
   const [hrSector, setHrSector] = useState<string>('all');
@@ -456,6 +471,15 @@ export function ContactsSection({ locale }: { locale: Loc }) {
     () => rankedConnections.filter((r) => matchesQuery(r.contact)),
     [rankedConnections, query],
   );
+
+  // Unified items for the active view, split into in-progress vs not-yet-contacted.
+  const items: GridItem[] =
+    part === 'connections'
+      ? connFiltered.map((r) => ({ contact: r.contact, kind: r.kind, reason: r.reason[locale] }))
+      : hrFiltered.map((c) => ({ contact: c }));
+  const statusOf = (c: Contact) => statuses[c.id] ?? c.status;
+  const active = items.filter((it) => statusOf(it.contact) !== 'new');
+  const main = items.filter((it) => statusOf(it.contact) === 'new');
 
   const parts: { id: Part; Icon: typeof Users; label: string; hint: string; badge: number | null }[] = [
     {
@@ -552,37 +576,33 @@ export function ContactsSection({ locale }: { locale: Loc }) {
         </div>
       )}
 
-      {/* Lists (paginated; 100-300 cards at once is too heavy to render) */}
-      {part === 'connections' &&
-        network &&
-        (connFiltered.length === 0 ? (
+      {/* Lists: in-progress (sent/replied/follow-up) separated from the main list */}
+      {(part === 'hr' || network) &&
+        (items.length === 0 ? (
           <p className="mt-10 text-center text-sm text-ink-muted">{ui.contacts.empty[locale]}</p>
         ) : (
           <>
-            <Stagger className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {connFiltered.slice(0, shown).map((r) => (
-                <StaggerItem key={r.contact.id} className="h-full">
-                  <ConnectionCard contact={r.contact} locale={locale} kind={r.kind} reason={r.reason[locale]} />
-                </StaggerItem>
-              ))}
-            </Stagger>
-            <ListFooter total={connFiltered.length} shown={shown} onMore={() => setShown((s) => s + 24)} locale={locale} />
-          </>
-        ))}
-
-      {part === 'hr' &&
-        (hrFiltered.length === 0 ? (
-          <p className="mt-10 text-center text-sm text-ink-muted">{ui.contacts.empty[locale]}</p>
-        ) : (
-          <>
-            <Stagger className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {hrFiltered.slice(0, shown).map((c) => (
-                <StaggerItem key={c.id} className="h-full">
-                  <ConnectionCard contact={c} locale={locale} />
-                </StaggerItem>
-              ))}
-            </Stagger>
-            <ListFooter total={hrFiltered.length} shown={shown} onMore={() => setShown((s) => s + 24)} locale={locale} />
+            {active.length > 0 && (
+              <div className="mt-6">
+                <h3 className="text-sm font-extrabold text-ink-soft">
+                  {ui.contacts.inProgress[locale]} <span className="text-ink-muted">({active.length})</span>
+                </h3>
+                <CardGrid items={active} locale={locale} />
+              </div>
+            )}
+            <div className="mt-6">
+              {active.length > 0 && (
+                <h3 className="mb-1 text-sm font-extrabold text-ink-soft">{ui.contacts.notContacted[locale]}</h3>
+              )}
+              {main.length === 0 ? (
+                <p className="mt-6 text-center text-sm text-ink-muted">{ui.contacts.empty[locale]}</p>
+              ) : (
+                <>
+                  <CardGrid items={main.slice(0, shown)} locale={locale} />
+                  <ListFooter total={main.length} shown={shown} onMore={() => setShown((s) => s + 24)} locale={locale} />
+                </>
+              )}
+            </div>
           </>
         ))}
     </div>
