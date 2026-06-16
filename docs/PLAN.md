@@ -203,3 +203,68 @@ manually until patterns are clear.
 3. Refund policy for a one‑time purchase?
 4. Moyasar vs Tap (recommend Moyasar) — needs a Saudi entity/CR to register.
 5. Exact brand palette/logo (current scaffold uses a premium emerald + ink).
+
+---
+
+## 8. Onboarding process and deferred ideas (agreed 2026-06-16)
+
+This section is the agreed operating model going forward. Some of it is built,
+some is queued. Read this first when picking the work back up.
+
+### 8.1 Per-customer onboarding flow
+1. Scan the customer's CV. Identify the current area plus potential areas, and
+   score each area 0-100 with the SCORING.md rubric.
+2. The highest-scoring area is the headline on the Home page. Home also lists the
+   top 3 areas with their scores.
+3. Each path is one area and shows its score (NOT a separate "match %"; the old
+   match metric is removed in favor of one scoring mechanism everywhere).
+4. Research real certifications per path: name, description, official link, Hadaf
+   eligibility, and the score gain each adds.
+5. Contacts:
+   - HR (recruiters) come from our database, tiered by package: Starter = 100,
+     Pro = 300. These are HR only.
+   - Connections (the people the customer reaches out to) come from the
+     customer's own uploaded LinkedIn Connections.csv. We do NOT invent or
+     supply decision-makers. The file is parsed client-side (never uploaded or
+     stored) and auto-ranked by the customer's target companies/sectors. The
+     per-path "5 picks" and the Home "top connections" also draw from this
+     ranked network, so they are empty until the customer uploads.
+6. Messages are generated automatically on upload by filling templates written
+   in the customer's voice (from the CV) with each recipient's name, company, and
+   role. Personalized on both ends, instant, free, and fully client-side.
+7. Assemble the CustomerPlan, add the slug, deploy, and send /c/<slug>.
+
+Net effect: per customer the only manual step is the one-time CV -> plan
+(score, paths, certs, HR list, message templates). Connections and messages then
+generate themselves whenever the customer uploads their CSV.
+
+This also settles two earlier open decisions: deliverable = the live dashboard;
+Starter/Pro = 100/300 HR contacts.
+
+### 8.2 Deferred: AI-written outreach messages (optional upgrade)
+Today messages are smart templates (a few variants, auto-filled per recipient).
+A future option is to have every message uniquely AI-written per person.
+- Cost: tiny. Short outreach (~100 words) is about $0.002/message on Haiku
+  (~$0.20 per 100, ~$0.60 per 300) or ~$0.006 on Sonnet (~$0.60 / ~$1.80).
+  Prompt-caching the customer profile cuts repeat input cost another 5-10x. So
+  it is pennies per customer; cost is not the deciding factor.
+- Effort: ~1-2 hours. One /api route + an ANTHROPIC_API_KEY env var on Vercel +
+  the Anthropic SDK + a "Write with AI" button per contact card. The app already
+  has an /api folder, so it is a standard integration, low risk.
+- Tradeoffs (the real reason it is deferred, not cost or difficulty):
+  1. Privacy. AI-writing sends the recipient's name/company to our server and to
+     Anthropic, which breaks the "your file never leaves your browser" promise we
+     show. Would need a consent step or a reworded promise.
+  2. Small quality gain. The CSV only has name/company/title (no shared school or
+     recent post), so the AI mostly rephrases the same facts the template already
+     uses. Bigger uplift would require feeding it richer per-person data.
+- Decision: ship templates first (instant, free, private); add AI-written
+  messages later as an optional toggle if we want the polish.
+
+### 8.3 Deferred: persistence and automation
+- Supabase (customers + contacts tables): plans persist and getPlan reads the DB
+  by slug; the 100/300 HR are pulled live from the DB by field instead of seeded
+  in code. Privacy note: serving real, web-sourced HR PII on a public unguessable
+  link is a PDPL exposure - add a magic-link/consent gate when doing this.
+- CV -> JSON generator: automate producing the CustomerPlan object from an
+  uploaded CV so onboarding is near-instant.
