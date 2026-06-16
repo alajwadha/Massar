@@ -8,7 +8,7 @@ import { ThemeToggle } from '@/components/app/theme-toggle';
 // the logo pointing back at the page the visitor is actually on.
 export function AppShell({ children, homeHref = '/app' }: { children: ReactNode; homeHref?: string }) {
   return (
-    <div className="relative min-h-dvh bg-canvas">
+    <div className="legacy relative min-h-dvh bg-canvas">
       {/* Liquid-glass aurora backdrop: a colorful base for the glass to refract. */}
       <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden dark:opacity-60">
         <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-canvas to-sky-50 dark:from-emerald-950/40 dark:via-canvas dark:to-sky-950/40" />

@@ -33,6 +33,7 @@ import { Link, usePathname } from '@/i18n/routing';
 import { usePlan } from '@/components/app/plan-context';
 import { DashboardState, useNetwork, useProgress } from '@/components/app/dashboard-state';
 import { ProgressRing, Counter, Avatar } from '@/components/app/ui';
+import { ThemeToggle } from '@/components/app/theme-toggle';
 import {
   rankConnections,
   planTargets,
@@ -55,27 +56,30 @@ import {
 const EASE = [0.16, 1, 0.3, 1] as const;
 type Tab = 'home' | 'paths' | 'contacts' | 'tracker';
 
-/* --------------------------------------------------------------- primitives -- */
+// Studio = crisp premium. Light base + dark variants. Emerald is the one accent.
+const CARD = 'rounded-2xl border border-zinc-200/80 bg-white shadow-[0_1px_2px_rgba(16,24,40,0.04),0_10px_30px_-12px_rgba(16,24,40,0.12)] dark:border-white/[0.08] dark:bg-white/[0.03] dark:shadow-none';
+const SOFT = 'bg-zinc-100 dark:bg-white/[0.04]'; // inner panels
+const PILL = 'bg-emerald-600 text-white hover:bg-emerald-700 dark:bg-emerald-500 dark:text-[#08110d] dark:hover:bg-emerald-400'; // primary
+const GHOST = 'border border-zinc-200 bg-white text-zinc-600 hover:text-zinc-900 dark:border-white/10 dark:bg-white/5 dark:text-zinc-300 dark:hover:text-white';
+const ACCENT = 'text-emerald-600 dark:text-emerald-400';
 
 function Card({ className, children }: { className?: string; children: React.ReactNode }) {
-  return (
-    <div className={cn('rounded-2xl border border-white/[0.08] bg-white/[0.03]', className)}>{children}</div>
-  );
+  return <div className={cn(CARD, className)}>{children}</div>;
 }
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
-  return <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-emerald-400/90">{children}</div>;
+  return <div className={cn('text-[11px] font-bold uppercase tracking-[0.22em]', ACCENT)}>{children}</div>;
 }
 
 const KIND_META: Record<PickKind, { cls: string; Icon: typeof Crown; key: 'kindTop' | 'kindMid' | 'kindCommon' }> = {
-  top: { cls: 'text-emerald-300', Icon: Crown, key: 'kindTop' },
-  mid: { cls: 'text-amber-300', Icon: User, key: 'kindMid' },
-  common: { cls: 'text-violet-300', Icon: Sparkles, key: 'kindCommon' },
+  top: { cls: ACCENT, Icon: Crown, key: 'kindTop' },
+  mid: { cls: 'text-amber-600 dark:text-amber-300', Icon: User, key: 'kindMid' },
+  common: { cls: 'text-violet-600 dark:text-violet-300', Icon: Sparkles, key: 'kindCommon' },
 };
 
 const STATUS_BTNS: { key: ContactStatus; sk: 'status_sent' | 'status_replied' | 'status_followup'; on: string }[] = [
-  { key: 'sent', sk: 'status_sent', on: 'bg-emerald-500 text-[#08110d]' },
-  { key: 'replied', sk: 'status_replied', on: 'bg-sky-500 text-[#08110d]' },
+  { key: 'sent', sk: 'status_sent', on: 'bg-emerald-600 text-white dark:bg-emerald-500 dark:text-[#08110d]' },
+  { key: 'replied', sk: 'status_replied', on: 'bg-sky-600 text-white dark:bg-sky-500' },
   { key: 'followup', sk: 'status_followup', on: 'bg-rose-500 text-white' },
 ];
 
@@ -104,51 +108,47 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
   };
 
   return (
-    <div className="flex h-full flex-col rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4 transition-colors duration-300 hover:border-white/20">
+    <Card className="flex h-full flex-col p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-zinc-300 dark:hover:border-white/20">
       <div className="flex items-start gap-3">
         <Avatar initials={c.name[locale].charAt(0)} companyKey={c.companyKey} seed={c.company.en} />
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
-            <h3 className="truncate text-[15px] font-semibold text-white">{c.name[locale]}</h3>
+            <h3 className="truncate text-[15px] font-semibold text-zinc-900 dark:text-white">{c.name[locale]}</h3>
             {isRecruiter && (
-              <span className="shrink-0 rounded-full bg-sky-400/10 px-2 py-0.5 text-[10px] font-bold text-sky-300">
+              <span className="shrink-0 rounded-full bg-sky-500/10 px-2 py-0.5 text-[10px] font-bold text-sky-600 dark:text-sky-300">
                 {ui.contacts.recruiter[locale]}
               </span>
             )}
           </div>
-          <p className="mt-0.5 truncate text-[13px] text-zinc-400">{c.role[locale]}</p>
-          <p className="mt-0.5 truncate text-xs font-semibold text-emerald-400">{c.company[locale]}</p>
+          <p className="mt-0.5 truncate text-[13px] text-zinc-500 dark:text-zinc-400">{c.role[locale]}</p>
+          <p className={cn('mt-0.5 truncate text-xs font-semibold', ACCENT)}>{c.company[locale]}</p>
         </div>
       </div>
 
       {isRecruiter && (c.sector || c.companyTier) && (
         <div className="mt-2.5 flex flex-wrap gap-1.5">
           {c.sector && SECTOR_LABELS[c.sector] && (
-            <span className="rounded-md bg-white/5 px-2 py-0.5 text-[10.5px] font-semibold text-zinc-300">
-              {SECTOR_LABELS[c.sector][locale]}
-            </span>
+            <span className={cn('rounded-md px-2 py-0.5 text-[10.5px] font-semibold text-zinc-600 dark:text-zinc-300', SOFT)}>{SECTOR_LABELS[c.sector][locale]}</span>
           )}
           {c.companyTier && (
-            <span className="rounded-md bg-white/5 px-2 py-0.5 text-[10.5px] font-semibold text-zinc-400">
-              {TIER_LABELS[c.companyTier][locale]}
-            </span>
+            <span className={cn('rounded-md px-2 py-0.5 text-[10.5px] font-semibold text-zinc-500 dark:text-zinc-400', SOFT)}>{TIER_LABELS[c.companyTier][locale]}</span>
           )}
         </div>
       )}
 
       {kind && reason && (
-        <div className="mt-3 flex items-start gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-[11px]">
+        <div className={cn('mt-3 flex items-start gap-1.5 rounded-lg px-2.5 py-1.5 text-[11px]', SOFT)}>
           {(() => {
             const I = KIND_META[kind].Icon;
             return <I className={cn('mt-0.5 h-3 w-3 shrink-0', KIND_META[kind].cls)} />;
           })()}
-          <span className="text-zinc-300">
+          <span className="text-zinc-600 dark:text-zinc-300">
             <span className={cn('font-bold', KIND_META[kind].cls)}>{ui.paths[KIND_META[kind].key][locale]}</span> · {reason}
           </span>
         </div>
       )}
 
-      <div className="mt-3 border-t border-white/[0.06] pt-3">
+      <div className="mt-3 border-t border-zinc-200/80 pt-3 dark:border-white/[0.06]">
         <div className="flex items-center gap-1.5">
           {STATUS_BTNS.map((b) => {
             const active = status === b.key;
@@ -157,10 +157,7 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
                 key={b.key}
                 type="button"
                 onClick={() => setStatus(c.id, active ? 'new' : b.key)}
-                className={cn(
-                  'flex-1 rounded-lg px-2 py-1.5 text-[11px] font-bold transition-colors',
-                  active ? b.on : 'bg-white/5 text-zinc-400 hover:text-white',
-                )}
+                className={cn('flex-1 rounded-lg px-2 py-1.5 text-[11px] font-bold transition-colors', active ? b.on : cn(SOFT, 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white'))}
               >
                 {ui.contacts[b.sk][locale]}
               </button>
@@ -170,28 +167,24 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
       </div>
 
       <div className="mt-3 flex-1">
-        <div className="mb-1.5 flex items-start gap-1.5 rounded-lg bg-amber-400/10 px-2.5 py-1.5 text-[11px] leading-relaxed text-amber-200/90">
+        <div className="mb-1.5 flex items-start gap-1.5 rounded-lg bg-amber-400/10 px-2.5 py-1.5 text-[11px] leading-relaxed text-amber-700 dark:text-amber-300">
           <PenLine className="mt-0.5 h-3 w-3 shrink-0" />
           <span>{ui.contacts.handwrite[locale]}</span>
         </div>
-        <div className="rounded-xl border border-white/[0.06] bg-black/20 p-3">
+        <div className={cn('rounded-xl p-3', SOFT)}>
           <div className="mb-1.5 flex items-center justify-between gap-2">
-            <span className="truncate text-[11px] font-semibold text-zinc-500">
-              {ui.contacts.messagePreview[locale]} · {template.title[locale]}
-            </span>
+            <span className="truncate text-[11px] font-semibold text-zinc-400 dark:text-zinc-500">{ui.contacts.messagePreview[locale]} · {template.title[locale]}</span>
             <button
               type="button"
               onClick={() => setMsgLang((l) => (l === 'ar' ? 'en' : 'ar'))}
               title={ui.contacts.msgLangHint[locale]}
-              className="inline-flex items-center gap-1 rounded-md border border-white/10 bg-white/5 px-1.5 py-0.5 text-[10px] font-bold text-zinc-300 hover:text-white"
+              className="inline-flex items-center gap-1 rounded-md border border-zinc-200 bg-white px-1.5 py-0.5 text-[10px] font-bold text-zinc-500 hover:text-zinc-900 dark:border-white/10 dark:bg-white/10 dark:text-zinc-400 dark:hover:text-white"
             >
               <Languages className="h-3 w-3" />
               {msgLang === 'ar' ? 'EN' : 'ع'}
             </button>
           </div>
-          <p dir={msgLang === 'ar' ? 'rtl' : 'ltr'} className="line-clamp-3 text-[12.5px] leading-relaxed text-zinc-400">
-            {message}
-          </p>
+          <p dir={msgLang === 'ar' ? 'rtl' : 'ltr'} className="line-clamp-3 text-[12.5px] leading-relaxed text-zinc-500 dark:text-zinc-400">{message}</p>
         </div>
       </div>
 
@@ -199,33 +192,19 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
         <button
           type="button"
           onClick={copy}
-          className={cn(
-            'flex flex-1 items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-[13px] font-bold transition-colors',
-            copied ? 'bg-emerald-500/15 text-emerald-300' : 'bg-emerald-500 text-[#08110d] hover:bg-emerald-400',
-          )}
+          className={cn('flex flex-1 items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-[13px] font-bold transition-colors', copied ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300' : PILL)}
         >
           {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
           {copied ? ui.contacts.copied[locale] : ui.contacts.copy[locale]}
         </button>
-        <button
-          type="button"
-          onClick={() => setTpl((i) => i + 1)}
-          title={ui.contacts.shuffle[locale]}
-          className="grid w-11 shrink-0 place-items-center rounded-xl border border-white/10 bg-white/5 text-zinc-300 transition-colors hover:text-white"
-        >
+        <button type="button" onClick={() => setTpl((i) => i + 1)} title={ui.contacts.shuffle[locale]} className={cn('grid w-11 shrink-0 place-items-center rounded-xl', GHOST)}>
           <Shuffle className="h-4 w-4" />
         </button>
-        <a
-          href={linkedinUrl(c)}
-          target="_blank"
-          rel="noopener noreferrer"
-          title={ui.contacts.linkedin[locale]}
-          className="grid w-11 shrink-0 place-items-center rounded-xl border border-white/10 bg-white/5 text-sky-300 transition-colors hover:bg-white/10"
-        >
+        <a href={linkedinUrl(c)} target="_blank" rel="noopener noreferrer" title={ui.contacts.linkedin[locale]} className="grid w-11 shrink-0 place-items-center rounded-xl border border-zinc-200 bg-white text-sky-600 transition-colors hover:bg-zinc-50 dark:border-white/10 dark:bg-white/5 dark:text-sky-300">
           <Linkedin className="h-4 w-4" />
         </a>
       </div>
-    </div>
+    </Card>
   );
 }
 
@@ -265,26 +244,24 @@ function Home({ locale, go }: { locale: Loc; go: (t: Tab) => void }) {
 
   return (
     <div className="space-y-5">
-      {/* Score hero */}
-      <Card className="overflow-hidden bg-gradient-to-b from-white/[0.06] to-white/[0.02] p-6 sm:p-8">
+      <Card className="p-6 sm:p-8">
         <div className="grid gap-8 lg:grid-cols-[auto_1fr]">
           <div className="flex flex-col items-center gap-4">
-            <ProgressRing value={score} size={150} stroke={12} color="#34D399" track="rgba(255,255,255,0.08)">
-              <div className="leading-none">
-                <Counter to={score} className="text-5xl font-semibold tracking-tight text-white" />
-                <div className="mt-1 text-[11px] font-medium text-zinc-500">/ 100</div>
-              </div>
-            </ProgressRing>
-            <div className="inline-flex rounded-xl border border-white/10 bg-black/20 p-0.5">
+            <div className={ACCENT}>
+              <ProgressRing value={score} size={150} stroke={12} color="currentColor" track="rgba(125,125,140,0.16)">
+                <div className="leading-none">
+                  <Counter to={score} className="text-5xl font-semibold tracking-tight text-zinc-900 dark:text-white" />
+                  <div className="mt-1 text-[11px] font-medium text-zinc-400 dark:text-zinc-500">/ 100</div>
+                </div>
+              </ProgressRing>
+            </div>
+            <div className={cn('inline-flex rounded-xl p-0.5', SOFT)}>
               {LEVELS.map((lv) => (
                 <button
                   key={lv.id}
                   type="button"
                   onClick={() => setLevel(lv.id)}
-                  className={cn(
-                    'rounded-lg px-2.5 py-1.5 text-[11px] font-bold transition-colors',
-                    level === lv.id ? 'bg-emerald-500 text-[#08110d]' : 'text-zinc-400 hover:text-white',
-                  )}
+                  className={cn('rounded-lg px-2.5 py-1.5 text-[11px] font-bold transition-colors', level === lv.id ? PILL : 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white')}
                 >
                   {lv.label[locale]}
                 </button>
@@ -294,51 +271,47 @@ function Home({ locale, go }: { locale: Loc; go: (t: Tab) => void }) {
 
           <div className="min-w-0">
             <Eyebrow>{ui.overview.scoreLabel[locale]}</Eyebrow>
-            <h1 className="mt-2 text-2xl font-semibold tracking-tight text-white sm:text-3xl">{cvScore.target[locale]}</h1>
-            <p className="mt-1 text-sm text-zinc-400">{ui.overview.levelHint[locale]}</p>
+            <h1 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-900 dark:text-white sm:text-3xl">{cvScore.target[locale]}</h1>
+            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{ui.overview.levelHint[locale]}</p>
 
             <div className="mt-5 grid grid-cols-3 gap-3">
               {stats.map((s) => (
-                <div key={s.label} className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-3 py-3 text-center">
-                  <div className="text-xl font-semibold text-white">{s.v}</div>
-                  <div className="mt-0.5 text-[11px] text-zinc-500">{s.label}</div>
+                <div key={s.label} className={cn('rounded-xl px-3 py-3 text-center', SOFT)}>
+                  <div className="text-xl font-semibold text-zinc-900 dark:text-white">{s.v}</div>
+                  <div className="mt-0.5 text-[11px] text-zinc-400 dark:text-zinc-500">{s.label}</div>
                 </div>
               ))}
             </div>
 
             <div className="mt-5">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-zinc-300">
-                <TrendingUp className="h-3.5 w-3.5 text-emerald-400" />
+              <div className="flex items-center gap-1.5 text-xs font-bold text-zinc-700 dark:text-zinc-200">
+                <TrendingUp className={cn('h-3.5 w-3.5', ACCENT)} />
                 {ui.overview.improvementsTitle[locale]}
               </div>
               <ul className="mt-2.5 space-y-2">
                 {cvScore.improvements.map((imp, i) => (
                   <li key={i} className="flex items-center gap-2.5 text-[13px]">
-                    <span className="shrink-0 rounded-md bg-emerald-500/15 px-1.5 py-0.5 text-[11px] font-bold text-emerald-300 tabular-nums">
-                      +{imp.delta}
-                    </span>
-                    <span className="min-w-0 flex-1 text-zinc-300">
+                    <span className="shrink-0 rounded-md bg-emerald-500/15 px-1.5 py-0.5 text-[11px] font-bold text-emerald-700 tabular-nums dark:text-emerald-300">+{imp.delta}</span>
+                    <span className="min-w-0 flex-1 text-zinc-600 dark:text-zinc-300">
                       {imp.action[locale]}
                       {i === 0 && (
-                        <span className="ms-2 whitespace-nowrap rounded bg-amber-400/15 px-1.5 py-0.5 text-[10px] font-bold text-amber-300">
-                          {ui.overview.quickWin[locale]}
-                        </span>
+                        <span className="ms-2 whitespace-nowrap rounded bg-amber-400/15 px-1.5 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-300">{ui.overview.quickWin[locale]}</span>
                       )}
                     </span>
-                    <span className="shrink-0 text-[11px] text-zinc-500">{imp.effort[locale]}</span>
+                    <span className="shrink-0 text-[11px] text-zinc-400 dark:text-zinc-500">{imp.effort[locale]}</span>
                   </li>
                 ))}
               </ul>
               <div className="mt-3.5">
                 <div className="flex items-center justify-between text-[11px] font-semibold">
-                  <span className="text-zinc-500">{ui.overview.reachable[locale]}</span>
-                  <span className="tabular-nums text-zinc-400">
-                    {score} <span className="text-zinc-600">→</span> <span className="font-bold text-emerald-300">{potential}</span>
+                  <span className="text-zinc-400 dark:text-zinc-500">{ui.overview.reachable[locale]}</span>
+                  <span className="tabular-nums text-zinc-500 dark:text-zinc-400">
+                    {score} <span className="text-zinc-300 dark:text-zinc-600">→</span> <span className="font-bold text-emerald-700 dark:text-emerald-300">{potential}</span>
                   </span>
                 </div>
-                <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-white/5">
+                <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-zinc-200/80 dark:bg-white/10">
                   <div className="h-full rounded-full bg-emerald-500/25" style={{ width: `${potential}%` }}>
-                    <div className="h-full rounded-full bg-emerald-400" style={{ width: `${(score / potential) * 100}%` }} />
+                    <div className="h-full rounded-full bg-emerald-600 dark:bg-emerald-400" style={{ width: `${(score / potential) * 100}%` }} />
                   </div>
                 </div>
               </div>
@@ -347,53 +320,47 @@ function Home({ locale, go }: { locale: Loc; go: (t: Tab) => void }) {
         </div>
       </Card>
 
-      {/* Quick tip + current cert */}
       <div className="grid gap-4 sm:grid-cols-2">
         <Card className="flex items-start gap-3 p-5">
-          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-emerald-500/15 text-emerald-300">
+          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
             <Sparkles className="h-5 w-5" />
           </div>
           <div>
-            <div className="text-sm font-bold text-white">{ui.overview.tipTitle[locale]}</div>
-            <p className="mt-0.5 text-[13px] leading-relaxed text-zinc-400">{ui.overview.tip[locale]}</p>
+            <div className="text-sm font-bold text-zinc-900 dark:text-white">{ui.overview.tipTitle[locale]}</div>
+            <p className="mt-0.5 text-[13px] leading-relaxed text-zinc-500 dark:text-zinc-400">{ui.overview.tip[locale]}</p>
           </div>
         </Card>
         {current && (
-          <button type="button" onClick={() => go('paths')} className="group">
-            <Card className="flex h-full items-center gap-3 p-5 text-start transition-colors hover:border-white/20">
-              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white/5 text-emerald-300">
+          <button type="button" onClick={() => go('paths')} className="group text-start">
+            <Card className="flex h-full items-center gap-3 p-5 transition-all hover:-translate-y-0.5 hover:border-zinc-300 dark:hover:border-white/20">
+              <div className={cn('grid h-10 w-10 shrink-0 place-items-center rounded-xl text-emerald-700 dark:text-emerald-300', SOFT)}>
                 <BadgeCheck className="h-5 w-5" />
               </div>
               <div className="min-w-0 flex-1">
-                <div className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500">{ui.overview.nextCert[locale]}</div>
-                <div className="mt-0.5 truncate font-bold text-white">{current.name[locale]}</div>
+                <div className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">{ui.overview.nextCert[locale]}</div>
+                <div className="mt-0.5 truncate font-bold text-zinc-900 dark:text-white">{current.name[locale]}</div>
               </div>
-              <ArrowUpRight className="h-5 w-5 shrink-0 text-zinc-500 transition-colors group-hover:text-white" />
+              <ArrowUpRight className="h-5 w-5 shrink-0 text-zinc-400 transition-colors group-hover:text-zinc-900 dark:text-zinc-500 dark:group-hover:text-white" />
             </Card>
           </button>
         )}
       </div>
 
-      {/* Today's outreach */}
       <div>
         <div className="mb-1 flex items-end justify-between">
-          <h2 className="text-lg font-semibold text-white">{ui.overview.actionsTitle[locale]}</h2>
-          <button type="button" onClick={() => go('contacts')} className="inline-flex items-center gap-1 text-sm font-semibold text-emerald-400 hover:text-emerald-300">
+          <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">{ui.overview.actionsTitle[locale]}</h2>
+          <button type="button" onClick={() => go('contacts')} className={cn('inline-flex items-center gap-1 text-sm font-semibold', ACCENT)}>
             {ui.overview.openContacts[locale]} <ArrowLeft className="h-4 w-4 ltr:rotate-180" />
           </button>
         </div>
-        <p className="text-sm text-zinc-500">{ui.overview.actionsSub[locale]}</p>
+        <p className="text-sm text-zinc-400 dark:text-zinc-500">{ui.overview.actionsSub[locale]}</p>
         {todays.length > 0 ? (
           <CardGrid items={todays.map((r) => ({ contact: r.contact, kind: r.kind, reason: r.reason[locale] }))} locale={locale} />
         ) : (
-          <button
-            type="button"
-            onClick={() => go('contacts')}
-            className="mt-4 flex w-full flex-col items-center gap-1 rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-8 text-center transition-colors hover:border-white/30"
-          >
-            <Network className="h-6 w-6 text-emerald-400" />
-            <span className="mt-1 text-sm font-semibold text-white">{ui.network.locked[locale]}</span>
-            <span className="text-xs font-bold text-emerald-400">{ui.network.upload[locale]}</span>
+          <button type="button" onClick={() => go('contacts')} className="mt-4 flex w-full flex-col items-center gap-1 rounded-2xl border border-dashed border-zinc-300 bg-white/50 p-8 text-center transition-colors hover:border-emerald-500/50 dark:border-white/15 dark:bg-white/[0.02] dark:hover:border-white/30">
+            <Network className={cn('h-6 w-6', ACCENT)} />
+            <span className="mt-1 text-sm font-semibold text-zinc-900 dark:text-white">{ui.network.locked[locale]}</span>
+            <span className={cn('text-xs font-bold', ACCENT)}>{ui.network.upload[locale]}</span>
           </button>
         )}
       </div>
@@ -413,17 +380,17 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
 
   return (
     <div className="space-y-5">
-      <button type="button" onClick={onBack} className="inline-flex items-center gap-1.5 text-sm font-semibold text-zinc-400 hover:text-white">
+      <button type="button" onClick={onBack} className="inline-flex items-center gap-1.5 text-sm font-semibold text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white">
         <ArrowLeft className="h-4 w-4 ltr:rotate-180" />
         {ui.paths.back[locale]}
       </button>
 
-      <Card className="bg-gradient-to-b from-white/[0.06] to-white/[0.02] p-6">
+      <Card className="p-6">
         <div className="flex flex-wrap items-center gap-2">
-          <h2 className="text-2xl font-semibold tracking-tight text-white">{path.name[locale]}</h2>
-          {path.primary && <span className="rounded-md bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold text-emerald-300">★ {ui.paths.primary[locale]}</span>}
+          <h2 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-white">{path.name[locale]}</h2>
+          {path.primary && <span className={cn('rounded-md px-2 py-0.5 text-[10px] font-bold', PILL)}>★ {ui.paths.primary[locale]}</span>}
         </div>
-        <p className="mt-1 text-sm text-zinc-400">{path.targets[locale]}</p>
+        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{path.targets[locale]}</p>
         <div className="mt-5 grid grid-cols-4 gap-3">
           {[
             { v: score, l: ui.paths.score[locale] },
@@ -431,18 +398,17 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
             { v: path.months, l: ui.paths.statMonths[locale] },
             { v: `+${totalScore}`, l: ui.paths.totalScore[locale] },
           ].map((s) => (
-            <div key={s.l} className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-2 py-3 text-center">
-              <div className="text-lg font-semibold text-white tabular-nums">{s.v}</div>
-              <div className="mt-0.5 text-[10px] text-zinc-500">{s.l}</div>
+            <div key={s.l} className={cn('rounded-xl px-2 py-3 text-center', SOFT)}>
+              <div className="text-lg font-semibold text-zinc-900 tabular-nums dark:text-white">{s.v}</div>
+              <div className="mt-0.5 text-[10px] text-zinc-400 dark:text-zinc-500">{s.l}</div>
             </div>
           ))}
         </div>
       </Card>
 
-      {/* Certifications */}
       <div>
-        <h3 className="text-lg font-semibold text-white">{ui.certs.title[locale]}</h3>
-        <p className="mt-0.5 text-sm text-zinc-500">{ui.certs.sub[locale]}</p>
+        <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">{ui.certs.title[locale]}</h3>
+        <p className="mt-0.5 text-sm text-zinc-400 dark:text-zinc-500">{ui.certs.sub[locale]}</p>
         <div className="mt-4 space-y-3">
           {path.certs.map((cert) => {
             const isDone = certsDone[cert.name.en];
@@ -450,27 +416,20 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
               <Card key={cert.name.en} className={cn('p-4', isDone && 'opacity-70')}>
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <h4 className="font-semibold text-white">{cert.name[locale]}</h4>
-                    <p className="mt-1 text-[13px] leading-relaxed text-zinc-400">{cert.desc[locale]}</p>
+                    <h4 className="font-semibold text-zinc-900 dark:text-white">{cert.name[locale]}</h4>
+                    <p className="mt-1 text-[13px] leading-relaxed text-zinc-500 dark:text-zinc-400">{cert.desc[locale]}</p>
                   </div>
-                  <span className="shrink-0 rounded-lg bg-emerald-500/15 px-2 py-1 text-sm font-bold text-emerald-300 tabular-nums">+{cert.scoreAdd}</span>
+                  <span className="shrink-0 rounded-lg bg-emerald-500/15 px-2 py-1 text-sm font-bold text-emerald-700 tabular-nums dark:text-emerald-300">+{cert.scoreAdd}</span>
                 </div>
                 <div className="mt-3 flex flex-wrap items-center gap-2">
-                  {cert.hadaf && <span className="rounded-md bg-emerald-500/10 px-2 py-1 text-[11px] font-semibold text-emerald-300">{ui.certs.hadaf[locale]}</span>}
-                  <span className="rounded-md bg-white/5 px-2 py-1 text-[11px] font-semibold text-zinc-300">{cert.cost[locale]}</span>
-                  <span className="rounded-md bg-white/5 px-2 py-1 text-[11px] font-semibold text-zinc-400">{cert.duration[locale]}</span>
+                  {cert.hadaf && <span className="rounded-md bg-emerald-500/10 px-2 py-1 text-[11px] font-semibold text-emerald-700 dark:text-emerald-300">{ui.certs.hadaf[locale]}</span>}
+                  <span className={cn('rounded-md px-2 py-1 text-[11px] font-semibold text-zinc-600 dark:text-zinc-300', SOFT)}>{cert.cost[locale]}</span>
+                  <span className={cn('rounded-md px-2 py-1 text-[11px] font-semibold text-zinc-500 dark:text-zinc-400', SOFT)}>{cert.duration[locale]}</span>
                   <div className="ms-auto flex gap-2">
-                    <a href={cert.official} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-[12px] font-semibold text-zinc-300 hover:text-white">
+                    <a href={cert.official} target="_blank" rel="noopener noreferrer" className={cn('inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12px] font-semibold', GHOST)}>
                       <ExternalLink className="h-3.5 w-3.5" /> {ui.certs.official[locale]}
                     </a>
-                    <button
-                      type="button"
-                      onClick={() => toggleCert(cert.name.en)}
-                      className={cn(
-                        'inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12px] font-bold transition-colors',
-                        isDone ? 'bg-emerald-500 text-[#08110d]' : 'border border-white/10 bg-white/5 text-zinc-300 hover:text-white',
-                      )}
-                    >
+                    <button type="button" onClick={() => toggleCert(cert.name.en)} className={cn('inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12px] font-bold transition-colors', isDone ? PILL : GHOST)}>
                       <Check className="h-3.5 w-3.5" /> {isDone ? ui.certs.markedDone[locale] : ui.certs.markDone[locale]}
                     </button>
                   </div>
@@ -481,14 +440,13 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
         </div>
       </div>
 
-      {/* Picks from network */}
       <div>
-        <h3 className="text-lg font-semibold text-white">{ui.paths.picksTitle[locale]}</h3>
-        <p className="mt-0.5 text-sm text-zinc-500">{ui.paths.picksSub[locale]}</p>
+        <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">{ui.paths.picksTitle[locale]}</h3>
+        <p className="mt-0.5 text-sm text-zinc-400 dark:text-zinc-500">{ui.paths.picksSub[locale]}</p>
         {picks.length > 0 ? (
           <CardGrid items={picks.map((r) => ({ contact: r.contact, kind: r.kind, reason: r.reason[locale] }))} locale={locale} />
         ) : (
-          <Card className="mt-4 p-6 text-center text-sm text-zinc-400">{ui.network.locked[locale]}</Card>
+          <Card className="mt-4 p-6 text-center text-sm text-zinc-500 dark:text-zinc-400">{ui.network.locked[locale]}</Card>
         )}
       </div>
     </div>
@@ -505,34 +463,34 @@ function Paths({ locale }: { locale: Loc }) {
   return (
     <div>
       <Eyebrow>{ui.paths.eyebrow[locale]}</Eyebrow>
-      <h1 className="mt-2 text-2xl font-semibold tracking-tight text-white">{ui.paths.title[locale]}</h1>
-      <p className="mt-1 text-sm text-zinc-400">{ui.paths.sub[locale]}</p>
+      <h1 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-900 dark:text-white">{ui.paths.title[locale]}</h1>
+      <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{ui.paths.sub[locale]}</p>
       <div className="mt-5 grid gap-4 lg:grid-cols-2">
         {paths.map((p) => {
           const score = p.scoreByLevel[level];
           const totalScore = p.certs.reduce((s, c) => s + c.scoreAdd, 0);
           return (
             <button key={p.id} type="button" onClick={() => setSel(p.id)} className="group text-start">
-              <Card className={cn('h-full p-5 transition-colors hover:border-white/20', p.primary && 'border-emerald-500/30')}>
+              <Card className={cn('h-full p-5 transition-all hover:-translate-y-0.5 hover:border-zinc-300 dark:hover:border-white/20', p.primary && 'border-emerald-500/40 dark:border-emerald-500/30')}>
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <h3 className="text-[15px] font-semibold text-white">{p.name[locale]}</h3>
-                    <p className="mt-1 text-[13px] text-zinc-400">{p.targets[locale]}</p>
+                    <h3 className="text-[15px] font-semibold text-zinc-900 dark:text-white">{p.name[locale]}</h3>
+                    <p className="mt-1 text-[13px] text-zinc-500 dark:text-zinc-400">{p.targets[locale]}</p>
                   </div>
-                  {p.primary && <span className="shrink-0 rounded-md bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold text-emerald-300">★</span>}
+                  {p.primary && <span className="shrink-0 rounded-md bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-300">★</span>}
                 </div>
                 <div className="mt-4 flex items-center justify-between text-xs">
-                  <span className="font-semibold text-zinc-400">{ui.paths.score[locale]}</span>
-                  <span className="font-bold text-emerald-300 tabular-nums">{score}<span className="ms-1 text-[10px] text-zinc-500">{ui.paths.scoreOf[locale]}</span></span>
+                  <span className="font-semibold text-zinc-500 dark:text-zinc-400">{ui.paths.score[locale]}</span>
+                  <span className="font-bold tabular-nums text-emerald-700 dark:text-emerald-300">{score}<span className="ms-1 text-[10px] text-zinc-400 dark:text-zinc-500">{ui.paths.scoreOf[locale]}</span></span>
                 </div>
-                <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-white/5">
-                  <div className="h-full rounded-full bg-emerald-400" style={{ width: `${score}%` }} />
+                <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-zinc-200/80 dark:bg-white/10">
+                  <div className="h-full rounded-full bg-emerald-600 dark:bg-emerald-400" style={{ width: `${score}%` }} />
                 </div>
-                <div className="mt-4 flex items-center gap-4 text-[12px] text-zinc-500">
-                  <span><span className="font-bold text-zinc-300">{p.certs.length}</span> {ui.paths.statCerts[locale]}</span>
-                  <span><span className="font-bold text-zinc-300">{p.months}</span> {ui.paths.statMonths[locale]}</span>
-                  <span><span className="font-bold text-emerald-300">+{totalScore}</span> {ui.paths.totalScore[locale]}</span>
-                  <ArrowUpRight className="ms-auto h-4 w-4 text-zinc-600 transition-colors group-hover:text-white" />
+                <div className="mt-4 flex items-center gap-4 text-[12px] text-zinc-400 dark:text-zinc-500">
+                  <span><span className="font-bold text-zinc-600 dark:text-zinc-300">{p.certs.length}</span> {ui.paths.statCerts[locale]}</span>
+                  <span><span className="font-bold text-zinc-600 dark:text-zinc-300">{p.months}</span> {ui.paths.statMonths[locale]}</span>
+                  <span><span className="font-bold text-emerald-700 dark:text-emerald-300">+{totalScore}</span> {ui.paths.totalScore[locale]}</span>
+                  <ArrowUpRight className="ms-auto h-4 w-4 text-zinc-300 transition-colors group-hover:text-zinc-900 dark:text-zinc-600 dark:group-hover:text-white" />
                 </div>
               </Card>
             </button>
@@ -548,16 +506,13 @@ function Paths({ locale }: { locale: Loc }) {
 function Chips<T extends string>({ label, options, value, onChange }: { label: string; options: { id: T; label: string }[]; value: T; onChange: (v: T) => void }) {
   return (
     <div className="flex items-center gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-      <span className="shrink-0 text-xs font-semibold text-zinc-500">{label}:</span>
+      <span className="shrink-0 text-xs font-semibold text-zinc-400 dark:text-zinc-500">{label}:</span>
       {options.map((o) => (
         <button
           key={o.id}
           type="button"
           onClick={() => onChange(o.id)}
-          className={cn(
-            'shrink-0 rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors',
-            value === o.id ? 'border-emerald-400 bg-emerald-500/15 text-emerald-200' : 'border-white/10 bg-white/5 text-zinc-400 hover:text-white',
-          )}
+          className={cn('shrink-0 rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors', value === o.id ? 'border-emerald-600 bg-emerald-600 text-white dark:border-emerald-500 dark:bg-emerald-500 dark:text-[#08110d]' : 'border-zinc-200 bg-white text-zinc-500 hover:text-zinc-900 dark:border-white/10 dark:bg-white/5 dark:text-zinc-400 dark:hover:text-white')}
         >
           {o.label}
         </button>
@@ -575,13 +530,13 @@ function NetworkPanel({ locale, count, onFile, onClear }: { locale: Loc; count: 
     return (
       <Card className="mt-4 flex flex-wrap items-center justify-between gap-3 p-4">
         <div className="flex items-center gap-3">
-          <div className="grid h-10 w-10 place-items-center rounded-xl bg-emerald-500/15 text-emerald-300"><Network className="h-5 w-5" /></div>
+          <div className="grid h-10 w-10 place-items-center rounded-xl bg-emerald-500/15 text-emerald-700 dark:text-emerald-300"><Network className="h-5 w-5" /></div>
           <div>
-            <div className="font-bold text-white">{ui.network.matched[locale](count)}</div>
-            <div className="text-[12.5px] text-zinc-400">{count > 0 ? ui.network.ranked[locale] : ui.network.none[locale]}</div>
+            <div className="font-bold text-zinc-900 dark:text-white">{ui.network.matched[locale](count)}</div>
+            <div className="text-[12.5px] text-zinc-500 dark:text-zinc-400">{count > 0 ? ui.network.ranked[locale] : ui.network.none[locale]}</div>
           </div>
         </div>
-        <button type="button" onClick={onClear} className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-sm font-semibold text-zinc-300 hover:text-white">
+        <button type="button" onClick={onClear} className={cn('inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-semibold', GHOST)}>
           <X className="h-4 w-4" /> {ui.network.clear[locale]}
         </button>
         {Picker}
@@ -591,21 +546,21 @@ function NetworkPanel({ locale, count, onFile, onClear }: { locale: Loc; count: 
   return (
     <Card className="mt-4 p-5">
       <div className="flex items-start gap-3">
-        <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-emerald-500/15 text-emerald-300"><Network className="h-5 w-5" /></div>
+        <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-emerald-500/15 text-emerald-700 dark:text-emerald-300"><Network className="h-5 w-5" /></div>
         <div>
-          <h3 className="text-base font-semibold text-white">{ui.network.title[locale]}</h3>
-          <p className="mt-1 text-[13px] leading-relaxed text-zinc-400">{ui.network.body[locale]}</p>
+          <h3 className="text-base font-semibold text-zinc-900 dark:text-white">{ui.network.title[locale]}</h3>
+          <p className="mt-1 text-[13px] leading-relaxed text-zinc-500 dark:text-zinc-400">{ui.network.body[locale]}</p>
         </div>
       </div>
-      <div className="mt-4 rounded-xl bg-amber-400/10 px-3 py-2.5 text-[12.5px] font-semibold text-amber-200/90">{ui.network.note[locale]}</div>
+      <div className="mt-4 rounded-xl bg-amber-400/10 px-3 py-2.5 text-[12.5px] font-semibold text-amber-700 dark:text-amber-300">{ui.network.note[locale]}</div>
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
         {([['howPhone', 'phoneSteps'], ['howLaptop', 'laptopSteps']] as const).map(([h, s]) => (
-          <div key={h} className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3.5">
-            <div className="text-sm font-bold text-white">{ui.network[h][locale]}</div>
+          <div key={h} className={cn('rounded-xl p-3.5', SOFT)}>
+            <div className="text-sm font-bold text-zinc-900 dark:text-white">{ui.network[h][locale]}</div>
             <ol className="mt-2.5 space-y-2">
               {ui.network[s][locale].map((step, i) => (
-                <li key={i} className="flex gap-2 text-[12.5px] leading-relaxed text-zinc-400">
-                  <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-emerald-500/20 text-[11px] font-bold text-emerald-300 tabular-nums">{i + 1}</span>
+                <li key={i} className="flex gap-2 text-[12.5px] leading-relaxed text-zinc-500 dark:text-zinc-400">
+                  <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-emerald-500/20 text-[11px] font-bold text-emerald-700 tabular-nums dark:text-emerald-300">{i + 1}</span>
                   <span className="flex-1">{step}</span>
                 </li>
               ))}
@@ -613,7 +568,7 @@ function NetworkPanel({ locale, count, onFile, onClear }: { locale: Loc; count: 
           </div>
         ))}
       </div>
-      <button type="button" onClick={() => inputRef.current?.click()} className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 px-4 py-3 text-sm font-bold text-[#08110d] transition-colors hover:bg-emerald-400">
+      <button type="button" onClick={() => inputRef.current?.click()} className={cn('mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full px-4 py-3 text-sm font-bold', PILL)}>
         <Upload className="h-4 w-4" /> {ui.network.upload[locale]}
       </button>
       {Picker}
@@ -662,27 +617,24 @@ function Contacts({ locale }: { locale: Loc }) {
   return (
     <div>
       <Eyebrow>{ui.contacts.eyebrow[locale]}</Eyebrow>
-      <h1 className="mt-2 text-2xl font-semibold tracking-tight text-white">{ui.contacts.title[locale]}</h1>
-      <p className="mt-1 text-sm text-zinc-400">{ui.contacts.sub[locale]}</p>
+      <h1 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-900 dark:text-white">{ui.contacts.title[locale]}</h1>
+      <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{ui.contacts.sub[locale]}</p>
 
       <div className="mt-5 grid grid-cols-2 gap-2">
         {tabs.map((t) => {
           const on = part === t.id;
           return (
-            <button
-              key={t.id}
-              type="button"
-              onClick={() => setPart(t.id)}
-              className={cn('flex items-center gap-3 rounded-2xl border p-4 text-start transition-colors', on ? 'border-emerald-500/40 bg-emerald-500/10' : 'border-white/[0.08] bg-white/[0.03] hover:border-white/20')}
-            >
-              <t.Icon className={cn('h-5 w-5 shrink-0', on ? 'text-emerald-300' : 'text-zinc-400')} />
-              <span className="min-w-0 flex-1">
-                <span className="flex items-center gap-1.5">
-                  <span className="text-sm font-bold text-white">{t.label}</span>
-                  {t.badge !== null && <span className="rounded-full bg-white/10 px-1.5 py-0.5 text-[10px] font-bold text-zinc-300 tabular-nums">{t.badge}</span>}
+            <button key={t.id} type="button" onClick={() => setPart(t.id)} className="text-start">
+              <Card className={cn('flex items-center gap-3 p-4 transition-all', on ? 'border-emerald-500/50 dark:border-emerald-500/40' : 'hover:border-zinc-300 dark:hover:border-white/20')}>
+                <t.Icon className={cn('h-5 w-5 shrink-0', on ? ACCENT : 'text-zinc-400 dark:text-zinc-500')} />
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-center gap-1.5">
+                    <span className="text-sm font-bold text-zinc-900 dark:text-white">{t.label}</span>
+                    {t.badge !== null && <span className={cn('rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-zinc-500 dark:text-zinc-300', SOFT)}>{t.badge}</span>}
+                  </span>
+                  <span className="block truncate text-[11px] text-zinc-400 dark:text-zinc-500">{t.hint}</span>
                 </span>
-                <span className="block truncate text-[11px] text-zinc-500">{t.hint}</span>
-              </span>
+              </Card>
             </button>
           );
         })}
@@ -691,10 +643,10 @@ function Contacts({ locale }: { locale: Loc }) {
       {part === 'connections' && <NetworkPanel locale={locale} count={network ? ranked.length : null} onFile={onFile} onClear={clear} />}
 
       {(part === 'hr' || network) && (
-        <div className="mt-3 flex items-center gap-2.5 rounded-2xl border border-white/[0.08] bg-white/[0.03] px-4 py-3">
-          <Search className="h-4 w-4 shrink-0 text-zinc-500" />
-          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={ui.contacts.search[locale]} className="w-full bg-transparent text-sm text-white outline-none placeholder:text-zinc-600" />
-        </div>
+        <Card className="mt-3 flex items-center gap-2.5 px-4 py-3">
+          <Search className="h-4 w-4 shrink-0 text-zinc-400 dark:text-zinc-500" />
+          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={ui.contacts.search[locale]} className="w-full bg-transparent text-sm text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-white dark:placeholder:text-zinc-500" />
+        </Card>
       )}
 
       {part === 'hr' && (
@@ -706,24 +658,24 @@ function Contacts({ locale }: { locale: Loc }) {
 
       {(part === 'hr' || network) &&
         (items.length === 0 ? (
-          <p className="mt-10 text-center text-sm text-zinc-500">{ui.contacts.empty[locale]}</p>
+          <p className="mt-10 text-center text-sm text-zinc-400 dark:text-zinc-500">{ui.contacts.empty[locale]}</p>
         ) : (
           <>
             {active.length > 0 && (
               <div className="mt-6">
-                <h3 className="text-sm font-bold text-zinc-300">{ui.contacts.inProgress[locale]} <span className="text-zinc-500">({active.length})</span></h3>
+                <h3 className="text-sm font-bold text-zinc-700 dark:text-zinc-200">{ui.contacts.inProgress[locale]} <span className="text-zinc-400 dark:text-zinc-500">({active.length})</span></h3>
                 <CardGrid items={active} locale={locale} />
               </div>
             )}
             <div className="mt-6">
-              {active.length > 0 && <h3 className="mb-1 text-sm font-bold text-zinc-300">{ui.contacts.notContacted[locale]}</h3>}
+              {active.length > 0 && <h3 className="mb-1 text-sm font-bold text-zinc-700 dark:text-zinc-200">{ui.contacts.notContacted[locale]}</h3>}
               <CardGrid items={main.slice(0, shown)} locale={locale} />
               {main.length > shown && (
                 <div className="mt-5 flex flex-col items-center gap-2">
-                  <button type="button" onClick={() => setShown((s) => s + 24)} className="rounded-full bg-emerald-500 px-5 py-2.5 text-sm font-bold text-[#08110d] hover:bg-emerald-400">
+                  <button type="button" onClick={() => setShown((s) => s + 24)} className={cn('rounded-full px-5 py-2.5 text-sm font-bold', PILL)}>
                     {ui.contacts.showMore[locale](Math.min(24, main.length - shown))}
                   </button>
-                  <span className="text-[11px] text-zinc-500">{ui.contacts.showing[locale](Math.min(shown, main.length), main.length)}</span>
+                  <span className="text-[11px] text-zinc-400 dark:text-zinc-500">{ui.contacts.showing[locale](Math.min(shown, main.length), main.length)}</span>
                 </div>
               )}
             </div>
@@ -744,10 +696,10 @@ function Tracker({ locale }: { locale: Loc }) {
   const sent = replied + followup + pending;
   const rate = sent ? Math.round((replied / sent) * 100) : 0;
   const cards = [
-    { v: sent, l: ui.tracker.sent[locale], c: 'text-emerald-300' },
-    { v: replied, l: ui.tracker.replied[locale], c: 'text-sky-300' },
-    { v: pending, l: ui.tracker.pending[locale], c: 'text-amber-300' },
-    { v: followup, l: ui.tracker.followup[locale], c: 'text-rose-300' },
+    { v: sent, l: ui.tracker.sent[locale], c: 'text-emerald-700 dark:text-emerald-300' },
+    { v: replied, l: ui.tracker.replied[locale], c: 'text-sky-600 dark:text-sky-300' },
+    { v: pending, l: ui.tracker.pending[locale], c: 'text-amber-600 dark:text-amber-300' },
+    { v: followup, l: ui.tracker.followup[locale], c: 'text-rose-600 dark:text-rose-300' },
   ];
   const legend = [
     { l: ui.tracker.replied[locale], cls: 'bg-sky-500', w: sent ? (replied / sent) * 100 : 0 },
@@ -758,41 +710,41 @@ function Tracker({ locale }: { locale: Loc }) {
   return (
     <div>
       <Eyebrow>{ui.tracker.eyebrow[locale]}</Eyebrow>
-      <h1 className="mt-2 text-2xl font-semibold tracking-tight text-white">{ui.tracker.title[locale]}</h1>
-      <p className="mt-1 text-sm text-zinc-400">{ui.tracker.sub[locale]}</p>
+      <h1 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-900 dark:text-white">{ui.tracker.title[locale]}</h1>
+      <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{ui.tracker.sub[locale]}</p>
 
       <div className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
         {cards.map((c) => (
           <Card key={c.l} className="p-4">
             <div className={cn('text-3xl font-semibold tracking-tight', c.c)}>{c.v}</div>
-            <div className="mt-1 text-xs text-zinc-500">{c.l}</div>
+            <div className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">{c.l}</div>
           </Card>
         ))}
       </div>
 
       {sent === 0 ? (
-        <Card className="mt-4 p-6 text-center text-sm text-zinc-400">{ui.tracker.empty[locale]}</Card>
+        <Card className="mt-4 p-6 text-center text-sm text-zinc-500 dark:text-zinc-400">{ui.tracker.empty[locale]}</Card>
       ) : (
         <>
           <Card className="mt-4 flex items-center gap-4 p-5">
-            <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-emerald-500/15 text-emerald-300"><TrendingUp className="h-6 w-6" /></div>
+            <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-emerald-500/15 text-emerald-700 dark:text-emerald-300"><TrendingUp className="h-6 w-6" /></div>
             <div>
               <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-semibold tabular-nums text-white">{rate}</span>
-                <span className="text-xl font-semibold text-white">%</span>
-                <span className="ms-2 text-sm text-zinc-400">{ui.tracker.replyRate[locale]}</span>
+                <span className="text-3xl font-semibold tabular-nums text-zinc-900 dark:text-white">{rate}</span>
+                <span className="text-xl font-semibold text-zinc-900 dark:text-white">%</span>
+                <span className="ms-2 text-sm text-zinc-500 dark:text-zinc-400">{ui.tracker.replyRate[locale]}</span>
               </div>
-              <p className="mt-0.5 text-xs font-semibold text-emerald-400">{ui.tracker.vsBenchmark[locale]}</p>
+              <p className={cn('mt-0.5 text-xs font-semibold', ACCENT)}>{ui.tracker.vsBenchmark[locale]}</p>
             </div>
           </Card>
           <Card className="mt-4 p-5">
-            <h3 className="text-sm font-bold text-zinc-300">{ui.tracker.breakdown[locale]}</h3>
-            <div className="mt-3 flex h-3 overflow-hidden rounded-full bg-white/5">
+            <h3 className="text-sm font-bold text-zinc-700 dark:text-zinc-200">{ui.tracker.breakdown[locale]}</h3>
+            <div className="mt-3 flex h-3 overflow-hidden rounded-full bg-zinc-200/80 dark:bg-white/10">
               {legend.map((l, i) => <div key={i} className={l.cls} style={{ width: `${l.w}%` }} />)}
             </div>
             <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5">
               {legend.map((l, i) => (
-                <span key={i} className="inline-flex items-center gap-1.5 text-[11px] font-medium text-zinc-400">
+                <span key={i} className="inline-flex items-center gap-1.5 text-[11px] font-medium text-zinc-500 dark:text-zinc-400">
                   <span className={cn('h-2 w-2 rounded-full', l.cls)} /> {l.l}
                 </span>
               ))}
@@ -820,40 +772,36 @@ function Shell() {
   const [tab, setTab] = useState<Tab>('home');
 
   return (
-    <div className="relative min-h-dvh bg-[#0a0b0f] text-white">
-      {/* Ambient glow */}
+    <div className="relative min-h-dvh bg-[#f5f6f8] text-zinc-900 dark:bg-[#0a0b0f] dark:text-white">
       <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute -top-40 start-1/2 h-[40rem] w-[40rem] -translate-x-1/2 rounded-full bg-emerald-500/15 blur-[140px]" />
-        <div className="absolute bottom-0 end-0 h-[28rem] w-[28rem] rounded-full bg-sky-500/10 blur-[140px]" />
+        <div className="absolute -top-40 start-1/2 h-[40rem] w-[40rem] -translate-x-1/2 rounded-full bg-emerald-400/20 blur-[140px] dark:bg-emerald-500/15" />
+        <div className="absolute bottom-0 end-0 h-[28rem] w-[28rem] rounded-full bg-sky-400/15 blur-[140px] dark:bg-sky-500/10" />
       </div>
 
-      {/* Top bar */}
-      <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#0a0b0f]/70 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-zinc-200/70 bg-[#f5f6f8]/70 backdrop-blur-xl dark:border-white/[0.06] dark:bg-[#0a0b0f]/70">
         <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-5 sm:px-8">
           <div className="flex items-center gap-2.5">
-            <span className="grid h-8 w-8 place-items-center rounded-xl bg-emerald-500 font-extrabold text-[#08110d] shadow-[0_0_24px_-4px_rgba(52,211,153,0.6)]">م</span>
+            <span className="grid h-8 w-8 place-items-center rounded-xl bg-emerald-600 font-extrabold text-white shadow-[0_0_24px_-4px_rgba(16,185,129,0.5)] dark:bg-emerald-500 dark:text-[#08110d]">م</span>
             <span className="text-lg font-semibold tracking-tight">مسار</span>
-            <span className="ms-1 rounded-full border border-white/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-zinc-400">Studio</span>
+            <span className="ms-1 rounded-full border border-zinc-200 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-zinc-400 dark:border-white/10 dark:text-zinc-400">Studio</span>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="hidden items-center gap-2 text-end sm:flex">
+          <div className="flex items-center gap-2">
+            <div className="me-1 hidden items-center gap-2 text-end sm:flex">
               <div className="leading-tight">
-                <div className="text-[11px] text-zinc-500">{ui.shell.greeting[locale]}</div>
+                <div className="text-[11px] text-zinc-400 dark:text-zinc-500">{ui.shell.greeting[locale]}</div>
                 <div className="text-sm font-semibold">{profile.name[locale]}</div>
               </div>
-              <span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-700 text-sm font-bold text-white">
-                {profile.name[locale].charAt(0)}
-              </span>
+              <span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-700 text-sm font-bold text-white">{profile.name[locale].charAt(0)}</span>
             </div>
-            <Link href={pathname} locale={locale === 'ar' ? 'en' : 'ar'} className="grid h-9 w-9 place-items-center rounded-full border border-white/10 text-xs font-bold text-zinc-300 hover:text-white">
+            <ThemeToggle />
+            <Link href={pathname} locale={locale === 'ar' ? 'en' : 'ar'} className="grid h-9 w-9 place-items-center rounded-full border border-zinc-200 bg-white text-xs font-bold text-zinc-600 hover:text-zinc-900 dark:border-white/10 dark:bg-white/5 dark:text-zinc-300 dark:hover:text-white">
               {locale === 'ar' ? 'EN' : 'ع'}
             </Link>
           </div>
         </div>
       </header>
 
-      {/* Nav */}
-      <div className="sticky top-16 z-40 border-b border-white/[0.06] bg-[#0a0b0f]/70 backdrop-blur-xl">
+      <div className="sticky top-16 z-40 border-b border-zinc-200/70 bg-[#f5f6f8]/70 backdrop-blur-xl dark:border-white/[0.06] dark:bg-[#0a0b0f]/70">
         <nav className="mx-auto flex w-full max-w-6xl gap-1 px-5 sm:px-8">
           {NAV.map((n) => {
             const on = tab === n.id;
@@ -862,11 +810,11 @@ function Shell() {
                 key={n.id}
                 type="button"
                 onClick={() => setTab(n.id)}
-                className={cn('relative flex items-center gap-2 px-3 py-3.5 text-sm font-semibold transition-colors', on ? 'text-white' : 'text-zinc-500 hover:text-zinc-300')}
+                className={cn('relative flex items-center gap-2 px-3 py-3.5 text-sm font-semibold transition-colors', on ? 'text-zinc-900 dark:text-white' : 'text-zinc-400 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-300')}
               >
                 <n.Icon className="h-4 w-4" />
                 <span>{ui.nav[n.id][locale]}</span>
-                {on && <motion.span layoutId="studio-nav" className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-emerald-400" transition={{ duration: 0.3, ease: EASE }} />}
+                {on && <motion.span layoutId="studio-nav" className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-emerald-600 dark:bg-emerald-400" transition={{ duration: 0.3, ease: EASE }} />}
               </button>
             );
           })}

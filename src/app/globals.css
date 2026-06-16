@@ -96,44 +96,44 @@
   }
 }
 
-/* ---------------------------------------------------------------- dark theme --
-   The UI was built light-first with literal white/pastel utilities. Rather than
-   touch hundreds of call-sites, re-tint the common ones when .dark is active so
-   inner surfaces, chips, and accent text stay legible on a dark canvas. */
-.dark .bg-white\/30 { background-color: rgb(255 255 255 / 0.04) !important; }
-.dark .bg-white\/40 { background-color: rgb(255 255 255 / 0.06) !important; }
-.dark .bg-white\/50 { background-color: rgb(255 255 255 / 0.08) !important; }
-.dark .bg-white\/70 { background-color: rgb(255 255 255 / 0.10) !important; }
-.dark .border-white\/40,
-.dark .border-white\/50,
-.dark .border-white\/60,
-.dark .border-white\/70 { border-color: rgb(255 255 255 / 0.12) !important; }
-.dark .bg-black\/5 { background-color: rgb(255 255 255 / 0.08) !important; }
+/* ------------------------------------------------------ legacy (v1) dark theme --
+   v1 (/c, /app) was built light-first with literal white/pastel utilities; re-tint
+   the common ones when .dark is active. SCOPED to .legacy so the v2/v3/v4 designs,
+   which carry their own explicit dark: variants, are never touched by these. */
+.dark .legacy .bg-white\/30 { background-color: rgb(255 255 255 / 0.04) !important; }
+.dark .legacy .bg-white\/40 { background-color: rgb(255 255 255 / 0.06) !important; }
+.dark .legacy .bg-white\/50 { background-color: rgb(255 255 255 / 0.08) !important; }
+.dark .legacy .bg-white\/70 { background-color: rgb(255 255 255 / 0.10) !important; }
+.dark .legacy .border-white\/40,
+.dark .legacy .border-white\/50,
+.dark .legacy .border-white\/60,
+.dark .legacy .border-white\/70 { border-color: rgb(255 255 255 / 0.12) !important; }
+.dark .legacy .bg-black\/5 { background-color: rgb(255 255 255 / 0.08) !important; }
 
 /* Pale accent backgrounds -> translucent accents */
-.dark .bg-brand-50,
-.dark .bg-brand-50\/70,
-.dark .bg-brand-50\/80,
-.dark .bg-brand-50\/60,
-.dark .bg-brand-50\/40 { background-color: rgb(16 185 129 / 0.14) !important; }
-.dark .bg-amber-50,
-.dark .bg-amber-50\/70,
-.dark .bg-amber-100 { background-color: rgb(245 158 11 / 0.16) !important; }
-.dark .bg-sky-50,
-.dark .bg-sky-50\/80 { background-color: rgb(14 165 233 / 0.16) !important; }
-.dark .bg-violet-50 { background-color: rgb(139 92 246 / 0.16) !important; }
-.dark .bg-rose-50,
-.dark .bg-rose-50\/80 { background-color: rgb(244 63 94 / 0.16) !important; }
-.dark .bg-ink\/5 { background-color: rgb(255 255 255 / 0.07) !important; }
+.dark .legacy .bg-brand-50,
+.dark .legacy .bg-brand-50\/70,
+.dark .legacy .bg-brand-50\/80,
+.dark .legacy .bg-brand-50\/60,
+.dark .legacy .bg-brand-50\/40 { background-color: rgb(16 185 129 / 0.14) !important; }
+.dark .legacy .bg-amber-50,
+.dark .legacy .bg-amber-50\/70,
+.dark .legacy .bg-amber-100 { background-color: rgb(245 158 11 / 0.16) !important; }
+.dark .legacy .bg-sky-50,
+.dark .legacy .bg-sky-50\/80 { background-color: rgb(14 165 233 / 0.16) !important; }
+.dark .legacy .bg-violet-50 { background-color: rgb(139 92 246 / 0.16) !important; }
+.dark .legacy .bg-rose-50,
+.dark .legacy .bg-rose-50\/80 { background-color: rgb(244 63 94 / 0.16) !important; }
+.dark .legacy .bg-ink\/5 { background-color: rgb(255 255 255 / 0.07) !important; }
 
 /* Accent text -> lighter so it reads on dark */
-.dark .text-brand-700 { color: rgb(110 231 183) !important; }
-.dark .text-brand-900 { color: rgb(167 243 208) !important; }
-.dark .text-amber-700,
-.dark .text-amber-800 { color: rgb(252 211 77) !important; }
-.dark .text-sky-700 { color: rgb(125 211 252) !important; }
-.dark .text-violet-700 { color: rgb(196 181 253) !important; }
+.dark .legacy .text-brand-700 { color: rgb(110 231 183) !important; }
+.dark .legacy .text-brand-900 { color: rgb(167 243 208) !important; }
+.dark .legacy .text-amber-700,
+.dark .legacy .text-amber-800 { color: rgb(252 211 77) !important; }
+.dark .legacy .text-sky-700 { color: rgb(125 211 252) !important; }
+.dark .legacy .text-violet-700 { color: rgb(196 181 253) !important; }
 
 /* Borders on the brand/amber banners */
-.dark .border-brand-100 { border-color: rgb(16 185 129 / 0.25) !important; }
-.dark .border-amber-100 { border-color: rgb(245 158 11 / 0.25) !important; }
+.dark .legacy .border-brand-100 { border-color: rgb(16 185 129 / 0.25) !important; }
+.dark .legacy .border-amber-100 { border-color: rgb(245 158 11 / 0.25) !important; }
