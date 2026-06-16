@@ -1,18 +1,20 @@
 'use client';
 
 import { Sparkles, ArrowLeft, GraduationCap, BadgeCheck } from 'lucide-react';
-import { primaryPath, journey, ui, type Loc } from '@/lib/app-data';
+import { primaryPath, journey, connections, ui, type Loc } from '@/lib/app-data';
 import { ProgressRing, Counter, SectionHeading, Stagger, StaggerItem } from './ui';
-import { ContactCard } from './contacts';
+import { ConnectionCard } from './contacts';
 
 export function OverviewSection({
   locale,
   onOpenPath,
+  onOpenContacts,
 }: {
   locale: Loc;
   onOpenPath: (id: string) => void;
+  onOpenContacts: () => void;
 }) {
-  const priority = primaryPath.contacts.filter((c) => c.priority).slice(0, 3);
+  const top = [...connections].sort((a, b) => (b.score ?? 0) - (a.score ?? 0)).slice(0, 3);
   const current = primaryPath.certs.find((c) => c.status === 'current');
 
   return (
@@ -58,7 +60,7 @@ export function OverviewSection({
       </div>
 
       {/* Today's top move */}
-      <div className="mt-4 flex items-start gap-3 rounded-2xl border border-brand-100 bg-brand-50/70 p-4">
+      <div className="mt-4 flex items-start gap-3 rounded-2xl border border-brand-100 bg-brand-50/70 p-4 backdrop-blur-sm">
         <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-white text-brand-600 shadow-soft">
           <Sparkles className="h-5 w-5" />
         </div>
@@ -73,7 +75,7 @@ export function OverviewSection({
         <button
           type="button"
           onClick={() => onOpenPath(primaryPath.id)}
-          className="group mt-4 flex w-full items-center gap-4 rounded-2xl border border-line bg-canvas-raised p-4 text-start shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift"
+          className="group glass mt-4 flex w-full items-center gap-4 rounded-2xl p-4 text-start transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift"
         >
           <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-brand-50 text-brand-600">
             <GraduationCap className="h-6 w-6" />
@@ -102,28 +104,28 @@ export function OverviewSection({
         </div>
         <button
           type="button"
-          onClick={() => onOpenPath(primaryPath.id)}
+          onClick={onOpenContacts}
           className="hidden shrink-0 items-center gap-1 text-sm font-semibold text-brand-700 hover:text-brand-900 sm:inline-flex"
         >
-          {ui.overview.openPath[locale]}
+          {ui.overview.openContacts[locale]}
           <ArrowLeft className="h-4 w-4 ltr:rotate-180" />
         </button>
       </div>
 
       <Stagger className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {priority.map((c) => (
-          <StaggerItem key={c.id}>
-            <ContactCard contact={c} locale={locale} />
+        {top.map((c) => (
+          <StaggerItem key={c.id} className="h-full">
+            <ConnectionCard contact={c} locale={locale} />
           </StaggerItem>
         ))}
       </Stagger>
 
       <button
         type="button"
-        onClick={() => onOpenPath(primaryPath.id)}
-        className="mt-4 inline-flex w-full items-center justify-center gap-1.5 rounded-xl border border-line bg-canvas-raised py-3 text-sm font-semibold text-brand-700 shadow-soft hover:border-ink/20 sm:hidden"
+        onClick={onOpenContacts}
+        className="glass mt-4 inline-flex w-full items-center justify-center gap-1.5 rounded-xl py-3 text-sm font-semibold text-brand-700 hover:shadow-lift sm:hidden"
       >
-        {ui.overview.openPath[locale]}
+        {ui.overview.openContacts[locale]}
         <ArrowLeft className="h-4 w-4 ltr:rotate-180" />
       </button>
     </div>

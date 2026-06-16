@@ -72,7 +72,7 @@ export function ProgressRing({
   size = 132,
   stroke = 12,
   color = '#0E9F6E',
-  track = '#ECEAE4',
+  track = 'rgba(15,17,21,0.08)',
   children,
 }: {
   value: number;
@@ -121,7 +121,7 @@ export function ScoreRing({ score, size = 46, stroke = 4 }: { score: number; siz
   return (
     <div className="relative grid shrink-0 place-items-center" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#ECEAE4" strokeWidth={stroke} />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(15,17,21,0.08)" strokeWidth={stroke} />
         <motion.circle
           cx={size / 2}
           cy={size / 2}
@@ -159,7 +159,7 @@ export function StatCard({
   animate?: boolean;
 }) {
   return (
-    <div className="rounded-2xl border border-line bg-canvas-raised p-4 shadow-soft">
+    <div className="glass rounded-2xl p-4">
       <div className={cn('text-2xl font-extrabold tracking-tight sm:text-3xl', accentText)}>
         {doAnimate ? <Counter to={value} suffix={suffix} /> : `${value}${suffix}`}
       </div>
@@ -171,10 +171,10 @@ export function StatCard({
 /* ---------------------------------------------------------------- status pill -- */
 
 const statusStyle: Record<ContactStatus, { cls: string; key: keyof typeof ui.contacts; dot: string }> = {
-  new: { cls: 'bg-amber-50 text-amber-700 ring-amber-100', key: 'new', dot: 'bg-amber-500' },
-  sent: { cls: 'bg-brand-50 text-brand-700 ring-brand-100', key: 'sent', dot: 'bg-brand-500' },
-  replied: { cls: 'bg-sky-50 text-sky-700 ring-sky-100', key: 'replied', dot: 'bg-sky-500' },
-  followup: { cls: 'bg-rose-50 text-rose-700 ring-rose-100', key: 'followup', dot: 'bg-rose-500' },
+  new: { cls: 'bg-amber-50/80 text-amber-700 ring-amber-100', key: 'status_new', dot: 'bg-amber-500' },
+  sent: { cls: 'bg-brand-50/80 text-brand-700 ring-brand-100', key: 'status_sent', dot: 'bg-brand-500' },
+  replied: { cls: 'bg-sky-50/80 text-sky-700 ring-sky-100', key: 'status_replied', dot: 'bg-sky-500' },
+  followup: { cls: 'bg-rose-50/80 text-rose-700 ring-rose-100', key: 'status_followup', dot: 'bg-rose-500' },
 };
 
 export function StatusPill({ status, locale }: { status: ContactStatus; locale: Loc }) {
@@ -237,14 +237,13 @@ export function SectionHeading({
 
 /* --------------------------------------------------------------- motion list -- */
 
-// Staggered fade-up wrapper for cards within a section.
 export function Stagger({ children, className }: { children: ReactNode; className?: string }) {
   return (
     <motion.div
       className={className}
       initial="hidden"
       animate="show"
-      variants={{ hidden: {}, show: { transition: { staggerChildren: 0.06 } } }}
+      variants={{ hidden: {}, show: { transition: { staggerChildren: 0.05 } } }}
     >
       {children}
     </motion.div>

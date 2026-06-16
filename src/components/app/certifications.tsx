@@ -24,7 +24,7 @@ function Tag({ tone, icon: Icon, children }: { tone: 'hadaf' | 'cost' | 'time'; 
   const cls = {
     hadaf: 'bg-brand-50 text-brand-700',
     cost: 'bg-amber-50 text-amber-700',
-    time: 'border border-line bg-canvas text-ink-muted',
+    time: 'border border-white/60 bg-white/40 text-ink-muted',
   }[tone];
   return (
     <span className={cn('inline-flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-semibold', cls)}>
@@ -48,7 +48,7 @@ function Dot({ status }: { status: Cert['status'] }) {
           <span className="relative h-2 w-2 rounded-full bg-white" />
         </span>
       )}
-      {status === 'future' && <span className="h-full w-full rounded-full border-2 border-line bg-canvas-raised" />}
+      {status === 'future' && <span className="h-full w-full rounded-full border-2 border-line bg-white/70" />}
     </span>
   );
 }
@@ -57,9 +57,9 @@ function CertCard({ cert, locale }: { cert: Cert; locale: Loc }) {
   return (
     <div
       className={cn(
-        'rounded-2xl border bg-canvas-raised p-4 shadow-soft',
-        cert.status === 'current' ? 'border-brand-200 ring-1 ring-brand-100' : 'border-line',
-        cert.status === 'future' && 'opacity-75',
+        'glass rounded-2xl p-4',
+        cert.status === 'current' && 'ring-1 ring-brand-200',
+        cert.status === 'future' && 'opacity-80',
       )}
     >
       <div className="flex items-center gap-2">
@@ -83,13 +83,13 @@ function CertCard({ cert, locale }: { cert: Cert; locale: Loc }) {
       </div>
 
       {cert.hadafNote && cert.status !== 'done' && (
-        <div className="mt-3 rounded-xl bg-brand-50/70 px-3 py-2 text-xs font-semibold text-brand-700">
+        <div className="mt-3 rounded-xl bg-brand-50/80 px-3 py-2 text-xs font-semibold text-brand-700">
           {cert.hadafNote[locale]}
         </div>
       )}
 
       {cert.why && (
-        <div className="mt-3 flex items-start gap-2 border-t border-line pt-3">
+        <div className="mt-3 flex items-start gap-2 border-t border-white/40 pt-3">
           <Lightbulb className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
           <p className="text-xs leading-relaxed text-ink-soft">
             <span className="font-bold text-ink">{ui.certs.whyNow[locale]} </span>
@@ -110,7 +110,7 @@ export function CertificationsSection({ certs, locale }: { certs: Cert[]; locale
       <SectionHeading title={ui.certs.title[locale]} sub={ui.certs.sub[locale]} />
 
       {supported > 0 && (
-        <div className="mb-6 flex items-center gap-3 rounded-2xl border border-brand-100 bg-brand-50/70 p-4">
+        <div className="mb-6 flex items-center gap-3 rounded-2xl border border-brand-100 bg-brand-50/70 p-4 backdrop-blur-sm">
           <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand-600 text-white shadow-soft">
             <BadgeCheck className="h-5 w-5" />
           </div>
@@ -122,7 +122,7 @@ export function CertificationsSection({ certs, locale }: { certs: Cert[]; locale
       )}
 
       <div className="relative">
-        <div className="absolute bottom-4 top-4 start-[15px] w-0.5 bg-line" aria-hidden />
+        <div className="absolute bottom-4 top-4 start-[15px] w-0.5 bg-black/10" aria-hidden />
         <Stagger className="space-y-3">
           {certs.map((cert) => (
             <StaggerItem key={cert.name} className="relative ps-11">

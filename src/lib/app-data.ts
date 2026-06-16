@@ -1,8 +1,6 @@
-// Sample customer data for the Masaar product dashboard.
-// The deliverable a customer receives after purchase: their career plan, organised
-// BY PATH. Each path (e.g. the finance path) contains its own certification
-// roadmap, its decision-makers, and outreach messages. Demo data uses the
-// founder's own profile; in production each field is generated per customer.
+// Sample customer data for the Masaar product dashboard (the deliverable a
+// customer receives after purchase). Demo data uses the founder's own profile;
+// in production each field is generated per customer from their CV and goals.
 //
 // Arabic copy is written natively (not translated) to match the marketing voice.
 
@@ -34,6 +32,7 @@ export const journey = {
 /* ------------------------------------------------------------------- types -- */
 
 export type AccentKey = 'brand' | 'sky' | 'violet' | 'amber' | 'rose';
+export type IndustryKey = 'finance' | 'energy' | 'consulting' | 'government' | 'tech';
 
 export type CompanyKey =
   | 'pif' | 'aramco' | 'acwa' | 'neom' | 'gov'
@@ -59,11 +58,51 @@ export type Contact = {
   role: LS;
   company: LS;
   companyKey: CompanyKey;
-  score: number; // AI match, 100-200
+  industry: IndustryKey;
+  score?: number; // AI match, 100-200 (omitted for HR)
   status: ContactStatus;
   when: LS;
-  priority?: boolean;
 };
+
+export const industries: { id: IndustryKey; label: LS }[] = [
+  { id: 'finance', label: { ar: 'المالية', en: 'Finance' } },
+  { id: 'energy', label: { ar: 'الطاقة', en: 'Energy' } },
+  { id: 'consulting', label: { ar: 'الاستشارات', en: 'Consulting' } },
+  { id: 'government', label: { ar: 'الحكومي', en: 'Government' } },
+  { id: 'tech', label: { ar: 'التقنية', en: 'Tech' } },
+];
+
+/* ----------------------------------------------------- connections (targets) -- */
+
+export const connections: Contact[] = [
+  { id: 'n1', name: { ar: 'عبدالرحمن العتيبي', en: 'Abdulrahman Alotaibi' }, role: { ar: 'رئيس برامج القطاع', en: 'Head of Sector Programs' }, company: { ar: 'صندوق الاستثمارات العامة', en: 'PIF' }, companyKey: 'pif', industry: 'finance', score: 192, status: 'new', when: { ar: 'جديد', en: 'New' } },
+  { id: 'n2', name: { ar: 'علي الصاحب', en: 'Ali Alsaheb' }, role: { ar: 'مدير محفظة أول', en: 'Senior Portfolio Director' }, company: { ar: 'الصندوق · تحوّل الطاقة', en: 'PIF · Energy Transition' }, companyKey: 'pif', industry: 'finance', score: 189, status: 'new', when: { ar: 'أمس', en: 'Yesterday' } },
+  { id: 'n3', name: { ar: 'عبدالرحمن الفوزان', en: 'Abdulrahman Alfawzan' }, role: { ar: 'مدير ارتباط أول', en: 'Senior Engagement Manager' }, company: { ar: 'ماكنزي وشركاه', en: 'McKinsey & Company' }, companyKey: 'mck', industry: 'consulting', score: 178, status: 'replied', when: { ar: 'قبل ساعتين', en: '2h ago' } },
+  { id: 'n4', name: { ar: 'مؤيد الشويعر', en: 'Mowayed Alshuwaier' }, role: { ar: 'رئيس تنفيذي · شركة مشروع', en: 'CEO, SPV' }, company: { ar: 'أكوا باور', en: 'ACWA Power' }, companyKey: 'acwa', industry: 'energy', score: 173, status: 'sent', when: { ar: 'قبل 4 أيام', en: '4 days ago' } },
+  { id: 'n5', name: { ar: 'نورة السديري', en: 'Noura Alsudairi' }, role: { ar: 'مستشارة', en: 'Consultant' }, company: { ar: 'BCG', en: 'BCG' }, companyKey: 'bcg', industry: 'consulting', score: 170, status: 'new', when: { ar: 'جديد', en: 'New' } },
+  { id: 'n6', name: { ar: 'ريم العمران', en: 'Reem Alomran' }, role: { ar: 'مديرة أولى · الصفقات', en: 'Senior Manager, Deals' }, company: { ar: 'PwC السعودية', en: 'PwC Saudi' }, companyKey: 'pwc', industry: 'finance', score: 167, status: 'new', when: { ar: 'جديد', en: 'New' } },
+  { id: 'n7', name: { ar: 'أحمد الشهراني', en: 'Ahmed Alshahrani' }, role: { ar: 'مدير تخطيط أول', en: 'Senior Director, Planning' }, company: { ar: 'وزارة الطاقة', en: 'Ministry of Energy' }, companyKey: 'gov', industry: 'government', score: 165, status: 'followup', when: { ar: 'متابعة · 9 أيام', en: 'Follow-up · 9d' } },
+  { id: 'n8', name: { ar: 'سارة القحطاني', en: 'Sara Alqahtani' }, role: { ar: 'مديرة استقطاب المواهب', en: 'Talent Acquisition Lead' }, company: { ar: 'نيوم', en: 'NEOM' }, companyKey: 'neom', industry: 'energy', score: 164, status: 'new', when: { ar: 'جديد', en: 'New' } },
+  { id: 'n9', name: { ar: 'فهد القرني', en: 'Fahad Alqarni' }, role: { ar: 'مساعد أول', en: 'Senior Associate' }, company: { ar: 'بِين وشركاه', en: 'Bain & Company' }, companyKey: 'bain', industry: 'consulting', score: 162, status: 'new', when: { ar: 'جديد', en: 'New' } },
+  { id: 'n10', name: { ar: 'يوسف هاشم', en: 'Yusuf Hashem' }, role: { ar: 'مختصّ استثمار', en: 'Investment Associate' }, company: { ar: 'الصندوق · الأسواق العامة', en: 'PIF · Public Markets' }, companyKey: 'pif', industry: 'finance', score: 161, status: 'sent', when: { ar: 'قبل 5 ساعات', en: '5h ago' } },
+  { id: 'n11', name: { ar: 'ريان الشمري', en: 'Rayan Alshammari' }, role: { ar: 'مدير منتج', en: 'Product Manager' }, company: { ar: 'stc', en: 'stc' }, companyKey: 'stc', industry: 'tech', score: 160, status: 'new', when: { ar: 'جديد', en: 'New' } },
+  { id: 'n12', name: { ar: 'منيرة الحربي', en: 'Munira Alharbi' }, role: { ar: 'مديرة عامة', en: 'Director General' }, company: { ar: 'وزارة الاقتصاد والتخطيط', en: 'Ministry of Economy' }, companyKey: 'gov', industry: 'government', score: 158, status: 'new', when: { ar: 'جديد', en: 'New' } },
+  { id: 'n13', name: { ar: 'خالد الدوسري', en: 'Khalid Aldossari' }, role: { ar: 'مدير تطوير أعمال', en: 'Business Development Manager' }, company: { ar: 'أرامكو السعودية', en: 'Saudi Aramco' }, companyKey: 'aramco', industry: 'energy', score: 156, status: 'sent', when: { ar: 'قبل أسبوع', en: '1 week ago' } },
+  { id: 'n14', name: { ar: 'هند العتيبي', en: 'Hind Alotaibi' }, role: { ar: 'قائدة هندسة برمجيات', en: 'Engineering Lead' }, company: { ar: 'علم', en: 'Elm' }, companyKey: 'elm', industry: 'tech', score: 155, status: 'new', when: { ar: 'جديد', en: 'New' } },
+];
+
+/* ----------------------------------------------------------- HR / recruiters -- */
+
+export const hrContacts: Contact[] = [
+  { id: 'h1', name: { ar: 'لمى الراجحي', en: 'Lama Alrajhi' }, role: { ar: 'شريكة استقطاب المواهب', en: 'Talent Acquisition Partner' }, company: { ar: 'صندوق الاستثمارات العامة', en: 'PIF' }, companyKey: 'pif', industry: 'finance', status: 'new', when: { ar: 'جديد', en: 'New' } },
+  { id: 'h2', name: { ar: 'بدر الدوسري', en: 'Badr Aldossari' }, role: { ar: 'قائد التوظيف', en: 'Recruitment Lead' }, company: { ar: 'أرامكو السعودية', en: 'Saudi Aramco' }, companyKey: 'aramco', industry: 'energy', status: 'sent', when: { ar: 'قبل 3 أيام', en: '3 days ago' } },
+  { id: 'h3', name: { ar: 'جواهر السبيعي', en: 'Jawaher Alsubaie' }, role: { ar: 'أخصائية توظيف أولى', en: 'Senior Recruiter' }, company: { ar: 'نيوم', en: 'NEOM' }, companyKey: 'neom', industry: 'energy', status: 'new', when: { ar: 'جديد', en: 'New' } },
+  { id: 'h4', name: { ar: 'طلال العنزي', en: 'Talal Alanazi' }, role: { ar: 'شريك موارد بشرية', en: 'HR Business Partner' }, company: { ar: 'stc', en: 'stc' }, companyKey: 'stc', industry: 'tech', status: 'new', when: { ar: 'جديد', en: 'New' } },
+  { id: 'h5', name: { ar: 'عبير الزهراني', en: 'Abeer Alzahrani' }, role: { ar: 'مسؤولة استقطاب', en: 'Talent Sourcer' }, company: { ar: 'ماكنزي وشركاه', en: 'McKinsey & Company' }, companyKey: 'mck', industry: 'consulting', status: 'sent', when: { ar: 'قبل أسبوع', en: '1 week ago' } },
+  { id: 'h6', name: { ar: 'سلطان المالكي', en: 'Sultan Almalki' }, role: { ar: 'أخصائي توظيف', en: 'Recruiter' }, company: { ar: 'وزارة الموارد البشرية', en: 'Ministry of HR' }, companyKey: 'gov', industry: 'government', status: 'new', when: { ar: 'جديد', en: 'New' } },
+];
+
+/* ------------------------------------------------------------------- paths -- */
 
 export type CareerPath = {
   id: string;
@@ -76,10 +115,7 @@ export type CareerPath = {
   primary?: boolean;
   trail: string;
   certs: Cert[];
-  contacts: Contact[];
 };
-
-/* ------------------------------------------------------------------- paths -- */
 
 export const paths: CareerPath[] = [
   {
@@ -111,13 +147,6 @@ export const paths: CareerPath[] = [
       },
       { name: 'CFA Level 2', desc: { ar: 'المستوى المتقدّم الذي يميّزك في الـ Big 4', en: 'Advanced level that sets you apart at the Big 4' }, status: 'future', cost: { ar: '5,500 ر.س', en: '5,500 SAR' }, duration: { ar: '8 أشهر', en: '8 months' }, hadaf: true },
     ],
-    contacts: [
-      { id: 'f1', name: { ar: 'عبدالرحمن العتيبي', en: 'Abdulrahman Alotaibi' }, role: { ar: 'رئيس برامج القطاع', en: 'Head of Sector Programs' }, company: { ar: 'صندوق الاستثمارات العامة', en: 'PIF' }, companyKey: 'pif', score: 192, status: 'new', when: { ar: 'جديد', en: 'New' }, priority: true },
-      { id: 'f2', name: { ar: 'علي الصاحب', en: 'Ali Alsaheb' }, role: { ar: 'مدير محفظة أول', en: 'Senior Portfolio Director' }, company: { ar: 'الصندوق · تحوّل الطاقة', en: 'PIF · Energy Transition' }, companyKey: 'pif', score: 189, status: 'new', when: { ar: 'أمس', en: 'Yesterday' }, priority: true },
-      { id: 'f3', name: { ar: 'عبدالرحمن الفوزان', en: 'Abdulrahman Alfawzan' }, role: { ar: 'مدير ارتباط أول', en: 'Senior Engagement Manager' }, company: { ar: 'ماكنزي وشركاه', en: 'McKinsey & Company' }, companyKey: 'mck', score: 178, status: 'replied', when: { ar: 'قبل ساعتين', en: '2h ago' }, priority: true },
-      { id: 'f4', name: { ar: 'ريم العمران', en: 'Reem Alomran' }, role: { ar: 'مديرة أولى · الصفقات', en: 'Senior Manager, Deals' }, company: { ar: 'PwC السعودية', en: 'PwC Saudi' }, companyKey: 'pwc', score: 167, status: 'new', when: { ar: 'جديد', en: 'New' } },
-      { id: 'f5', name: { ar: 'يوسف هاشم', en: 'Yusuf Hashem' }, role: { ar: 'مختصّ استثمار', en: 'Investment Associate' }, company: { ar: 'الصندوق · الأسواق العامة', en: 'PIF · Public Markets' }, companyKey: 'pif', score: 161, status: 'sent', when: { ar: 'قبل 5 ساعات', en: '5h ago' } },
-    ],
   },
   {
     id: 'energy',
@@ -134,12 +163,6 @@ export const paths: CareerPath[] = [
       { name: 'Six Sigma', desc: { ar: 'الحزام الأخضر في تحسين العمليات', en: 'Green Belt, process improvement' }, status: 'future', cost: { ar: '2,500 ر.س', en: '2,500 SAR' }, duration: { ar: 'شهران', en: '2 months' }, hadaf: true },
       { name: 'ISO 50001', desc: { ar: 'مدقّق رئيسي لإدارة الطاقة', en: 'Energy management lead auditor' }, status: 'future', cost: { ar: '3,000 ر.س', en: '3,000 SAR' }, duration: { ar: 'شهر', en: '1 month' } },
       { name: 'MBA', desc: { ar: 'تحضير ماجستير إدارة الأعمال', en: 'MBA preparation' }, status: 'future', cost: { ar: 'يختلف', en: 'Varies' }, duration: { ar: '6 أشهر', en: '6 months' } },
-    ],
-    contacts: [
-      { id: 'e1', name: { ar: 'مؤيد الشويعر', en: 'Mowayed Alshuwaier' }, role: { ar: 'رئيس تنفيذي · شركة مشروع', en: 'CEO, SPV' }, company: { ar: 'أكوا باور', en: 'ACWA Power' }, companyKey: 'acwa', score: 173, status: 'sent', when: { ar: 'قبل 4 أيام', en: '4 days ago' } },
-      { id: 'e2', name: { ar: 'سارة القحطاني', en: 'Sara Alqahtani' }, role: { ar: 'مديرة استقطاب المواهب', en: 'Talent Acquisition Lead' }, company: { ar: 'نيوم', en: 'NEOM' }, companyKey: 'neom', score: 164, status: 'new', when: { ar: 'جديد', en: 'New' } },
-      { id: 'e3', name: { ar: 'أحمد الشهراني', en: 'Ahmed Alshahrani' }, role: { ar: 'مدير تخطيط أول', en: 'Senior Director, Planning' }, company: { ar: 'وزارة الطاقة', en: 'Ministry of Energy' }, companyKey: 'gov', score: 160, status: 'followup', when: { ar: 'متابعة · 9 أيام', en: 'Follow-up · 9d' } },
-      { id: 'e4', name: { ar: 'خالد الدوسري', en: 'Khalid Aldossari' }, role: { ar: 'مدير تطوير أعمال', en: 'Business Development Manager' }, company: { ar: 'أرامكو السعودية', en: 'Saudi Aramco' }, companyKey: 'aramco', score: 156, status: 'sent', when: { ar: 'قبل أسبوع', en: '1 week ago' } },
     ],
   },
   {
@@ -158,12 +181,6 @@ export const paths: CareerPath[] = [
       { name: 'PSPO', desc: { ar: 'مالك منتج محترف', en: 'Professional Scrum Product Owner' }, status: 'future', cost: { ar: '$200', en: '$200' }, duration: { ar: 'شهر', en: '1 month' } },
       { name: 'MBA', desc: { ar: 'تحضير ماجستير إدارة الأعمال', en: 'MBA preparation' }, status: 'future', cost: { ar: 'يختلف', en: 'Varies' }, duration: { ar: '6 أشهر', en: '6 months' } },
     ],
-    contacts: [
-      { id: 'c1', name: { ar: 'عبدالرحمن الفوزان', en: 'Abdulrahman Alfawzan' }, role: { ar: 'مدير ارتباط أول', en: 'Senior Engagement Manager' }, company: { ar: 'ماكنزي وشركاه', en: 'McKinsey & Company' }, companyKey: 'mck', score: 178, status: 'replied', when: { ar: 'قبل ساعتين', en: '2h ago' } },
-      { id: 'c2', name: { ar: 'نورة السديري', en: 'Noura Alsudairi' }, role: { ar: 'مستشارة', en: 'Consultant' }, company: { ar: 'BCG', en: 'BCG' }, companyKey: 'bcg', score: 170, status: 'new', when: { ar: 'جديد', en: 'New' } },
-      { id: 'c3', name: { ar: 'فهد القرني', en: 'Fahad Alqarni' }, role: { ar: 'مساعد أول', en: 'Senior Associate' }, company: { ar: 'بِين وشركاه', en: 'Bain & Company' }, companyKey: 'bain', score: 162, status: 'new', when: { ar: 'جديد', en: 'New' } },
-      { id: 'c4', name: { ar: 'ليان الزهراني', en: 'Layan Alzahrani' }, role: { ar: 'مستشارة استراتيجية', en: 'Strategy Consultant' }, company: { ar: 'Strategy&', en: 'Strategy&' }, companyKey: 'strat', score: 159, status: 'sent', when: { ar: 'قبل 3 أيام', en: '3 days ago' } },
-    ],
   },
   {
     id: 'government',
@@ -180,11 +197,6 @@ export const paths: CareerPath[] = [
       { name: 'دبلوم السياسات', desc: { ar: 'دبلوم السياسات العامة', en: 'Public policy diploma' }, status: 'future', cost: { ar: '5,000 ر.س', en: '5,000 SAR' }, duration: { ar: '5 أشهر', en: '5 months' }, hadaf: true },
       { name: 'PgMP', desc: { ar: 'محترف إدارة البرامج', en: 'Program Management Professional' }, status: 'future', cost: { ar: '$800', en: '$800' }, duration: { ar: '4 أشهر', en: '4 months' } },
       { name: 'DBA', desc: { ar: 'تحضير دكتوراه إدارة الأعمال', en: 'DBA preparation' }, status: 'future', cost: { ar: 'يختلف', en: 'Varies' }, duration: { ar: '12 شهرًا', en: '12 months' } },
-    ],
-    contacts: [
-      { id: 'g1', name: { ar: 'أحمد الشهراني', en: 'Ahmed Alshahrani' }, role: { ar: 'مدير تخطيط أول', en: 'Senior Director, Planning' }, company: { ar: 'وزارة الطاقة', en: 'Ministry of Energy' }, companyKey: 'gov', score: 165, status: 'new', when: { ar: 'جديد', en: 'New' } },
-      { id: 'g2', name: { ar: 'منيرة الحربي', en: 'Munira Alharbi' }, role: { ar: 'مديرة عامة', en: 'Director General' }, company: { ar: 'وزارة الاقتصاد والتخطيط', en: 'Ministry of Economy & Planning' }, companyKey: 'gov', score: 158, status: 'new', when: { ar: 'جديد', en: 'New' } },
-      { id: 'g3', name: { ar: 'سعود المطيري', en: 'Saud Almutairi' }, role: { ar: 'مدير برنامج', en: 'Program Manager' }, company: { ar: 'هيئة المحتوى المحلي', en: 'Local Content Authority' }, companyKey: 'gov', score: 152, status: 'sent', when: { ar: 'قبل أسبوعين', en: '2 weeks ago' } },
     ],
   },
   {
@@ -203,11 +215,6 @@ export const paths: CareerPath[] = [
       { name: 'تحليل البيانات', desc: { ar: 'محلّل بيانات معتمد', en: 'Certified Data Analyst' }, status: 'future', cost: { ar: '3,500 ر.س', en: '3,500 SAR' }, duration: { ar: '3 أشهر', en: '3 months' }, hadaf: true },
       { name: 'MBA', desc: { ar: 'تحضير ماجستير إدارة الأعمال', en: 'MBA preparation' }, status: 'future', cost: { ar: 'يختلف', en: 'Varies' }, duration: { ar: '6 أشهر', en: '6 months' } },
     ],
-    contacts: [
-      { id: 't1', name: { ar: 'ريان الشمري', en: 'Rayan Alshammari' }, role: { ar: 'مدير منتج', en: 'Product Manager' }, company: { ar: 'stc', en: 'stc' }, companyKey: 'stc', score: 160, status: 'new', when: { ar: 'جديد', en: 'New' } },
-      { id: 't2', name: { ar: 'هند العتيبي', en: 'Hind Alotaibi' }, role: { ar: 'قائدة هندسة برمجيات', en: 'Engineering Lead' }, company: { ar: 'علم', en: 'Elm' }, companyKey: 'elm', score: 155, status: 'new', when: { ar: 'جديد', en: 'New' } },
-      { id: 't3', name: { ar: 'ماجد الغامدي', en: 'Majed Alghamdi' }, role: { ar: 'مدير تطوير الأعمال', en: 'Business Development Manager' }, company: { ar: 'هيئة الاتصالات والفضاء والتقنية', en: 'CST' }, companyKey: 'cst', score: 151, status: 'sent', when: { ar: 'قبل أسبوع', en: '1 week ago' } },
-    ],
   },
 ];
 
@@ -219,10 +226,7 @@ export type Template = {
   id: string;
   title: LS;
   preview: LS;
-  words: number;
   tone: LS;
-  audience: LS;
-  recommended?: boolean;
 };
 
 export const templates: Template[] = [
@@ -230,59 +234,56 @@ export const templates: Template[] = [
     id: 't1',
     title: { ar: 'تعريف مباشر', en: 'Direct Introduction' },
     preview: {
-      ar: 'السلام عليكم {الاسم}، أنا علي، طالب ماجستير في اقتصاديات الطاقة بجامعة كورنيل (أتخرّج مايو 2026)، ولي خبرة تشغيلية في رأس الخير. أتطلّع لفرصة في {الشركة}، ويسعدني لو نتحدّث قصيرًا...',
-      en: "Hi {firstName}, I'm Ali, an Energy Economics M.Eng. at Cornell (graduating May 2026) with operational experience at Ras Al-Khair. I'm keen on a role at {company} and would value a short chat...",
+      ar: 'السلام عليكم {الاسم}، أنا علي، طالب ماجستير في اقتصاديات الطاقة بجامعة كورنيل (أتخرّج مايو 2026)، ولي خبرة تشغيلية في رأس الخير. أتطلّع لفرصة في {الشركة}، ويسعدني لو نتحدّث قصيرًا.',
+      en: "Hi {firstName}, I'm Ali, an Energy Economics M.Eng. at Cornell (graduating May 2026) with operational experience at Ras Al-Khair. I'm keen on a role at {company} and would value a short chat.",
     },
-    words: 60,
     tone: { ar: 'رسمي', en: 'Formal' },
-    audience: { ar: 'القيادات', en: 'Senior' },
-    recommended: true,
   },
   {
     id: 't2',
     title: { ar: 'جسر بحثي', en: 'Research Bridge' },
     preview: {
-      ar: 'السلام عليكم {الاسم}، أشارك حاليًا في تأليف ورقة بحثية لمعهد أكسفورد لدراسات الطاقة حول إزالة الكربون من مباني الهيدروجين في أوروبا، ولفت نظري عمل {الشركة} في هذا المجال...',
-      en: "Hi {firstName}, I'm co-authoring an OIES paper on EU hydrogen-buildings decarbonization, and {company}'s work in this area caught my attention...",
+      ar: 'السلام عليكم {الاسم}، أشارك حاليًا في تأليف ورقة بحثية لمعهد أكسفورد لدراسات الطاقة، ولفت نظري عمل {الشركة} في هذا المجال. أودّ لو أسمع وجهة نظرك.',
+      en: "Hi {firstName}, I'm co-authoring an OIES energy paper, and {company}'s work in the space caught my attention. I'd love to hear your perspective.",
     },
-    words: 80,
     tone: { ar: 'أكاديمي', en: 'Academic' },
-    audience: { ar: 'الباحثون', en: 'Researchers' },
   },
   {
     id: 't3',
     title: { ar: 'جسر شخصي', en: 'Personal Bridge' },
     preview: {
-      ar: 'السلام عليكم أستاذ {الاسم}، أنا علي الأجود، خرّيج هندسة من مانشستر وطالب ماجستير في كورنيل، وعملت في رأس الخير. تابعت مسيرتك في {الشركة} وأعجبني انتقالك إلى {الدور}...',
-      en: "As-salamu alaykum {firstName}, I'm Ali Alajwad — a Manchester engineering graduate, now at Cornell, with experience at Ras Al-Khair. I've followed your move into {role} at {company}...",
+      ar: 'السلام عليكم أستاذ {الاسم}، أنا علي الأجود، خرّيج هندسة من مانشستر وطالب ماجستير في كورنيل. تابعت مسيرتك في {الشركة}، وأعجبني انتقالك إلى {الدور}، وأطمح لمسار مشابه.',
+      en: "As-salamu alaykum {firstName}, I'm Ali Alajwad — a Manchester engineering graduate, now at Cornell. I've followed your path at {company} and admired your move into {role}; I'm aiming for something similar.",
     },
-    words: 70,
     tone: { ar: 'ودّي', en: 'Warm' },
-    audience: { ar: 'قيادات سعودية', en: 'Senior Saudis' },
   },
   {
     id: 't4',
-    title: { ar: 'خلفية مشتركة', en: 'Mutual Background' },
-    preview: {
-      ar: 'السلام عليكم {الاسم}، يجمعنا التخرّج من {مانشستر/كورنيل}. لاحظت انتقالك إلى {الدور} في {الشركة}، وهو تحديدًا المسار الذي أطمح إليه، فأحببت أن أتواصل معك...',
-      en: "Hi {firstName}, fellow {Manchester/Cornell} alum here. I noticed your move into {role} at {company} — exactly the path I'm aiming for, so I wanted to reach out...",
-    },
-    words: 65,
-    tone: { ar: 'ودّي', en: 'Warm' },
-    audience: { ar: 'الخرّيجون', en: 'Alumni' },
-  },
-  {
-    id: 't5',
     title: { ar: 'مختصرة ومباشرة', en: 'Short & Direct' },
     preview: {
-      ar: 'السلام عليكم {الاسم}، خرّيج اقتصاديات طاقة من كورنيل (مايو 2026)، وخبرة سابقة في رأس الخير، وأستهدف قطاع الطاقة. هل يناسبك حديث 10 دقائق؟',
-      en: 'Hi {firstName}, Cornell Energy Economics grad (May 2026), prior ops at Ras Al-Khair, targeting the energy sector. Open to a 10-min chat?',
+      ar: 'السلام عليكم {الاسم}، خرّيج اقتصاديات طاقة من كورنيل (مايو 2026)، وخبرة سابقة في رأس الخير، وأستهدف {الشركة}. هل يناسبك حديث 10 دقائق؟',
+      en: 'Hi {firstName}, Cornell Energy Economics grad (May 2026), prior ops at Ras Al-Khair, targeting {company}. Open to a 10-min chat?',
     },
-    words: 40,
     tone: { ar: 'مختصر', en: 'Tight' },
-    audience: { ar: 'كبار التنفيذيين', en: 'C-Suite' },
   },
 ];
+
+// Fill a template preview with a specific contact's details for a live preview.
+export function fillTemplate(preview: string, c: Contact, locale: Loc): string {
+  const first = c.name[locale].split(' ')[0];
+  let out = preview;
+  for (const [k, v] of [
+    ['{الاسم}', first],
+    ['{firstName}', first],
+    ['{الشركة}', c.company[locale]],
+    ['{company}', c.company[locale]],
+    ['{الدور}', c.role[locale]],
+    ['{role}', c.role[locale]],
+  ] as const) {
+    out = out.split(k).join(v);
+  }
+  return out;
+}
 
 /* ------------------------------------------------------------------ tracker -- */
 
@@ -317,6 +318,7 @@ export const ui = {
   nav: {
     home: { ar: 'الرئيسية', en: 'Home' },
     paths: { ar: 'المسارات', en: 'Paths' },
+    contacts: { ar: 'التواصل', en: 'Contacts' },
     tracker: { ar: 'المتتبّع', en: 'Tracker' },
   },
   shell: {
@@ -339,15 +341,15 @@ export const ui = {
     },
     actionsTitle: { ar: 'ابدأ بهؤلاء اليوم', en: 'Start with these today' },
     actionsSub: { ar: 'الأعلى ملاءمةً أولًا', en: 'Highest match first' },
-    openPath: { ar: 'افتح مسارك الرئيسي', en: 'Open your primary path' },
+    openContacts: { ar: 'كل صنّاع القرار', en: 'All decision-makers' },
     nextCert: { ar: 'شهادتك الحالية', en: 'Your current certification' },
   },
   paths: {
     eyebrow: { ar: 'مساراتك المهنية', en: 'Your career paths' },
     title: { ar: 'خمسة مسارات مبنية على خلفيتك', en: 'Five paths built on your background' },
     sub: {
-      ar: 'افتح أيّ مسار لترى شهاداته، وصنّاع القرار فيه، ورسائلك الجاهزة له.',
-      en: 'Open any path to see its certifications, decision-makers, and ready messages.',
+      ar: 'افتح أيّ مسار لترى خارطة شهاداته وتكلفتها بعد دعم هدف.',
+      en: 'Open any path to see its certification roadmap and cost after Hadaf support.',
     },
     match: { ar: 'ملاءمة', en: 'match' },
     primary: { ar: 'مسارك الرئيسي', en: 'Primary path' },
@@ -355,13 +357,7 @@ export const ui = {
     open: { ar: 'افتح المسار', en: 'Open path' },
     statCerts: { ar: 'شهادات', en: 'certs' },
     statMonths: { ar: 'شهرًا', en: 'months' },
-    statContacts: { ar: 'صانع قرار', en: 'contacts' },
     back: { ar: 'كل المسارات', en: 'All paths' },
-  },
-  pathTabs: {
-    certs: { ar: 'الشهادات', en: 'Certifications' },
-    contacts: { ar: 'صنّاع القرار', en: 'Decision-makers' },
-    messages: { ar: 'الرسائل', en: 'Messages' },
   },
   certs: {
     title: { ar: 'خارطة الشهادات', en: 'Certification roadmap' },
@@ -374,28 +370,29 @@ export const ui = {
     bannerSub: { ar: 'تسترجع نحو نصف تكلفة كل شهادة معتمدة عبر هدف.', en: 'Reclaim about half of each approved certification via Hadaf.' },
   },
   contacts: {
-    title: { ar: 'صنّاع القرار', en: 'Decision-makers' },
-    sub: { ar: 'في شركات هذا المسار، مرتّبون حسب ملاءمتهم لك.', en: "At this path's companies, ranked by how well they match you." },
+    eyebrow: { ar: 'التواصل', en: 'Outreach' },
+    title: { ar: 'تواصل مع من يقرّر', en: 'Reach the people who decide' },
+    sub: {
+      ar: 'صنّاع القرار للتواصل المباشر، والموارد البشرية للتقديم الرسمي. كل اسم مع رسالة جاهزة بصوتك.',
+      en: 'Decision-makers for direct outreach, HR for the official application. Each with a ready message in your voice.',
+    },
+    tabConnections: { ar: 'صنّاع القرار', en: 'Connections' },
+    tabHr: { ar: 'الموارد البشرية', en: 'HR' },
+    connectionsHint: { ar: 'أفضل 300 جهة للتواصل المباشر', en: 'Top 300 for direct outreach' },
+    hrHint: { ar: 'مسؤولو التوظيف · البوابة الرسمية', en: 'Recruiters · the official channel' },
+    industry: { ar: 'المجال', en: 'Industry' },
+    allIndustries: { ar: 'كل المجالات', en: 'All industries' },
     search: { ar: 'ابحث بالاسم أو الشركة…', en: 'Search by name or company…' },
-    all: { ar: 'الكل', en: 'All' },
-    hot: { ar: 'الأهمّ', en: 'Top' },
-    new: { ar: 'جديد', en: 'New' },
-    sent: { ar: 'مُرسل', en: 'Sent' },
-    replied: { ar: 'ردّ', en: 'Replied' },
-    followup: { ar: 'متابعة', en: 'Follow-up' },
-    outreach: { ar: 'ابدأ التواصل', en: 'Start outreach' },
-    reply: { ar: 'ردّ سريع', en: 'Quick reply' },
-    followupCta: { ar: 'رسالة متابعة', en: 'Follow up' },
-    empty: { ar: 'لا نتائج مطابقة.', en: 'No matching results.' },
-  },
-  messages: {
-    title: { ar: 'رسائل بصوتك', en: 'Messages in your voice' },
-    sub: { ar: 'جاهزة للإرسال عبر لينكدإن، مكتوبة بأسلوبك.', en: 'Ready to send on LinkedIn, written in your style.' },
-    recommended: { ar: 'موصى به', en: 'Recommended' },
+    recruiter: { ar: 'توظيف', en: 'Recruiter' },
+    messagePreview: { ar: 'رسالة جاهزة', en: 'Ready message' },
     copy: { ar: 'نسخ', en: 'Copy' },
     copied: { ar: 'تم النسخ', en: 'Copied' },
-    vary: { ar: 'صيغة أخرى', en: 'Reword' },
-    words: { ar: 'كلمة', en: 'words' },
+    shuffle: { ar: 'صيغة أخرى', en: 'Shuffle' },
+    empty: { ar: 'لا نتائج مطابقة.', en: 'No matching results.' },
+    status_new: { ar: 'جديد', en: 'New' },
+    status_sent: { ar: 'مُرسل', en: 'Sent' },
+    status_replied: { ar: 'ردّ', en: 'Replied' },
+    status_followup: { ar: 'متابعة', en: 'Follow-up' },
   },
   tracker: {
     eyebrow: { ar: 'المتتبّع', en: 'Tracker' },

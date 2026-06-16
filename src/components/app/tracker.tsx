@@ -19,11 +19,7 @@ export function TrackerSection({ locale }: { locale: Loc }) {
 
   return (
     <div>
-      <SectionHeading
-        eyebrow={ui.tracker.eyebrow[locale]}
-        title={ui.tracker.title[locale]}
-        sub={ui.tracker.sub[locale]}
-      />
+      <SectionHeading eyebrow={ui.tracker.eyebrow[locale]} title={ui.tracker.title[locale]} sub={ui.tracker.sub[locale]} />
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <StatCard value={tracker.stats.sent} label={ui.tracker.sent[locale]} accentText="text-brand-600" />
@@ -33,7 +29,7 @@ export function TrackerSection({ locale }: { locale: Loc }) {
       </div>
 
       {/* Reply rate */}
-      <div className="mt-4 flex items-center gap-4 overflow-hidden rounded-2xl border border-brand-100 bg-gradient-to-br from-brand-50/80 to-canvas-raised p-5">
+      <div className="mt-4 flex items-center gap-4 rounded-2xl border border-brand-100 bg-brand-50/60 p-5 backdrop-blur-sm">
         <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-brand-600 text-white shadow-soft">
           <TrendingUp className="h-6 w-6" />
         </div>
@@ -48,7 +44,7 @@ export function TrackerSection({ locale }: { locale: Loc }) {
       </div>
 
       {/* Weekly chart */}
-      <div className="mt-4 rounded-2xl border border-line bg-canvas-raised p-5 shadow-soft">
+      <div className="glass mt-4 rounded-2xl p-5">
         <h3 className="text-sm font-bold text-ink-soft">{ui.tracker.weekly[locale]}</h3>
         <div className="mt-4 flex items-end justify-between gap-2">
           {tracker.weekly.map((d, i) => (
@@ -70,9 +66,9 @@ export function TrackerSection({ locale }: { locale: Loc }) {
       </div>
 
       {/* Activity feed */}
-      <div className="mt-4 rounded-2xl border border-line bg-canvas-raised p-2 shadow-soft">
+      <div className="glass mt-4 rounded-2xl p-2">
         <h3 className="px-3 pb-1 pt-3 text-sm font-bold text-ink-soft">{ui.tracker.recent[locale]}</h3>
-        <div className="divide-y divide-line">
+        <div className="divide-y divide-white/40">
           {tracker.activity.map((a, i) => {
             const conf = ACTIVITY_ICON[a.kind];
             return (

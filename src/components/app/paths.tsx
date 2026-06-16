@@ -1,14 +1,11 @@
 'use client';
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { TrendingUp, Zap, Briefcase, Landmark, Cpu, Route, ArrowLeft, GraduationCap, Users, Send } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { TrendingUp, Zap, Briefcase, Landmark, Cpu, Route, ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { paths, ui, type CareerPath, type Loc } from '@/lib/app-data';
 import { accent, SectionHeading, Stagger, StaggerItem } from './ui';
 import { CertificationsSection } from './certifications';
-import { ContactsSection } from './contacts';
-import { MessagesSection } from './messages';
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -20,16 +17,9 @@ const ICONS = {
   tech: Cpu,
 } as const;
 
-const SUBTABS = [
-  { id: 'certs', Icon: GraduationCap },
-  { id: 'contacts', Icon: Users },
-  { id: 'messages', Icon: Send },
-] as const;
-type SubTab = (typeof SUBTABS)[number]['id'];
-
 function Stat({ value, label }: { value: number; label: string }) {
   return (
-    <div className="rounded-xl border border-line bg-canvas px-2 py-2.5 text-center">
+    <div className="rounded-xl border border-white/50 bg-white/40 px-2 py-2.5 text-center">
       <div className="text-base font-extrabold tabular-nums">{value}</div>
       <div className="mt-0.5 text-[10px] font-medium leading-tight text-ink-muted">{label}</div>
     </div>
@@ -46,7 +36,7 @@ function MatchBar({ path, locale }: { path: CareerPath; locale: Loc }) {
           {path.matchPercent}%
         </span>
       </div>
-      <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-line">
+      <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-black/5">
         <motion.div
           className={cn('h-full rounded-full', a.bar)}
           initial={{ width: 0 }}
@@ -66,8 +56,8 @@ function PathCard({ path, locale, onOpen }: { path: CareerPath; locale: Loc; onO
       type="button"
       onClick={onOpen}
       className={cn(
-        'group relative h-full w-full overflow-hidden rounded-3xl border bg-canvas-raised p-5 text-start shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift',
-        path.primary ? 'border-brand-200' : 'border-line',
+        'group glass relative h-full w-full overflow-hidden rounded-3xl p-5 text-start transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift',
+        path.primary && 'ring-1 ring-brand-200',
       )}
     >
       {path.primary && (
@@ -89,13 +79,12 @@ function PathCard({ path, locale, onOpen }: { path: CareerPath; locale: Loc; onO
         <MatchBar path={path} locale={locale} />
       </div>
 
-      <div className="mt-4 grid grid-cols-3 gap-2">
+      <div className="mt-4 grid grid-cols-2 gap-2">
         <Stat value={path.certs.length} label={ui.paths.statCerts[locale]} />
         <Stat value={path.months} label={ui.paths.statMonths[locale]} />
-        <Stat value={path.contacts.length} label={ui.paths.statContacts[locale]} />
       </div>
 
-      <div className="mt-3 flex items-start gap-2 rounded-xl border border-dashed border-line bg-canvas px-3 py-2.5">
+      <div className="mt-3 flex items-start gap-2 rounded-xl border border-dashed border-white/60 bg-white/30 px-3 py-2.5">
         <Route className="mt-0.5 h-3.5 w-3.5 shrink-0 text-ink-muted" />
         <p className="text-[11px] leading-relaxed text-ink-soft" dir="ltr">
           <span className="font-semibold text-ink">{ui.paths.roadmap[locale]}: </span>
@@ -112,10 +101,8 @@ function PathCard({ path, locale, onOpen }: { path: CareerPath; locale: Loc; onO
 }
 
 function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; onBack: () => void }) {
-  const [sub, setSub] = useState<SubTab>('certs');
   const a = accent[path.accent];
   const Icon = ICONS[path.icon];
-
   return (
     <div>
       <button
@@ -128,7 +115,7 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
       </button>
 
       {/* Path header */}
-      <div className="mt-4 rounded-3xl border border-line bg-canvas-raised p-5 shadow-soft">
+      <div className="glass mt-4 rounded-3xl p-5">
         <div className="flex items-start gap-3">
           <div className={cn('grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br text-white shadow-soft', a.grad)}>
             <Icon className="h-6 w-6" />
@@ -148,49 +135,14 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
         <div className="mt-4">
           <MatchBar path={path} locale={locale} />
         </div>
-        <div className="mt-4 grid grid-cols-3 gap-2">
+        <div className="mt-4 grid grid-cols-2 gap-2">
           <Stat value={path.certs.length} label={ui.paths.statCerts[locale]} />
           <Stat value={path.months} label={ui.paths.statMonths[locale]} />
-          <Stat value={path.contacts.length} label={ui.paths.statContacts[locale]} />
         </div>
       </div>
 
-      {/* Sub navigation */}
-      <div className="mt-5 flex gap-1 rounded-2xl border border-line bg-canvas-raised p-1 shadow-soft">
-        {SUBTABS.map((s) => {
-          const active = sub === s.id;
-          return (
-            <button
-              key={s.id}
-              type="button"
-              onClick={() => setSub(s.id)}
-              className={cn(
-                'flex flex-1 items-center justify-center gap-1.5 rounded-xl px-2 py-2.5 text-[13px] font-bold transition-colors',
-                active ? 'bg-brand-600 text-white shadow-soft' : 'text-ink-soft hover:text-ink',
-              )}
-            >
-              <s.Icon className="h-4 w-4" />
-              <span className="truncate">{ui.pathTabs[s.id][locale]}</span>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Sub content */}
-      <div className="py-6">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={sub}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.22, ease: EASE }}
-          >
-            {sub === 'certs' && <CertificationsSection certs={path.certs} locale={locale} />}
-            {sub === 'contacts' && <ContactsSection contacts={path.contacts} locale={locale} />}
-            {sub === 'messages' && <MessagesSection locale={locale} />}
-          </motion.div>
-        </AnimatePresence>
+      <div className="mt-6">
+        <CertificationsSection certs={path.certs} locale={locale} />
       </div>
     </div>
   );
