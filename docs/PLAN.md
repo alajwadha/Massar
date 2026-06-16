@@ -222,7 +222,11 @@ some is queued. Read this first when picking the work back up.
    eligibility, and the score gain each adds.
 5. Contacts:
    - HR (recruiters) come from our database, tiered by package: Starter = 100,
-     Pro = 300. These are HR only.
+     Pro = 300 (HR only). HR is CATEGORIZED like Connections and gets the same
+     filter UI: by sector/industry (finance, energy, consulting, government,
+     tech, ...) and by company tier (giant / large / mid-market / SME / agency
+     per SECTORS.md, skewed to mid-market and SME, which actually respond). So
+     the customer can narrow their 100/300 recruiters to the field they want.
    - Connections (the people the customer reaches out to) come from the
      customer's own uploaded LinkedIn Connections.csv. We do NOT invent or
      supply decision-makers. The file is parsed client-side (never uploaded or
