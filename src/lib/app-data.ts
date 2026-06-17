@@ -546,10 +546,11 @@ const aliCvReview: CvReview = {
     { ar: 'شهادة تمويل مناخي من كابسارك تغطي الحوكمة البيئية وأسواق الكربون', en: 'A KAPSARC Climate Finance credential covering ESG and carbon markets' },
   ],
   issues: [
-    { id: 'summary', kind: 'summary', text: { ar: 'ملخصك يبدأ بالعمليات. اجعله يبدأ باقتصاديات الطاقة من كورنيل وأعمال النمذجة ليناسب أدوار الاستثمار.', en: 'Your summary leads with operations. Lead instead with Cornell energy economics and your modeling work, so it reads for an investment role.' }, severity: 'high' },
-    { id: 'impact', kind: 'bullet', text: { ar: 'إنجازاتك تُظهر الإنتاج (2,700 ميغاواط، مليون م³ يوميًا) لا الأثر المالي. أضف الوفورات أو تحسّن الكفاءة من متابعتك للغاز وتوزيع الأحمال.', en: 'Your bullets show output (2,700 MWh, 1M m³/day) but not money. Add the cost saved or efficiency gained from your gas tracking and load work.' }, severity: 'high' },
-    { id: 'finance', kind: 'format', text: { ar: 'لا توجد شهادة مالية بعد عدا التمويل المناخي. مستوى أول من CFA أو شهادة نمذجة مالية يسدّ أكبر فجوة للتحوّل نحو الاستثمار.', en: 'No finance credential yet beyond Climate Finance. A CFA Level 1 or a financial-modeling cert closes the biggest gap for an investment move.' }, severity: 'med' },
-    { id: 'keywords', kind: 'contact', text: { ar: 'استخدم مصطلحات صندوق الاستثمارات وكابسارك: استراتيجية تحوّل الطاقة، التحليل التقني الاقتصادي، تمويل المشاريع. لديك الجوهر، فقط سمِّه بلغتهم.', en: 'Mirror the words PIF and KAPSARC use: energy-transition strategy, techno-economic analysis, project finance. You have the substance, name it their way.' }, severity: 'low' },
+    { id: 'finance', kind: 'format', text: { ar: 'تحتاج شهادة مالية، ابدأ بمستوى CFA الأول.', en: 'A finance certification is needed, start with CFA Level 1.' }, severity: 'high' },
+    { id: 'summary', kind: 'summary', text: { ar: 'اجعل ملخصك يبدأ باقتصاديات الطاقة لا بالعمليات.', en: 'Lead your summary with energy economics, not operations.' }, severity: 'high' },
+    { id: 'whitespace', kind: 'length', text: { ar: 'هناك فراغات كثيرة، اضبط التنسيق ليملأ الصفحة.', en: 'There is too much white space, tighten the layout to fill the page.' }, severity: 'med' },
+    { id: 'typo', kind: 'typo', text: { ar: 'راجعها مرة أخرى، قد يكون فيها خطأ مطبعي بسيط.', en: 'Proofread once more, a small typo or two may have slipped in.' }, severity: 'med' },
+    { id: 'projects', kind: 'bullet', text: { ar: 'أبرز مشاريعك في موضع أعلى، فهي نقطة قوة.', en: 'Feature your projects higher up, they are a strong asset.' }, severity: 'low' },
   ],
 };
 
@@ -851,6 +852,7 @@ export const ui = {
   },
   shell: {
     greeting: { ar: 'أهلًا بعودتك', en: 'Welcome back' },
+    disclaimer: { ar: 'تأكد من التفاصيل قبل أي خطوة. قد نخطئ في أمرٍ ما، لكن مستقبلك يهمّنا.', en: 'Double-check the details before you act. We might get something wrong, but your future matters to us.' },
     plan: { ar: 'الباقة الاحترافية', en: 'Pro plan' },
     journey: { ar: 'إنجاز خطتك المهنية', en: 'Your plan progress' },
     demoBadge: { ar: 'خطتك أنت', en: 'Your plan' },
@@ -1090,6 +1092,10 @@ export const ui = {
     tierSolid: { ar: 'خيار قوي', en: 'A solid choice' },
     tierAccessible: { ar: 'أسهل قبولًا', en: 'Easier to get into' },
     nearYou: { ar: 'الأقرب إليك', en: 'Nearest you' },
+    majorsHere: { ar: 'تخصصات متاحة هنا', en: 'Majors here' },
+    reqBrief: { ar: ['معدل تراكمي جيد واختبار لغة (آيلتس 6.5 أو توفل 90)', 'GMAT أو GRE لبعض البرامج، مع خطاب غرض وتوصيات'], en: ['A good GPA and an English test (IELTS 6.5 or TOEFL 90)', 'GMAT or GRE for some, plus an SOP and references'] },
+    timelineBrief: { ar: ['ابدأ قبل 9 إلى 12 شهرًا', 'أغلب المواعيد في الخريف'], en: ['Start 9 to 12 months ahead', 'Most deadlines fall in autumn'] },
+    fundingBrief: { ar: ['برنامج «بعثتك» لأفضل الجامعات', 'ابتعاث جهة العمل أو زمالة كاوست'], en: ['The بعثتك program for top universities', 'Employer sponsorship or a KAUST fellowship'] },
     viewProgram: { ar: 'صفحة البرنامج', en: 'Program page' },
     worthItTitle: { ar: 'هل تستحق الدراسة العليا؟', en: 'Is a graduate degree worth it?' },
     worthIt: { ar: 'لمسارك، الماجستير يرفع سقف راتبك ويفتح الأدوار القيادية أسرع، خاصة من جامعة قوية في مجالك. القرار يعتمد على هدفك ووقتك.', en: 'For your path, a master’s raises your ceiling and opens senior roles faster, especially from a university strong in your field. It comes down to your goal and your time.' },

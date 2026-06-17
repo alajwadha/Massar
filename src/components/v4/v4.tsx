@@ -1120,9 +1120,10 @@ function Study({ locale }: { locale: Loc }) {
   const tierLabel = (t: GradProgram['tier']) =>
     (t === 'high' ? ui.study.tierHigh : t === 'respected' ? ui.study.tierRespected : t === 'solid' ? ui.study.tierSolid : ui.study.tierAccessible)[locale];
 
-  const lists = [
-    { Icon: FileText, title: ui.study.admissionsTitle[locale], items: ui.study.admissions[locale] },
-    { Icon: CalendarDays, title: ui.study.timelineTitle[locale], items: ui.study.timeline[locale] },
+  const essentials = [
+    { Icon: FileText, title: ui.study.admissionsTitle[locale], items: ui.study.reqBrief[locale] },
+    { Icon: CalendarDays, title: ui.study.timelineTitle[locale], items: ui.study.timelineBrief[locale] },
+    { Icon: Wallet, title: ui.study.fundingTitle[locale], items: ui.study.fundingBrief[locale] },
   ];
 
   return (
@@ -1142,6 +1143,25 @@ function Study({ locale }: { locale: Loc }) {
           <p className="mt-0.5 text-[13px] leading-relaxed text-stone-500 dark:text-stone-400">{ui.study.worthIt[locale]}</p>
         </div>
       </Card>
+
+      {/* The essentials up top, briefly: requirements, timeline, funding */}
+      <div className="grid gap-3 sm:grid-cols-3">
+        {essentials.map((e) => (
+          <Card key={e.title} className="p-4">
+            <div className="mb-2 flex items-center gap-2">
+              <e.Icon className={cn('h-4 w-4', ACCENT)} />
+              <h3 className="text-[13px] font-bold text-stone-900 dark:text-stone-50">{e.title}</h3>
+            </div>
+            <ul className="space-y-1.5">
+              {e.items.map((t, i) => (
+                <li key={i} className="flex items-start gap-2 text-[12.5px] text-stone-600 dark:text-stone-300">
+                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-amber-500" /> {t}
+                </li>
+              ))}
+            </ul>
+          </Card>
+        ))}
+      </div>
 
       {/* Full-time, BY MAJOR: each major gets four universities strong in that field */}
       <div className="space-y-6">
@@ -1177,7 +1197,7 @@ function Study({ locale }: { locale: Loc }) {
       <div>
         <SectionTitle icon={GraduationCap} title={ui.study.partTimeTitle[locale]} sub={ui.study.partTimeSub[locale]} />
         <div className="mb-3 rounded-2xl bg-amber-400/[0.12] px-3.5 py-2.5 text-[12.5px] font-semibold text-amber-700 dark:text-amber-300">{saudiUniStrength[primary][locale]}</div>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2">
           {partTime.map((u, i) => {
             const near = !!region && u.region === region;
             return (
@@ -1188,13 +1208,15 @@ function Study({ locale }: { locale: Loc }) {
                       <h3 className="text-[14px] font-semibold text-stone-900 dark:text-stone-50">{u.uni[locale]}</h3>
                       {near && <span className="rounded-full bg-amber-500/15 px-1.5 py-0.5 text-[9.5px] font-bold text-amber-700 dark:text-amber-300">{ui.study.nearYou[locale]}</span>}
                     </div>
-                    <ArrowUpRight className="h-4 w-4 shrink-0 text-stone-300 transition-colors group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
+                    <span className="inline-flex shrink-0 items-center gap-1 text-[11.5px] text-stone-400 dark:text-stone-500"><Globe className="h-3 w-3" /> {u.city[locale]}</span>
                   </div>
-                  <div className="mt-0.5 text-[12.5px] text-stone-600 dark:text-stone-300">{u.program[locale]}</div>
-                  <div className="mt-2.5 flex items-center gap-2 text-[11.5px]">
-                    <span className="inline-flex items-center gap-1 text-stone-400 dark:text-stone-500"><Globe className="h-3 w-3" /> {u.city[locale]}</span>
-                    <span className={cn('ms-auto inline-flex items-center gap-1 font-semibold', ACCENT)}>{ui.study.viewProgram[locale]} <ArrowUpRight className="h-3 w-3" /></span>
+                  <div className="mt-3 text-[10.5px] font-semibold uppercase tracking-wide text-stone-400 dark:text-stone-500">{ui.study.majorsHere[locale]}</div>
+                  <div className="mt-1.5 flex flex-wrap gap-1.5">
+                    {fields.map((f) => (
+                      <span key={f} className={cn('rounded-full px-2.5 py-1 text-[11.5px] font-semibold', SOFT)}>{fieldMajors[f][locale]}</span>
+                    ))}
                   </div>
+                  <span className={cn('mt-3 inline-flex items-center gap-1 text-[11.5px] font-semibold', ACCENT)}>{ui.study.viewProgram[locale]} <ArrowUpRight className="h-3 w-3" /></span>
                 </Card>
               </a>
             );
@@ -1202,32 +1224,6 @@ function Study({ locale }: { locale: Loc }) {
         </div>
       </div>
 
-      {/* Admissions + timeline */}
-      <div className="grid gap-5 lg:grid-cols-2">
-        {lists.map((l) => (
-          <Card key={l.title} className="p-5">
-            <SectionTitle icon={l.Icon} title={l.title} />
-            <ul className="space-y-2">
-              {l.items.map((t, i) => (
-                <li key={i} className="flex items-start gap-2 text-[13px] text-stone-600 dark:text-stone-300">
-                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" /> {t}
-                </li>
-              ))}
-            </ul>
-          </Card>
-        ))}
-      </div>
-
-      <Card className="p-5">
-        <SectionTitle icon={Wallet} title={ui.study.fundingTitle[locale]} />
-        <ul className="space-y-2">
-          {ui.study.funding[locale].map((t, i) => (
-            <li key={i} className="flex items-start gap-2 text-[13px] text-stone-600 dark:text-stone-300">
-              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" /> {t}
-            </li>
-          ))}
-        </ul>
-      </Card>
     </div>
   );
 }
@@ -1635,6 +1631,8 @@ function Shell() {
       </main>
 
       <FeedbackFooter locale={locale} />
+
+      <p className="mx-auto w-full max-w-5xl px-5 pb-10 text-center text-[11.5px] leading-relaxed text-stone-400 dark:text-stone-500 sm:px-8">{ui.shell.disclaimer[locale]}</p>
 
       <CommandPalette open={cmdOpen} setOpen={setCmdOpen} locale={locale} go={go} openPath={openPath} />
     </div>
