@@ -17,7 +17,7 @@ export function ThemeToggle() {
     const root = document.documentElement;
     // Briefly enable color transitions so the theme morphs smoothly (see globals.css).
     root.classList.add('theme-anim');
-    window.setTimeout(() => root.classList.remove('theme-anim'), 450);
+    window.setTimeout(() => root.classList.remove('theme-anim'), 800);
     setDark(next);
     root.classList.toggle('dark', next);
     try {

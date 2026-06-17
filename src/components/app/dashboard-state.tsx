@@ -27,6 +27,10 @@ type ProgressCtx = {
   toggleCert: (nameEn: string) => void;
   cvFixed: Record<string, boolean>;
   toggleCvFix: (id: string) => void;
+  activePathId: string | null;
+  setActivePath: (id: string) => void;
+  homeWidgets: Record<string, boolean>;
+  setWidget: (id: string, on: boolean) => void;
   level: Level;
   setLevel: (l: Level) => void;
 };
@@ -73,6 +77,8 @@ export function DashboardState({
     Object.fromEntries(initialCertsDone.map((n) => [n, true])),
   );
   const [cvFixed, setCvFixed] = useState<Record<string, boolean>>({});
+  const [activePathId, setActivePathId] = useState<string | null>(null);
+  const [homeWidgets, setHomeWidgets] = useState<Record<string, boolean>>({});
   const [level, setLevel] = useState<Level>('entry');
   // A state flag (not a ref): a ref would flip to true synchronously inside the
   // hydration effect, so the save effect would fire in the SAME pass with stale
@@ -88,11 +94,15 @@ export function DashboardState({
           statuses?: Record<string, ContactStatus>;
           certsDone?: Record<string, boolean>;
           cvFixed?: Record<string, boolean>;
+          activePathId?: string | null;
+          homeWidgets?: Record<string, boolean>;
           level?: Level;
         };
         if (p.statuses) setStatuses(p.statuses);
         if (p.certsDone) setCertsDone((prev) => ({ ...prev, ...p.certsDone }));
         if (p.cvFixed) setCvFixed(p.cvFixed);
+        if (p.activePathId) setActivePathId(p.activePathId);
+        if (p.homeWidgets) setHomeWidgets(p.homeWidgets);
         if (p.level) setLevel(p.level);
       }
     } catch {
@@ -104,11 +114,11 @@ export function DashboardState({
   useEffect(() => {
     if (!hydrated) return;
     try {
-      localStorage.setItem(`masaar:progress:${slug}`, JSON.stringify({ statuses, certsDone, cvFixed, level }));
+      localStorage.setItem(`masaar:progress:${slug}`, JSON.stringify({ statuses, certsDone, cvFixed, activePathId, homeWidgets, level }));
     } catch {
       /* ignore */
     }
-  }, [hydrated, statuses, certsDone, cvFixed, level, slug]);
+  }, [hydrated, statuses, certsDone, cvFixed, activePathId, homeWidgets, level, slug]);
 
   const network_ = useMemo<NetworkCtx>(
     () => ({ network, setFromCsv, clear: clearNetwork }),
@@ -119,13 +129,17 @@ export function DashboardState({
       statuses,
       certsDone,
       cvFixed,
+      activePathId,
+      homeWidgets,
       level,
       setLevel,
       setStatus: (id, s) => setStatuses((prev) => ({ ...prev, [id]: s })),
       toggleCert: (n) => setCertsDone((prev) => ({ ...prev, [n]: !prev[n] })),
       toggleCvFix: (id) => setCvFixed((prev) => ({ ...prev, [id]: !prev[id] })),
+      setActivePath: (id) => setActivePathId(id),
+      setWidget: (id, on) => setHomeWidgets((prev) => ({ ...prev, [id]: on })),
     }),
-    [statuses, certsDone, cvFixed, level],
+    [statuses, certsDone, cvFixed, activePathId, homeWidgets, level],
   );
 
   return (

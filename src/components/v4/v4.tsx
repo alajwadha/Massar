@@ -37,6 +37,8 @@ import {
   Gift,
   Send,
   Star,
+  Sliders,
+  KeyRound,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Link, usePathname } from '@/i18n/routing';
@@ -123,7 +125,7 @@ function ThemeToggle() {
     const root = document.documentElement;
     // Briefly enable color transitions so the theme morphs smoothly (see globals.css).
     root.classList.add('theme-anim');
-    window.setTimeout(() => root.classList.remove('theme-anim'), 450);
+    window.setTimeout(() => root.classList.remove('theme-anim'), 800);
     setDark(next);
     root.classList.toggle('dark', next);
     try {
@@ -183,7 +185,6 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
   const template = templates[tpl % templates.length];
   const message = fillTemplate(template.preview[msgLang], c, msgLang);
   const isRecruiter = Boolean(c.sector);
-  const applyUrl = careersUrlFor(c.company.en);
 
   const copy = async () => {
     try {
@@ -269,11 +270,6 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
         <a href={linkedinUrl(c)} target="_blank" rel="noopener noreferrer" title={ui.contacts.linkedin[locale]} className={cn('grid w-11 shrink-0 place-items-center rounded-full text-blue-600 dark:text-blue-300', GHOST)}>
           <Linkedin className="h-4 w-4" />
         </a>
-        {applyUrl && (
-          <a href={applyUrl} target="_blank" rel="noopener noreferrer" title={ui.opp.apply[locale]} className={cn('grid w-11 shrink-0 place-items-center rounded-full', GHOST)}>
-            <Briefcase className="h-4 w-4" />
-          </a>
-        )}
       </div>
     </Card>
   );
@@ -344,13 +340,14 @@ function CvReviewCard({ locale }: { locale: Loc }) {
   );
 }
 
-// What's missing for the selected level. Persists (resolved by earning certs /
-// experience, not by a toggle), so it lives with the score, not the review card.
-function LevelGaps({ locale, onOpenPrimary }: { locale: Loc; onOpenPrimary: () => void }) {
+// What's missing for the selected level: the EXPERIENCE / other gaps a certificate
+// cannot fix (the certs are covered by "what raises your score"). Lives with the
+// score and persists.
+function LevelGaps({ locale }: { locale: Loc }) {
   const { levelGaps } = usePlan();
   const { level } = useProgress();
   const gap = levelGaps[level];
-  const empty = !gap.experience && gap.certs.length === 0 && (!gap.other || gap.other.length === 0);
+  const empty = !gap.experience && (!gap.other || gap.other.length === 0);
 
   return (
     <div className="mt-5">
@@ -364,11 +361,6 @@ function LevelGaps({ locale, onOpenPrimary }: { locale: Loc; onOpenPrimary: () =
               <TrendingUp className="h-3 w-3" /> {gap.experience[locale]}
             </span>
           )}
-          {gap.certs.map((c) => (
-            <button key={c} type="button" onClick={onOpenPrimary} className="inline-flex items-center gap-1 rounded-lg bg-amber-500/[0.12] px-2 py-1 text-[11.5px] font-semibold text-amber-700 transition-colors hover:bg-amber-500/20 dark:text-amber-300">
-              <BadgeCheck className="h-3 w-3" /> {c}
-            </button>
-          ))}
           {gap.other?.map((o, i) => (
             <span key={i} className={cn('inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[11.5px] font-semibold', SOFT)}>
               <Sparkles className="h-3 w-3" /> {o[locale]}
@@ -381,24 +373,47 @@ function LevelGaps({ locale, onOpenPrimary }: { locale: Loc; onOpenPrimary: () =
 }
 
 /* -------------------------------------------------------------------- home -- */
+// Home is customizable: the score hero is the fixed core, and the surrounding
+// cards are widgets the customer can toggle (persisted in homeWidgets). New
+// widgets (weekly goal, snapshot) default off so they can be "added".
+const HOME_WIDGETS: { id: string; label: keyof typeof ui.overview }[] = [
+  { id: 'nextMove', label: 'wNextMove' },
+  { id: 'network', label: 'wNetwork' },
+  { id: 'cvReview', label: 'wCvReview' },
+  { id: 'stats', label: 'wStats' },
+  { id: 'picks', label: 'wPicks' },
+  { id: 'goal', label: 'wGoal' },
+  { id: 'snapshot', label: 'wSnapshot' },
+];
+const WIDGET_DEFAULT: Record<string, boolean> = { nextMove: true, network: true, cvReview: true, stats: true, picks: true, goal: false, snapshot: false };
+const WEEKLY_GOAL = 5;
 
 function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; openPath: (id: string) => void }) {
   const plan = usePlan();
-  const { primaryPath, cvScore } = plan;
   const { network } = useNetwork();
-  const { level, setLevel, statuses, certsDone } = useProgress();
+  const { level, setLevel, statuses, certsDone, activePathId, homeWidgets, setWidget } = useProgress();
+  const [customizing, setCustomizing] = useState(false);
 
-  const score = primaryPath.scoreByLevel[level];
-  const imps = cvScore.improvements.map((i) => ({ ...i, d: scaledAdd(i.delta, level) }));
+  // The customer's chosen path drives Home (falls back to the plan's primary).
+  const activePath = plan.paths.find((p) => p.id === (activePathId ?? plan.primaryPath.id)) ?? plan.primaryPath;
+
+  const score = activePath.scoreByLevel[level];
+  const upcoming = activePath.certs.filter((c) => !certsDone[c.name.en] && c.status !== 'done');
+  // "What raises your score" is derived from the active path's remaining certs.
+  const imps = upcoming.slice(0, 3).map((c) => ({ name: c.name, d: scaledAdd(c.scoreAdd, level), effort: c.duration, current: c.status === 'current' }));
   const potential = Math.min(100, score + imps.reduce((s, i) => s + i.d, 0));
-  const certsTotal = primaryPath.certs.length;
-  const certsDoneCount = primaryPath.certs.filter((c) => certsDone[c.name.en]).length;
+  const certsTotal = activePath.certs.length;
+  const certsDoneCount = activePath.certs.filter((c) => certsDone[c.name.en]).length;
   const sv = Object.values(statuses);
   const sent = sv.filter((s) => s !== 'new').length;
-  const current = primaryPath.certs.find((c) => c.status === 'current');
-  const todays = network ? dailyPicks(rankConnections(network, planTargets(plan)), 3, Math.floor(Date.now() / 86_400_000)) : [];
+  const replied = sv.filter((s) => s === 'replied').length;
+  const current = activePath.certs.find((c) => c.status === 'current');
 
-  // The single highest-leverage action right now (replaces the old tip + cert cards).
+  // Connection picks: the uploaded network if present, otherwise HR contacts as
+  // placeholders (same ranking rules), shown until the CSV is uploaded.
+  const ranked = rankConnections(network ?? plan.hrContacts, planTargets(plan));
+  const todays = network ? dailyPicks(ranked, 3, Math.floor(Date.now() / 86_400_000)) : ranked.slice(0, 3);
+
   const nm: { title: string; desc: string; go: Tab } = !network
     ? { title: ui.overview.nextMove.connectTitle[locale], desc: ui.overview.nextMove.connectDesc[locale], go: 'contacts' }
     : todays.length > 0
@@ -410,10 +425,45 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
     { v: `${sent}`, label: ui.overview.sentLabel[locale] },
   ];
 
+  const W = (id: string) => homeWidgets[id] ?? WIDGET_DEFAULT[id];
+  const railOn = ['nextMove', 'network', 'goal', 'snapshot'].filter(W);
+  const goalDone = sent >= WEEKLY_GOAL;
+
   return (
     <div className="space-y-3 sm:space-y-4">
+      {/* customize control */}
+      <div className="flex justify-end">
+        <button type="button" onClick={() => setCustomizing((v) => !v)} className={cn('inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-semibold', GHOST)}>
+          <Sliders className="h-3.5 w-3.5" /> {ui.overview.customize[locale]}
+        </button>
+      </div>
+      {customizing && (
+        <Card className="p-4 sm:p-5">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <div className="text-sm font-bold text-stone-900 dark:text-stone-50">{ui.overview.customizeTitle[locale]}</div>
+              <div className="text-[12.5px] text-stone-400 dark:text-stone-500">{ui.overview.customizeSub[locale]}</div>
+            </div>
+            <button type="button" onClick={() => setCustomizing(false)} className={cn('shrink-0 rounded-full px-4 py-1.5 text-[12px] font-bold', PILL)}>{ui.overview.doneBtn[locale]}</button>
+          </div>
+          <div className="mt-3 grid gap-2 sm:grid-cols-2">
+            {HOME_WIDGETS.map((w) => {
+              const on = W(w.id);
+              return (
+                <button key={w.id} type="button" onClick={() => setWidget(w.id, !on)} className={cn('flex items-center justify-between rounded-xl px-3 py-2.5 text-start transition-colors', INSET)}>
+                  <span className="text-sm font-semibold text-stone-700 dark:text-stone-200">{(ui.overview[w.label] as { ar: string; en: string })[locale]}</span>
+                  <span className={cn('relative h-5 w-9 shrink-0 rounded-full transition-colors', on ? 'bg-amber-500' : 'bg-stone-300 dark:bg-white/15')}>
+                    <span className={cn('absolute top-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-all', on ? 'ltr:left-4 rtl:right-4' : 'ltr:left-0.5 rtl:right-0.5')} />
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </Card>
+      )}
+
       <div className="grid grid-cols-12 gap-3 sm:gap-4">
-        <Card className="col-span-12 p-5 sm:p-8 lg:col-span-8">
+        <Card className={cn('col-span-12 p-5 sm:p-8', railOn.length ? 'lg:col-span-8' : 'lg:col-span-12')}>
           <div className="grid items-start gap-7 sm:grid-cols-[auto_1fr] sm:gap-9">
             <div className="mx-auto flex flex-col items-center gap-4 sm:mx-0">
               <div className="text-amber-600 dark:text-amber-400">
@@ -441,103 +491,141 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
 
             <div className="min-w-0">
               <Eyebrow>{ui.overview.scoreLabel[locale]}</Eyebrow>
-              <h1 className="mt-2 text-balance text-[24px] font-semibold leading-[1.12] tracking-tight text-stone-900 dark:text-stone-50 sm:text-[34px]">{cvScore.target[locale]}</h1>
+              <h1 className="mt-2 text-balance text-[24px] font-semibold leading-[1.12] tracking-tight text-stone-900 dark:text-stone-50 sm:text-[34px]">{activePath.name[locale]}</h1>
               <p className="mt-2 text-sm text-stone-500 dark:text-stone-400">{ui.overview.levelHint[locale]}</p>
 
-              <LevelGaps locale={locale} onOpenPrimary={() => openPath(primaryPath.id)} />
+              <LevelGaps locale={locale} />
 
-              <div className="mt-5">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-stone-700 dark:text-stone-200">
-                  <TrendingUp className={cn('h-3.5 w-3.5', ACCENT)} />
-                  {ui.overview.improvementsTitle[locale]}
-                </div>
-                <ul className="mt-2.5 space-y-2">
-                  {imps.map((imp, i) => (
-                    <li key={i} className="flex items-center gap-2.5 text-[13px]">
-                      <span className={cn('shrink-0 rounded-md px-1.5 py-0.5 text-[11px] font-bold tabular-nums', i === 0 ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : SOFT)}>+{imp.d}</span>
-                      <span className="min-w-0 flex-1 text-stone-600 dark:text-stone-300">
-                        {imp.action[locale]}
-                        {i === 0 && <span className="ms-2 whitespace-nowrap rounded bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-300">{ui.overview.quickWin[locale]}</span>}
+              {imps.length > 0 && (
+                <div className="mt-5">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-stone-700 dark:text-stone-200">
+                    <TrendingUp className={cn('h-3.5 w-3.5', ACCENT)} />
+                    {ui.overview.improvementsTitle[locale]}
+                  </div>
+                  <ul className="mt-2.5 space-y-2">
+                    {imps.map((imp, i) => (
+                      <li key={i} className="flex items-center gap-2.5 text-[13px]">
+                        <span className={cn('shrink-0 rounded-md px-1.5 py-0.5 text-[11px] font-bold tabular-nums', imp.current ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : SOFT)}>+{imp.d}</span>
+                        <span className="min-w-0 flex-1 text-stone-600 dark:text-stone-300">
+                          {imp.name[locale]}
+                          {imp.current && <span className="ms-2 whitespace-nowrap rounded bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-300">{ui.overview.quickWin[locale]}</span>}
+                        </span>
+                        <span className="shrink-0 text-[11px] text-stone-400 dark:text-stone-500">{imp.effort[locale]}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-3.5">
+                    <div className="flex items-center justify-between text-[11px] font-semibold">
+                      <span className="text-stone-400 dark:text-stone-500">{ui.overview.reachable[locale]}</span>
+                      <span className="tabular-nums text-stone-500 dark:text-stone-400">
+                        {score} <span className="text-stone-300 dark:text-stone-600">→</span> <span className="font-bold text-stone-900 dark:text-stone-100">{potential}</span>
                       </span>
-                      <span className="shrink-0 text-[11px] text-stone-400 dark:text-stone-500">{imp.effort[locale]}</span>
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-3.5">
-                  <div className="flex items-center justify-between text-[11px] font-semibold">
-                    <span className="text-stone-400 dark:text-stone-500">{ui.overview.reachable[locale]}</span>
-                    <span className="tabular-nums text-stone-500 dark:text-stone-400">
-                      {score} <span className="text-stone-300 dark:text-stone-600">→</span> <span className="font-bold text-stone-900 dark:text-stone-100">{potential}</span>
-                    </span>
-                  </div>
-                  <div className="relative mt-1.5 h-2 overflow-hidden rounded-full bg-stone-900/[0.06] dark:bg-white/10">
-                    <motion.div className="absolute inset-y-0 start-0 rounded-full bg-amber-400/45 dark:bg-amber-400/30" initial={{ width: 0 }} animate={{ width: `${potential}%` }} transition={{ duration: 1, ease: EASE }} />
-                    <motion.div className="absolute inset-y-0 start-0 rounded-full bg-stone-900 dark:bg-stone-100" initial={{ width: 0 }} animate={{ width: `${score}%` }} transition={{ duration: 1, delay: 0.1, ease: EASE }} />
+                    </div>
+                    <div className="relative mt-1.5 h-2 overflow-hidden rounded-full bg-stone-900/[0.06] dark:bg-white/10">
+                      <motion.div className="absolute inset-y-0 start-0 rounded-full bg-amber-400/45 dark:bg-amber-400/30" initial={{ width: 0 }} animate={{ width: `${potential}%` }} transition={{ duration: 1, ease: EASE }} />
+                      <motion.div className="absolute inset-y-0 start-0 rounded-full bg-stone-900 dark:bg-stone-100" initial={{ width: 0 }} animate={{ width: `${score}%` }} transition={{ duration: 1, delay: 0.1, ease: EASE }} />
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </Card>
 
-        <div className="col-span-12 grid gap-3 sm:grid-cols-2 sm:gap-4 lg:col-span-4 lg:grid-cols-1">
-          <button type="button" onClick={() => go(nm.go)} className="group text-start">
-            <Card className="flex h-full items-start gap-3 p-5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.45)]">
-              <div className={cn('grid h-10 w-10 shrink-0 place-items-center rounded-xl', SOFT)}>
-                <Sparkles className={cn('h-5 w-5', ACCENT)} />
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="text-[10.5px] font-semibold uppercase tracking-wider text-stone-400 dark:text-stone-500">{ui.overview.nextMove.eyebrow[locale]}</div>
-                <div className="mt-0.5 font-bold text-stone-900 dark:text-stone-50">{nm.title}</div>
-                <p className="mt-0.5 text-[12.5px] leading-relaxed text-stone-500 dark:text-stone-400">{nm.desc}</p>
-              </div>
-              <ArrowUpRight className="h-5 w-5 shrink-0 text-stone-300 transition-colors group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
-            </Card>
-          </button>
-          <button type="button" onClick={() => go('contacts')} className="group text-start">
-            <Card className="flex h-full items-center gap-3 p-5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.45)]">
-              <div className={cn('grid h-10 w-10 shrink-0 place-items-center rounded-xl', SOFT)}>
-                <Network className="h-5 w-5 text-stone-700 dark:text-stone-200" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="text-[10.5px] font-semibold uppercase tracking-wider text-stone-400 dark:text-stone-500">{ui.overview.networkTitle[locale]}</div>
-                <div className="mt-0.5 text-[13px] font-semibold text-stone-700 dark:text-stone-200">{network ? ui.overview.networkCount[locale](network.length) : ui.overview.networkEmpty[locale]}</div>
-              </div>
-              <ArrowUpRight className="h-5 w-5 shrink-0 text-stone-300 transition-colors group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
-            </Card>
-          </button>
-        </div>
-      </div>
-
-      <CvReviewCard locale={locale} />
-
-      <div className="grid grid-cols-2 gap-3 sm:gap-4">
-        {stats.map((s) => (
-          <Card key={s.label} className="p-4 sm:p-5">
-            <Serif className="block text-3xl tracking-tight text-stone-900 dark:text-stone-50 sm:text-4xl">{s.v}</Serif>
-            <div className="mt-1 text-[11px] text-stone-400 dark:text-stone-500 sm:text-xs">{s.label}</div>
-          </Card>
-        ))}
-      </div>
-
-      <div className="pt-1">
-        <div className="mb-1 flex items-end justify-between gap-3">
-          <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-50">{ui.overview.actionsTitle[locale]}</h2>
-          <button type="button" onClick={() => go('contacts')} className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-stone-900 hover:text-stone-500 dark:text-stone-100 dark:hover:text-stone-400">
-            {ui.overview.openContacts[locale]} <ArrowLeft className="h-4 w-4 ltr:rotate-180" />
-          </button>
-        </div>
-        <p className="text-sm text-stone-400 dark:text-stone-500">{ui.overview.actionsSub[locale]}</p>
-        {todays.length > 0 ? (
-          <CardGrid items={todays.map((r) => ({ contact: r.contact, kind: r.kind, reason: r.reason[locale] }))} locale={locale} />
-        ) : (
-          <button type="button" onClick={() => go('contacts')} className="mt-4 flex w-full flex-col items-center gap-1 rounded-[22px] border border-dashed border-stone-300/80 bg-white/40 p-8 text-center transition-colors hover:border-stone-400 dark:border-white/15 dark:bg-white/[0.02] dark:hover:border-white/30">
-            <Network className="h-6 w-6 text-stone-700 dark:text-stone-200" />
-            <span className="mt-1 text-sm font-semibold text-stone-900 dark:text-stone-50">{ui.network.locked[locale]}</span>
-            <span className={cn('text-xs font-bold', ACCENT)}>{ui.network.upload[locale]}</span>
-          </button>
+        {railOn.length > 0 && (
+          <div className="col-span-12 grid gap-3 sm:grid-cols-2 sm:gap-4 lg:col-span-4 lg:grid-cols-1">
+            {W('nextMove') && (
+              <button type="button" onClick={() => go(nm.go)} className="group text-start">
+                <Card className="flex h-full items-start gap-3 p-5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.45)]">
+                  <div className={cn('grid h-10 w-10 shrink-0 place-items-center rounded-xl', SOFT)}>
+                    <Sparkles className={cn('h-5 w-5', ACCENT)} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-[10.5px] font-semibold uppercase tracking-wider text-stone-400 dark:text-stone-500">{ui.overview.nextMove.eyebrow[locale]}</div>
+                    <div className="mt-0.5 font-bold text-stone-900 dark:text-stone-50">{nm.title}</div>
+                    <p className="mt-0.5 text-[12.5px] leading-relaxed text-stone-500 dark:text-stone-400">{nm.desc}</p>
+                  </div>
+                  <ArrowUpRight className="h-5 w-5 shrink-0 text-stone-300 transition-colors group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
+                </Card>
+              </button>
+            )}
+            {W('network') && (
+              <button type="button" onClick={() => go('contacts')} className="group text-start">
+                <Card className="flex h-full items-center gap-3 p-5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.45)]">
+                  <div className={cn('grid h-10 w-10 shrink-0 place-items-center rounded-xl', SOFT)}>
+                    <Network className="h-5 w-5 text-stone-700 dark:text-stone-200" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-[10.5px] font-semibold uppercase tracking-wider text-stone-400 dark:text-stone-500">{ui.overview.networkTitle[locale]}</div>
+                    <div className="mt-0.5 text-[13px] font-semibold text-stone-700 dark:text-stone-200">{network ? ui.overview.networkCount[locale](network.length) : ui.overview.networkEmpty[locale]}</div>
+                  </div>
+                  <ArrowUpRight className="h-5 w-5 shrink-0 text-stone-300 transition-colors group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
+                </Card>
+              </button>
+            )}
+            {W('goal') && (
+              <Card className="p-5">
+                <div className="text-[10.5px] font-semibold uppercase tracking-wider text-stone-400 dark:text-stone-500">{ui.overview.goalTitle[locale]}</div>
+                {goalDone ? (
+                  <p className={cn('mt-1.5 text-sm font-bold', ACCENT)}>{ui.overview.goalDone[locale]}</p>
+                ) : (
+                  <>
+                    <div className="mt-2 flex items-baseline gap-1">
+                      <Serif className="text-3xl tabular-nums text-stone-900 dark:text-stone-50">{Math.min(sent, WEEKLY_GOAL)}</Serif>
+                      <span className="text-sm text-stone-400 dark:text-stone-500">/ {WEEKLY_GOAL}</span>
+                    </div>
+                    <div className="mt-2 h-2 overflow-hidden rounded-full bg-stone-900/[0.06] dark:bg-white/10">
+                      <motion.div className="h-full rounded-full bg-amber-500 dark:bg-amber-400" initial={{ width: 0 }} animate={{ width: `${Math.min(100, (sent / WEEKLY_GOAL) * 100)}%` }} transition={{ duration: 0.8, ease: EASE }} />
+                    </div>
+                    <div className="mt-1.5 text-[11px] text-stone-400 dark:text-stone-500">{ui.overview.goalHint[locale](sent, WEEKLY_GOAL)}</div>
+                  </>
+                )}
+              </Card>
+            )}
+            {W('snapshot') && (
+              <Card className="p-5">
+                <div className="text-[10.5px] font-semibold uppercase tracking-wider text-stone-400 dark:text-stone-500">{ui.overview.snapshotTitle[locale]}</div>
+                <div className="mt-2 flex gap-6">
+                  <div>
+                    <Serif className="block text-3xl tabular-nums text-stone-900 dark:text-stone-50">{sent}</Serif>
+                    <div className="text-[10.5px] text-stone-400 dark:text-stone-500">{ui.overview.sentLabel[locale]}</div>
+                  </div>
+                  <div>
+                    <Serif className="block text-3xl tabular-nums text-emerald-600 dark:text-emerald-300">{replied}</Serif>
+                    <div className="text-[10.5px] text-stone-400 dark:text-stone-500">{ui.tracker.replied[locale]}</div>
+                  </div>
+                </div>
+              </Card>
+            )}
+          </div>
         )}
       </div>
+
+      {W('cvReview') && <CvReviewCard locale={locale} />}
+
+      {W('stats') && (
+        <div className="grid grid-cols-2 gap-3 sm:gap-4">
+          {stats.map((s) => (
+            <Card key={s.label} className="p-4 sm:p-5">
+              <Serif className="block text-3xl tracking-tight text-stone-900 dark:text-stone-50 sm:text-4xl">{s.v}</Serif>
+              <div className="mt-1 text-[11px] text-stone-400 dark:text-stone-500 sm:text-xs">{s.label}</div>
+            </Card>
+          ))}
+        </div>
+      )}
+
+      {W('picks') && (
+        <div className="pt-1">
+          <div className="mb-1 flex items-end justify-between gap-3">
+            <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-50">{ui.overview.actionsTitle[locale]}</h2>
+            <button type="button" onClick={() => go('contacts')} className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-stone-900 hover:text-stone-500 dark:text-stone-100 dark:hover:text-stone-400">
+              {ui.overview.openContacts[locale]} <ArrowLeft className="h-4 w-4 ltr:rotate-180" />
+            </button>
+          </div>
+          <p className="text-sm text-stone-400 dark:text-stone-500">{network ? ui.overview.actionsSub[locale] : ui.contacts.placeholderNote[locale]}</p>
+          {todays.length > 0 && <CardGrid items={todays.map((r) => ({ contact: r.contact, kind: r.kind, reason: r.reason[locale] }))} locale={locale} />}
+        </div>
+      )}
     </div>
   );
 }
@@ -566,6 +654,14 @@ function CertTimeline({ path, locale }: { path: CareerPath; locale: Loc }) {
                   </div>
                   <span className="shrink-0 rounded-xl bg-amber-500/[0.12] px-2 py-1 text-sm font-bold tabular-nums text-amber-700 dark:text-amber-300">+{scaledAdd(cert.scoreAdd, level)}</span>
                 </div>
+                {cert.opens && cert.opens.length > 0 && (
+                  <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+                    <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-700 dark:text-amber-300"><KeyRound className="h-3 w-3" /> {ui.certs.opens[locale]}:</span>
+                    {cert.opens.map((o, i) => (
+                      <span key={i} className="rounded-md bg-amber-500/[0.12] px-2 py-0.5 text-[11px] font-semibold text-amber-700 dark:text-amber-300">{o[locale]}</span>
+                    ))}
+                  </div>
+                )}
                 <div className="mt-3 flex flex-wrap items-center gap-2">
                   {cert.hadaf && <span className={cn('rounded-md px-2 py-1 text-[11px] font-semibold', SOFT)}>{ui.certs.hadaf[locale]}</span>}
                   <span className={cn('rounded-md px-2 py-1 text-[11px] font-semibold', SOFT)}>{cert.cost[locale]}</span>
@@ -589,12 +685,15 @@ function CertTimeline({ path, locale }: { path: CareerPath; locale: Loc }) {
 }
 
 function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; onBack: () => void }) {
+  const plan = usePlan();
   const { network } = useNetwork();
-  const { level, certsDone } = useProgress();
+  const { level, certsDone, activePathId, setActivePath } = useProgress();
   const score = path.scoreByLevel[level];
   const done = path.certs.filter((c) => certsDone[c.name.en]).length;
   const totalScore = path.certs.reduce((s, c) => s + scaledAdd(c.scoreAdd, level), 0);
-  const picks = network ? rankConnections(network, path.targetCompanies).slice(0, 5) : [];
+  const isActive = (activePathId ?? plan.primaryPath.id) === path.id;
+  // Same rule as connections: real network if uploaded, else HR placeholders.
+  const picks = rankConnections(network ?? plan.hrContacts, path.targetCompanies).slice(0, 5);
 
   return (
     <div className="space-y-5">
@@ -604,12 +703,25 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
       </button>
 
       <Card className="p-6">
-        <div className="flex flex-wrap items-center gap-2">
-          <h2 className="text-2xl font-semibold tracking-tight text-stone-900 dark:text-stone-50">{path.name[locale]}</h2>
-          {path.primary && <span className={cn('rounded-full px-2.5 py-0.5 text-[10px] font-bold', PILL)}>★ {ui.paths.primary[locale]}</span>}
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h2 className="text-2xl font-semibold tracking-tight text-stone-900 dark:text-stone-50">{path.name[locale]}</h2>
+            <p className="mt-1 text-sm text-stone-500 dark:text-stone-400">{path.targets[locale]}</p>
+          </div>
+          {isActive ? (
+            <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-amber-500/15 px-3 py-1.5 text-[12px] font-bold text-amber-700 dark:text-amber-300">★ {ui.paths.active[locale]}</span>
+          ) : (
+            <button type="button" onClick={() => setActivePath(path.id)} className={cn('inline-flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[12px] font-bold', PILL)}>★ {ui.paths.setActive[locale]}</button>
+          )}
         </div>
-        <p className="mt-1 text-sm text-stone-500 dark:text-stone-400">{path.targets[locale]}</p>
-        <div className="mt-5 grid grid-cols-4 gap-2 sm:gap-3">
+
+        <div className={cn('mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 px-3 py-2.5', INSET)}>
+          <span className="text-[10.5px] font-bold uppercase tracking-wide text-stone-400 dark:text-stone-500">{ui.paths.roles[locale]}</span>
+          <span className="text-[13px] font-semibold text-stone-700 dark:text-stone-200">{path.roles[locale]}</span>
+          <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-300">{ui.paths.forPromotions[locale]}</span>
+        </div>
+
+        <div className="mt-4 grid grid-cols-4 gap-2 sm:gap-3">
           {[
             { v: score, l: ui.paths.score[locale] },
             { v: `${done}/${path.certs.length}`, l: ui.paths.statCerts[locale] },
@@ -634,7 +746,7 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
 
       <div>
         <h3 className="text-lg font-semibold text-stone-900 dark:text-stone-50">{ui.paths.picksTitle[locale]}</h3>
-        <p className="mt-0.5 text-sm text-stone-400 dark:text-stone-500">{ui.paths.picksSub[locale]}</p>
+        <p className="mt-0.5 text-sm text-stone-400 dark:text-stone-500">{network ? ui.paths.picksSub[locale] : ui.contacts.placeholderNote[locale]}</p>
         {picks.length > 0 ? (
           <CardGrid items={picks.map((r) => ({ contact: r.contact, kind: r.kind, reason: r.reason[locale] }))} locale={locale} />
         ) : (
@@ -646,8 +758,9 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
 }
 
 function Paths({ locale, selId, setSelId }: { locale: Loc; selId: string | null; setSelId: (id: string | null) => void }) {
-  const { paths } = usePlan();
-  const { level } = useProgress();
+  const { paths, primaryPath } = usePlan();
+  const { level, activePathId } = useProgress();
+  const activeId = activePathId ?? primaryPath.id;
   const selected = selId ? paths.find((p) => p.id === selId) : null;
   if (selected) return <PathDetail path={selected} locale={locale} onBack={() => setSelId(null)} />;
 
@@ -661,13 +774,13 @@ function Paths({ locale, selId, setSelId }: { locale: Loc; selId: string | null;
           const score = p.scoreByLevel[level];
           const totalScore = p.certs.reduce((s, c) => s + scaledAdd(c.scoreAdd, level), 0);
           return (
-            <button key={p.id} type="button" onClick={() => setSelId(p.id)} className={cn('group text-start', p.primary && 'sm:col-span-2')}>
-              <Card className={cn('h-full p-5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.45)]', p.primary && 'border-amber-500/30 dark:border-amber-400/20')}>
+            <button key={p.id} type="button" onClick={() => setSelId(p.id)} className={cn('group text-start', p.id === activeId && 'sm:col-span-2')}>
+              <Card className={cn('h-full p-5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.45)]', p.id === activeId && 'border-amber-500/30 dark:border-amber-400/20')}>
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
                       <h3 className="text-[15px] font-semibold text-stone-900 dark:text-stone-50">{p.name[locale]}</h3>
-                      {p.primary && <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[9.5px] font-bold text-amber-700 dark:text-amber-300">★ {ui.paths.primary[locale]}</span>}
+                      {p.id === activeId && <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[9.5px] font-bold text-amber-700 dark:text-amber-300">★ {ui.paths.active[locale]}</span>}
                     </div>
                     <p className="mt-1 text-[13px] text-stone-500 dark:text-stone-400">{p.targets[locale]}</p>
                   </div>
@@ -780,7 +893,10 @@ function Contacts({ locale }: { locale: Loc }) {
   const q = query.trim().toLowerCase();
   const match = (c: Contact) => !q || c.name.en.toLowerCase().includes(q) || c.name.ar.includes(query) || c.company.en.toLowerCase().includes(q) || c.role.en.toLowerCase().includes(q);
 
-  const ranked = useMemo(() => (network ? rankConnections(network, planTargets(plan)).slice(0, cap) : []), [network, plan, cap]);
+  // Connections: the uploaded network if present, otherwise HR contacts as
+  // placeholders (same ranking rules) until the CSV is uploaded.
+  const ranked = useMemo(() => rankConnections(network ?? plan.hrContacts, planTargets(plan)).slice(0, cap), [network, plan, cap]);
+  const isPlaceholder = part === 'connections' && !network;
   const hrSectors = useMemo(() => Array.from(new Set(plan.hrContacts.map((c) => c.sector).filter(Boolean) as string[])), [plan.hrContacts]);
   const hrTiers = useMemo(() => Array.from(new Set(plan.hrContacts.map((c) => c.companyTier).filter(Boolean) as CompanyTier[])), [plan.hrContacts]);
 
@@ -825,12 +941,14 @@ function Contacts({ locale }: { locale: Loc }) {
 
       {part === 'connections' && <NetworkPanel locale={locale} count={network ? ranked.length : null} onFile={onFile} onClear={clear} />}
 
-      {(part === 'hr' || network) && (
-        <Card className="mt-3 flex items-center gap-2.5 px-4 py-3">
-          <Search className="h-4 w-4 shrink-0 text-stone-400 dark:text-stone-500" />
-          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={ui.contacts.search[locale]} className="w-full bg-transparent text-sm text-stone-900 outline-none placeholder:text-stone-400 dark:text-stone-50 dark:placeholder:text-stone-500" />
-        </Card>
+      {isPlaceholder && (
+        <div className="mt-3 rounded-2xl bg-amber-400/[0.12] px-3.5 py-2.5 text-[12.5px] font-semibold text-amber-700 dark:text-amber-300">{ui.contacts.placeholderNote[locale]}</div>
       )}
+
+      <Card className="mt-3 flex items-center gap-2.5 px-4 py-3">
+        <Search className="h-4 w-4 shrink-0 text-stone-400 dark:text-stone-500" />
+        <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={ui.contacts.search[locale]} className="w-full bg-transparent text-sm text-stone-900 outline-none placeholder:text-stone-400 dark:text-stone-50 dark:placeholder:text-stone-500" />
+      </Card>
 
       {part === 'hr' && (
         <div className="mt-3 space-y-2">
@@ -839,10 +957,9 @@ function Contacts({ locale }: { locale: Loc }) {
         </div>
       )}
 
-      {(part === 'hr' || network) &&
-        (items.length === 0 ? (
-          <p className="mt-10 text-center text-sm text-stone-400 dark:text-stone-500">{ui.contacts.empty[locale]}</p>
-        ) : (
+      {items.length === 0 ? (
+        <p className="mt-10 text-center text-sm text-stone-400 dark:text-stone-500">{ui.contacts.empty[locale]}</p>
+      ) : (
           <>
             {active.length > 0 && (
               <div className="mt-6">
@@ -863,7 +980,7 @@ function Contacts({ locale }: { locale: Loc }) {
               )}
             </div>
           </>
-        ))}
+        )}
     </div>
   );
 }

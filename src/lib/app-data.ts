@@ -64,6 +64,7 @@ export type Cert = {
   hadaf?: boolean;
   hadafNote?: LS;
   why?: LS;
+  opens?: LS[]; // positions this certificate unlocks (new roles or a promotion)
 };
 
 export type ContactStatus = 'new' | 'sent' | 'replied' | 'followup';
@@ -170,6 +171,7 @@ export type CareerPath = {
   id: string;
   name: LS;
   targets: LS;
+  roles: LS; // the positions this path leads to (for a new job OR a promotion)
   accent: AccentKey;
   icon: 'finance' | 'energy' | 'consulting' | 'government' | 'tech';
   months: number;
@@ -189,6 +191,7 @@ export const paths: CareerPath[] = [
     id: 'energy-invest',
     name: { ar: 'الاستثمار والاستراتيجية في الطاقة', en: 'Energy Investment & Strategy' },
     targets: { ar: 'صندوق الاستثمارات العامة · كابسارك · صناديق الطاقة', en: 'PIF Energy Transition · KAPSARC · energy funds' },
+    roles: { ar: 'محلل استثمار ← محلل أول ← مدير محفظة', en: 'Investment Analyst → Senior Analyst → Portfolio Manager' },
     accent: 'brand',
     icon: 'finance',
     months: 16,
@@ -197,10 +200,10 @@ export const paths: CareerPath[] = [
     trail: { ar: 'تمويل المناخ → CME-1 → FMVA → CFA L1 → CFA L2', en: 'Climate Finance → CME-1 → FMVA → CFA L1 → CFA L2' },
     certs: [
       { name: { ar: 'تمويل المناخ', en: 'Climate Finance' }, desc: { ar: 'برنامج تمويل المناخ والتمويل المستدام وأسواق الكربون من مدرسة كابسارك للسياسة العامة. يربط خبرتك في الطاقة بلغة الاستثمار والـ ESG، وهي ميزة نادرة في سوق صناديق تحوّل الطاقة.', en: 'KAPSARC’s climate finance, sustainable finance, and carbon-markets program. It connects your energy background to the language of investment and ESG, a rare edge in the energy-transition fund market.' }, gain: { ar: 'يربط خبرتك في الطاقة بعالم الاستثمار المستدام', en: 'Bridges your energy background into sustainable investing' }, scoreAdd: 7, official: 'https://www.kapsarc.org', status: 'done', cost: { ar: 'منجزة', en: 'Completed' }, duration: { ar: 'أنجزتها', en: 'Completed' } },
-      { name: { ar: 'CME-1', en: 'CME-1' }, desc: { ar: 'الشهادة التأسيسية من المعهد المالي، وهي مطلب تنظيمي للعمل في الأسواق المالية السعودية. تغطّي أساسيات الأنظمة والمنتجات المالية وقواعد هيئة السوق المالية — خطوتك الأولى نحو دور استثماري معتمد.', en: 'The Financial Academy’s foundational license, a regulatory requirement to work in Saudi capital markets. It covers financial regulations, products, and CMA rules — your first step toward an accredited investment role.' }, gain: { ar: 'ترخيص للعمل في الأسواق المالية السعودية', en: 'License to work in Saudi capital markets' }, scoreAdd: 6, official: 'https://fa.gov.sa', status: 'current', cost: { ar: '2,000 ر.س', en: '2,000 SAR' }, duration: { ar: '6–8 أسابيع', en: '6–8 weeks' }, hadaf: true, hadafNote: { ar: 'يدعمها صندوق هدف', en: 'Hadaf-supported' }, why: { ar: 'أسرع خطوة معتمدة تنقلك رسميًا إلى مسار الاستثمار، وتؤهّلك لأدوار الأسواق العامة في الصندوق. ابدأ بها قبل CFA.', en: 'The fastest accredited step that formally moves you into the investment track and qualifies you for PIF public-markets roles. Do it before the CFA.' } },
-      { name: { ar: 'FMVA', en: 'FMVA' }, desc: { ar: 'برنامج معهد تمويل الشركات لبناء النماذج المالية وتقييم الشركات. عملي بالكامل: تتخرّج منه قادرًا على بناء نموذج مالي متكامل من الصفر، وهي المهارة الأكثر طلبًا في فرق الاستثمار والصفقات.', en: 'CFI’s hands-on program for financial modeling and company valuation. You finish able to build a full model from scratch — the most in-demand skill on investment and deals teams.' }, gain: { ar: 'إتقان النمذجة المالية المطلوبة في الصفقات', en: 'Deal-grade financial modeling skills' }, scoreAdd: 8, official: 'https://corporatefinanceinstitute.com/certifications/fmva-program/', status: 'future', cost: { ar: '$497', en: '$497' }, duration: { ar: '3 أشهر', en: '3 months' } },
-      { name: { ar: 'CFA المستوى الأول', en: 'CFA Level 1' }, desc: { ar: 'المستوى الأول من شهادة محلل مالي معتمد، المعيار العالمي الأرفع في إدارة الاستثمار. يغطّي الأخلاقيات والأدوات الكمية والاقتصاد وتحليل القوائم المالية، وهو حجر الأساس لأي دور استثماري في الصندوق.', en: 'Level 1 of the Chartered Financial Analyst program, the global gold standard in investment management. It spans ethics, quantitative methods, economics, and financial reporting — the foundation for any investment role at PIF.' }, gain: { ar: 'المعيار الذهبي لوظائف الاستثمار في الصندوق', en: 'The gold standard for PIF investment roles' }, scoreAdd: 15, official: CFA, status: 'future', cost: { ar: '5,500 ر.س', en: '5,500 SAR' }, duration: { ar: '6 أشهر · 300 ساعة', en: '6 months · 300h' }, hadaf: true, hadafNote: { ar: 'تسترجع نحو 2,750 ر.س عبر هدف', en: 'Reclaim ~2,750 SAR via Hadaf' } },
-      { name: { ar: 'CFA المستوى الثاني', en: 'CFA Level 2' }, desc: { ar: 'المستوى المتقدّم من برنامج CFA، ويركّز على تطبيق أدوات التقييم على فئات الأصول المختلفة. اجتيازه يضعك في نخبة المحللين ويفتح الأدوار القيادية في صناديق الاستثمار.', en: 'The advanced CFA level, focused on applying valuation tools across asset classes. Passing it puts you among elite analysts and opens senior fund roles.' }, gain: { ar: 'يفتح الأدوار القيادية في صناديق الاستثمار', en: 'Opens senior investment-fund roles' }, scoreAdd: 12, official: CFA, status: 'future', cost: { ar: '5,500 ر.س', en: '5,500 SAR' }, duration: { ar: '8 أشهر', en: '8 months' }, hadaf: true },
+      { name: { ar: 'CME-1', en: 'CME-1' }, desc: { ar: 'الشهادة التأسيسية من المعهد المالي، وهي مطلب تنظيمي للعمل في الأسواق المالية السعودية. تغطّي أساسيات الأنظمة والمنتجات المالية وقواعد هيئة السوق المالية — خطوتك الأولى نحو دور استثماري معتمد.', en: 'The Financial Academy’s foundational license, a regulatory requirement to work in Saudi capital markets. It covers financial regulations, products, and CMA rules — your first step toward an accredited investment role.' }, gain: { ar: 'ترخيص للعمل في الأسواق المالية السعودية', en: 'License to work in Saudi capital markets' }, opens: [{ ar: 'محلل أسواق مالية', en: 'Capital Markets Analyst' }, { ar: 'محلل استثمار مبتدئ', en: 'Investment Analyst (entry)' }], scoreAdd: 6, official: 'https://fa.gov.sa', status: 'current', cost: { ar: '2,000 ر.س', en: '2,000 SAR' }, duration: { ar: '6–8 أسابيع', en: '6–8 weeks' }, hadaf: true, hadafNote: { ar: 'يدعمها صندوق هدف', en: 'Hadaf-supported' }, why: { ar: 'أسرع خطوة معتمدة تنقلك رسميًا إلى مسار الاستثمار، وتؤهّلك لأدوار الأسواق العامة في الصندوق. ابدأ بها قبل CFA.', en: 'The fastest accredited step that formally moves you into the investment track and qualifies you for PIF public-markets roles. Do it before the CFA.' } },
+      { name: { ar: 'FMVA', en: 'FMVA' }, desc: { ar: 'برنامج معهد تمويل الشركات لبناء النماذج المالية وتقييم الشركات. عملي بالكامل: تتخرّج منه قادرًا على بناء نموذج مالي متكامل من الصفر، وهي المهارة الأكثر طلبًا في فرق الاستثمار والصفقات.', en: 'CFI’s hands-on program for financial modeling and company valuation. You finish able to build a full model from scratch — the most in-demand skill on investment and deals teams.' }, gain: { ar: 'إتقان النمذجة المالية المطلوبة في الصفقات', en: 'Deal-grade financial modeling skills' }, opens: [{ ar: 'محلل مالي', en: 'Financial Analyst' }, { ar: 'زميل استثمار', en: 'Investment Associate' }], scoreAdd: 8, official: 'https://corporatefinanceinstitute.com/certifications/fmva-program/', status: 'future', cost: { ar: '$497', en: '$497' }, duration: { ar: '3 أشهر', en: '3 months' } },
+      { name: { ar: 'CFA المستوى الأول', en: 'CFA Level 1' }, desc: { ar: 'المستوى الأول من شهادة محلل مالي معتمد، المعيار العالمي الأرفع في إدارة الاستثمار. يغطّي الأخلاقيات والأدوات الكمية والاقتصاد وتحليل القوائم المالية، وهو حجر الأساس لأي دور استثماري في الصندوق.', en: 'Level 1 of the Chartered Financial Analyst program, the global gold standard in investment management. It spans ethics, quantitative methods, economics, and financial reporting — the foundation for any investment role at PIF.' }, gain: { ar: 'المعيار الذهبي لوظائف الاستثمار في الصندوق', en: 'The gold standard for PIF investment roles' }, opens: [{ ar: 'محلل استثمار في الصندوق', en: 'Investment Analyst at PIF' }, { ar: 'محلل أبحاث أسهم', en: 'Equity Research Analyst' }], scoreAdd: 15, official: CFA, status: 'future', cost: { ar: '5,500 ر.س', en: '5,500 SAR' }, duration: { ar: '6 أشهر · 300 ساعة', en: '6 months · 300h' }, hadaf: true, hadafNote: { ar: 'تسترجع نحو 2,750 ر.س عبر هدف', en: 'Reclaim ~2,750 SAR via Hadaf' } },
+      { name: { ar: 'CFA المستوى الثاني', en: 'CFA Level 2' }, desc: { ar: 'المستوى المتقدّم من برنامج CFA، ويركّز على تطبيق أدوات التقييم على فئات الأصول المختلفة. اجتيازه يضعك في نخبة المحللين ويفتح الأدوار القيادية في صناديق الاستثمار.', en: 'The advanced CFA level, focused on applying valuation tools across asset classes. Passing it puts you among elite analysts and opens senior fund roles.' }, gain: { ar: 'يفتح الأدوار القيادية في صناديق الاستثمار', en: 'Opens senior investment-fund roles' }, opens: [{ ar: 'محلل استثمار أول', en: 'Senior Investment Analyst' }, { ar: 'زميل إدارة محافظ', en: 'Portfolio Associate' }], scoreAdd: 12, official: CFA, status: 'future', cost: { ar: '5,500 ر.س', en: '5,500 SAR' }, duration: { ar: '8 أشهر', en: '8 months' }, hadaf: true },
     ],
     targetCompanies: ['Public Investment Fund', 'PIF', 'KAPSARC', 'Saudi National Bank', 'Sanabil', 'Jadwa', 'NEOM'],
   },
@@ -208,6 +211,7 @@ export const paths: CareerPath[] = [
     id: 'power-renewables',
     name: { ar: 'هندسة الطاقة والمتجددة', en: 'Power & Renewables Engineering' },
     targets: { ar: 'أرامكو · أكوا باور · تحلية المياه · نيوم', en: 'Aramco · ACWA · Water Authority · NEOM' },
+    roles: { ar: 'مهندس ← مهندس أول ← مدير مشروع/عمليات', en: 'Engineer → Senior Engineer → Project / Operations Manager' },
     accent: 'sky',
     icon: 'energy',
     months: 12,
@@ -226,6 +230,7 @@ export const paths: CareerPath[] = [
     id: 'consulting',
     name: { ar: 'استشارات الطاقة والاستراتيجية', en: 'Energy Strategy Consulting' },
     targets: { ar: 'ماكنزي · BCG · ستراتيجي&', en: 'McKinsey · BCG · Strategy&' },
+    roles: { ar: 'محلل ← مستشار ← مدير ارتباط', en: 'Analyst → Consultant → Engagement Manager' },
     accent: 'violet',
     icon: 'consulting',
     months: 12,
@@ -244,6 +249,7 @@ export const paths: CareerPath[] = [
     id: 'government',
     name: { ar: 'سياسات الطاقة والقطاع الحكومي', en: 'Energy Policy & Government' },
     targets: { ar: 'وزارة الطاقة · كابسارك · رؤية 2030', en: 'Ministry of Energy · KAPSARC · Vision 2030' },
+    roles: { ar: 'أخصائي سياسات ← مدير برنامج ← مدير عام', en: 'Policy Specialist → Program Manager → Director' },
     accent: 'amber',
     icon: 'government',
     months: 18,
@@ -262,6 +268,7 @@ export const paths: CareerPath[] = [
     id: 'tech',
     name: { ar: 'الذكاء الاصطناعي والبيانات للطاقة', en: 'AI & Data for Energy' },
     targets: { ar: 'أرامكو الرقمية · stc · علم', en: 'Aramco Digital · stc · Elm' },
+    roles: { ar: 'محلل بيانات ← مهندس بيانات ← قائد منتج', en: 'Data Analyst → Data Engineer → Product Lead' },
     accent: 'rose',
     icon: 'tech',
     months: 12,
@@ -480,9 +487,10 @@ export type CvIssueKind = 'length' | 'typo' | 'format' | 'bullet' | 'contact' | 
 export type CvIssue = { id: string; kind: CvIssueKind; text: LS; severity: 'high' | 'med' | 'low' };
 export type CvReview = { headline: LS; strengths: LS[]; issues: CvIssue[] };
 
-// What blocks the NEXT level, per level. `certs` reference cert names already in
-// the roadmap (so they deep-link); experience/other gaps cannot be fixed by a cert.
-export type LevelGap = { experience?: LS; certs: string[]; other?: LS[] };
+// What blocks the NEXT level, per level. These are EXPERIENCE / other gaps that a
+// certificate cannot fix; the certificate gaps are derived from the customer's
+// active path instead, so this stays correct whichever path they pick.
+export type LevelGap = { experience?: LS; other?: LS[] };
 
 /* -------------------------------------------------------------- customer plan -- */
 // Everything that varies per customer. The dashboard renders ONE plan through
@@ -528,16 +536,14 @@ const aliCvReview: CvReview = {
 };
 
 const aliLevelGaps: Record<Level, LevelGap> = {
-  entry: { certs: ['CME-1'] },
-  mid: { experience: { ar: 'نحو سنتين إضافيتين في دور مالي أو استثماري', en: '≈2 more years in a finance or investment role' }, certs: ['FMVA', 'CFA Level 1'] },
+  entry: {},
+  mid: { experience: { ar: 'نحو سنتين إضافيتين من الخبرة ذات الصلة', en: '≈2 more years of relevant experience' } },
   senior: {
-    experience: { ar: '5+ سنوات تشمل التعرض للصفقات', en: '5+ years including deal exposure' },
-    certs: ['CFA Level 1', 'CFA Level 2'],
-    other: [{ ar: 'قِدت صفقة أو تفويضًا استثماريًا', en: 'Led a transaction or investment mandate' }],
+    experience: { ar: '5+ سنوات تشمل تحمّل مسؤولية أكبر', en: '5+ years including broader ownership' },
+    other: [{ ar: 'قِدت مشروعًا أو مبادرة', en: 'Led a project or initiative' }],
   },
   director: {
     experience: { ar: '10+ سنوات مع خبرة قيادية', en: '10+ years with leadership experience' },
-    certs: ['CFA Level 2'],
     other: [
       { ar: 'مسؤولية عن الأرباح والخسائر (P&L)', en: 'P&L ownership' },
       { ar: 'بنيت أو قدت فريقًا', en: 'Built or led a team' },
@@ -729,6 +735,21 @@ export const ui = {
     networkTitle: { ar: 'شبكتك', en: 'Your network' },
     networkCount: { ar: (n: number) => `${n} جهة مرتّبة حسب قربها من أهدافك`, en: (n: number) => `${n} connections ranked by fit` },
     networkEmpty: { ar: 'لم ترفع شبكتك بعد', en: 'No network uploaded yet' },
+    customize: { ar: 'تخصيص', en: 'Customize' },
+    customizeTitle: { ar: 'خصّص صفحتك', en: 'Customize your home' },
+    customizeSub: { ar: 'اختر البطاقات التي تظهر هنا.', en: 'Choose which cards appear here.' },
+    doneBtn: { ar: 'تم', en: 'Done' },
+    wNextMove: { ar: 'خطوتك التالية', en: 'Next move' },
+    wNetwork: { ar: 'شبكتك', en: 'Your network' },
+    wCvReview: { ar: 'مراجعة السيرة', en: 'CV review' },
+    wStats: { ar: 'الأرقام', en: 'Stats' },
+    wPicks: { ar: 'تواصل اليوم', en: "Today's picks" },
+    wGoal: { ar: 'هدف الأسبوع', en: 'Weekly goal' },
+    wSnapshot: { ar: 'ملخّص التتبّع', en: 'Outreach snapshot' },
+    goalTitle: { ar: 'هدف هذا الأسبوع', en: "This week's goal" },
+    goalHint: { ar: (a: number, b: number) => `${a} من ${b} تواصلات`, en: (a: number, b: number) => `${a} of ${b} reach-outs` },
+    goalDone: { ar: 'أنجزت هدف الأسبوع 🎉', en: "You hit this week's goal 🎉" },
+    snapshotTitle: { ar: 'ملخّص تواصلك', en: 'Outreach snapshot' },
     scoreLabel: { ar: 'درجة تنافسية سيرتك', en: 'Your CV competitiveness' },
     scoreFor: { ar: 'لهدف', en: 'for' },
     levelLabel: { ar: 'المستوى الوظيفي المستهدف', en: 'Target seniority' },
@@ -773,6 +794,10 @@ export const ui = {
     kindTop: { ar: 'منصب رفيع', en: 'Senior' },
     kindMid: { ar: 'مستوى متوسط', en: 'Mid-level' },
     kindCommon: { ar: 'قاسم مشترك', en: 'Common ground' },
+    roles: { ar: 'وظائف يفتحها هذا المسار', en: 'Roles this path opens' },
+    forPromotions: { ar: 'لوظيفة جديدة أو ترقية', en: 'For a new role or a promotion' },
+    setActive: { ar: 'اجعله مساري', en: 'Make this my path' },
+    active: { ar: 'مسارك', en: 'Your path' },
   },
   certs: {
     title: { ar: 'خارطة الشهادات', en: 'Certification roadmap' },
@@ -788,6 +813,7 @@ export const ui = {
     markDone: { ar: 'تحديد كمنجزة', en: 'Mark done' },
     markedDone: { ar: 'منجزة', en: 'Done' },
     bannerSub: { ar: 'تسترجع نحو نصف تكلفة كل شهادة معتمدة عبر هدف.', en: 'Reclaim about half of each approved certification via Hadaf.' },
+    opens: { ar: 'يفتح أبواب', en: 'Opens doors to' },
   },
   contacts: {
     eyebrow: { ar: 'التواصل', en: 'Outreach' },
@@ -800,6 +826,7 @@ export const ui = {
     tabHr: { ar: 'الموارد البشرية', en: 'HR' },
     connectionsHint: { ar: 'أهم الجهات للتواصل المباشر', en: 'Top targets for direct outreach' },
     hrHint: { ar: 'مسؤولو التوظيف · البوابة الرسمية', en: 'Recruiters · the official channel' },
+    placeholderNote: { ar: 'نعرض لك مسؤولي توظيف من قاعدتنا مؤقتًا. ارفع جهات اتصالك في لينكدإن لتظهر أقرب الأشخاص إلى أهدافك للتواصل معهم أولًا.', en: 'Showing recruiters from our database for now. Upload your LinkedIn connections to reveal the warmest intros to reach out to first.' },
     industry: { ar: 'المجال', en: 'Industry' },
     allIndustries: { ar: 'كل المجالات', en: 'All industries' },
     search: { ar: 'ابحث بالاسم أو الشركة…', en: 'Search by name or company…' },
