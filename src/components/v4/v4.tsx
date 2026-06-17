@@ -1569,6 +1569,7 @@ function Shell() {
   const locale = useLocale() as Loc;
   const pathname = usePathname();
   const reduce = useReducedMotion();
+  const { profile } = usePlan();
   const [tab, setTab] = useState<Tab>('home');
   const [pathSel, setPathSel] = useState<string | null>(null);
   const [cmdOpen, setCmdOpen] = useState(false);
@@ -1627,6 +1628,14 @@ function Shell() {
             <Link href={pathname} locale={locale === 'ar' ? 'en' : 'ar'} className={cn('grid h-9 w-9 place-items-center rounded-full text-xs font-bold', GHOST)}>
               {locale === 'ar' ? 'EN' : 'ع'}
             </Link>
+            {/* Identity, far right, on wide screens only so the nav stays on one line below lg */}
+            <div className="ms-1 hidden items-center gap-2 lg:flex">
+              <div className="hidden text-end leading-tight xl:block">
+                <div className="text-[11px] text-stone-400 dark:text-stone-500">{ui.shell.greeting[locale]}</div>
+                <div className="text-sm font-semibold">{profile.name[locale]}</div>
+              </div>
+              <span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-stone-700 to-stone-900 text-sm font-bold text-stone-50 dark:from-stone-500 dark:to-stone-700">{profile.name[locale].charAt(0)}</span>
+            </div>
           </div>
         </div>
       </header>
