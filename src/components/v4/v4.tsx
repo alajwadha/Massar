@@ -66,6 +66,7 @@ import {
   skills,
   nationalPortals,
   companyPortals,
+  companyIndustries,
   cvGuide,
   interviewTips,
   ui,
@@ -78,6 +79,7 @@ import {
   type CareerPath,
   type FieldTag,
   type GradProgram,
+  type CompanySize,
 } from '@/lib/app-data';
 
 /* =============================================================================
@@ -1195,9 +1197,12 @@ function Study({ locale }: { locale: Loc }) {
       {/* Part-time inside Saudi (study while working), nearest first */}
       <div>
         <SectionTitle icon={GraduationCap} title={ui.study.partTimeTitle[locale]} sub={ui.study.partTimeSub[locale]} />
+        <p className="-mt-1 mb-3 text-[12.5px] text-stone-500 dark:text-stone-400">{ui.study.partTimeHow[locale]}</p>
         <div className="grid gap-3 sm:grid-cols-2">
           {partTime.map((u, i) => {
             const near = !!region && u.region === region;
+            const uniMajors = u.fields.filter((f) => fields.includes(f));
+            const majors = uniMajors.length ? uniMajors : u.fields;
             return (
               <a key={i} href={u.link} target="_blank" rel="noopener noreferrer" className="group">
                 <Card className="flex h-full flex-col p-4 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]">
@@ -1210,7 +1215,7 @@ function Study({ locale }: { locale: Loc }) {
                   </div>
                   <div className="mt-3 text-[10.5px] font-semibold uppercase tracking-wide text-stone-500 dark:text-stone-400">{ui.study.majorsHere[locale]}</div>
                   <div className="mt-1.5 flex flex-wrap gap-1.5">
-                    {fields.map((f) => (
+                    {majors.map((f) => (
                       <span key={f} className={cn('rounded-full px-2.5 py-1 text-[11.5px] font-semibold', SOFT)}>{fieldMajors[f][locale]}</span>
                     ))}
                   </div>
@@ -1256,11 +1261,7 @@ function Opportunities({ locale }: { locale: Loc }) {
     { Icon: FileText, title: ui.opp.cvGuideTitle[locale], items: cvGuide },
     { Icon: MessageCircle, title: ui.opp.interviewTitle[locale], items: interviewTips },
   ];
-  // A broad set of company career pages, the ones matching the active field first.
-  const companies = useMemo(() => {
-    const rank = (e: (typeof companyPortals)[number]) => (e.fields.includes(field) ? 0 : e.fields.includes('all') ? 1 : 2);
-    return [...companyPortals].sort((a, b) => rank(a) - rank(b));
-  }, [field]);
+  const sizeLabel = (s: CompanySize) => (s === 'big' ? ui.opp.sizeBig : s === 'medium' ? ui.opp.sizeMedium : ui.opp.sizeSmall)[locale];
   const [copied, setCopied] = useState(false);
   const refUrl = typeof window !== 'undefined' ? referralLink(window.location.origin, locale, plan.slug) : '';
   const copyRef = async () => {
@@ -1386,15 +1387,27 @@ function Opportunities({ locale }: { locale: Loc }) {
         </div>
         <div className="mt-5 text-[11px] font-bold uppercase tracking-wide text-stone-500 dark:text-stone-400">{ui.opp.companyPortalsTitle[locale]}</div>
         <p className="mb-2.5 mt-0.5 text-[12px] text-stone-500 dark:text-stone-400">{ui.opp.companyPortalsSub[locale]}</p>
-        <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
-          {companies.map((c, i) => (
-            <a key={i} href={c.url} target="_blank" rel="noopener noreferrer" className="group">
-              <Card className="flex items-center gap-3 p-3.5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]">
-                <span className="min-w-0 flex-1 truncate text-[13.5px] font-semibold text-stone-900 dark:text-stone-50">{c.name[locale]}</span>
-                <span className={cn('inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold', SOFT)}>{ui.opp.apply[locale]} <ArrowUpRight className="h-3 w-3" /></span>
-              </Card>
-            </a>
-          ))}
+        <div className="space-y-4">
+          {companyIndustries.map((ind) => {
+            const list = companyPortals.filter((c) => c.industry === ind.id);
+            if (!list.length) return null;
+            return (
+              <div key={ind.id}>
+                <div className="mb-2 text-[12.5px] font-bold text-stone-700 dark:text-stone-200">{ind.label[locale]}</div>
+                <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
+                  {list.map((c, i) => (
+                    <a key={i} href={c.url} target="_blank" rel="noopener noreferrer" className="group">
+                      <Card className="flex items-center gap-2 p-3.5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]">
+                        <span className="min-w-0 flex-1 truncate text-[13.5px] font-semibold text-stone-900 dark:text-stone-50">{c.name[locale]}</span>
+                        <span className={cn('shrink-0 rounded-full px-1.5 py-0.5 text-[9.5px] font-bold', c.size === 'big' ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : SOFT)}>{sizeLabel(c.size)}</span>
+                        <ArrowUpRight className="h-3.5 w-3.5 shrink-0 text-stone-300 transition-colors group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
+                      </Card>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 
