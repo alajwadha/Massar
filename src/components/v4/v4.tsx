@@ -61,7 +61,6 @@ import {
   tamheer,
   careerDays,
   gradPrograms,
-  saudiUniStrength,
   fieldMajors,
   partTimeSaudi,
   skills,
@@ -114,7 +113,7 @@ function Card({ className, children }: { className?: string; children: React.Rea
 }
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
-  return <div className="text-[10.5px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">{children}</div>;
+  return <div className="text-[10.5px] font-semibold uppercase tracking-[0.24em] text-stone-500 dark:text-stone-400">{children}</div>;
 }
 
 function Serif({ className, children }: { className?: string; children: React.ReactNode }) {
@@ -168,7 +167,7 @@ function Moon() {
 const KIND_META: Record<PickKind, { cls: string; Icon: typeof User; key: 'kindTop' | 'kindMid' | 'kindCommon' }> = {
   top: { cls: ACCENT, Icon: TrendingUp, key: 'kindTop' },
   mid: { cls: 'text-stone-600 dark:text-stone-300', Icon: User, key: 'kindMid' },
-  common: { cls: 'text-stone-500 dark:text-stone-400', Icon: Sparkles, key: 'kindCommon' },
+  common: { cls: 'text-stone-600 dark:text-stone-300', Icon: Sparkles, key: 'kindCommon' },
 };
 
 const STATUS_BTNS: { key: ContactStatus; sk: 'status_sent' | 'status_replied' | 'status_followup'; on: string }[] = [
@@ -210,7 +209,7 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
             <h3 className="truncate text-[15px] font-semibold text-stone-900 dark:text-stone-50">{c.name[locale]}</h3>
             {isRecruiter && <span className="shrink-0 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-300">{ui.contacts.recruiter[locale]}</span>}
           </div>
-          <p className="mt-0.5 truncate text-[13px] text-stone-500 dark:text-stone-400">{c.role[locale]}</p>
+          <p className="mt-0.5 truncate text-[13px] text-stone-600 dark:text-stone-300">{c.role[locale]}</p>
           <p className="mt-0.5 truncate text-xs font-semibold text-stone-600 dark:text-stone-300">{c.company[locale]}</p>
         </div>
       </div>
@@ -254,13 +253,13 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
         </div>
         <div className={cn('p-3', INSET)}>
           <div className="mb-1.5 flex items-center justify-between gap-2">
-            <span className="truncate text-[11px] font-semibold text-stone-400 dark:text-stone-500">{ui.contacts.messagePreview[locale]} · {template.title[locale]}</span>
+            <span className="truncate text-[11px] font-semibold text-stone-500 dark:text-stone-400">{ui.contacts.messagePreview[locale]} · {template.title[locale]}</span>
             <button type="button" onClick={() => setMsgLang((l) => (l === 'ar' ? 'en' : 'ar'))} title={ui.contacts.msgLangHint[locale]} className={cn('inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] font-bold', GHOST)}>
               <Languages className="h-3 w-3" />
               {msgLang === 'ar' ? 'EN' : 'ع'}
             </button>
           </div>
-          <p dir={msgLang === 'ar' ? 'rtl' : 'ltr'} className="line-clamp-3 text-[12.5px] leading-relaxed text-stone-500 dark:text-stone-400">{message}</p>
+          <p dir={msgLang === 'ar' ? 'rtl' : 'ltr'} className="line-clamp-3 text-[12.5px] leading-relaxed text-stone-600 dark:text-stone-300">{message}</p>
         </div>
       </div>
 
@@ -314,7 +313,7 @@ function CvReviewCard({ locale }: { locale: Loc }) {
 
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
         <div>
-          <div className="text-[11px] font-bold uppercase tracking-wide text-stone-400 dark:text-stone-500">{ui.cvBlock.strengths[locale]}</div>
+          <div className="text-[11px] font-bold uppercase tracking-wide text-stone-500 dark:text-stone-400">{ui.cvBlock.strengths[locale]}</div>
           <ul className="mt-2 space-y-1.5">
             {cvReview.strengths.map((s, i) => (
               <li key={i} className="flex items-start gap-2 text-[13px] text-stone-600 dark:text-stone-300">
@@ -325,7 +324,7 @@ function CvReviewCard({ locale }: { locale: Loc }) {
           </ul>
         </div>
         <div>
-          <div className="text-[11px] font-bold uppercase tracking-wide text-stone-400 dark:text-stone-500">{ui.cvBlock.needsPolish[locale]}</div>
+          <div className="text-[11px] font-bold uppercase tracking-wide text-stone-500 dark:text-stone-400">{ui.cvBlock.needsPolish[locale]}</div>
           <ul className="mt-2 space-y-2">
             <AnimatePresence initial={false}>
               {open.map((iss) => (
@@ -462,7 +461,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
           <div className="flex items-start justify-between gap-3">
             <div>
               <div className="text-sm font-bold text-stone-900 dark:text-stone-50">{ui.overview.customizeTitle[locale]}</div>
-              <div className="text-[12.5px] text-stone-400 dark:text-stone-500">{ui.overview.customizeSub[locale]}</div>
+              <div className="text-[12.5px] text-stone-500 dark:text-stone-400">{ui.overview.customizeSub[locale]}</div>
             </div>
             <button type="button" onClick={() => setCustomizing(false)} className={cn('shrink-0 rounded-full px-4 py-1.5 text-[12px] font-bold', PILL)}>{ui.overview.doneBtn[locale]}</button>
           </div>
@@ -483,16 +482,16 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
       )}
 
       <div className="grid grid-cols-12 gap-3 sm:gap-4">
-        <Card className={cn('col-span-12 p-5 sm:p-8', railOn.length ? 'lg:col-span-8' : 'lg:col-span-12')}>
-          <div className="grid items-start gap-7 sm:grid-cols-[auto_1fr] sm:gap-9">
-            <div className="mx-auto flex flex-col items-center gap-4 sm:mx-0">
+        <Card className={cn('col-span-12 p-5 sm:p-6', railOn.length ? 'lg:col-span-8' : 'lg:col-span-12')}>
+          <div className="grid items-start gap-5 sm:grid-cols-[auto_1fr] sm:gap-7">
+            <div className="mx-auto flex flex-col items-center gap-3 sm:mx-0">
               <div className="text-amber-600 dark:text-amber-400">
-                <ProgressRing value={score} size={160} stroke={7} color="currentColor" track="rgba(120,113,108,0.18)">
+                <ProgressRing value={score} size={118} stroke={6} color="currentColor" track="rgba(120,113,108,0.18)">
                   <div className="leading-none">
-                    <Serif className="block text-6xl tracking-tight text-stone-900 dark:text-stone-50">
+                    <Serif className="block text-5xl tracking-tight text-stone-900 dark:text-stone-50">
                       <Counter to={score} />
                     </Serif>
-                    <div className="mt-1 text-[11px] font-medium text-stone-400 dark:text-stone-500">/ 100</div>
+                    <div className="mt-0.5 text-[10px] font-medium text-stone-500 dark:text-stone-400">/ 100</div>
                   </div>
                 </ProgressRing>
               </div>
@@ -511,28 +510,21 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
 
             <div className="min-w-0">
               <Eyebrow>{ui.overview.scoreLabel[locale]}</Eyebrow>
-              <h1 className="mt-2 text-balance text-[24px] font-semibold leading-[1.12] tracking-tight text-stone-900 dark:text-stone-50 sm:text-[34px]">{activePath.name[locale]}</h1>
-              <p className="mt-2 text-sm text-stone-500 dark:text-stone-400">{ui.overview.levelHint[locale]}</p>
+              <h1 className="mt-2 text-balance text-[22px] font-semibold leading-[1.12] tracking-tight text-stone-900 dark:text-stone-50 sm:text-[28px]">{activePath.name[locale]}</h1>
+              <p className="mt-1.5 text-sm text-stone-600 dark:text-stone-300">{ui.overview.levelHint[locale]}</p>
 
-              {/* What's behind your score (education incl. university, experience, ...) */}
-              <div className="mt-4">
+              {/* What's behind your score, condensed to chips (full detail on hover) */}
+              <div className="mt-3.5">
                 <div className="text-xs font-bold text-stone-700 dark:text-stone-200">{ui.overview.scoreFactorsTitle[locale]}</div>
-                <ul className="mt-2 space-y-1.5">
+                <div className="mt-2 flex flex-wrap gap-1.5">
                   {plan.scoreFactors.map((f, i) => {
                     const tint = f.strength === 'strong' ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : f.strength === 'good' ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300' : SOFT;
-                    const sLabel = f.strength === 'strong' ? ui.overview.strengthStrong[locale] : f.strength === 'good' ? ui.overview.strengthGood[locale] : ui.overview.strengthGrowing[locale];
                     return (
-                      <li key={i} className="flex items-start gap-2 text-[12.5px]">
-                        <span className={cn('mt-0.5 shrink-0 rounded-md px-1.5 py-0.5 text-[10px] font-bold', tint)}>{sLabel}</span>
-                        <span className="min-w-0"><span className="font-semibold text-stone-700 dark:text-stone-200">{f.label[locale]}:</span> <span className="text-stone-500 dark:text-stone-400">{f.detail[locale]}</span></span>
-                      </li>
+                      <span key={i} title={f.detail[locale]} className={cn('rounded-md px-2 py-0.5 text-[11px] font-semibold', tint)}>{f.label[locale]}</span>
                     );
                   })}
-                  <li className="flex items-start gap-2 text-[12.5px]">
-                    <span className={cn('mt-0.5 shrink-0 rounded-md px-1.5 py-0.5 text-[10px] font-bold', certsDoneCount >= 3 ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300' : SOFT)}>{certsDoneCount >= 3 ? ui.overview.strengthGood[locale] : ui.overview.strengthGrowing[locale]}</span>
-                    <span className="min-w-0"><span className="font-semibold text-stone-700 dark:text-stone-200">{ui.overview.certsLabel[locale]}:</span> <span className="text-stone-500 dark:text-stone-400">{certsDoneCount}/{certsTotal}</span></span>
-                  </li>
-                </ul>
+                  <span className={cn('rounded-md px-2 py-0.5 text-[11px] font-semibold', certsDoneCount >= 3 ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300' : SOFT)}>{ui.overview.certsLabel[locale]} {certsDoneCount}/{certsTotal}</span>
+                </div>
               </div>
 
               <LevelGaps locale={locale} />
@@ -551,14 +543,14 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
                           {imp.name[locale]}
                           {imp.current && <span className="ms-2 whitespace-nowrap rounded bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-300">{ui.overview.quickWin[locale]}</span>}
                         </span>
-                        <span className="shrink-0 text-[11px] text-stone-400 dark:text-stone-500">{imp.effort[locale]}</span>
+                        <span className="shrink-0 text-[11px] text-stone-500 dark:text-stone-400">{imp.effort[locale]}</span>
                       </li>
                     ))}
                   </ul>
                   <div className="mt-3.5">
                     <div className="flex items-center justify-between text-[11px] font-semibold">
-                      <span className="text-stone-400 dark:text-stone-500">{ui.overview.reachable[locale]}</span>
-                      <span className="tabular-nums text-stone-500 dark:text-stone-400">
+                      <span className="text-stone-500 dark:text-stone-400">{ui.overview.reachable[locale]}</span>
+                      <span className="tabular-nums text-stone-600 dark:text-stone-300">
                         {score} <span className="text-stone-300 dark:text-stone-600">→</span> <span className="font-bold text-stone-900 dark:text-stone-100">{potential}</span>
                       </span>
                     </div>
@@ -582,9 +574,9 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
                     <Sparkles className={cn('h-5 w-5', ACCENT)} />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="text-[10.5px] font-semibold uppercase tracking-wider text-stone-400 dark:text-stone-500">{ui.overview.nextMove.eyebrow[locale]}</div>
+                    <div className="text-[10.5px] font-semibold uppercase tracking-wider text-stone-500 dark:text-stone-400">{ui.overview.nextMove.eyebrow[locale]}</div>
                     <div className="mt-0.5 font-bold text-stone-900 dark:text-stone-50">{nm.title}</div>
-                    <p className="mt-0.5 text-[12.5px] leading-relaxed text-stone-500 dark:text-stone-400">{nm.desc}</p>
+                    <p className="mt-0.5 text-[12.5px] leading-relaxed text-stone-600 dark:text-stone-300">{nm.desc}</p>
                   </div>
                   <ArrowUpRight className="h-5 w-5 shrink-0 text-stone-300 transition-colors group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
                 </Card>
@@ -597,7 +589,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
                     <Network className="h-5 w-5 text-stone-700 dark:text-stone-200" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="text-[10.5px] font-semibold uppercase tracking-wider text-stone-400 dark:text-stone-500">{ui.overview.networkTitle[locale]}</div>
+                    <div className="text-[10.5px] font-semibold uppercase tracking-wider text-stone-500 dark:text-stone-400">{ui.overview.networkTitle[locale]}</div>
                     <div className="mt-0.5 text-[13px] font-semibold text-stone-700 dark:text-stone-200">{network ? ui.overview.networkCount[locale](network.length) : ui.overview.networkEmpty[locale]}</div>
                   </div>
                   <ArrowUpRight className="h-5 w-5 shrink-0 text-stone-300 transition-colors group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
@@ -606,34 +598,34 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
             )}
             {W('goal') && (
               <Card className="p-5">
-                <div className="text-[10.5px] font-semibold uppercase tracking-wider text-stone-400 dark:text-stone-500">{ui.overview.goalTitle[locale]}</div>
+                <div className="text-[10.5px] font-semibold uppercase tracking-wider text-stone-500 dark:text-stone-400">{ui.overview.goalTitle[locale]}</div>
                 {goalDone ? (
                   <p className={cn('mt-1.5 text-sm font-bold', ACCENT)}>{ui.overview.goalDone[locale]}</p>
                 ) : (
                   <>
                     <div className="mt-2 flex items-baseline gap-1">
                       <Serif className="text-3xl tabular-nums text-stone-900 dark:text-stone-50">{Math.min(sent, WEEKLY_GOAL)}</Serif>
-                      <span className="text-sm text-stone-400 dark:text-stone-500">/ {WEEKLY_GOAL}</span>
+                      <span className="text-sm text-stone-500 dark:text-stone-400">/ {WEEKLY_GOAL}</span>
                     </div>
                     <div className="mt-2 h-2 overflow-hidden rounded-full bg-stone-900/[0.06] dark:bg-white/10">
                       <motion.div className="h-full rounded-full bg-amber-500 dark:bg-amber-400" initial={{ width: 0 }} animate={{ width: `${Math.min(100, (sent / WEEKLY_GOAL) * 100)}%` }} transition={{ duration: 0.8, ease: EASE }} />
                     </div>
-                    <div className="mt-1.5 text-[11px] text-stone-400 dark:text-stone-500">{ui.overview.goalHint[locale](sent, WEEKLY_GOAL)}</div>
+                    <div className="mt-1.5 text-[11px] text-stone-500 dark:text-stone-400">{ui.overview.goalHint[locale](sent, WEEKLY_GOAL)}</div>
                   </>
                 )}
               </Card>
             )}
             {W('snapshot') && (
               <Card className="p-5">
-                <div className="text-[10.5px] font-semibold uppercase tracking-wider text-stone-400 dark:text-stone-500">{ui.overview.snapshotTitle[locale]}</div>
+                <div className="text-[10.5px] font-semibold uppercase tracking-wider text-stone-500 dark:text-stone-400">{ui.overview.snapshotTitle[locale]}</div>
                 <div className="mt-2 flex gap-6">
                   <div>
                     <Serif className="block text-3xl tabular-nums text-stone-900 dark:text-stone-50">{sent}</Serif>
-                    <div className="text-[10.5px] text-stone-400 dark:text-stone-500">{ui.overview.sentLabel[locale]}</div>
+                    <div className="text-[10.5px] text-stone-500 dark:text-stone-400">{ui.overview.sentLabel[locale]}</div>
                   </div>
                   <div>
                     <Serif className="block text-3xl tabular-nums text-emerald-600 dark:text-emerald-300">{replied}</Serif>
-                    <div className="text-[10.5px] text-stone-400 dark:text-stone-500">{ui.tracker.replied[locale]}</div>
+                    <div className="text-[10.5px] text-stone-500 dark:text-stone-400">{ui.tracker.replied[locale]}</div>
                   </div>
                 </div>
               </Card>
@@ -643,7 +635,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
                 <Card className="flex h-full items-center gap-3 p-5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.45)]">
                   <div className={cn('grid h-10 w-10 shrink-0 place-items-center rounded-xl', SOFT)}><BadgeCheck className="h-5 w-5 text-stone-700 dark:text-stone-200" /></div>
                   <div className="min-w-0 flex-1">
-                    <div className="text-[10.5px] font-semibold uppercase tracking-wider text-stone-400 dark:text-stone-500">{ui.overview.certPeekTitle[locale]}</div>
+                    <div className="text-[10.5px] font-semibold uppercase tracking-wider text-stone-500 dark:text-stone-400">{ui.overview.certPeekTitle[locale]}</div>
                     <div className="mt-0.5 truncate font-bold text-stone-900 dark:text-stone-50">{current.name[locale]}</div>
                   </div>
                   <ArrowUpRight className="h-5 w-5 shrink-0 text-stone-300 transition-colors group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
@@ -655,9 +647,9 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
                 <Card className="flex h-full items-center gap-3 p-5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.45)]">
                   <div className={cn('grid h-10 w-10 shrink-0 place-items-center rounded-xl', SOFT)}><CalendarDays className="h-5 w-5 text-stone-700 dark:text-stone-200" /></div>
                   <div className="min-w-0 flex-1">
-                    <div className="text-[10.5px] font-semibold uppercase tracking-wider text-stone-400 dark:text-stone-500">{ui.overview.careerDayTitle[locale]}</div>
+                    <div className="text-[10.5px] font-semibold uppercase tracking-wider text-stone-500 dark:text-stone-400">{ui.overview.careerDayTitle[locale]}</div>
                     <div className="mt-0.5 truncate font-bold text-stone-900 dark:text-stone-50">{nextDay.title[locale]}</div>
-                    <div className="text-[11.5px] text-stone-400 dark:text-stone-500">{nextDay.when[locale]}</div>
+                    <div className="text-[11.5px] text-stone-500 dark:text-stone-400">{nextDay.when[locale]}</div>
                   </div>
                   <ArrowUpRight className="h-5 w-5 shrink-0 text-stone-300 transition-colors group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
                 </Card>
@@ -674,7 +666,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
           {stats.map((s) => (
             <Card key={s.label} className="p-4 sm:p-5">
               <Serif className="block text-3xl tracking-tight text-stone-900 dark:text-stone-50 sm:text-4xl">{s.v}</Serif>
-              <div className="mt-1 text-[11px] text-stone-400 dark:text-stone-500 sm:text-xs">{s.label}</div>
+              <div className="mt-1 text-[11px] text-stone-500 dark:text-stone-400 sm:text-xs">{s.label}</div>
             </Card>
           ))}
         </div>
@@ -693,7 +685,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
               </button>
             </div>
           </div>
-          <p className="text-sm text-stone-400 dark:text-stone-500">{network ? ui.overview.actionsSub[locale] : ui.contacts.placeholderNote[locale]}</p>
+          <p className="text-sm text-stone-500 dark:text-stone-400">{network ? ui.overview.actionsSub[locale] : ui.contacts.placeholderNote[locale]}</p>
           {todays.length > 0 && <CardGrid items={todays.map((r) => ({ contact: r.contact, kind: r.kind, reason: r.reason[locale] }))} locale={locale} />}
         </div>
       )}
@@ -721,7 +713,7 @@ function CertTimeline({ path, locale }: { path: CareerPath; locale: Loc }) {
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <h4 className="font-semibold text-stone-900 dark:text-stone-50">{cert.name[locale]}</h4>
-                    <p className="mt-1 text-[13px] leading-relaxed text-stone-500 dark:text-stone-400">{cert.desc[locale]}</p>
+                    <p className="mt-1 text-[13px] leading-relaxed text-stone-600 dark:text-stone-300">{cert.desc[locale]}</p>
                   </div>
                   <span className="shrink-0 rounded-xl bg-amber-500/[0.12] px-2 py-1 text-sm font-bold tabular-nums text-amber-700 dark:text-amber-300">+{scaledAdd(cert.scoreAdd, level)}</span>
                 </div>
@@ -777,7 +769,7 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0">
             <h2 className="text-2xl font-semibold tracking-tight text-stone-900 dark:text-stone-50">{path.name[locale]}</h2>
-            <p className="mt-1 text-sm text-stone-500 dark:text-stone-400">{path.targets[locale]}</p>
+            <p className="mt-1 text-sm text-stone-600 dark:text-stone-300">{path.targets[locale]}</p>
           </div>
           {isActive ? (
             <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-amber-500/15 px-3 py-1.5 text-[12px] font-bold text-amber-700 dark:text-amber-300">★ {ui.paths.active[locale]}</span>
@@ -795,7 +787,7 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
           ].map((s) => (
             <div key={s.l} className={cn('px-2 py-3 text-center', INSET)}>
               <Serif className="block text-2xl tabular-nums text-stone-900 dark:text-stone-50">{s.v}</Serif>
-              <div className="mt-0.5 text-[10px] text-stone-400 dark:text-stone-500">{s.l}</div>
+              <div className="mt-0.5 text-[10px] text-stone-500 dark:text-stone-400">{s.l}</div>
             </div>
           ))}
         </div>
@@ -803,7 +795,7 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
 
       <div>
         <h3 className="text-lg font-semibold text-stone-900 dark:text-stone-50">{ui.certs.title[locale]}</h3>
-        <p className="mt-0.5 text-sm text-stone-400 dark:text-stone-500">{ui.certs.sub[locale]}</p>
+        <p className="mt-0.5 text-sm text-stone-500 dark:text-stone-400">{ui.certs.sub[locale]}</p>
         <div className="mt-4">
           <CertTimeline path={path} locale={locale} />
         </div>
@@ -811,11 +803,11 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
 
       <div>
         <h3 className="text-lg font-semibold text-stone-900 dark:text-stone-50">{ui.paths.picksTitle[locale]}</h3>
-        <p className="mt-0.5 text-sm text-stone-400 dark:text-stone-500">{network ? ui.paths.picksSub[locale] : ui.contacts.placeholderNote[locale]}</p>
+        <p className="mt-0.5 text-sm text-stone-500 dark:text-stone-400">{network ? ui.paths.picksSub[locale] : ui.contacts.placeholderNote[locale]}</p>
         {picks.length > 0 ? (
           <CardGrid items={picks.map((r) => ({ contact: r.contact, kind: r.kind, reason: r.reason[locale] }))} locale={locale} />
         ) : (
-          <Card className="mt-4 p-6 text-center text-sm text-stone-500 dark:text-stone-400">{ui.network.locked[locale]}</Card>
+          <Card className="mt-4 p-6 text-center text-sm text-stone-600 dark:text-stone-300">{ui.network.locked[locale]}</Card>
         )}
       </div>
     </div>
@@ -833,7 +825,7 @@ function Paths({ locale, selId, setSelId }: { locale: Loc; selId: string | null;
     <div>
       <Eyebrow>{ui.paths.eyebrow[locale]}</Eyebrow>
       <h1 className="mt-2 text-2xl font-semibold tracking-tight text-stone-900 dark:text-stone-50">{ui.paths.title[locale]}</h1>
-      <p className="mt-1 text-sm text-stone-500 dark:text-stone-400">{ui.paths.sub[locale]}</p>
+      <p className="mt-1 text-sm text-stone-600 dark:text-stone-300">{ui.paths.sub[locale]}</p>
       <div className="mt-5 grid gap-3 sm:grid-cols-2 sm:gap-4">
         {paths.map((p) => {
           const score = p.scoreByLevel[level];
@@ -847,14 +839,14 @@ function Paths({ locale, selId, setSelId }: { locale: Loc; selId: string | null;
                       <h3 className="text-[15px] font-semibold text-stone-900 dark:text-stone-50">{p.name[locale]}</h3>
                       {p.id === activeId && <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[9.5px] font-bold text-amber-700 dark:text-amber-300">★ {ui.paths.active[locale]}</span>}
                     </div>
-                    <p className="mt-1 text-[13px] text-stone-500 dark:text-stone-400">{p.targets[locale]}</p>
+                    <p className="mt-1 text-[13px] text-stone-600 dark:text-stone-300">{p.targets[locale]}</p>
                   </div>
                   <Serif className="shrink-0 text-3xl tabular-nums text-stone-900 dark:text-stone-50">{score}</Serif>
                 </div>
                 <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-stone-900/[0.06] dark:bg-white/10">
                   <motion.div className="h-full rounded-full bg-stone-900 dark:bg-stone-100" initial={{ width: 0 }} animate={{ width: `${score}%` }} transition={{ duration: 0.9, ease: EASE }} />
                 </div>
-                <div className="mt-4 flex items-center gap-4 text-[12px] text-stone-400 dark:text-stone-500">
+                <div className="mt-4 flex items-center gap-4 text-[12px] text-stone-500 dark:text-stone-400">
                   <span><span className="font-bold text-stone-600 dark:text-stone-300">{p.certs.length}</span> {ui.paths.statCerts[locale]}</span>
                   <span><span className="font-bold text-stone-600 dark:text-stone-300">{p.months}</span> {ui.paths.statMonths[locale]}</span>
                   <span><span className={cn('font-bold', ACCENT)}>+{totalScore}</span> {ui.paths.totalScore[locale]}</span>
@@ -874,7 +866,7 @@ function Paths({ locale, selId, setSelId }: { locale: Loc; selId: string | null;
 function Chips<T extends string>({ label, options, value, onChange }: { label: string; options: { id: T; label: string }[]; value: T; onChange: (v: T) => void }) {
   return (
     <div className="flex items-center gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-      <span className="shrink-0 text-xs font-semibold text-stone-400 dark:text-stone-500">{label}:</span>
+      <span className="shrink-0 text-xs font-semibold text-stone-500 dark:text-stone-400">{label}:</span>
       {options.map((o) => (
         <button key={o.id} type="button" onClick={() => onChange(o.id)} className={cn('shrink-0 rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors', value === o.id ? 'border-stone-900 bg-stone-900 text-white dark:border-stone-100 dark:bg-stone-100 dark:text-stone-900' : GHOST)}>
           {o.label}
@@ -894,7 +886,7 @@ function NetworkPanel({ locale, count, onFile, onClear }: { locale: Loc; count: 
           <div className={cn('grid h-10 w-10 place-items-center rounded-xl', SOFT)}><Network className="h-5 w-5" /></div>
           <div>
             <div className="font-bold text-stone-900 dark:text-stone-50">{ui.network.matched[locale](count)}</div>
-            <div className="text-[12.5px] text-stone-500 dark:text-stone-400">{count > 0 ? ui.network.ranked[locale] : ui.network.none[locale]}</div>
+            <div className="text-[12.5px] text-stone-600 dark:text-stone-300">{count > 0 ? ui.network.ranked[locale] : ui.network.none[locale]}</div>
           </div>
         </div>
         <button type="button" onClick={onClear} className={cn('inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-semibold', GHOST)}>
@@ -910,7 +902,7 @@ function NetworkPanel({ locale, count, onFile, onClear }: { locale: Loc; count: 
         <div className={cn('grid h-11 w-11 shrink-0 place-items-center rounded-xl', SOFT)}><Network className="h-5 w-5" /></div>
         <div>
           <h3 className="text-base font-semibold text-stone-900 dark:text-stone-50">{ui.network.title[locale]}</h3>
-          <p className="mt-1 text-[13px] leading-relaxed text-stone-500 dark:text-stone-400">{ui.network.body[locale]}</p>
+          <p className="mt-1 text-[13px] leading-relaxed text-stone-600 dark:text-stone-300">{ui.network.body[locale]}</p>
         </div>
       </div>
       <div className="mt-4 rounded-2xl bg-amber-400/[0.14] px-3 py-2.5 text-[12.5px] font-semibold text-amber-700 dark:text-amber-300">{ui.network.note[locale]}</div>
@@ -920,7 +912,7 @@ function NetworkPanel({ locale, count, onFile, onClear }: { locale: Loc; count: 
             <div className="text-sm font-bold text-stone-900 dark:text-stone-50">{ui.network[h][locale]}</div>
             <ol className="mt-2.5 space-y-2">
               {ui.network[s][locale].map((step, i) => (
-                <li key={i} className="flex gap-2 text-[12.5px] leading-relaxed text-stone-500 dark:text-stone-400">
+                <li key={i} className="flex gap-2 text-[12.5px] leading-relaxed text-stone-600 dark:text-stone-300">
                   <span className={cn('grid h-5 w-5 shrink-0 place-items-center rounded-full text-[11px] font-bold tabular-nums', SOFT)}>{i + 1}</span>
                   <span className="flex-1">{step}</span>
                 </li>
@@ -983,7 +975,7 @@ function Contacts({ locale }: { locale: Loc }) {
     <div>
       <Eyebrow>{ui.contacts.eyebrow[locale]}</Eyebrow>
       <h1 className="mt-2 text-2xl font-semibold tracking-tight text-stone-900 dark:text-stone-50">{ui.contacts.title[locale]}</h1>
-      <p className="mt-1 text-sm text-stone-500 dark:text-stone-400">{ui.contacts.sub[locale]}</p>
+      <p className="mt-1 text-sm text-stone-600 dark:text-stone-300">{ui.contacts.sub[locale]}</p>
 
       <div className="mt-5">
         <OutreachLog locale={locale} />
@@ -995,13 +987,13 @@ function Contacts({ locale }: { locale: Loc }) {
           return (
             <button key={t.id} type="button" onClick={() => setPart(t.id)} className="text-start">
               <Card className={cn('flex items-center gap-3 p-4 transition-shadow', on ? 'border-stone-900/30 dark:border-white/25' : 'hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]')}>
-                <t.Icon className={cn('h-5 w-5 shrink-0', on ? 'text-stone-900 dark:text-stone-50' : 'text-stone-400 dark:text-stone-500')} />
+                <t.Icon className={cn('h-5 w-5 shrink-0', on ? 'text-stone-900 dark:text-stone-50' : 'text-stone-500 dark:text-stone-400')} />
                 <span className="min-w-0 flex-1">
                   <span className="flex items-center gap-1.5">
                     <span className="text-sm font-bold text-stone-900 dark:text-stone-50">{t.label}</span>
                     {t.badge !== null && <span className={cn('rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums', SOFT)}>{t.badge}</span>}
                   </span>
-                  <span className="block truncate text-[11px] text-stone-400 dark:text-stone-500">{t.hint}</span>
+                  <span className="block truncate text-[11px] text-stone-500 dark:text-stone-400">{t.hint}</span>
                 </span>
               </Card>
             </button>
@@ -1013,7 +1005,7 @@ function Contacts({ locale }: { locale: Loc }) {
 
       {(part === 'hr' || network) && (
         <Card className="mt-3 flex items-center gap-2.5 px-4 py-3">
-          <Search className="h-4 w-4 shrink-0 text-stone-400 dark:text-stone-500" />
+          <Search className="h-4 w-4 shrink-0 text-stone-500 dark:text-stone-400" />
           <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={ui.contacts.search[locale]} className="w-full bg-transparent text-sm text-stone-900 outline-none placeholder:text-stone-400 dark:text-stone-50 dark:placeholder:text-stone-500" />
         </Card>
       )}
@@ -1027,12 +1019,12 @@ function Contacts({ locale }: { locale: Loc }) {
 
       {(part === 'hr' || network) &&
         (items.length === 0 ? (
-          <p className="mt-10 text-center text-sm text-stone-400 dark:text-stone-500">{ui.contacts.empty[locale]}</p>
+          <p className="mt-10 text-center text-sm text-stone-500 dark:text-stone-400">{ui.contacts.empty[locale]}</p>
         ) : (
           <>
             {active.length > 0 && (
               <div className="mt-6">
-                <h3 className="text-sm font-bold text-stone-700 dark:text-stone-200">{ui.contacts.inProgress[locale]} <span className="text-stone-400 dark:text-stone-500">({active.length})</span></h3>
+                <h3 className="text-sm font-bold text-stone-700 dark:text-stone-200">{ui.contacts.inProgress[locale]} <span className="text-stone-500 dark:text-stone-400">({active.length})</span></h3>
                 <CardGrid items={active} locale={locale} />
               </div>
             )}
@@ -1044,7 +1036,7 @@ function Contacts({ locale }: { locale: Loc }) {
                   <button type="button" onClick={() => setShown((s) => s + 12)} className={cn('rounded-full px-5 py-2.5 text-sm font-bold', PILL)}>
                     {ui.contacts.showMore[locale](Math.min(12, main.length - shown))}
                   </button>
-                  <span className="text-[11px] text-stone-400 dark:text-stone-500">{ui.contacts.showing[locale](Math.min(shown, main.length), main.length)}</span>
+                  <span className="text-[11px] text-stone-500 dark:text-stone-400">{ui.contacts.showing[locale](Math.min(shown, main.length), main.length)}</span>
                 </div>
               )}
             </div>
@@ -1078,16 +1070,16 @@ function OutreachLog({ locale }: { locale: Loc }) {
     <Card className="p-5">
       <div className="flex items-center justify-between gap-3">
         <h3 className="text-sm font-bold text-stone-900 dark:text-stone-50">{ui.contacts.outreachLog[locale]}</h3>
-        <span className="text-xs font-semibold text-stone-500 dark:text-stone-400">
+        <span className="text-xs font-semibold text-stone-600 dark:text-stone-300">
           <span className="font-bold text-stone-900 tabular-nums dark:text-stone-50">{pct}%</span> {ui.contacts.reachedLabel[locale]}
-          <span className="ms-1 text-stone-400 dark:text-stone-500">· {ui.contacts.reachedOf[locale](reached, total)}</span>
+          <span className="ms-1 text-stone-500 dark:text-stone-400">· {ui.contacts.reachedOf[locale](reached, total)}</span>
         </span>
       </div>
       <div className="mt-3 grid grid-cols-3 gap-2 sm:gap-3">
         {cards.map((c) => (
           <div key={c.l} className={cn('px-2 py-2.5 text-center', INSET)}>
             <Serif className={cn('block text-2xl tabular-nums sm:text-3xl', c.c)}>{c.v}</Serif>
-            <div className="mt-0.5 text-[10px] text-stone-400 dark:text-stone-500 sm:text-[11px]">{c.l}</div>
+            <div className="mt-0.5 text-[10px] text-stone-500 dark:text-stone-400 sm:text-[11px]">{c.l}</div>
           </div>
         ))}
       </div>
@@ -1133,7 +1125,7 @@ function Study({ locale }: { locale: Loc }) {
       <div>
         <Eyebrow>{ui.study.eyebrow[locale]}</Eyebrow>
         <h1 className="mt-2 text-2xl font-semibold tracking-tight text-stone-900 dark:text-stone-50">{ui.study.title[locale]}</h1>
-        <p className="mt-1 text-sm text-stone-500 dark:text-stone-400">{ui.study.sub[locale]}</p>
+        <p className="mt-1 text-sm text-stone-600 dark:text-stone-300">{ui.study.sub[locale]}</p>
         <p className={cn('mt-1.5 text-[12.5px] font-semibold', ACCENT)}>{ui.study.chosenFor[locale](activePath.name[locale])}</p>
       </div>
 
@@ -1142,7 +1134,7 @@ function Study({ locale }: { locale: Loc }) {
         <div className={cn('grid h-10 w-10 shrink-0 place-items-center rounded-xl', SOFT)}><GraduationCap className={cn('h-5 w-5', ACCENT)} /></div>
         <div className="min-w-0">
           <h3 className="text-sm font-bold text-stone-900 dark:text-stone-50">{ui.study.worthItTitle[locale]}</h3>
-          <p className="mt-0.5 text-[13px] leading-relaxed text-stone-500 dark:text-stone-400">{ui.study.worthIt[locale]}</p>
+          <p className="mt-0.5 text-[13px] leading-relaxed text-stone-600 dark:text-stone-300">{ui.study.worthIt[locale]}</p>
         </div>
       </Card>
 
@@ -1171,7 +1163,6 @@ function Study({ locale }: { locale: Loc }) {
       {/* Full-time, BY MAJOR: each major gets four universities strong in that field */}
       <div className="space-y-6">
         <SectionTitle icon={Globe} title={ui.study.fullTimeTitle[locale]} sub={ui.study.fullTimeSub[locale]} />
-        <div className={cn('-mt-2 rounded-2xl bg-amber-400/[0.12] px-3.5 py-2.5 text-[12.5px] font-semibold text-amber-700 dark:text-amber-300')}>★ {ui.study.pioneersNote[locale]}</div>
         {fields.map((f) => (
           <div key={f}>
             <h3 className="mb-2.5 flex items-center gap-2 text-[13px] font-bold text-stone-900 dark:text-stone-50">
@@ -1189,8 +1180,8 @@ function Study({ locale }: { locale: Loc }) {
                     <div className="mt-0.5 text-[12.5px] text-stone-600 dark:text-stone-300">{p.program[locale]}</div>
                     <span className={cn('mt-1.5 inline-flex w-fit items-center gap-1 rounded-full px-2 py-0.5 text-[9.5px] font-bold', p.top30 ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : SOFT)}>★ {(p.top30 ? ui.study.pioneersBadge : ui.study.imdadBadge)[locale]}</span>
                     <div className="mt-2.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11.5px]">
-                      <span className="inline-flex items-center gap-1 text-stone-400 dark:text-stone-500"><Globe className="h-3 w-3" /> {p.location[locale]}</span>
-                      <span className="inline-flex items-center gap-1 text-stone-400 dark:text-stone-500"><CalendarDays className="h-3 w-3" /> {deadlineFor(p.location.en)}</span>
+                      <span className="inline-flex items-center gap-1 text-stone-500 dark:text-stone-400"><Globe className="h-3 w-3" /> {p.location[locale]}</span>
+                      <span className="inline-flex items-center gap-1 text-stone-500 dark:text-stone-400"><CalendarDays className="h-3 w-3" /> {deadlineFor(p.location.en)}</span>
                       <span className={cn('ms-auto inline-flex items-center gap-1 font-semibold', ACCENT)}>{ui.study.viewProgram[locale]} <ArrowUpRight className="h-3 w-3" /></span>
                     </div>
                   </Card>
@@ -1204,7 +1195,6 @@ function Study({ locale }: { locale: Loc }) {
       {/* Part-time inside Saudi (study while working), nearest first */}
       <div>
         <SectionTitle icon={GraduationCap} title={ui.study.partTimeTitle[locale]} sub={ui.study.partTimeSub[locale]} />
-        <div className="mb-3 rounded-2xl bg-amber-400/[0.12] px-3.5 py-2.5 text-[12.5px] font-semibold text-amber-700 dark:text-amber-300">{saudiUniStrength[primary][locale]}</div>
         <div className="grid gap-3 sm:grid-cols-2">
           {partTime.map((u, i) => {
             const near = !!region && u.region === region;
@@ -1216,9 +1206,9 @@ function Study({ locale }: { locale: Loc }) {
                       <h3 className="text-[14px] font-semibold text-stone-900 dark:text-stone-50">{u.uni[locale]}</h3>
                       {near && <span className="rounded-full bg-amber-500/15 px-1.5 py-0.5 text-[9.5px] font-bold text-amber-700 dark:text-amber-300">{ui.study.nearYou[locale]}</span>}
                     </div>
-                    <span className="inline-flex shrink-0 items-center gap-1 text-[11.5px] text-stone-400 dark:text-stone-500"><Globe className="h-3 w-3" /> {u.city[locale]}</span>
+                    <span className="inline-flex shrink-0 items-center gap-1 text-[11.5px] text-stone-500 dark:text-stone-400"><Globe className="h-3 w-3" /> {u.city[locale]}</span>
                   </div>
-                  <div className="mt-3 text-[10.5px] font-semibold uppercase tracking-wide text-stone-400 dark:text-stone-500">{ui.study.majorsHere[locale]}</div>
+                  <div className="mt-3 text-[10.5px] font-semibold uppercase tracking-wide text-stone-500 dark:text-stone-400">{ui.study.majorsHere[locale]}</div>
                   <div className="mt-1.5 flex flex-wrap gap-1.5">
                     {fields.map((f) => (
                       <span key={f} className={cn('rounded-full px-2.5 py-1 text-[11.5px] font-semibold', SOFT)}>{fieldMajors[f][locale]}</span>
@@ -1244,7 +1234,7 @@ function SectionTitle({ icon: Icon, title, sub }: { icon: typeof GraduationCap; 
       <div className={cn('grid h-9 w-9 shrink-0 place-items-center rounded-xl', SOFT)}><Icon className={cn('h-5 w-5', ACCENT)} /></div>
       <div>
         <h2 className="text-base font-semibold text-stone-900 dark:text-stone-50">{title}</h2>
-        {sub && <p className="text-[12.5px] text-stone-400 dark:text-stone-500">{sub}</p>}
+        {sub && <p className="text-[12.5px] text-stone-500 dark:text-stone-400">{sub}</p>}
       </div>
     </div>
   );
@@ -1288,7 +1278,7 @@ function Opportunities({ locale }: { locale: Loc }) {
       <div>
         <Eyebrow>{ui.opp.eyebrow[locale]}</Eyebrow>
         <h1 className="mt-2 text-2xl font-semibold tracking-tight text-stone-900 dark:text-stone-50">{ui.opp.title[locale]}</h1>
-        <p className="mt-1 text-sm text-stone-500 dark:text-stone-400">{ui.opp.sub[locale]}</p>
+        <p className="mt-1 text-sm text-stone-600 dark:text-stone-300">{ui.opp.sub[locale]}</p>
       </div>
 
       {/* Tamheer */}
@@ -1299,7 +1289,7 @@ function Opportunities({ locale }: { locale: Loc }) {
         </div>
         <div className="mt-2 grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end">
           <div>
-            <div className="text-[11px] font-bold uppercase tracking-wide text-stone-400 dark:text-stone-500">{ui.opp.tamheerEligible[locale]}</div>
+            <div className="text-[11px] font-bold uppercase tracking-wide text-stone-500 dark:text-stone-400">{ui.opp.tamheerEligible[locale]}</div>
             <ul className="mt-2 space-y-1.5">
               {tamheer.eligibility.map((e, i) => (
                 <li key={i} className="flex items-start gap-2 text-[13px] text-stone-600 dark:text-stone-300">
@@ -1332,8 +1322,8 @@ function Opportunities({ locale }: { locale: Loc }) {
                       <h3 className="truncate text-[14px] font-semibold text-stone-900 dark:text-stone-50">{d.title[locale]}</h3>
                       {relevant && <span className="shrink-0 rounded-full bg-amber-500/15 px-1.5 py-0.5 text-[9.5px] font-bold text-amber-700 dark:text-amber-300">{ui.opp.relevantToYou[locale]}</span>}
                     </div>
-                    <p className="mt-0.5 truncate text-[12px] text-stone-500 dark:text-stone-400">{d.org[locale]}</p>
-                    <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11.5px] text-stone-400 dark:text-stone-500">
+                    <p className="mt-0.5 truncate text-[12px] text-stone-600 dark:text-stone-300">{d.org[locale]}</p>
+                    <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11.5px] text-stone-500 dark:text-stone-400">
                       <span>{d.when[locale]}</span>
                       <span>· {d.city[locale]}</span>
                     </div>
@@ -1350,7 +1340,7 @@ function Opportunities({ locale }: { locale: Loc }) {
       <div>
         <SectionTitle icon={Sparkles} title={ui.opp.skillsTitle[locale]} sub={ui.opp.skillsSub[locale]} />
         <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
-          {skills[field].map((sk, i) => (
+          {skills.map((sk, i) => (
             <a key={i} href={sk.link} target="_blank" rel="noopener noreferrer" className="group">
               <Card className="flex items-center justify-between gap-2 p-3.5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]">
                 <span className="min-w-0 truncate text-[13px] font-semibold text-stone-800 dark:text-stone-100">{sk.name[locale]}</span>
@@ -1380,22 +1370,22 @@ function Opportunities({ locale }: { locale: Loc }) {
       {/* Where to apply: official portals, then a broad set of company career pages */}
       <div>
         <SectionTitle icon={Globe} title={ui.opp.jobPortalsTitle[locale]} />
-        <div className="mb-2 text-[11px] font-bold uppercase tracking-wide text-stone-400 dark:text-stone-500">{ui.opp.portalsTitle[locale]}</div>
+        <div className="mb-2 text-[11px] font-bold uppercase tracking-wide text-stone-500 dark:text-stone-400">{ui.opp.portalsTitle[locale]}</div>
         <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
           {nationalPortals.map((p, i) => (
             <a key={i} href={p.url} target="_blank" rel="noopener noreferrer" className="group">
               <Card className="flex items-center gap-3 p-3.5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]">
                 <div className="min-w-0 flex-1">
                   <div className="text-[13.5px] font-semibold text-stone-900 dark:text-stone-50">{p.name[locale]}</div>
-                  <div className="truncate text-[11.5px] text-stone-400 dark:text-stone-500">{p.desc[locale]}</div>
+                  <div className="truncate text-[11.5px] text-stone-500 dark:text-stone-400">{p.desc[locale]}</div>
                 </div>
                 <ArrowUpRight className="h-4 w-4 shrink-0 text-stone-300 group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
               </Card>
             </a>
           ))}
         </div>
-        <div className="mt-5 text-[11px] font-bold uppercase tracking-wide text-stone-400 dark:text-stone-500">{ui.opp.companyPortalsTitle[locale]}</div>
-        <p className="mb-2.5 mt-0.5 text-[12px] text-stone-400 dark:text-stone-500">{ui.opp.companyPortalsSub[locale]}</p>
+        <div className="mt-5 text-[11px] font-bold uppercase tracking-wide text-stone-500 dark:text-stone-400">{ui.opp.companyPortalsTitle[locale]}</div>
+        <p className="mb-2.5 mt-0.5 text-[12px] text-stone-500 dark:text-stone-400">{ui.opp.companyPortalsSub[locale]}</p>
         <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
           {companies.map((c, i) => (
             <a key={i} href={c.url} target="_blank" rel="noopener noreferrer" className="group">
@@ -1415,11 +1405,11 @@ function Opportunities({ locale }: { locale: Loc }) {
           <div className={cn('grid h-10 w-10 shrink-0 place-items-center rounded-xl', SOFT)}><Gift className={cn('h-5 w-5', ACCENT)} /></div>
           <div className="min-w-0">
             <h2 className="text-base font-semibold text-stone-900 dark:text-stone-50">{ui.referral.title[locale]}</h2>
-            <p className="mt-1 text-[13px] leading-relaxed text-stone-500 dark:text-stone-400">{ui.referral.body[locale]}</p>
+            <p className="mt-1 text-[13px] leading-relaxed text-stone-600 dark:text-stone-300">{ui.referral.body[locale]}</p>
           </div>
         </div>
         <div className="mt-4">
-          <div className="text-[11px] font-bold uppercase tracking-wide text-stone-400 dark:text-stone-500">{ui.referral.yourLink[locale]}</div>
+          <div className="text-[11px] font-bold uppercase tracking-wide text-stone-500 dark:text-stone-400">{ui.referral.yourLink[locale]}</div>
           <div className="mt-2 flex flex-col gap-2 sm:flex-row">
             <div className={cn('min-w-0 flex-1 truncate rounded-full px-4 py-2.5 text-[13px] font-medium text-stone-600 dark:text-stone-300', INSET)} dir="ltr">{refUrl}</div>
             <div className="flex gap-2">
@@ -1428,7 +1418,7 @@ function Opportunities({ locale }: { locale: Loc }) {
               </button>
             </div>
           </div>
-          <p className="mt-2 text-[11.5px] text-stone-400 dark:text-stone-500">{ui.referral.pending[locale]}</p>
+          <p className="mt-2 text-[11.5px] text-stone-500 dark:text-stone-400">{ui.referral.pending[locale]}</p>
         </div>
       </Card>
     </div>
@@ -1454,7 +1444,7 @@ function FeedbackFooter({ locale }: { locale: Loc }) {
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h2 className="text-base font-semibold text-stone-900 dark:text-stone-50">{ui.feedback.title[locale]}</h2>
-                <p className="text-[12.5px] text-stone-400 dark:text-stone-500">{ui.feedback.sub[locale]}</p>
+                <p className="text-[12.5px] text-stone-500 dark:text-stone-400">{ui.feedback.sub[locale]}</p>
               </div>
               <div className="flex items-center gap-1">
                 {[1, 2, 3, 4, 5].map((n) => (
@@ -1532,9 +1522,9 @@ function CommandPalette({ open, setOpen, locale, go, openPath }: { open: boolean
               ) : (
                 filtered.map((c, i) => (
                   <button key={c.id} type="button" onClick={() => { c.run(); setOpen(false); }} className={cn('group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-start transition-colors', i === 0 ? 'bg-stone-900/[0.05] dark:bg-white/[0.06]' : 'hover:bg-stone-900/[0.04] dark:hover:bg-white/[0.04]')}>
-                    <c.Icon className="h-4 w-4 shrink-0 text-stone-500 dark:text-stone-400" />
+                    <c.Icon className="h-4 w-4 shrink-0 text-stone-600 dark:text-stone-300" />
                     <span className="min-w-0 flex-1 truncate text-sm font-semibold text-stone-800 dark:text-stone-100">{c.label}</span>
-                    <span className="shrink-0 text-[10.5px] font-medium uppercase tracking-wide text-stone-400 dark:text-stone-500">{c.hint}</span>
+                    <span className="shrink-0 text-[10.5px] font-medium uppercase tracking-wide text-stone-500 dark:text-stone-400">{c.hint}</span>
                     {i === 0 && <CornerDownLeft className="h-3.5 w-3.5 shrink-0 text-stone-400" />}
                   </button>
                 ))
@@ -1600,7 +1590,7 @@ function Shell() {
                   <n.Icon className="h-4 w-4 shrink-0" />
                   <span className="hidden md:inline">{ui.nav[n.id][locale]}</span>
                   {n.pro && <span className={cn('ms-0.5 hidden rounded px-1 text-[8.5px] font-bold leading-tight md:inline', on ? 'bg-white/20 text-white dark:bg-stone-900/20 dark:text-stone-900' : 'bg-amber-500/15 text-amber-700 dark:text-amber-300')}>Pro</span>}
-                  {n.pro && <span className="absolute end-1 top-0.5 h-1.5 w-1.5 rounded-full bg-amber-500 md:hidden" />}
+                  {n.pro && <span className="ms-0.5 rounded bg-amber-500/15 px-1 text-[8px] font-bold leading-tight text-amber-700 dark:text-amber-300 md:hidden">Pro</span>}
                 </button>
               );
             })}
@@ -1617,7 +1607,7 @@ function Shell() {
             {/* Identity, far right, on wide screens only so the nav stays on one line below lg */}
             <div className="ms-1 hidden items-center gap-2 lg:flex">
               <div className="hidden text-end leading-tight xl:block">
-                <div className="text-[11px] text-stone-400 dark:text-stone-500">{ui.shell.greeting[locale]}</div>
+                <div className="text-[11px] text-stone-500 dark:text-stone-400">{ui.shell.greeting[locale]}</div>
                 <div className="text-sm font-semibold">{profile.name[locale]}</div>
               </div>
               <span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-stone-700 to-stone-900 text-sm font-bold text-stone-50 dark:from-stone-500 dark:to-stone-700">{profile.name[locale].charAt(0)}</span>
@@ -1642,7 +1632,7 @@ function Shell() {
 
       <FeedbackFooter locale={locale} />
 
-      <p className="mx-auto w-full max-w-5xl px-5 pb-10 text-center text-[11.5px] leading-relaxed text-stone-400 dark:text-stone-500 sm:px-8">{ui.shell.disclaimer[locale]}</p>
+      <p className="mx-auto w-full max-w-5xl px-5 pb-10 text-center text-[11.5px] leading-relaxed text-stone-500 dark:text-stone-400 sm:px-8">{ui.shell.disclaimer[locale]}</p>
 
       <CommandPalette open={cmdOpen} setOpen={setCmdOpen} locale={locale} go={go} openPath={openPath} />
     </div>

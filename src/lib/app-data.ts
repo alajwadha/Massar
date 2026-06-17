@@ -715,59 +715,17 @@ export const saudiUniStrength: Record<Exclude<FieldTag, 'all'>, LS> = {
   tech: { ar: 'كاوست وجامعة الملك فهد الأقوى محليًا في الحاسب والذكاء الاصطناعي.', en: 'KAUST and KFUPM are the strongest locally for computing & AI.' },
 };
 
-// In-demand skills to learn, each with a place to learn it.
-export const skills: Record<Exclude<FieldTag, 'all'>, { name: LS; link: string }[]> = {
-  finance: [
-    { name: { ar: 'النمذجة المالية (Excel)', en: 'Financial modeling (Excel)' }, link: 'https://corporatefinanceinstitute.com' },
-    { name: { ar: 'التقييم وDCF', en: 'Valuation and DCF' }, link: 'https://www.coursera.org' },
-    { name: { ar: 'Power BI', en: 'Power BI' }, link: 'https://learn.microsoft.com/power-bi/' },
-    { name: { ar: 'أساسيات بلومبرغ', en: 'Bloomberg basics' }, link: 'https://www.bloomberg.com/professional/' },
-    { name: { ar: 'بايثون للتمويل', en: 'Python for finance' }, link: 'https://www.coursera.org' },
-    { name: { ar: 'الذكاء الاصطناعي في التمويل', en: 'AI in finance' }, link: 'https://www.coursera.org' },
-    { name: { ar: 'الاستثمار المستدام وESG', en: 'ESG and sustainable investing' }, link: 'https://www.coursera.org' },
-    { name: { ar: 'سرد البيانات للقادة', en: 'Data storytelling' }, link: 'https://www.coursera.org' },
-  ],
-  energy: [
-    { name: { ar: 'نمذجة أنظمة الطاقة', en: 'Energy systems modeling' }, link: 'https://www.coursera.org' },
-    { name: { ar: 'تصميم الطاقة الشمسية (PVsyst)', en: 'Solar design (PVsyst)' }, link: 'https://www.udemy.com' },
-    { name: { ar: 'إدارة المشاريع', en: 'Project management' }, link: 'https://www.pmi.org' },
-    { name: { ar: 'Power BI', en: 'Power BI' }, link: 'https://learn.microsoft.com/power-bi/' },
-    { name: { ar: 'الذكاء الاصطناعي للتنبؤ بالطاقة', en: 'AI for energy forecasting' }, link: 'https://www.coursera.org' },
-    { name: { ar: 'تخزين الطاقة وتكامل الشبكة', en: 'Energy storage and grid integration' }, link: 'https://www.edx.org' },
-    { name: { ar: 'أسواق الكربون وESG', en: 'Carbon markets and ESG' }, link: 'https://www.coursera.org' },
-    { name: { ar: 'التواصل مع الأطراف المعنية', en: 'Stakeholder communication' }, link: 'https://www.coursera.org' },
-  ],
-  consulting: [
-    { name: { ar: 'حل دراسات الحالة', en: 'Case solving' }, link: 'https://www.preplounge.com' },
-    { name: { ar: 'بناء العروض (PowerPoint)', en: 'Slide writing (PowerPoint)' }, link: 'https://www.coursera.org' },
-    { name: { ar: 'Excel المتقدم', en: 'Advanced Excel' }, link: 'https://www.coursera.org' },
-    { name: { ar: 'سرد البيانات', en: 'Data storytelling' }, link: 'https://www.coursera.org' },
-    { name: { ar: 'الذكاء التوليدي للبحث والعروض', en: 'GenAI for research and decks' }, link: 'https://www.coursera.org' },
-    { name: { ar: 'أساسيات SQL وبايثون', en: 'SQL and Python basics' }, link: 'https://www.datacamp.com' },
-    { name: { ar: 'إدارة الأطراف المعنية', en: 'Stakeholder management' }, link: 'https://www.coursera.org' },
-    { name: { ar: 'المرونة والتكيّف', en: 'Adaptability' }, link: 'https://www.coursera.org' },
-  ],
-  government: [
-    { name: { ar: 'تحليل السياسات', en: 'Policy analysis' }, link: 'https://www.edx.org' },
-    { name: { ar: 'إدارة أصحاب المصلحة', en: 'Stakeholder management' }, link: 'https://www.coursera.org' },
-    { name: { ar: 'البيانات لصنع القرار', en: 'Data for decisions' }, link: 'https://www.coursera.org' },
-    { name: { ar: 'الكتابة التنفيذية', en: 'Executive writing' }, link: 'https://www.coursera.org' },
-    { name: { ar: 'سياسات الذكاء الاصطناعي والحكومة الرقمية', en: 'AI policy and digital government' }, link: 'https://www.edx.org' },
-    { name: { ar: 'تحليلات البيانات للسياسات', en: 'Data analytics for policy' }, link: 'https://www.coursera.org' },
-    { name: { ar: 'التفاوض', en: 'Negotiation' }, link: 'https://www.coursera.org' },
-    { name: { ar: 'التحدث أمام الجمهور', en: 'Public speaking' }, link: 'https://www.coursera.org' },
-  ],
-  tech: [
-    { name: { ar: 'بايثون', en: 'Python' }, link: 'https://www.coursera.org' },
-    { name: { ar: 'SQL', en: 'SQL' }, link: 'https://www.datacamp.com' },
-    { name: { ar: 'السحابة (AWS)', en: 'Cloud (AWS)' }, link: 'https://aws.amazon.com/training/' },
-    { name: { ar: 'تعلّم الآلة', en: 'Machine learning' }, link: 'https://www.coursera.org' },
-    { name: { ar: 'الذكاء التوليدي ونماذج اللغة', en: 'Generative AI and LLMs' }, link: 'https://www.deeplearning.ai' },
-    { name: { ar: 'MLOps وهندسة البيانات', en: 'MLOps and data engineering' }, link: 'https://www.coursera.org' },
-    { name: { ar: 'أساسيات الأمن السيبراني', en: 'Cybersecurity basics' }, link: 'https://www.coursera.org' },
-    { name: { ar: 'التواصل والعمل الجماعي', en: 'Communication and teamwork' }, link: 'https://www.coursera.org' },
-  ],
-};
+// In-demand, future-ready skills that suit any pathway (general, not field-specific).
+export const skills: { name: LS; link: string }[] = [
+  { name: { ar: 'إجادة الذكاء الاصطناعي والتوليدي', en: 'AI and GenAI literacy' }, link: 'https://www.deeplearning.ai' },
+  { name: { ar: 'تحليل البيانات (Excel وSQL)', en: 'Data analysis (Excel and SQL)' }, link: 'https://www.datacamp.com' },
+  { name: { ar: 'التواصل والعرض', en: 'Communication and presenting' }, link: 'https://www.coursera.org' },
+  { name: { ar: 'إدارة المشاريع', en: 'Project management' }, link: 'https://www.pmi.org' },
+  { name: { ar: 'حل المشكلات', en: 'Problem solving' }, link: 'https://www.coursera.org' },
+  { name: { ar: 'المرونة والتعلّم المستمر', en: 'Adaptability and learning' }, link: 'https://www.coursera.org' },
+  { name: { ar: 'القيادة والعمل الجماعي', en: 'Leadership and teamwork' }, link: 'https://www.coursera.org' },
+  { name: { ar: 'الحس التجاري والمالي', en: 'Business and financial acumen' }, link: 'https://www.coursera.org' },
+];
 
 export const nationalPortals: { name: LS; desc: LS; url: string }[] = [
   { name: { ar: 'جدارات', en: 'Jadarat' }, desc: { ar: 'المنصة الوطنية للتوظيف', en: 'National jobs platform' }, url: 'https://jadarat.sa' },
@@ -1108,7 +1066,7 @@ export const ui = {
     fullTimeSub: { ar: 'جامعات قوية في متناولك فعلًا، من الأصعب إلى الأسهل قبولًا', en: 'Strong universities you can realistically reach, hardest to easiest' },
     partTimeTitle: { ar: 'في السعودية', en: 'In Saudi Arabia' },
     partTimeSub: { ar: 'ادرس وأنت تعمل، أقرب خيارين إليك', en: 'Study while you work, your two nearest options' },
-    tierHigh: { ar: 'عالمية المستوى', en: 'World class' },
+    tierHigh: { ar: 'عالمية، صعبة القبول', en: 'World class, hard to get in' },
     tierRespected: { ar: 'مرموقة ومعروفة', en: 'Respected and well known' },
     tierSolid: { ar: 'خيار قوي', en: 'A solid choice' },
     tierAccessible: { ar: 'أسهل قبولًا', en: 'Easier to get into' },
@@ -1118,8 +1076,8 @@ export const ui = {
     imdadBadge: { ar: 'إمداد', en: 'Imdad' },
     pioneersNote: { ar: 'جامعات أفضل 30 مؤهّلة لمنحة رواد (مضمونة)، والبقية ضمن أفضل 200 مؤهّلة لإمداد (غير مضمونة).', en: 'Top-30 schools qualify for Pioneers (guaranteed); the rest, in the top 200, qualify for Imdad (not guaranteed).' },
     deadlineLabel: { ar: 'الموعد النهائي', en: 'Deadline' },
-    deadlineUS: { ar: 'قرابة ديسمبر', en: 'around December' },
-    deadlineUK: { ar: 'قرابة أبريل إلى مايو', en: 'around April to May' },
+    deadlineUS: { ar: 'ديسمبر', en: 'December' },
+    deadlineUK: { ar: 'أبريل إلى مايو', en: 'April to May' },
     deadlineOther: { ar: 'يختلف، تحقق من الموقع', en: 'varies, check the site' },
     essentialsTitle: { ar: 'قبل التقديم', en: 'Before you apply' },
     reqLabel: { ar: 'المتطلبات', en: 'Requirements' },
