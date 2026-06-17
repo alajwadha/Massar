@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { parseUploadedConnections, type Contact, type ContactStatus, type Level } from '@/lib/app-data';
 
 /* ------------------------------------------------------------ network -- */
@@ -25,6 +25,8 @@ type ProgressCtx = {
   setStatus: (id: string, s: ContactStatus) => void;
   certsDone: Record<string, boolean>;
   toggleCert: (nameEn: string) => void;
+  cvFixed: Record<string, boolean>;
+  toggleCvFix: (id: string) => void;
   level: Level;
   setLevel: (l: Level) => void;
 };
@@ -70,8 +72,13 @@ export function DashboardState({
   const [certsDone, setCertsDone] = useState<Record<string, boolean>>(() =>
     Object.fromEntries(initialCertsDone.map((n) => [n, true])),
   );
+  const [cvFixed, setCvFixed] = useState<Record<string, boolean>>({});
   const [level, setLevel] = useState<Level>('entry');
-  const hydrated = useRef(false);
+  // A state flag (not a ref): a ref would flip to true synchronously inside the
+  // hydration effect, so the save effect would fire in the SAME pass with stale
+  // empty state and clobber localStorage. As state, the save effect skips the
+  // first render and only persists once the hydrated values are in.
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     try {
@@ -80,26 +87,28 @@ export function DashboardState({
         const p = JSON.parse(raw) as {
           statuses?: Record<string, ContactStatus>;
           certsDone?: Record<string, boolean>;
+          cvFixed?: Record<string, boolean>;
           level?: Level;
         };
         if (p.statuses) setStatuses(p.statuses);
         if (p.certsDone) setCertsDone((prev) => ({ ...prev, ...p.certsDone }));
+        if (p.cvFixed) setCvFixed(p.cvFixed);
         if (p.level) setLevel(p.level);
       }
     } catch {
       /* ignore */
     }
-    hydrated.current = true;
+    setHydrated(true);
   }, [slug]);
 
   useEffect(() => {
-    if (!hydrated.current) return;
+    if (!hydrated) return;
     try {
-      localStorage.setItem(`masaar:progress:${slug}`, JSON.stringify({ statuses, certsDone, level }));
+      localStorage.setItem(`masaar:progress:${slug}`, JSON.stringify({ statuses, certsDone, cvFixed, level }));
     } catch {
       /* ignore */
     }
-  }, [statuses, certsDone, level, slug]);
+  }, [hydrated, statuses, certsDone, cvFixed, level, slug]);
 
   const network_ = useMemo<NetworkCtx>(
     () => ({ network, setFromCsv, clear: clearNetwork }),
@@ -109,12 +118,14 @@ export function DashboardState({
     () => ({
       statuses,
       certsDone,
+      cvFixed,
       level,
       setLevel,
       setStatus: (id, s) => setStatuses((prev) => ({ ...prev, [id]: s })),
       toggleCert: (n) => setCertsDone((prev) => ({ ...prev, [n]: !prev[n] })),
+      toggleCvFix: (id) => setCvFixed((prev) => ({ ...prev, [id]: !prev[id] })),
     }),
-    [statuses, certsDone, level],
+    [statuses, certsDone, cvFixed, level],
   );
 
   return (

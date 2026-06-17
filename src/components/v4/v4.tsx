@@ -8,6 +8,7 @@ import {
   Compass,
   Users,
   Activity,
+  Briefcase,
   Sparkles,
   ArrowUpRight,
   Copy,
@@ -28,6 +29,14 @@ import {
   TrendingUp,
   Command,
   CornerDownLeft,
+  GraduationCap,
+  CalendarDays,
+  Globe,
+  FileText,
+  MessageCircle,
+  Gift,
+  Send,
+  Star,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Link, usePathname } from '@/i18n/routing';
@@ -40,46 +49,56 @@ import {
   dailyPicks,
   fillTemplate,
   linkedinUrl,
+  scaledAdd,
+  careersUrlFor,
+  referralLink,
   LEVELS,
   SECTOR_LABELS,
   TIER_LABELS,
   TIER_CAP,
+  tamheer,
+  careerDays,
+  masters,
+  nationalPortals,
+  companyCareers,
+  cvGuide,
+  interviewTips,
   ui,
   type Contact,
   type ContactStatus,
   type CompanyTier,
   type Loc,
+  type Level,
   type PickKind,
   type CareerPath,
+  type FieldTag,
 } from '@/lib/app-data';
 
 /* =============================================================================
-   v4 "Atlas" — an editorial bento dashboard. Warm paper / tinted-near-black,
-   a single rationed gold accent, an Instrument-Serif display face for the big
-   numbers, a masked background grid + film grain, spring motion with layoutId
-   morphs, and a ⌘K command palette. Dual-theme via explicit dark: variants.
-   Reuses the whole shared data/state layer, so v1–v4 share the same plan,
-   network, statuses and level per slug.
+   v4 "Atlas" — an editorial bento dashboard. Warm paper / crisp near-black with
+   SOLID elevated cards (the dark theme reworked for contrast), a single rationed
+   gold accent, an Instrument-Serif display face, a masked grid + film grain,
+   spring motion with layoutId morphs, a ⌘K palette, and a فرص/Opportunities hub.
+   Fully responsive down to phone widths. Reuses the shared data/state layer.
 ============================================================================= */
 
 const SPRING = { type: 'spring', stiffness: 420, damping: 34, mass: 0.8 } as const;
 const EASE = [0.16, 1, 0.3, 1] as const;
-type Tab = 'home' | 'paths' | 'contacts' | 'tracker';
+type Tab = 'home' | 'paths' | 'contacts' | 'tracker' | 'opportunities';
 
-// Shared class tokens keep light + dark in lockstep across the whole file.
+// Shared class tokens keep light + dark in lockstep. Dark uses SOLID elevated
+// surfaces (#161619 on a #0a0a0b canvas) so cards actually read as panels.
 const CARD =
-  'relative overflow-hidden rounded-[22px] border border-stone-200/80 bg-white/85 shadow-[0_1px_2px_rgba(28,25,23,0.04),0_24px_60px_-34px_rgba(28,25,23,0.30)] backdrop-blur-sm dark:border-white/[0.07] dark:bg-white/[0.025] dark:shadow-[0_24px_60px_-34px_rgba(0,0,0,0.7)]';
-// A whisper-thin specular line along the top edge, like light catching a panel.
+  'relative overflow-hidden rounded-[22px] border border-stone-200/80 bg-white/85 shadow-[0_1px_2px_rgba(28,25,23,0.04),0_24px_60px_-34px_rgba(28,25,23,0.30)] backdrop-blur-sm dark:border-white/[0.09] dark:bg-[#161619] dark:shadow-[0_22px_55px_-32px_rgba(0,0,0,0.9)]';
 const EDGE =
-  'before:pointer-events-none before:absolute before:inset-x-5 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-900/10 before:to-transparent dark:before:via-white/15';
-const INSET = 'rounded-2xl border border-stone-200/70 bg-stone-50/70 dark:border-white/[0.06] dark:bg-white/[0.02]';
+  'before:pointer-events-none before:absolute before:inset-x-5 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-900/10 before:to-transparent dark:before:via-white/20';
+const INSET = 'rounded-2xl border border-stone-200/70 bg-stone-50/70 dark:border-white/[0.07] dark:bg-white/[0.035]';
 const PILL = 'bg-stone-900 text-white hover:bg-stone-800 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-white';
 const GHOST =
-  'border border-stone-300/70 bg-white/60 text-stone-500 hover:border-stone-400 hover:text-stone-900 dark:border-white/10 dark:bg-white/[0.04] dark:text-stone-400 dark:hover:text-white';
-const SOFT = 'bg-stone-900/[0.05] text-stone-600 dark:bg-white/[0.06] dark:text-stone-300';
+  'border border-stone-300/70 bg-white/60 text-stone-500 hover:border-stone-400 hover:text-stone-900 dark:border-white/10 dark:bg-white/[0.05] dark:text-stone-300 dark:hover:border-white/25 dark:hover:text-white';
+const SOFT = 'bg-stone-900/[0.05] text-stone-600 dark:bg-white/[0.07] dark:text-stone-300';
 const ACCENT = 'text-amber-700 dark:text-amber-300';
 
-// Film grain (feTurbulence) as a data URI; layered at very low opacity.
 const NOISE =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")";
 
@@ -88,11 +107,7 @@ function Card({ className, children }: { className?: string; children: React.Rea
 }
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="text-[10.5px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
-      {children}
-    </div>
-  );
+  return <div className="text-[10.5px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">{children}</div>;
 }
 
 function Serif({ className, children }: { className?: string; children: React.ReactNode }) {
@@ -100,9 +115,6 @@ function Serif({ className, children }: { className?: string; children: React.Re
 }
 
 /* ---------------------------------------------------------------- theme toggle -- */
-// Same contract as the shared toggle (flips `.dark`, persists masaar:theme), but
-// styled to sit cleanly in the v4 chrome. A no-flash script in the root layout
-// applies the saved choice before paint.
 function ThemeToggle() {
   const [dark, setDark] = useState(false);
   useEffect(() => setDark(document.documentElement.classList.contains('dark')), []);
@@ -117,27 +129,15 @@ function ThemeToggle() {
     }
   };
   return (
-    <button
-      type="button"
-      onClick={toggle}
-      aria-label="Toggle dark mode"
-      className={cn('grid h-9 w-9 place-items-center rounded-full transition-colors', GHOST)}
-    >
+    <button type="button" onClick={toggle} aria-label="Toggle dark mode" className={cn('grid h-9 w-9 place-items-center rounded-full transition-colors', GHOST)}>
       <AnimatePresence mode="wait" initial={false}>
-        <motion.span
-          key={dark ? 'sun' : 'moon'}
-          initial={{ rotate: -40, opacity: 0, scale: 0.6 }}
-          animate={{ rotate: 0, opacity: 1, scale: 1 }}
-          exit={{ rotate: 40, opacity: 0, scale: 0.6 }}
-          transition={{ duration: 0.2 }}
-        >
+        <motion.span key={dark ? 'sun' : 'moon'} initial={{ rotate: -40, opacity: 0, scale: 0.6 }} animate={{ rotate: 0, opacity: 1, scale: 1 }} exit={{ rotate: 40, opacity: 0, scale: 0.6 }} transition={{ duration: 0.2 }}>
           {dark ? <Sun /> : <Moon />}
         </motion.span>
       </AnimatePresence>
     </button>
   );
 }
-// tiny inline icons so the toggle can animate the swap without layout shift
 function Sun() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -179,6 +179,7 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
   const template = templates[tpl % templates.length];
   const message = fillTemplate(template.preview[msgLang], c, msgLang);
   const isRecruiter = Boolean(c.sector);
+  const applyUrl = careersUrlFor(c.company.en);
 
   const copy = async () => {
     try {
@@ -197,11 +198,7 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
             <h3 className="truncate text-[15px] font-semibold text-stone-900 dark:text-stone-50">{c.name[locale]}</h3>
-            {isRecruiter && (
-              <span className="shrink-0 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-300">
-                {ui.contacts.recruiter[locale]}
-              </span>
-            )}
+            {isRecruiter && <span className="shrink-0 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-300">{ui.contacts.recruiter[locale]}</span>}
           </div>
           <p className="mt-0.5 truncate text-[13px] text-stone-500 dark:text-stone-400">{c.role[locale]}</p>
           <p className="mt-0.5 truncate text-xs font-semibold text-stone-600 dark:text-stone-300">{c.company[locale]}</p>
@@ -210,9 +207,7 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
 
       {isRecruiter && (c.sector || c.companyTier) && (
         <div className="mt-2.5 flex flex-wrap gap-1.5">
-          {c.sector && SECTOR_LABELS[c.sector] && (
-            <span className={cn('rounded-md px-2 py-0.5 text-[10.5px] font-semibold', SOFT)}>{SECTOR_LABELS[c.sector][locale]}</span>
-          )}
+          {c.sector && SECTOR_LABELS[c.sector] && <span className={cn('rounded-md px-2 py-0.5 text-[10.5px] font-semibold', SOFT)}>{SECTOR_LABELS[c.sector][locale]}</span>}
           {c.companyTier && <span className={cn('rounded-md px-2 py-0.5 text-[10.5px] font-semibold', SOFT)}>{TIER_LABELS[c.companyTier][locale]}</span>}
         </div>
       )}
@@ -234,15 +229,7 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
           {STATUS_BTNS.map((b) => {
             const active = status === b.key;
             return (
-              <button
-                key={b.key}
-                type="button"
-                onClick={() => setStatus(c.id, active ? 'new' : b.key)}
-                className={cn(
-                  'flex-1 rounded-full px-2 py-1.5 text-[11px] font-bold transition-colors',
-                  active ? b.on : 'bg-stone-900/[0.04] text-stone-500 hover:text-stone-900 dark:bg-white/[0.05] dark:text-stone-400 dark:hover:text-white',
-                )}
-              >
+              <button key={b.key} type="button" onClick={() => setStatus(c.id, active ? 'new' : b.key)} className={cn('flex-1 rounded-full px-2 py-1.5 text-[11px] font-bold transition-colors', active ? b.on : 'bg-stone-900/[0.04] text-stone-500 hover:text-stone-900 dark:bg-white/[0.05] dark:text-stone-400 dark:hover:text-white')}>
                 {ui.contacts[b.sk][locale]}
               </button>
             );
@@ -257,49 +244,32 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
         </div>
         <div className={cn('p-3', INSET)}>
           <div className="mb-1.5 flex items-center justify-between gap-2">
-            <span className="truncate text-[11px] font-semibold text-stone-400 dark:text-stone-500">
-              {ui.contacts.messagePreview[locale]} · {template.title[locale]}
-            </span>
-            <button
-              type="button"
-              onClick={() => setMsgLang((l) => (l === 'ar' ? 'en' : 'ar'))}
-              title={ui.contacts.msgLangHint[locale]}
-              className={cn('inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] font-bold', GHOST)}
-            >
+            <span className="truncate text-[11px] font-semibold text-stone-400 dark:text-stone-500">{ui.contacts.messagePreview[locale]} · {template.title[locale]}</span>
+            <button type="button" onClick={() => setMsgLang((l) => (l === 'ar' ? 'en' : 'ar'))} title={ui.contacts.msgLangHint[locale]} className={cn('inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] font-bold', GHOST)}>
               <Languages className="h-3 w-3" />
               {msgLang === 'ar' ? 'EN' : 'ع'}
             </button>
           </div>
-          <p dir={msgLang === 'ar' ? 'rtl' : 'ltr'} className="line-clamp-3 text-[12.5px] leading-relaxed text-stone-500 dark:text-stone-400">
-            {message}
-          </p>
+          <p dir={msgLang === 'ar' ? 'rtl' : 'ltr'} className="line-clamp-3 text-[12.5px] leading-relaxed text-stone-500 dark:text-stone-400">{message}</p>
         </div>
       </div>
 
       <div className="mt-2.5 flex gap-2">
-        <button
-          type="button"
-          onClick={copy}
-          className={cn(
-            'flex flex-1 items-center justify-center gap-1.5 rounded-full px-3 py-2.5 text-[13px] font-bold transition-colors',
-            copied ? 'bg-stone-900/[0.06] text-stone-700 dark:bg-white/10 dark:text-stone-200' : PILL,
-          )}
-        >
+        <button type="button" onClick={copy} className={cn('flex flex-1 items-center justify-center gap-1.5 rounded-full px-3 py-2.5 text-[13px] font-bold transition-colors', copied ? 'bg-stone-900/[0.06] text-stone-700 dark:bg-white/10 dark:text-stone-200' : PILL)}>
           {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
           {copied ? ui.contacts.copied[locale] : ui.contacts.copy[locale]}
         </button>
         <button type="button" onClick={() => setTpl((i) => i + 1)} title={ui.contacts.shuffle[locale]} className={cn('grid w-11 shrink-0 place-items-center rounded-full', GHOST)}>
           <Shuffle className="h-4 w-4" />
         </button>
-        <a
-          href={linkedinUrl(c)}
-          target="_blank"
-          rel="noopener noreferrer"
-          title={ui.contacts.linkedin[locale]}
-          className={cn('grid w-11 shrink-0 place-items-center rounded-full text-blue-600 dark:text-blue-300', GHOST)}
-        >
+        <a href={linkedinUrl(c)} target="_blank" rel="noopener noreferrer" title={ui.contacts.linkedin[locale]} className={cn('grid w-11 shrink-0 place-items-center rounded-full text-blue-600 dark:text-blue-300', GHOST)}>
           <Linkedin className="h-4 w-4" />
         </a>
+        {applyUrl && (
+          <a href={applyUrl} target="_blank" rel="noopener noreferrer" title={ui.opp.apply[locale]} className={cn('grid w-11 shrink-0 place-items-center rounded-full', GHOST)}>
+            <Briefcase className="h-4 w-4" />
+          </a>
+        )}
       </div>
     </Card>
   );
@@ -315,16 +285,108 @@ function CardGrid({ items, locale }: { items: { contact: Contact; kind?: PickKin
   );
 }
 
+/* ---------------------------------------------------------------- your CV -- */
+
+// Transient review card: shows strengths + hygiene issues, and unmounts entirely
+// once every issue is marked Fixed (we never leave a resolved to-do hanging).
+function CvReviewCard({ locale }: { locale: Loc }) {
+  const { cvReview } = usePlan();
+  const { cvFixed, toggleCvFix } = useProgress();
+  const open = cvReview.issues.filter((i) => !cvFixed[i.id]);
+  if (open.length === 0) return null;
+
+  const total = cvReview.issues.length;
+  const done = total - open.length;
+  const sevDot: Record<string, string> = { high: 'bg-rose-500', med: 'bg-amber-500', low: 'bg-stone-400' };
+
+  return (
+    <Card className="p-5 sm:p-6">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <Eyebrow>{ui.cvBlock.eyebrow[locale]}</Eyebrow>
+        {done > 0 && <span className={cn('rounded-full px-2 py-0.5 text-[10.5px] font-bold tabular-nums', SOFT)}>{ui.cvBlock.polishProgress[locale](done, total)}</span>}
+      </div>
+      <p className="mt-2 text-[15px] font-semibold leading-snug text-stone-900 dark:text-stone-50">{cvReview.headline[locale]}</p>
+
+      <div className="mt-4 grid gap-4 sm:grid-cols-2">
+        <div>
+          <div className="text-[11px] font-bold uppercase tracking-wide text-stone-400 dark:text-stone-500">{ui.cvBlock.strengths[locale]}</div>
+          <ul className="mt-2 space-y-1.5">
+            {cvReview.strengths.map((s, i) => (
+              <li key={i} className="flex items-start gap-2 text-[13px] text-stone-600 dark:text-stone-300">
+                <Check className={cn('mt-0.5 h-3.5 w-3.5 shrink-0', ACCENT)} />
+                <span>{s[locale]}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <div className="text-[11px] font-bold uppercase tracking-wide text-stone-400 dark:text-stone-500">{ui.cvBlock.needsPolish[locale]}</div>
+          <ul className="mt-2 space-y-2">
+            <AnimatePresence initial={false}>
+              {open.map((iss) => (
+                <motion.li key={iss.id} layout initial={{ opacity: 1 }} exit={{ opacity: 0, height: 0, marginTop: 0 }} transition={{ duration: 0.25 }} className="flex items-start gap-2">
+                  <span className={cn('mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full', sevDot[iss.severity])} />
+                  <span className="min-w-0 flex-1 text-[13px] text-stone-600 dark:text-stone-300">{iss.text[locale]}</span>
+                  <button type="button" onClick={() => toggleCvFix(iss.id)} className={cn('inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold transition-colors', GHOST)}>
+                    <Check className="h-3 w-3" /> {ui.cvBlock.markFixed[locale]}
+                  </button>
+                </motion.li>
+              ))}
+            </AnimatePresence>
+          </ul>
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+// What's missing for the selected level. Persists (resolved by earning certs /
+// experience, not by a toggle), so it lives with the score, not the review card.
+function LevelGaps({ locale, onOpenPrimary }: { locale: Loc; onOpenPrimary: () => void }) {
+  const { levelGaps } = usePlan();
+  const { level } = useProgress();
+  const gap = levelGaps[level];
+  const empty = !gap.experience && gap.certs.length === 0 && (!gap.other || gap.other.length === 0);
+
+  return (
+    <div className="mt-5">
+      <div className="text-xs font-bold text-stone-700 dark:text-stone-200">{ui.cvBlock.gapsTitle[locale]}</div>
+      {empty ? (
+        <p className={cn('mt-2 text-[13px] font-semibold', ACCENT)}>{ui.cvBlock.ready[locale]}</p>
+      ) : (
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          {gap.experience && (
+            <span className={cn('inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[11.5px] font-semibold', SOFT)}>
+              <TrendingUp className="h-3 w-3" /> {gap.experience[locale]}
+            </span>
+          )}
+          {gap.certs.map((c) => (
+            <button key={c} type="button" onClick={onOpenPrimary} className="inline-flex items-center gap-1 rounded-lg bg-amber-500/[0.12] px-2 py-1 text-[11.5px] font-semibold text-amber-700 transition-colors hover:bg-amber-500/20 dark:text-amber-300">
+              <BadgeCheck className="h-3 w-3" /> {c}
+            </button>
+          ))}
+          {gap.other?.map((o, i) => (
+            <span key={i} className={cn('inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[11.5px] font-semibold', SOFT)}>
+              <Sparkles className="h-3 w-3" /> {o[locale]}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* -------------------------------------------------------------------- home -- */
 
-function Home({ locale, go }: { locale: Loc; go: (t: Tab) => void }) {
+function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; openPath: (id: string) => void }) {
   const plan = usePlan();
   const { primaryPath, cvScore } = plan;
   const { network } = useNetwork();
   const { level, setLevel, statuses, certsDone } = useProgress();
 
   const score = primaryPath.scoreByLevel[level];
-  const potential = Math.min(100, score + cvScore.improvements.reduce((s, i) => s + i.delta, 0));
+  const imps = cvScore.improvements.map((i) => ({ ...i, d: scaledAdd(i.delta, level) }));
+  const potential = Math.min(100, score + imps.reduce((s, i) => s + i.d, 0));
   const certsTotal = primaryPath.certs.length;
   const certsDoneCount = primaryPath.certs.filter((c) => certsDone[c.name.en]).length;
   const sv = Object.values(statuses);
@@ -341,13 +403,12 @@ function Home({ locale, go }: { locale: Loc; go: (t: Tab) => void }) {
 
   return (
     <div className="space-y-3 sm:space-y-4">
-      {/* Bento: hero score + right rail */}
       <div className="grid grid-cols-12 gap-3 sm:gap-4">
-        <Card className="col-span-12 p-6 sm:p-8 lg:col-span-8">
-          <div className="grid items-center gap-7 sm:grid-cols-[auto_1fr] sm:gap-9">
-            <div className="flex flex-col items-center gap-4">
+        <Card className="col-span-12 p-5 sm:p-8 lg:col-span-8">
+          <div className="grid items-start gap-7 sm:grid-cols-[auto_1fr] sm:gap-9">
+            <div className="mx-auto flex flex-col items-center gap-4 sm:mx-0">
               <div className="text-amber-600 dark:text-amber-400">
-                <ProgressRing value={score} size={168} stroke={7} color="currentColor" track="rgba(120,113,108,0.16)">
+                <ProgressRing value={score} size={160} stroke={7} color="currentColor" track="rgba(120,113,108,0.18)">
                   <div className="leading-none">
                     <Serif className="block text-6xl tracking-tight text-stone-900 dark:text-stone-50">
                       <Counter to={score} />
@@ -356,16 +417,11 @@ function Home({ locale, go }: { locale: Loc; go: (t: Tab) => void }) {
                   </div>
                 </ProgressRing>
               </div>
-              <div className="inline-flex rounded-full border border-stone-200/80 bg-stone-50/80 p-0.5 dark:border-white/10 dark:bg-white/[0.04]">
+              <div className="inline-flex rounded-full border border-stone-200/80 bg-stone-50/80 p-0.5 dark:border-white/10 dark:bg-white/[0.05]">
                 {LEVELS.map((lv) => {
                   const on = level === lv.id;
                   return (
-                    <button
-                      key={lv.id}
-                      type="button"
-                      onClick={() => setLevel(lv.id)}
-                      className={cn('relative rounded-full px-2.5 py-1.5 text-[11px] font-bold transition-colors', on ? 'text-white dark:text-stone-900' : 'text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-white')}
-                    >
+                    <button key={lv.id} type="button" onClick={() => setLevel(lv.id)} className={cn('relative rounded-full px-2.5 py-1.5 text-[11px] font-bold transition-colors', on ? 'text-white dark:text-stone-900' : 'text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-white')}>
                       {on && <motion.span layoutId="v4-level" className="absolute inset-0 -z-10 rounded-full bg-stone-900 dark:bg-stone-100" transition={SPRING} />}
                       {lv.label[locale]}
                     </button>
@@ -376,10 +432,10 @@ function Home({ locale, go }: { locale: Loc; go: (t: Tab) => void }) {
 
             <div className="min-w-0">
               <Eyebrow>{ui.overview.scoreLabel[locale]}</Eyebrow>
-              <h1 className="mt-2 text-balance text-[26px] font-semibold leading-[1.1] tracking-tight text-stone-900 dark:text-stone-50 sm:text-[34px]">
-                {cvScore.target[locale]}
-              </h1>
+              <h1 className="mt-2 text-balance text-[24px] font-semibold leading-[1.12] tracking-tight text-stone-900 dark:text-stone-50 sm:text-[34px]">{cvScore.target[locale]}</h1>
               <p className="mt-2 text-sm text-stone-500 dark:text-stone-400">{ui.overview.levelHint[locale]}</p>
+
+              <LevelGaps locale={locale} onOpenPrimary={() => openPath(primaryPath.id)} />
 
               <div className="mt-5">
                 <div className="flex items-center gap-1.5 text-xs font-bold text-stone-700 dark:text-stone-200">
@@ -387,14 +443,12 @@ function Home({ locale, go }: { locale: Loc; go: (t: Tab) => void }) {
                   {ui.overview.improvementsTitle[locale]}
                 </div>
                 <ul className="mt-2.5 space-y-2">
-                  {cvScore.improvements.map((imp, i) => (
+                  {imps.map((imp, i) => (
                     <li key={i} className="flex items-center gap-2.5 text-[13px]">
-                      <span className={cn('shrink-0 rounded-md px-1.5 py-0.5 text-[11px] font-bold tabular-nums', i === 0 ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : SOFT)}>+{imp.delta}</span>
+                      <span className={cn('shrink-0 rounded-md px-1.5 py-0.5 text-[11px] font-bold tabular-nums', i === 0 ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : SOFT)}>+{imp.d}</span>
                       <span className="min-w-0 flex-1 text-stone-600 dark:text-stone-300">
                         {imp.action[locale]}
-                        {i === 0 && (
-                          <span className="ms-2 whitespace-nowrap rounded bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-300">{ui.overview.quickWin[locale]}</span>
-                        )}
+                        {i === 0 && <span className="ms-2 whitespace-nowrap rounded bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-300">{ui.overview.quickWin[locale]}</span>}
                       </span>
                       <span className="shrink-0 text-[11px] text-stone-400 dark:text-stone-500">{imp.effort[locale]}</span>
                     </li>
@@ -408,7 +462,7 @@ function Home({ locale, go }: { locale: Loc; go: (t: Tab) => void }) {
                     </span>
                   </div>
                   <div className="relative mt-1.5 h-2 overflow-hidden rounded-full bg-stone-900/[0.06] dark:bg-white/10">
-                    <motion.div className="absolute inset-y-0 start-0 rounded-full bg-amber-400/40 dark:bg-amber-400/30" initial={{ width: 0 }} animate={{ width: `${potential}%` }} transition={{ duration: 1, ease: EASE }} />
+                    <motion.div className="absolute inset-y-0 start-0 rounded-full bg-amber-400/45 dark:bg-amber-400/30" initial={{ width: 0 }} animate={{ width: `${potential}%` }} transition={{ duration: 1, ease: EASE }} />
                     <motion.div className="absolute inset-y-0 start-0 rounded-full bg-stone-900 dark:bg-stone-100" initial={{ width: 0 }} animate={{ width: `${score}%` }} transition={{ duration: 1, delay: 0.1, ease: EASE }} />
                   </div>
                 </div>
@@ -444,7 +498,8 @@ function Home({ locale, go }: { locale: Loc; go: (t: Tab) => void }) {
         </div>
       </div>
 
-      {/* Stat strip with serif numerals */}
+      <CvReviewCard locale={locale} />
+
       <div className="grid grid-cols-3 gap-3 sm:gap-4">
         {stats.map((s) => (
           <Card key={s.label} className="p-4 sm:p-5">
@@ -454,11 +509,10 @@ function Home({ locale, go }: { locale: Loc; go: (t: Tab) => void }) {
         ))}
       </div>
 
-      {/* Today's connections */}
       <div className="pt-1">
-        <div className="mb-1 flex items-end justify-between">
+        <div className="mb-1 flex items-end justify-between gap-3">
           <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-50">{ui.overview.actionsTitle[locale]}</h2>
-          <button type="button" onClick={() => go('contacts')} className="inline-flex items-center gap-1 text-sm font-semibold text-stone-900 hover:text-stone-500 dark:text-stone-100 dark:hover:text-stone-400">
+          <button type="button" onClick={() => go('contacts')} className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-stone-900 hover:text-stone-500 dark:text-stone-100 dark:hover:text-stone-400">
             {ui.overview.openContacts[locale]} <ArrowLeft className="h-4 w-4 ltr:rotate-180" />
           </button>
         </div>
@@ -466,11 +520,7 @@ function Home({ locale, go }: { locale: Loc; go: (t: Tab) => void }) {
         {todays.length > 0 ? (
           <CardGrid items={todays.map((r) => ({ contact: r.contact, kind: r.kind, reason: r.reason[locale] }))} locale={locale} />
         ) : (
-          <button
-            type="button"
-            onClick={() => go('contacts')}
-            className={cn('mt-4 flex w-full flex-col items-center gap-1 rounded-[22px] border border-dashed p-8 text-center transition-colors', 'border-stone-300/80 bg-white/40 hover:border-stone-400 dark:border-white/15 dark:bg-white/[0.02] dark:hover:border-white/30')}
-          >
+          <button type="button" onClick={() => go('contacts')} className="mt-4 flex w-full flex-col items-center gap-1 rounded-[22px] border border-dashed border-stone-300/80 bg-white/40 p-8 text-center transition-colors hover:border-stone-400 dark:border-white/15 dark:bg-white/[0.02] dark:hover:border-white/30">
             <Network className="h-6 w-6 text-stone-700 dark:text-stone-200" />
             <span className="mt-1 text-sm font-semibold text-stone-900 dark:text-stone-50">{ui.network.locked[locale]}</span>
             <span className={cn('text-xs font-bold', ACCENT)}>{ui.network.upload[locale]}</span>
@@ -484,10 +534,9 @@ function Home({ locale, go }: { locale: Loc; go: (t: Tab) => void }) {
 /* ------------------------------------------------------------------- paths -- */
 
 function CertTimeline({ path, locale }: { path: CareerPath; locale: Loc }) {
-  const { certsDone, toggleCert } = useProgress();
+  const { certsDone, toggleCert, level } = useProgress();
   return (
     <div className="relative">
-      {/* connector spine */}
       <div className="absolute bottom-4 top-4 w-px bg-stone-200 ltr:left-[11px] rtl:right-[11px] dark:bg-white/10" />
       <div className="space-y-3">
         {path.certs.map((cert) => {
@@ -495,17 +544,7 @@ function CertTimeline({ path, locale }: { path: CareerPath; locale: Loc }) {
           const isCurrent = !isDone && cert.status === 'current';
           return (
             <div key={cert.name.en} className="relative ps-9">
-              {/* node */}
-              <span
-                className={cn(
-                  'absolute top-4 grid h-6 w-6 place-items-center rounded-full border text-[10px] ltr:left-0 rtl:right-0',
-                  isDone
-                    ? 'border-transparent bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900'
-                    : isCurrent
-                      ? 'border-amber-500 bg-amber-500/15 text-amber-700 dark:text-amber-300'
-                      : 'border-stone-300 bg-white text-stone-300 dark:border-white/15 dark:bg-stone-900 dark:text-stone-600',
-                )}
-              >
+              <span className={cn('absolute top-4 grid h-6 w-6 place-items-center rounded-full border text-[10px] ltr:left-0 rtl:right-0', isDone ? 'border-transparent bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900' : isCurrent ? 'border-amber-500 bg-amber-500/15 text-amber-700 dark:text-amber-300' : 'border-stone-300 bg-white text-stone-300 dark:border-white/15 dark:bg-[#161619] dark:text-stone-600')}>
                 {isDone ? <Check className="h-3.5 w-3.5" /> : <span className="h-1.5 w-1.5 rounded-full bg-current" />}
               </span>
               <Card className={cn('p-4', isDone && 'opacity-75')}>
@@ -514,7 +553,7 @@ function CertTimeline({ path, locale }: { path: CareerPath; locale: Loc }) {
                     <h4 className="font-semibold text-stone-900 dark:text-stone-50">{cert.name[locale]}</h4>
                     <p className="mt-1 text-[13px] leading-relaxed text-stone-500 dark:text-stone-400">{cert.desc[locale]}</p>
                   </div>
-                  <span className="shrink-0 rounded-xl bg-amber-500/[0.12] px-2 py-1 text-sm font-bold tabular-nums text-amber-700 dark:text-amber-300">+{cert.scoreAdd}</span>
+                  <span className="shrink-0 rounded-xl bg-amber-500/[0.12] px-2 py-1 text-sm font-bold tabular-nums text-amber-700 dark:text-amber-300">+{scaledAdd(cert.scoreAdd, level)}</span>
                 </div>
                 <div className="mt-3 flex flex-wrap items-center gap-2">
                   {cert.hadaf && <span className={cn('rounded-md px-2 py-1 text-[11px] font-semibold', SOFT)}>{ui.certs.hadaf[locale]}</span>}
@@ -543,7 +582,7 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
   const { level, certsDone } = useProgress();
   const score = path.scoreByLevel[level];
   const done = path.certs.filter((c) => certsDone[c.name.en]).length;
-  const totalScore = path.certs.reduce((s, c) => s + c.scoreAdd, 0);
+  const totalScore = path.certs.reduce((s, c) => s + scaledAdd(c.scoreAdd, level), 0);
   const picks = network ? rankConnections(network, path.targetCompanies).slice(0, 5) : [];
 
   return (
@@ -559,7 +598,7 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
           {path.primary && <span className={cn('rounded-full px-2.5 py-0.5 text-[10px] font-bold', PILL)}>★ {ui.paths.primary[locale]}</span>}
         </div>
         <p className="mt-1 text-sm text-stone-500 dark:text-stone-400">{path.targets[locale]}</p>
-        <div className="mt-5 grid grid-cols-4 gap-3">
+        <div className="mt-5 grid grid-cols-4 gap-2 sm:gap-3">
           {[
             { v: score, l: ui.paths.score[locale] },
             { v: `${done}/${path.certs.length}`, l: ui.paths.statCerts[locale] },
@@ -609,7 +648,7 @@ function Paths({ locale, selId, setSelId }: { locale: Loc; selId: string | null;
       <div className="mt-5 grid gap-3 sm:grid-cols-2 sm:gap-4">
         {paths.map((p) => {
           const score = p.scoreByLevel[level];
-          const totalScore = p.certs.reduce((s, c) => s + c.scoreAdd, 0);
+          const totalScore = p.certs.reduce((s, c) => s + scaledAdd(c.scoreAdd, level), 0);
           return (
             <button key={p.id} type="button" onClick={() => setSelId(p.id)} className={cn('group text-start', p.primary && 'sm:col-span-2')}>
               <Card className={cn('h-full p-5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.45)]', p.primary && 'border-amber-500/30 dark:border-amber-400/20')}>
@@ -617,7 +656,7 @@ function Paths({ locale, selId, setSelId }: { locale: Loc; selId: string | null;
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
                       <h3 className="text-[15px] font-semibold text-stone-900 dark:text-stone-50">{p.name[locale]}</h3>
-                      {p.primary && <span className={cn('rounded-full px-2 py-0.5 text-[9.5px] font-bold', 'bg-amber-500/15 text-amber-700 dark:text-amber-300')}>★ {ui.paths.primary[locale]}</span>}
+                      {p.primary && <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[9.5px] font-bold text-amber-700 dark:text-amber-300">★ {ui.paths.primary[locale]}</span>}
                     </div>
                     <p className="mt-1 text-[13px] text-stone-500 dark:text-stone-400">{p.targets[locale]}</p>
                   </div>
@@ -648,15 +687,7 @@ function Chips<T extends string>({ label, options, value, onChange }: { label: s
     <div className="flex items-center gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       <span className="shrink-0 text-xs font-semibold text-stone-400 dark:text-stone-500">{label}:</span>
       {options.map((o) => (
-        <button
-          key={o.id}
-          type="button"
-          onClick={() => onChange(o.id)}
-          className={cn(
-            'shrink-0 rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors',
-            value === o.id ? 'border-stone-900 bg-stone-900 text-white dark:border-stone-100 dark:bg-stone-100 dark:text-stone-900' : GHOST,
-          )}
-        >
+        <button key={o.id} type="button" onClick={() => onChange(o.id)} className={cn('shrink-0 rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors', value === o.id ? 'border-stone-900 bg-stone-900 text-white dark:border-stone-100 dark:bg-stone-100 dark:text-stone-900' : GHOST)}>
           {o.label}
         </button>
       ))}
@@ -666,9 +697,7 @@ function Chips<T extends string>({ label, options, value, onChange }: { label: s
 
 function NetworkPanel({ locale, count, onFile, onClear }: { locale: Loc; count: number | null; onFile: (f: File) => void; onClear: () => void }) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const Picker = (
-    <input ref={inputRef} type="file" accept=".csv,text/csv" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) onFile(f); e.target.value = ''; }} />
-  );
+  const Picker = <input ref={inputRef} type="file" accept=".csv,text/csv" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) onFile(f); e.target.value = ''; }} />;
   if (count !== null) {
     return (
       <Card className="mt-4 flex flex-wrap items-center justify-between gap-3 p-4">
@@ -899,6 +928,265 @@ function Tracker({ locale }: { locale: Loc }) {
   );
 }
 
+/* ------------------------------------------------------------ opportunities -- */
+
+function SectionTitle({ icon: Icon, title, sub }: { icon: typeof GraduationCap; title: string; sub?: string }) {
+  return (
+    <div className="mb-3 flex items-start gap-2.5">
+      <div className={cn('grid h-9 w-9 shrink-0 place-items-center rounded-xl', SOFT)}><Icon className={cn('h-5 w-5', ACCENT)} /></div>
+      <div>
+        <h2 className="text-base font-semibold text-stone-900 dark:text-stone-50">{title}</h2>
+        {sub && <p className="text-[12.5px] text-stone-400 dark:text-stone-500">{sub}</p>}
+      </div>
+    </div>
+  );
+}
+
+function Opportunities({ locale }: { locale: Loc }) {
+  const plan = usePlan();
+  const { level } = useProgress();
+  const field = plan.primaryPath.icon as Exclude<FieldTag, 'all'>;
+  const isEntry = level === 'entry';
+
+  const days = [...careerDays].sort((a, b) => {
+    const ra = a.fields.includes(field) || a.fields.includes('all') ? 0 : 1;
+    const rb = b.fields.includes(field) || b.fields.includes('all') ? 0 : 1;
+    return ra - rb;
+  });
+  const programs = masters[field] ?? masters.energy;
+  const targetCompanies = useMemo(() => {
+    const seen = new Set<string>();
+    const out: { name: { ar: string; en: string }; url: string }[] = [];
+    for (const t of planTargets(plan)) {
+      const url = careersUrlFor(t);
+      const entry = companyCareers.find((e) => e.url === url);
+      if (url && entry && !seen.has(url)) {
+        seen.add(url);
+        out.push({ name: entry.name, url });
+      }
+    }
+    return out;
+  }, [plan]);
+  const [copied, setCopied] = useState(false);
+  const refUrl = typeof window !== 'undefined' ? referralLink(window.location.origin, locale, plan.slug) : '';
+  const copyRef = async () => {
+    try {
+      await navigator.clipboard.writeText(refUrl);
+    } catch {
+      /* ignore */
+    }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
+  return (
+    <div className="space-y-7">
+      <div>
+        <Eyebrow>{ui.opp.eyebrow[locale]}</Eyebrow>
+        <h1 className="mt-2 text-2xl font-semibold tracking-tight text-stone-900 dark:text-stone-50">{ui.opp.title[locale]}</h1>
+        <p className="mt-1 text-sm text-stone-500 dark:text-stone-400">{ui.opp.sub[locale]}</p>
+      </div>
+
+      {/* Tamheer */}
+      <Card className={cn('p-5 sm:p-6', isEntry && 'border-amber-500/30 dark:border-amber-400/25')}>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <SectionTitle icon={GraduationCap} title={ui.opp.tamheerTitle[locale]} sub={ui.opp.tamheerDesc[locale]} />
+          {isEntry && <span className="rounded-full bg-amber-500/15 px-2.5 py-1 text-[11px] font-bold text-amber-700 dark:text-amber-300">{ui.opp.tamheerEntryHint[locale]}</span>}
+        </div>
+        <div className="mt-2 grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end">
+          <div>
+            <div className="text-[11px] font-bold uppercase tracking-wide text-stone-400 dark:text-stone-500">{ui.opp.tamheerEligible[locale]}</div>
+            <ul className="mt-2 space-y-1.5">
+              {tamheer.eligibility.map((e, i) => (
+                <li key={i} className="flex items-start gap-2 text-[13px] text-stone-600 dark:text-stone-300">
+                  <Check className={cn('mt-0.5 h-3.5 w-3.5 shrink-0', ACCENT)} /> {e[locale]}
+                </li>
+              ))}
+            </ul>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <span className={cn('rounded-md px-2 py-1 text-[11px] font-semibold', SOFT)}>{tamheer.stipend[locale]}</span>
+              <span className={cn('rounded-md px-2 py-1 text-[11px] font-semibold', SOFT)}>{tamheer.duration[locale]}</span>
+            </div>
+          </div>
+          <a href={tamheer.link} target="_blank" rel="noopener noreferrer" className={cn('inline-flex items-center justify-center gap-1.5 rounded-full px-4 py-2.5 text-sm font-bold', PILL)}>
+            {ui.opp.tamheerApply[locale]} <ArrowUpRight className="h-4 w-4" />
+          </a>
+        </div>
+      </Card>
+
+      {/* Career days */}
+      <div>
+        <SectionTitle icon={CalendarDays} title={ui.opp.careerDaysTitle[locale]} sub={ui.opp.careerDaysSub[locale]} />
+        <div className="grid gap-3 sm:grid-cols-2">
+          {days.map((d, i) => {
+            const relevant = d.fields.includes(field) || d.fields.includes('all');
+            return (
+              <a key={i} href={d.link} target="_blank" rel="noopener noreferrer" className="group">
+                <Card className="flex h-full items-start gap-3 p-4 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <h3 className="truncate text-[14px] font-semibold text-stone-900 dark:text-stone-50">{d.title[locale]}</h3>
+                      {relevant && <span className="shrink-0 rounded-full bg-amber-500/15 px-1.5 py-0.5 text-[9.5px] font-bold text-amber-700 dark:text-amber-300">{ui.opp.relevantToYou[locale]}</span>}
+                    </div>
+                    <p className="mt-0.5 truncate text-[12px] text-stone-500 dark:text-stone-400">{d.org[locale]}</p>
+                    <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11.5px] text-stone-400 dark:text-stone-500">
+                      <span>{d.when[locale]}</span>
+                      <span>· {d.city[locale]}</span>
+                    </div>
+                  </div>
+                  <ArrowUpRight className="h-4 w-4 shrink-0 text-stone-300 transition-colors group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
+                </Card>
+              </a>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Masters */}
+      <div>
+        <SectionTitle icon={GraduationCap} title={ui.opp.mastersTitle[locale]} sub={ui.opp.mastersSub[locale]} />
+        <div className="grid gap-3 sm:grid-cols-3">
+          {programs.map((p, i) => (
+            <a key={i} href={p.link} target="_blank" rel="noopener noreferrer" className="group">
+              <Card className="flex h-full flex-col p-4 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]">
+                <div className="text-[14px] font-semibold text-stone-900 dark:text-stone-50">{p.uni[locale]}</div>
+                <div className="mt-0.5 text-[12.5px] text-stone-600 dark:text-stone-300">{p.program[locale]}</div>
+                <div className="mt-2 flex items-center gap-1 text-[11.5px] text-stone-400 dark:text-stone-500">
+                  <Globe className="h-3 w-3" /> {p.location[locale]}
+                </div>
+              </Card>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      {/* Portals + company careers */}
+      <div className="grid gap-5 lg:grid-cols-2">
+        <div>
+          <SectionTitle icon={Globe} title={ui.opp.portalsTitle[locale]} />
+          <div className="grid gap-2.5 sm:grid-cols-2">
+            {nationalPortals.map((p, i) => (
+              <a key={i} href={p.url} target="_blank" rel="noopener noreferrer" className="group">
+                <Card className="flex items-center gap-3 p-3.5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]">
+                  <div className="min-w-0 flex-1">
+                    <div className="text-[13.5px] font-semibold text-stone-900 dark:text-stone-50">{p.name[locale]}</div>
+                    <div className="truncate text-[11.5px] text-stone-400 dark:text-stone-500">{p.desc[locale]}</div>
+                  </div>
+                  <ArrowUpRight className="h-4 w-4 shrink-0 text-stone-300 group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
+                </Card>
+              </a>
+            ))}
+          </div>
+        </div>
+        {targetCompanies.length > 0 && (
+          <div>
+            <SectionTitle icon={Briefcase} title={ui.opp.companyPortalsTitle[locale]} />
+            <div className="grid gap-2.5 sm:grid-cols-2">
+              {targetCompanies.map((c, i) => (
+                <a key={i} href={c.url} target="_blank" rel="noopener noreferrer" className="group">
+                  <Card className="flex items-center gap-3 p-3.5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]">
+                    <span className="min-w-0 flex-1 truncate text-[13.5px] font-semibold text-stone-900 dark:text-stone-50">{c.name[locale]}</span>
+                    <span className={cn('inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold', SOFT)}>{ui.opp.apply[locale]} <ArrowUpRight className="h-3 w-3" /></span>
+                  </Card>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Guides */}
+      <div className="grid gap-5 lg:grid-cols-2">
+        <Card className="p-5">
+          <SectionTitle icon={FileText} title={ui.opp.cvGuideTitle[locale]} />
+          <ul className="space-y-2">
+            {cvGuide.map((t, i) => (
+              <li key={i} className="flex items-start gap-2 text-[13px] text-stone-600 dark:text-stone-300">
+                <span className={cn('mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500')} /> {t[locale]}
+              </li>
+            ))}
+          </ul>
+        </Card>
+        <Card className="p-5">
+          <SectionTitle icon={MessageCircle} title={ui.opp.interviewTitle[locale]} />
+          <ul className="space-y-2">
+            {interviewTips.map((t, i) => (
+              <li key={i} className="flex items-start gap-2 text-[13px] text-stone-600 dark:text-stone-300">
+                <span className={cn('mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500')} /> {t[locale]}
+              </li>
+            ))}
+          </ul>
+        </Card>
+      </div>
+
+      {/* Referral */}
+      <Card className="overflow-hidden p-5 sm:p-6">
+        <div className="flex items-start gap-3">
+          <div className={cn('grid h-10 w-10 shrink-0 place-items-center rounded-xl', SOFT)}><Gift className={cn('h-5 w-5', ACCENT)} /></div>
+          <div className="min-w-0">
+            <h2 className="text-base font-semibold text-stone-900 dark:text-stone-50">{ui.referral.title[locale]}</h2>
+            <p className="mt-1 text-[13px] leading-relaxed text-stone-500 dark:text-stone-400">{ui.referral.body[locale]}</p>
+          </div>
+        </div>
+        <div className="mt-4">
+          <div className="text-[11px] font-bold uppercase tracking-wide text-stone-400 dark:text-stone-500">{ui.referral.yourLink[locale]}</div>
+          <div className="mt-2 flex flex-col gap-2 sm:flex-row">
+            <div className={cn('min-w-0 flex-1 truncate rounded-full px-4 py-2.5 text-[13px] font-medium text-stone-600 dark:text-stone-300', INSET)} dir="ltr">{refUrl}</div>
+            <div className="flex gap-2">
+              <button type="button" onClick={copyRef} className={cn('inline-flex flex-1 items-center justify-center gap-1.5 rounded-full px-4 py-2.5 text-sm font-bold sm:flex-none', copied ? cn('text-stone-700 dark:text-stone-200', SOFT) : PILL)}>
+                {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />} {copied ? ui.referral.copied[locale] : ui.referral.copy[locale]}
+              </button>
+            </div>
+          </div>
+          <p className="mt-2 text-[11.5px] text-stone-400 dark:text-stone-500">{ui.referral.pending[locale]}</p>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------ feedback footer -- */
+
+function FeedbackFooter({ locale }: { locale: Loc }) {
+  const [rating, setRating] = useState(0);
+  const [text, setText] = useState('');
+  const [sent, setSent] = useState(false);
+
+  return (
+    <footer className="mx-auto w-full max-w-5xl px-5 pb-12 sm:px-8">
+      <Card className="p-5 sm:p-6">
+        {sent ? (
+          <div className="flex items-center justify-center gap-2 py-4 text-center text-sm font-semibold text-stone-700 dark:text-stone-200">
+            <Check className={cn('h-4 w-4', ACCENT)} /> {ui.feedback.thanks[locale]}
+          </div>
+        ) : (
+          <>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <h2 className="text-base font-semibold text-stone-900 dark:text-stone-50">{ui.feedback.title[locale]}</h2>
+                <p className="text-[12.5px] text-stone-400 dark:text-stone-500">{ui.feedback.sub[locale]}</p>
+              </div>
+              <div className="flex items-center gap-1">
+                {[1, 2, 3, 4, 5].map((n) => (
+                  <button key={n} type="button" onClick={() => setRating(n)} aria-label={`${ui.feedback.rate[locale]} ${n}`} className="p-0.5">
+                    <Star className={cn('h-5 w-5 transition-colors', n <= rating ? 'fill-amber-400 text-amber-400' : 'text-stone-300 dark:text-stone-600')} />
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+              <input value={text} onChange={(e) => setText(e.target.value)} placeholder={ui.feedback.placeholder[locale]} className={cn('min-w-0 flex-1 rounded-full px-4 py-2.5 text-sm text-stone-900 outline-none placeholder:text-stone-400 dark:text-stone-50 dark:placeholder:text-stone-500', INSET)} />
+              <button type="button" disabled={!text.trim() && rating === 0} onClick={() => setSent(true)} className={cn('inline-flex items-center justify-center gap-1.5 rounded-full px-5 py-2.5 text-sm font-bold transition-opacity disabled:opacity-40', PILL)}>
+                <Send className="h-4 w-4" /> {ui.feedback.send[locale]}
+              </button>
+            </div>
+          </>
+        )}
+      </Card>
+    </footer>
+  );
+}
+
 /* ------------------------------------------------------------ command palette -- */
 
 const NAV: { id: Tab; Icon: typeof LayoutDashboard }[] = [
@@ -906,6 +1194,7 @@ const NAV: { id: Tab; Icon: typeof LayoutDashboard }[] = [
   { id: 'paths', Icon: Compass },
   { id: 'contacts', Icon: Users },
   { id: 'tracker', Icon: Activity },
+  { id: 'opportunities', Icon: Briefcase },
 ];
 
 function CommandPalette({ open, setOpen, locale, go, openPath }: { open: boolean; setOpen: (v: boolean) => void; locale: Loc; go: (t: Tab) => void; openPath: (id: string) => void }) {
@@ -939,25 +1228,12 @@ function CommandPalette({ open, setOpen, locale, go, openPath }: { open: boolean
   return (
     <AnimatePresence>
       {open && (
-        <motion.div className="fixed inset-0 z-[100] flex items-start justify-center p-4 pt-[14vh]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-          <div className="absolute inset-0 bg-stone-900/30 backdrop-blur-sm dark:bg-black/50" onClick={() => setOpen(false)} />
-          <motion.div
-            initial={{ opacity: 0, y: -12, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -8, scale: 0.98 }}
-            transition={SPRING}
-            className={cn('relative w-full max-w-lg overflow-hidden p-2', CARD)}
-          >
+        <motion.div className="fixed inset-0 z-[100] flex items-start justify-center p-4 pt-[12vh]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <div className="absolute inset-0 bg-stone-900/30 backdrop-blur-sm dark:bg-black/60" onClick={() => setOpen(false)} />
+          <motion.div initial={{ opacity: 0, y: -12, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -8, scale: 0.98 }} transition={SPRING} className={cn('relative w-full max-w-lg overflow-hidden p-2', CARD)}>
             <div className="flex items-center gap-2.5 px-3 py-2">
               <Search className="h-4 w-4 text-stone-400" />
-              <input
-                ref={inputRef}
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-                onKeyDown={onKey}
-                placeholder={ui.cmd.placeholder[locale]}
-                className="w-full bg-transparent text-[15px] text-stone-900 outline-none placeholder:text-stone-400 dark:text-stone-50 dark:placeholder:text-stone-500"
-              />
+              <input ref={inputRef} value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={onKey} placeholder={ui.cmd.placeholder[locale]} className="w-full bg-transparent text-[15px] text-stone-900 outline-none placeholder:text-stone-400 dark:text-stone-50 dark:placeholder:text-stone-500" />
               <kbd className={cn('rounded-md px-1.5 py-0.5 text-[10px] font-bold', SOFT)}>ESC</kbd>
             </div>
             <div className="mt-1 max-h-[46vh] overflow-y-auto px-1 pb-1">
@@ -965,12 +1241,7 @@ function CommandPalette({ open, setOpen, locale, go, openPath }: { open: boolean
                 <p className="px-3 py-6 text-center text-sm text-stone-400">{ui.contacts.empty[locale]}</p>
               ) : (
                 filtered.map((c, i) => (
-                  <button
-                    key={c.id}
-                    type="button"
-                    onClick={() => { c.run(); setOpen(false); }}
-                    className={cn('group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-start transition-colors', i === 0 ? 'bg-stone-900/[0.05] dark:bg-white/[0.06]' : 'hover:bg-stone-900/[0.04] dark:hover:bg-white/[0.04]')}
-                  >
+                  <button key={c.id} type="button" onClick={() => { c.run(); setOpen(false); }} className={cn('group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-start transition-colors', i === 0 ? 'bg-stone-900/[0.05] dark:bg-white/[0.06]' : 'hover:bg-stone-900/[0.04] dark:hover:bg-white/[0.04]')}>
                     <c.Icon className="h-4 w-4 shrink-0 text-stone-500 dark:text-stone-400" />
                     <span className="min-w-0 flex-1 truncate text-sm font-semibold text-stone-800 dark:text-stone-100">{c.label}</span>
                     <span className="shrink-0 text-[10.5px] font-medium uppercase tracking-wide text-stone-400 dark:text-stone-500">{c.hint}</span>
@@ -1014,34 +1285,15 @@ function Shell() {
   }, []);
 
   return (
-    <div className="relative min-h-dvh bg-[#f7f6f2] text-stone-900 dark:bg-[#0c0c0f] dark:text-stone-100">
-      {/* Background: masked grid + accent wash + film grain */}
+    <div className="relative min-h-dvh bg-[#f7f6f2] text-stone-900 dark:bg-[#0a0a0b] dark:text-stone-100">
       <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-        <div
-          className="absolute inset-0 dark:hidden"
-          style={{
-            backgroundImage:
-              'linear-gradient(to right, rgba(28,25,23,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(28,25,23,0.05) 1px, transparent 1px)',
-            backgroundSize: '54px 54px',
-            maskImage: 'radial-gradient(ellipse 75% 55% at 50% 0%, #000 35%, transparent 78%)',
-            WebkitMaskImage: 'radial-gradient(ellipse 75% 55% at 50% 0%, #000 35%, transparent 78%)',
-          }}
-        />
-        <div
-          className="absolute inset-0 hidden dark:block"
-          style={{
-            backgroundImage:
-              'linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)',
-            backgroundSize: '54px 54px',
-            maskImage: 'radial-gradient(ellipse 75% 55% at 50% 0%, #000 35%, transparent 78%)',
-            WebkitMaskImage: 'radial-gradient(ellipse 75% 55% at 50% 0%, #000 35%, transparent 78%)',
-          }}
-        />
-        <div className="absolute -top-40 left-1/2 h-[34rem] w-[56rem] -translate-x-1/2 rounded-full bg-amber-300/25 blur-[150px] dark:bg-amber-500/[0.08]" />
-        <div className="absolute inset-0 opacity-[0.04] mix-blend-overlay dark:opacity-[0.05]" style={{ backgroundImage: NOISE }} />
+        <div className="absolute inset-0 dark:hidden" style={{ backgroundImage: 'linear-gradient(to right, rgba(28,25,23,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(28,25,23,0.05) 1px, transparent 1px)', backgroundSize: '54px 54px', maskImage: 'radial-gradient(ellipse 75% 55% at 50% 0%, #000 35%, transparent 78%)', WebkitMaskImage: 'radial-gradient(ellipse 75% 55% at 50% 0%, #000 35%, transparent 78%)' }} />
+        <div className="absolute inset-0 hidden dark:block" style={{ backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '54px 54px', maskImage: 'radial-gradient(ellipse 75% 55% at 50% 0%, #000 35%, transparent 78%)', WebkitMaskImage: 'radial-gradient(ellipse 75% 55% at 50% 0%, #000 35%, transparent 78%)' }} />
+        <div className="absolute -top-40 left-1/2 h-[34rem] w-[56rem] -translate-x-1/2 rounded-full bg-amber-300/25 blur-[150px] dark:bg-amber-500/[0.12]" />
+        <div className="absolute inset-0 opacity-[0.04] mix-blend-overlay dark:opacity-[0.06]" style={{ backgroundImage: NOISE }} />
       </div>
 
-      <header className="sticky top-0 z-50 border-b border-stone-200/70 bg-[#f7f6f2]/80 backdrop-blur-xl dark:border-white/[0.07] dark:bg-[#0c0c0f]/80">
+      <header className="sticky top-0 z-50 border-b border-stone-200/70 bg-[#f7f6f2]/80 backdrop-blur-xl dark:border-white/[0.07] dark:bg-[#0a0a0b]/80">
         <div className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between px-5 sm:px-8">
           <div className="flex items-center gap-2.5">
             <span className="grid h-8 w-8 place-items-center rounded-xl bg-stone-900 font-extrabold text-white dark:bg-stone-100 dark:text-stone-900">م</span>
@@ -1066,43 +1318,35 @@ function Shell() {
         </div>
       </header>
 
-      {/* Floating segmented nav with a morphing pill */}
-      <div className="sticky top-[72px] z-40 mt-4 flex justify-center px-4">
-        <nav className={cn('flex gap-1 rounded-full p-1', CARD)}>
+      {/* Floating segmented nav (labels collapse to icons on phone) */}
+      <div className="sticky top-[68px] z-40 mt-4 flex justify-center px-4">
+        <nav className={cn('flex gap-0.5 rounded-full p-1 sm:gap-1', CARD)}>
           {NAV.map((n) => {
             const on = tab === n.id;
             return (
-              <button
-                key={n.id}
-                type="button"
-                onClick={() => go(n.id)}
-                className={cn('relative flex items-center gap-2 rounded-full px-3.5 py-2 text-sm font-semibold transition-colors', on ? 'text-white dark:text-stone-900' : 'text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100')}
-              >
+              <button key={n.id} type="button" onClick={() => go(n.id)} className={cn('relative flex items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold transition-colors sm:px-3.5', on ? 'text-white dark:text-stone-900' : 'text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100')}>
                 {on && <motion.span layoutId="v4-nav" className="absolute inset-0 -z-10 rounded-full bg-stone-900 dark:bg-stone-100" transition={SPRING} />}
-                <n.Icon className="h-4 w-4" />
-                <span>{ui.nav[n.id][locale]}</span>
+                <n.Icon className="h-4 w-4 shrink-0" />
+                <span className="hidden sm:inline">{ui.nav[n.id][locale]}</span>
               </button>
             );
           })}
         </nav>
       </div>
 
-      <main className="mx-auto w-full max-w-5xl px-5 pb-16 pt-7 sm:px-8">
+      <main className="mx-auto w-full max-w-5xl px-5 pb-10 pt-7 sm:px-8">
         <AnimatePresence mode="wait">
-          <motion.div
-            key={tab + (pathSel ?? '')}
-            initial={reduce ? false : { opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={reduce ? undefined : { opacity: 0, y: -6 }}
-            transition={{ duration: 0.26, ease: EASE }}
-          >
-            {tab === 'home' && <Home locale={locale} go={go} />}
+          <motion.div key={tab + (pathSel ?? '')} initial={reduce ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? undefined : { opacity: 0, y: -6 }} transition={{ duration: 0.26, ease: EASE }}>
+            {tab === 'home' && <Home locale={locale} go={go} openPath={openPath} />}
             {tab === 'paths' && <Paths locale={locale} selId={pathSel} setSelId={setPathSel} />}
             {tab === 'contacts' && <Contacts locale={locale} />}
             {tab === 'tracker' && <Tracker locale={locale} />}
+            {tab === 'opportunities' && <Opportunities locale={locale} />}
           </motion.div>
         </AnimatePresence>
       </main>
+
+      <FeedbackFooter locale={locale} />
 
       <CommandPalette open={cmdOpen} setOpen={setCmdOpen} locale={locale} go={go} openPath={openPath} />
     </div>

@@ -80,6 +80,22 @@ export const LEVELS: { id: Level; label: LS }[] = [
   { id: 'director', label: { ar: 'قيادي', en: 'Director' } },
 ];
 
+// A credential's marginal value depends on seniority: it matters most at mid,
+// less at entry (you are already near the ceiling) and at director (where the
+// real gap is experience, not certificates). So the same cert adds a different
+// amount at each level. We scale one base delta by a per-level weight rather
+// than hand-authoring a number per cert per level.
+export const LEVEL_DELTA_WEIGHT: Record<Level, number> = {
+  entry: 0.55,
+  mid: 1,
+  senior: 0.85,
+  director: 0.6,
+};
+
+export function scaledAdd(baseDelta: number, level: Level): number {
+  return Math.max(1, Math.round(baseDelta * LEVEL_DELTA_WEIGHT[level]));
+}
+
 export type Contact = {
   id: string;
   name: LS;
@@ -455,6 +471,19 @@ export const tracker = {
   ] as Activity[],
 };
 
+/* ---------------------------------------------------------------- cv review -- */
+// Authored when the founder uploads the CV to Claude at generation time, so only
+// derived text ships in the plan (never the raw CV). Hygiene issues each carry an
+// id so the customer can mark them Fixed; the whole review hides once all are done.
+
+export type CvIssueKind = 'length' | 'typo' | 'format' | 'bullet' | 'contact' | 'summary';
+export type CvIssue = { id: string; kind: CvIssueKind; text: LS; severity: 'high' | 'med' | 'low' };
+export type CvReview = { headline: LS; strengths: LS[]; issues: CvIssue[] };
+
+// What blocks the NEXT level, per level. `certs` reference cert names already in
+// the roadmap (so they deep-link); experience/other gaps cannot be fixed by a cert.
+export type LevelGap = { experience?: LS; certs: string[]; other?: LS[] };
+
 /* -------------------------------------------------------------- customer plan -- */
 // Everything that varies per customer. The dashboard renders ONE plan through
 // <PlanProvider>, so each customer is fully isolated and reachable at their own
@@ -468,6 +497,8 @@ export type CustomerPlan = {
   sectors: string[]; // HR DB sectors relevant to this customer (SECTOR_LABELS keys)
   profile: typeof profile;
   cvScore: typeof cvScore;
+  cvReview: CvReview;
+  levelGaps: Record<Level, LevelGap>;
   journey: typeof journey;
   connections: Contact[];
   hrContacts: Contact[]; // filled per request from the real DB by the page
@@ -475,6 +506,43 @@ export type CustomerPlan = {
   primaryPath: CareerPath;
   templates: Template[];
   tracker: typeof tracker;
+};
+
+const aliCvReview: CvReview = {
+  headline: {
+    ar: 'سيرتك قوية بأساس متين، يفصلك عنها القليل لإغلاق الفجوات.',
+    en: 'Strong foundation, just a few gaps to close.',
+  },
+  strengths: [
+    { ar: 'ماجستير اقتصاديات الطاقة من كورنيل', en: 'M.Eng Energy Economics, Cornell' },
+    { ar: 'سنتان خبرة تشغيلية في رأس الخير', en: '2 years hands-on operations at Ras Al-Khair' },
+    { ar: 'ثنائي اللغة + مشروع نمذجة تنبؤية بالذكاء الاصطناعي', en: 'Bilingual + an AI predictive-modeling project' },
+    { ar: 'هندسة من مانشستر مع شهادات معتمدة', en: 'Manchester engineering degree with certifications' },
+  ],
+  issues: [
+    { id: 'bullets', kind: 'bullet', text: { ar: 'أضف أرقامًا وأثرًا قابلًا للقياس لأبرز 3 إنجازات', en: 'Add concrete metrics and impact to your top 3 bullets' }, severity: 'high' },
+    { id: 'length', kind: 'length', text: { ar: 'اختصر السيرة إلى صفحتين كحد أقصى', en: 'Trim the CV to 2 pages maximum' }, severity: 'med' },
+    { id: 'summary', kind: 'summary', text: { ar: 'أضف ملخصًا من سطرين موجّهًا للاستثمار في الطاقة', en: 'Add a 2-line summary aimed at energy investment' }, severity: 'med' },
+    { id: 'keywords', kind: 'format', text: { ar: 'استخدم كلمات مفتاحية من إعلانات الصندوق وكابسارك', en: 'Mirror keywords from PIF and KAPSARC job posts' }, severity: 'low' },
+  ],
+};
+
+const aliLevelGaps: Record<Level, LevelGap> = {
+  entry: { certs: ['CME-1'] },
+  mid: { experience: { ar: 'نحو سنتين إضافيتين في دور مالي أو استثماري', en: '≈2 more years in a finance or investment role' }, certs: ['FMVA', 'CFA Level 1'] },
+  senior: {
+    experience: { ar: '5+ سنوات تشمل التعرض للصفقات', en: '5+ years including deal exposure' },
+    certs: ['CFA Level 1', 'CFA Level 2'],
+    other: [{ ar: 'قِدت صفقة أو تفويضًا استثماريًا', en: 'Led a transaction or investment mandate' }],
+  },
+  director: {
+    experience: { ar: '10+ سنوات مع خبرة قيادية', en: '10+ years with leadership experience' },
+    certs: ['CFA Level 2'],
+    other: [
+      { ar: 'مسؤولية عن الأرباح والخسائر (P&L)', en: 'P&L ownership' },
+      { ar: 'بنيت أو قدت فريقًا', en: 'Built or led a team' },
+    ],
+  },
 };
 
 export const aliPlan: CustomerPlan = {
@@ -492,6 +560,8 @@ export const aliPlan: CustomerPlan = {
   ],
   profile,
   cvScore,
+  cvReview: aliCvReview,
+  levelGaps: aliLevelGaps,
   journey,
   connections: [], // the customer's own network, loaded client-side from their CSV
   hrContacts: [], // injected by the page from hr-db.ts (real, tier-capped)
@@ -509,6 +579,121 @@ export function getPlan(slug: string): CustomerPlan | undefined {
   return plans[slug];
 }
 
+/* ----------------------------------------------------------- opportunities -- */
+// Mostly shared (not per-customer) content for the «فرص / Opportunities» tab.
+// Career-day dates use season framing on purpose so they do not go stale; refresh
+// the list each quarter. Field tags (finance/energy/consulting/government/tech)
+// let the tab surface what matches the customer's primary area first.
+
+export type FieldTag = 'finance' | 'energy' | 'consulting' | 'government' | 'tech' | 'all';
+
+export const tamheer = {
+  link: 'https://www.taqat.sa',
+  stipend: { ar: '≈ 3,000 ريال شهريًا', en: '≈ 3,000 SAR / month' },
+  duration: { ar: 'حتى 6 أشهر', en: 'Up to 6 months' },
+  eligibility: [
+    { ar: 'سعودي/ة خرّيج دبلوم أو بكالوريوس فأعلى', en: 'Saudi diploma/bachelor graduate or above' },
+    { ar: 'لم يمضِ على تخرّجك أكثر من 6 أشهر (أو غير مسجّل في التأمينات)', en: 'Graduated within ~6 months (or not registered in GOSI)' },
+    { ar: 'غير موظّف حاليًا', en: 'Not currently employed' },
+  ] as LS[],
+};
+
+export const careerDays: { title: LS; org: LS; when: LS; city: LS; fields: FieldTag[]; link: string }[] = [
+  { title: { ar: 'يوم المهنة - جامعة الملك فهد', en: 'KFUPM Career Day' }, org: { ar: 'جامعة الملك فهد للبترول والمعادن', en: 'KFUPM' }, when: { ar: 'سنويًا · فبراير', en: 'Annually · February' }, city: { ar: 'الظهران', en: 'Dhahran' }, fields: ['energy', 'tech'], link: 'https://www.kfupm.edu.sa' },
+  { title: { ar: 'مؤتمر القطاع المالي', en: 'Financial Sector Conference' }, org: { ar: 'البنك المركزي وهيئة السوق المالية', en: 'SAMA & CMA' }, when: { ar: 'سنويًا · الربع الأول', en: 'Annually · Q1' }, city: { ar: 'الرياض', en: 'Riyadh' }, fields: ['finance'], link: 'https://www.fsc.sa' },
+  { title: { ar: 'ليب التقني (LEAP)', en: 'LEAP Tech' }, org: { ar: 'وزارة الاتصالات', en: 'MCIT' }, when: { ar: 'سنويًا · فبراير', en: 'Annually · February' }, city: { ar: 'الرياض', en: 'Riyadh' }, fields: ['tech'], link: 'https://onegiantleap.com' },
+  { title: { ar: 'منتدى مسك العالمي', en: 'Misk Global Forum' }, org: { ar: 'مؤسسة مسك', en: 'Misk Foundation' }, when: { ar: 'سنويًا · الربع الرابع', en: 'Annually · Q4' }, city: { ar: 'الرياض', en: 'Riyadh' }, fields: ['all'], link: 'https://miskglobalforum.com' },
+  { title: { ar: 'ملتقى التوظيف - طاقات', en: 'Taqat Job Fair' }, org: { ar: 'صندوق تنمية الموارد البشرية (هدف)', en: 'HRDF (Hadaf)' }, when: { ar: 'دوريًا على مدار السنة', en: 'Recurring through the year' }, city: { ar: 'عدة مدن', en: 'Multiple cities' }, fields: ['all'], link: 'https://www.taqat.sa' },
+];
+
+export const masters: Record<Exclude<FieldTag, 'all'>, { uni: LS; program: LS; location: LS; link: string }[]> = {
+  finance: [
+    { uni: { ar: 'جامعة الملك فهد', en: 'KFUPM' }, program: { ar: 'ماجستير التمويل', en: 'MSc Finance' }, location: { ar: 'الظهران', en: 'Dhahran' }, link: 'https://www.kfupm.edu.sa' },
+    { uni: { ar: 'جامعة الفيصل', en: 'Alfaisal University' }, program: { ar: 'ماجستير إدارة أعمال - تمويل', en: 'MBA - Finance' }, location: { ar: 'الرياض', en: 'Riyadh' }, link: 'https://www.alfaisal.edu' },
+    { uni: { ar: 'كلية لندن للأعمال', en: 'London Business School' }, program: { ar: 'ماجستير التمويل', en: 'Masters in Finance' }, location: { ar: 'لندن', en: 'London' }, link: 'https://www.london.edu' },
+  ],
+  energy: [
+    { uni: { ar: 'جامعة الملك عبدالله (كاوست)', en: 'KAUST' }, program: { ar: 'علوم وهندسة الطاقة', en: 'Energy Science & Engineering' }, location: { ar: 'ثول', en: 'Thuwal' }, link: 'https://www.kaust.edu.sa' },
+    { uni: { ar: 'جامعة الملك فهد', en: 'KFUPM' }, program: { ar: 'هندسة البترول والطاقة', en: 'Petroleum & Energy Eng.' }, location: { ar: 'الظهران', en: 'Dhahran' }, link: 'https://www.kfupm.edu.sa' },
+    { uni: { ar: 'إمبريال كوليدج لندن', en: 'Imperial College London' }, program: { ar: 'سياسة وتمويل الطاقة', en: 'Energy Policy & Finance' }, location: { ar: 'لندن', en: 'London' }, link: 'https://www.imperial.ac.uk' },
+  ],
+  consulting: [
+    { uni: { ar: 'جامعة الملك عبدالله (كاوست)', en: 'KAUST' }, program: { ar: 'ماجستير إدارة الأعمال', en: 'MBA' }, location: { ar: 'ثول', en: 'Thuwal' }, link: 'https://www.kaust.edu.sa' },
+    { uni: { ar: 'إنسياد', en: 'INSEAD' }, program: { ar: 'ماجستير إدارة الأعمال', en: 'MBA' }, location: { ar: 'فونتينبلو/أبوظبي', en: 'Fontainebleau / Abu Dhabi' }, link: 'https://www.insead.edu' },
+    { uni: { ar: 'كلية لندن للأعمال', en: 'London Business School' }, program: { ar: 'ماجستير إدارة الأعمال', en: 'MBA' }, location: { ar: 'لندن', en: 'London' }, link: 'https://www.london.edu' },
+  ],
+  government: [
+    { uni: { ar: 'معهد الإدارة العامة', en: 'IPA / SPSP' }, program: { ar: 'السياسات العامة', en: 'Public Policy' }, location: { ar: 'الرياض', en: 'Riyadh' }, link: 'https://www.spsp.edu.sa' },
+    { uni: { ar: 'جامعة الملك سعود', en: 'King Saud University' }, program: { ar: 'ماجستير الإدارة العامة', en: 'Master of Public Admin.' }, location: { ar: 'الرياض', en: 'Riyadh' }, link: 'https://ksu.edu.sa' },
+    { uni: { ar: 'كلية كينيدي - هارفارد', en: 'Harvard Kennedy School' }, program: { ar: 'السياسات العامة (MPP)', en: 'Public Policy (MPP)' }, location: { ar: 'بوسطن', en: 'Boston' }, link: 'https://www.hks.harvard.edu' },
+  ],
+  tech: [
+    { uni: { ar: 'جامعة الملك عبدالله (كاوست)', en: 'KAUST' }, program: { ar: 'علوم الحاسب / الذكاء الاصطناعي', en: 'Computer Science / AI' }, location: { ar: 'ثول', en: 'Thuwal' }, link: 'https://www.kaust.edu.sa' },
+    { uni: { ar: 'جامعة الملك فهد', en: 'KFUPM' }, program: { ar: 'علوم الحاسب', en: 'Computer Science' }, location: { ar: 'الظهران', en: 'Dhahran' }, link: 'https://www.kfupm.edu.sa' },
+    { uni: { ar: 'جامعة كارنيجي ميلون', en: 'Carnegie Mellon' }, program: { ar: 'الذكاء الاصطناعي', en: 'Artificial Intelligence' }, location: { ar: 'بيتسبرغ', en: 'Pittsburgh' }, link: 'https://www.cmu.edu' },
+  ],
+};
+
+export const nationalPortals: { name: LS; desc: LS; url: string }[] = [
+  { name: { ar: 'جدارات', en: 'Jadarat' }, desc: { ar: 'المنصة الوطنية للتوظيف', en: 'National jobs platform' }, url: 'https://jadarat.sa' },
+  { name: { ar: 'قوى', en: 'Qiwa' }, desc: { ar: 'منصة سوق العمل', en: 'Labor market platform' }, url: 'https://www.qiwa.sa' },
+  { name: { ar: 'طاقات / تمهير', en: 'Taqat / Tamheer' }, desc: { ar: 'برامج هدف والتدريب', en: 'Hadaf programs & training' }, url: 'https://www.taqat.sa' },
+  { name: { ar: 'هدف', en: 'Hadaf (HRDF)' }, desc: { ar: 'دعم التوظيف والشهادات', en: 'Hiring & certification support' }, url: 'https://www.hrdf.org.sa' },
+];
+
+// Direct careers portals for the known target companies, matched by name fragments.
+export const companyCareers: { match: string[]; name: LS; url: string }[] = [
+  { match: ['public investment fund', 'pif', 'sanabil'], name: { ar: 'صندوق الاستثمارات العامة', en: 'PIF' }, url: 'https://www.pif.gov.sa/en/careers/' },
+  { match: ['aramco'], name: { ar: 'أرامكو السعودية', en: 'Saudi Aramco' }, url: 'https://www.aramco.com/en/careers' },
+  { match: ['acwa'], name: { ar: 'أكوا باور', en: 'ACWA Power' }, url: 'https://acwapower.com/en/careers/' },
+  { match: ['neom'], name: { ar: 'نيوم', en: 'NEOM' }, url: 'https://www.neom.com/en-us/careers' },
+  { match: ['sabic'], name: { ar: 'سابك', en: 'SABIC' }, url: 'https://www.sabic.com/en/careers' },
+  { match: ['kapsarc'], name: { ar: 'كابسارك', en: 'KAPSARC' }, url: 'https://www.kapsarc.org/careers/' },
+  { match: ['saudi national bank', 'snb', 'al ahli'], name: { ar: 'البنك الأهلي السعودي', en: 'Saudi National Bank' }, url: 'https://www.alahli.com/en-us/careers' },
+  { match: ['stc'], name: { ar: 'stc', en: 'stc' }, url: 'https://www.stc.com.sa/content/stc/sa/en/personal/about-stc/careers.html' },
+  { match: ['elm', 'علم'], name: { ar: 'علم', en: 'Elm' }, url: 'https://www.elm.sa/en/careers' },
+  { match: ['mckinsey'], name: { ar: 'ماكنزي', en: 'McKinsey' }, url: 'https://www.mckinsey.com/careers' },
+  { match: ['bcg', 'boston consulting'], name: { ar: 'بوسطن كونسلتنغ', en: 'BCG' }, url: 'https://careers.bcg.com' },
+  { match: ['strategy&', 'pwc'], name: { ar: 'ستراتيجي&', en: 'Strategy&' }, url: 'https://www.strategyand.pwc.com/m1/en/careers.html' },
+  { match: ['ministry of energy'], name: { ar: 'وزارة الطاقة', en: 'Ministry of Energy' }, url: 'https://jadarat.sa' },
+];
+
+export function careersUrlFor(companyEn: string): string | undefined {
+  const c = companyEn.toLowerCase();
+  return companyCareers.find((e) => e.match.some((m) => c.includes(m)))?.url;
+}
+
+// Generic, founder-curated CV and interview guidance (the same for everyone).
+export const cvGuide: LS[] = [
+  { ar: 'صفحة واحدة أو صفحتان كحد أقصى، بترتيب أنيق وثابت.', en: 'One page, two at most, with clean consistent formatting.' },
+  { ar: 'ابدأ كل نقطة بفعل قوي وأرفقها برقم أو أثر قابل للقياس.', en: 'Start each bullet with a strong verb and a measurable result.' },
+  { ar: 'رتّب الأكثر صلة بالوظيفة في الأعلى، واحذف الحشو.', en: 'Put the most role-relevant items first; cut filler.' },
+  { ar: 'طابق كلمات السيرة مع كلمات الإعلان الوظيفي.', en: 'Mirror keywords from the specific job posting.' },
+  { ar: 'راجع الأخطاء الإملائية واطلب من شخص آخر مراجعتها.', en: 'Proofread for typos and have someone else review it.' },
+  { ar: 'سيرة بالإنجليزية للشركات العالمية والاستشارات، وبالعربية لبعض الجهات الحكومية.', en: 'English CV for MNCs/consulting, Arabic for some government bodies.' },
+];
+
+export const interviewTips: LS[] = [
+  { ar: 'ابحث عن الشركة ومشاريعها الحديثة قبل المقابلة.', en: 'Research the company and its recent projects beforehand.' },
+  { ar: 'استخدم أسلوب STAR (موقف، مهمة، إجراء، نتيجة) للأسئلة السلوكية.', en: 'Use the STAR method (Situation, Task, Action, Result) for behavioral questions.' },
+  { ar: 'جهّز قصتك: لماذا هذا الدور ولماذا الآن.', en: 'Prepare your story: why this role and why now.' },
+  { ar: 'اعرف سيرتك جيدًا واستعد لشرح أي بند فيها.', en: 'Know your CV cold and be ready to explain any line.' },
+  { ar: 'للاستشارات: تدرّب على دراسات الحالة. للأدوار التقنية: راجع الأساسيات.', en: 'Consulting: practice cases. Technical roles: review fundamentals.' },
+  { ar: 'حضّر أسئلة ذكية تطرحها، وأرسل رسالة شكر بعد المقابلة.', en: 'Prepare smart questions to ask, and send a thank-you afterward.' },
+];
+
+/* ---------------------------------------------------------------- referral -- */
+// A referred friend lands on the MARKETING site (not a dashboard) with a code, so
+// they sign up and get 20% off. Enforcing the discount needs Moyasar checkout.
+
+export function referralCode(slug: string): string {
+  return (slug.split('-')[0] || slug).toUpperCase();
+}
+
+export function referralLink(origin: string, locale: Loc, slug: string): string {
+  return `${origin}/${locale}?ref=${referralCode(slug)}`;
+}
+
 /* ------------------------------------------------------------------- ui copy -- */
 
 export const ui = {
@@ -517,6 +702,7 @@ export const ui = {
     paths: { ar: 'المسارات', en: 'Paths' },
     contacts: { ar: 'التواصل', en: 'Contacts' },
     tracker: { ar: 'المتتبّع', en: 'Tracker' },
+    opportunities: { ar: 'فرص', en: 'Opportunities' },
   },
   shell: {
     greeting: { ar: 'أهلًا بعودتك', en: 'Welcome back' },
@@ -697,5 +883,57 @@ export const ui = {
     placeholder: { ar: 'ابحث أو انتقل…', en: 'Search or jump to…' },
     go: { ar: 'انتقال', en: 'Go' },
     openPath: { ar: 'افتح المسار', en: 'Open path' },
+  },
+  cvBlock: {
+    eyebrow: { ar: 'مراجعة سيرتك', en: 'Your CV review' },
+    strengths: { ar: 'نقاط قوتك', en: "What's working" },
+    needsPolish: { ar: 'تحتاج إلى تحسين', en: 'Needs polish' },
+    markFixed: { ar: 'تم الإصلاح', en: 'Mark fixed' },
+    fixed: { ar: 'تم', en: 'Fixed' },
+    polished: { ar: 'سيرتك مصقولة بالكامل', en: 'Your CV is fully polished' },
+    polishProgress: { ar: (a: number, b: number) => `أصلحت ${a} من ${b}`, en: (a: number, b: number) => `${a} of ${b} fixed` },
+    gapsTitle: { ar: 'ما الذي ينقصك للمستوى المستهدف', en: 'What you need for your target level' },
+    experience: { ar: 'الخبرة', en: 'Experience' },
+    certNeeded: { ar: 'شهادة مطلوبة', en: 'Certification' },
+    other: { ar: 'أخرى', en: 'Also' },
+    ready: { ar: 'أنت شبه جاهز لهذا المستوى!', en: "You're nearly ready for this level!" },
+  },
+  opp: {
+    eyebrow: { ar: 'فرص ومصادر', en: 'Opportunities & resources' },
+    title: { ar: 'أبعد من الشهادات', en: 'Beyond the certifications' },
+    sub: { ar: 'برامج حكومية، أيام مهنية، دراسات عليا، وبوابات التوظيف الرسمية، مع نصائح جاهزة.', en: 'Government programs, career days, graduate study, official job portals, plus ready tips.' },
+    tamheerTitle: { ar: 'برنامج تمهير', en: 'Tamheer program' },
+    tamheerDesc: { ar: 'تدريب على رأس العمل للخريجين السعوديين عبر هدف، مع مكافأة شهرية.', en: 'On-the-job training for Saudi graduates via Hadaf, with a monthly reward.' },
+    tamheerEligible: { ar: 'الشروط', en: 'Eligibility' },
+    tamheerApply: { ar: 'سجّل في طاقات', en: 'Register on Taqat' },
+    tamheerEntryHint: { ar: 'مناسب لك الآن كخرّيج في بداية المسار', en: 'A fit for you now as an early-career graduate' },
+    careerDaysTitle: { ar: 'الأيام المهنية والمعارض', en: 'Career days & fairs' },
+    careerDaysSub: { ar: 'تواريخ تقريبية، تحقّق من الموقع قبل الحضور.', en: 'Approximate timing, check the site before attending.' },
+    relevantToYou: { ar: 'يناسب مجالك', en: 'Matches your field' },
+    mastersTitle: { ar: 'الدراسات العليا', en: 'Graduate study' },
+    mastersSub: { ar: 'برامج قوية في مجالك، الخيارات السعودية أولًا.', en: 'Strong programs in your field, Saudi options first.' },
+    portalsTitle: { ar: 'بوابات التوظيف الرسمية', en: 'Official job portals' },
+    companyPortalsTitle: { ar: 'بوابات توظيف الشركات المستهدفة', en: 'Target company career portals' },
+    apply: { ar: 'تقديم', en: 'Apply' },
+    visit: { ar: 'زيارة', en: 'Visit' },
+    cvGuideTitle: { ar: 'كيف تكتب سيرة قوية', en: 'How to write a strong CV' },
+    interviewTitle: { ar: 'نصائح للمقابلات', en: 'Interview tips' },
+  },
+  referral: {
+    title: { ar: 'ادعُ صديقًا، واحصلا معًا على ميزة', en: 'Invite a friend, you both win' },
+    body: { ar: 'شارك رابطك: صديقك يحصل على خصم 20% عند الاشتراك، وأنت تحصل على إعادة تقييم مجانية لكل صديق ينضم.', en: 'Share your link: your friend gets 20% off when they join, and you get a free re-score for every friend who signs up.' },
+    yourLink: { ar: 'رابط الدعوة الخاص بك', en: 'Your invite link' },
+    copy: { ar: 'انسخ الرابط', en: 'Copy link' },
+    copied: { ar: 'تم النسخ', en: 'Copied' },
+    share: { ar: 'مشاركة', en: 'Share' },
+    pending: { ar: 'يُفعّل الخصم عند تشغيل الدفع.', en: 'The discount activates once checkout is live.' },
+  },
+  feedback: {
+    title: { ar: 'رأيك يهمّنا', en: 'We value your feedback' },
+    sub: { ar: 'كيف كانت تجربتك مع خطتك؟', en: 'How has your plan been so far?' },
+    placeholder: { ar: 'اكتب ملاحظتك هنا…', en: 'Write your feedback here…' },
+    rate: { ar: 'تقييمك', en: 'Your rating' },
+    send: { ar: 'إرسال', en: 'Send' },
+    thanks: { ar: 'شكرًا لك! وصلتنا ملاحظتك.', en: 'Thank you! We got your feedback.' },
   },
 } as const;
