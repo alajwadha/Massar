@@ -1106,19 +1106,19 @@ function Study({ locale }: { locale: Loc }) {
   const plan = usePlan();
   const { activePathId } = useProgress();
   const activePath = plan.paths.find((p) => p.id === (activePathId ?? plan.primaryPath.id)) ?? plan.primaryPath;
-  // Three majors that fit this path; each major gets its own three universities
-  // (one Saudi, one respected-but-gettable, one easier) strong in THAT field.
+  // Three majors that fit this path; each major gets its own four universities
+  // strong in THAT field, hardest to easiest (no Saudi in these tiers).
   const fields = activePath.gradFields;
   const primary = fields[0];
-  // Saudi part-time options that suit any of the path's majors, ordered with the
-  // ones nearest the customer's region first (their location comes from the CV).
+  // Only TWO Saudi options (study while working): best match for the path's majors,
+  // nearest the customer's region (from the CV) first.
   const region = plan.profile.region;
-  const partTime = partTimeSaudi
-    .filter((u) => u.fields.some((f) => fields.includes(f)))
-    .sort((a, b) => (region ? Number(b.region === region) - Number(a.region === region) : 0));
+  const saudiScore = (u: (typeof partTimeSaudi)[number]) =>
+    u.fields.filter((f) => fields.includes(f)).length * 2 + (region && u.region === region ? 1 : 0);
+  const partTime = [...partTimeSaudi].sort((a, b) => saudiScore(b) - saudiScore(a)).slice(0, 2);
 
   const tierLabel = (t: GradProgram['tier']) =>
-    (t === 'reach' ? ui.study.tierReach : t === 'top' ? ui.study.tierTop : t === 'accessible' ? ui.study.tierAccessible : ui.study.tierSaudi)[locale];
+    (t === 'high' ? ui.study.tierHigh : t === 'respected' ? ui.study.tierRespected : t === 'solid' ? ui.study.tierSolid : ui.study.tierAccessible)[locale];
 
   const lists = [
     { Icon: FileText, title: ui.study.admissionsTitle[locale], items: ui.study.admissions[locale] },
@@ -1154,9 +1154,9 @@ function Study({ locale }: { locale: Loc }) {
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {(gradPrograms[f] ?? []).map((p, i) => (
                 <a key={i} href={p.link} target="_blank" rel="noopener noreferrer" className="group">
-                  <Card className={cn('flex h-full flex-col p-4 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]', p.tier === 'saudi' && 'border-amber-500/30 dark:border-amber-400/25', p.tier === 'reach' && 'border-stone-900/20 dark:border-white/20')}>
+                  <Card className={cn('flex h-full flex-col p-4 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]', p.tier === 'high' && 'border-stone-900/20 dark:border-white/20')}>
                     <div className="flex items-center justify-between gap-2">
-                      <span className={cn('rounded-full px-2 py-0.5 text-[10px] font-bold', p.tier === 'reach' ? 'bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900' : p.tier === 'saudi' ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : SOFT)}>{tierLabel(p.tier)}</span>
+                      <span className={cn('rounded-full px-2 py-0.5 text-[10px] font-bold', p.tier === 'high' ? 'bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900' : SOFT)}>{tierLabel(p.tier)}</span>
                       <ArrowUpRight className="h-4 w-4 shrink-0 text-stone-300 transition-colors group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
                     </div>
                     <h4 className="mt-2 text-[14px] font-semibold text-stone-900 dark:text-stone-50">{p.uni[locale]}</h4>
