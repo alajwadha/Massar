@@ -195,7 +195,7 @@ export const paths: CareerPath[] = [
     accent: 'brand',
     icon: 'finance',
     months: 16,
-    scoreByLevel: { entry: 88, mid: 72, senior: 52, director: 34 },
+    scoreByLevel: { entry: 96, mid: 80, senior: 58, director: 40 },
     primary: true,
     trail: { ar: 'تمويل المناخ → CME-1 → FMVA → CFA L1 → CFA L2', en: 'Climate Finance → CME-1 → FMVA → CFA L1 → CFA L2' },
     certs: [
@@ -215,7 +215,7 @@ export const paths: CareerPath[] = [
     accent: 'sky',
     icon: 'energy',
     months: 12,
-    scoreByLevel: { entry: 90, mid: 70, senior: 50, director: 32 },
+    scoreByLevel: { entry: 94, mid: 76, senior: 54, director: 36 },
     trail: { ar: 'التناضح العكسي → الطاقة الشمسية → PMP → CEM → Six Sigma', en: 'Reverse Osmosis → Solar PV → PMP → CEM → Six Sigma' },
     certs: [
       { name: { ar: 'التناضح العكسي', en: 'Reverse Osmosis' }, desc: { ar: 'شهادة مهندس متخصص في التناضح العكسي من أكاديمية المياه. تثبت خبرتك التشغيلية في أكبر محطات التحلية — أساس قوي لأدوار الطاقة والمياه.', en: 'Reverse Osmosis Specialist Engineer from the Water Academy. It certifies your operational expertise at the largest desalination plants — a strong base for power and water roles.' }, gain: { ar: 'تثبت خبرتك في أكبر محطات التحلية', en: 'Certifies your large-scale desalination expertise' }, scoreAdd: 7, official: 'https://wa.edu.sa', status: 'done', cost: { ar: 'منجزة', en: 'Completed' }, duration: { ar: 'أنجزتها', en: 'Completed' } },
@@ -234,7 +234,7 @@ export const paths: CareerPath[] = [
     accent: 'violet',
     icon: 'consulting',
     months: 12,
-    scoreByLevel: { entry: 74, mid: 56, senior: 40, director: 26 },
+    scoreByLevel: { entry: 84, mid: 64, senior: 44, director: 28 },
     trail: { ar: 'مهارات الاستشارات → دراسات الحالة → GMAT → FMVA', en: 'Consulting Skills → Case Prep → GMAT → FMVA' },
     certs: [
       { name: { ar: 'مهارات الاستشارات', en: 'Consulting Skills' }, desc: { ar: 'برنامج مهارات الاستشارات الأساسية من مسرّعة مستشار. يمنحك إطار حلّ المشكلات والتواصل التنفيذي المطلوب في المقابلات.', en: 'Foundational consulting skills from the Mustashar accelerator. It gives you the problem-solving and executive-communication frame interviews demand.' }, gain: { ar: 'أساس حلّ المشكلات والتواصل التنفيذي', en: 'Problem-solving and executive-communication base' }, scoreAdd: 6, official: 'https://mustashar.org', status: 'done', cost: { ar: 'منجزة', en: 'Completed' }, duration: { ar: 'أنجزتها', en: 'Completed' } },
@@ -253,7 +253,7 @@ export const paths: CareerPath[] = [
     accent: 'amber',
     icon: 'government',
     months: 18,
-    scoreByLevel: { entry: 79, mid: 61, senior: 44, director: 28 },
+    scoreByLevel: { entry: 86, mid: 66, senior: 46, director: 30 },
     trail: { ar: 'تمويل المناخ → دبلوم السياسات → PMP → PgMP', en: 'Climate Finance → Policy Diploma → PMP → PgMP' },
     certs: [
       { name: { ar: 'تمويل المناخ', en: 'Climate Finance' }, desc: { ar: 'برنامج تمويل المناخ والاستدامة من كابسارك. يربط نمذجتك لمسار 2060 بأدوات السياسة والتمويل المناخي.', en: 'KAPSARC’s climate finance and sustainability program. It ties your 2060-pathway modeling to policy and climate-finance tools.' }, gain: { ar: 'يربط نمذجتك بالسياسة والتمويل المناخي', en: 'Links your modeling to climate policy and finance' }, scoreAdd: 7, official: 'https://www.kapsarc.org', status: 'done', cost: { ar: 'منجزة', en: 'Completed' }, duration: { ar: 'أنجزتها', en: 'Completed' } },
@@ -272,7 +272,7 @@ export const paths: CareerPath[] = [
     accent: 'rose',
     icon: 'tech',
     months: 12,
-    scoreByLevel: { entry: 73, mid: 54, senior: 38, director: 24 },
+    scoreByLevel: { entry: 80, mid: 60, senior: 40, director: 26 },
     trail: { ar: 'تحليل البيانات → AWS → Scrum → تحليلات متقدمة', en: 'Data Analyst → AWS → Scrum → Advanced Analytics' },
     certs: [
       { name: { ar: 'تحليل البيانات', en: 'Data Analyst' }, desc: { ar: 'شهادة محلل بيانات من IBM، تغطّي أدوات التحليل والتصوّر واتخاذ القرار بالبيانات. تكمّل خلفيتك في الذكاء الاصطناعي ومشروع نموذجك التنبؤي.', en: 'IBM’s Data Analyst certificate covering analysis, visualization, and data-driven decisions. It complements your AI background and your predictive-model project.' }, gain: { ar: 'تحليل البيانات واتخاذ القرار', en: 'Data analysis and decision-making' }, scoreAdd: 6, official: 'https://www.ibm.com/training/badge/data-analyst', status: 'done', cost: { ar: 'منجزة', en: 'Completed' }, duration: { ar: 'أنجزتها', en: 'Completed' } },
@@ -492,6 +492,10 @@ export type CvReview = { headline: LS; strengths: LS[]; issues: CvIssue[] };
 // active path instead, so this stays correct whichever path they pick.
 export type LevelGap = { experience?: LS; other?: LS[] };
 
+// What drives the CV score, shown as a breakdown so the customer sees that things
+// like their university's standing are actually counted. `strength` tints the chip.
+export type ScoreFactor = { label: LS; detail: LS; strength: 'strong' | 'good' | 'growing' };
+
 /* -------------------------------------------------------------- customer plan -- */
 // Everything that varies per customer. The dashboard renders ONE plan through
 // <PlanProvider>, so each customer is fully isolated and reachable at their own
@@ -506,6 +510,7 @@ export type CustomerPlan = {
   profile: typeof profile;
   cvScore: typeof cvScore;
   cvReview: CvReview;
+  scoreFactors: ScoreFactor[];
   levelGaps: Record<Level, LevelGap>;
   journey: typeof journey;
   connections: Contact[];
@@ -534,6 +539,12 @@ const aliCvReview: CvReview = {
     { id: 'keywords', kind: 'format', text: { ar: 'استخدم كلمات مفتاحية من إعلانات الصندوق وكابسارك', en: 'Mirror keywords from PIF and KAPSARC job posts' }, severity: 'low' },
   ],
 };
+
+const aliScoreFactors: ScoreFactor[] = [
+  { label: { ar: 'التعليم', en: 'Education' }, detail: { ar: 'ماجستير اقتصاديات الطاقة — كورنيل (ضمن أفضل 20 عالميًا)', en: 'M.Eng Energy Economics — Cornell (world top-20)' }, strength: 'strong' },
+  { label: { ar: 'الخبرة', en: 'Experience' }, detail: { ar: 'سنتان في عمليات رأس الخير', en: '2 years — Ras Al-Khair operations' }, strength: 'good' },
+  { label: { ar: 'ملاءمة المجال', en: 'Field fit' }, detail: { ar: 'طاقة + تمويل', en: 'Energy + finance' }, strength: 'strong' },
+];
 
 const aliLevelGaps: Record<Level, LevelGap> = {
   entry: {},
@@ -567,6 +578,7 @@ export const aliPlan: CustomerPlan = {
   profile,
   cvScore,
   cvReview: aliCvReview,
+  scoreFactors: aliScoreFactors,
   levelGaps: aliLevelGaps,
   journey,
   connections: [], // the customer's own network, loaded client-side from their CSV
@@ -658,6 +670,102 @@ export const gradPrograms: Record<Exclude<FieldTag, 'all'>, GradProgram[]> = {
     { uni: { ar: 'جامعة ستانفورد', en: 'Stanford University' }, program: { ar: 'ماجستير علوم الحاسب (ذكاء اصطناعي)', en: 'MS Computer Science (AI)' }, location: { ar: 'كاليفورنيا', en: 'California' }, link: 'https://cs.stanford.edu', mode: 'full_time', saudi: false, best: true },
     { uni: { ar: 'جامعة كارنيجي ميلون', en: 'Carnegie Mellon' }, program: { ar: 'ماجستير الذكاء الاصطناعي', en: 'MS Artificial Intelligence' }, location: { ar: 'بيتسبرغ', en: 'Pittsburgh' }, link: 'https://www.cs.cmu.edu', mode: 'full_time', saudi: false, best: true },
     { uni: { ar: 'إم آي تي', en: 'MIT' }, program: { ar: 'الهندسة الكهربائية وعلوم الحاسب', en: 'EECS' }, location: { ar: 'بوسطن', en: 'Boston' }, link: 'https://www.eecs.mit.edu', mode: 'full_time', saudi: false, best: true },
+  ],
+};
+
+// Field-specific note on which Saudi university leads (shown in Study > In Saudi).
+export const saudiUniStrength: Record<Exclude<FieldTag, 'all'>, LS> = {
+  finance: { ar: 'جامعة الملك سعود من الأقوى محليًا في الأعمال والمالية.', en: 'King Saud University is among the strongest locally for business & finance.' },
+  energy: { ar: 'جامعة الملك فهد للبترول والمعادن هي الأقوى في السعودية للهندسة والطاقة.', en: 'KFUPM is the strongest university in Saudi for engineering & energy.' },
+  consulting: { ar: 'كاوست وجامعة الفيصل الأبرز محليًا لإدارة الأعمال.', en: 'KAUST and Alfaisal lead locally for business & management.' },
+  government: { ar: 'معهد الإدارة العامة هو المرجع المحلي للسياسات والإدارة.', en: 'IPA is the local reference for policy & administration.' },
+  tech: { ar: 'كاوست وجامعة الملك فهد الأقوى محليًا في الحاسب والذكاء الاصطناعي.', en: 'KAUST and KFUPM are the strongest locally for computing & AI.' },
+};
+
+// Indicative monthly salary ranges in the Saudi market (SAR), entry to senior.
+export const salaries: Record<Exclude<FieldTag, 'all'>, { role: LS; range: LS }[]> = {
+  finance: [
+    { role: { ar: 'محلل استثمار (مبتدئ)', en: 'Investment Analyst (entry)' }, range: { ar: '12–18 ألف ر.س', en: 'SAR 12–18k' } },
+    { role: { ar: 'محلل أول', en: 'Senior Analyst' }, range: { ar: '20–30 ألف ر.س', en: 'SAR 20–30k' } },
+    { role: { ar: 'مدير محفظة', en: 'Portfolio Manager' }, range: { ar: '35–60 ألف ر.س', en: 'SAR 35–60k' } },
+  ],
+  energy: [
+    { role: { ar: 'مهندس', en: 'Engineer' }, range: { ar: '14–20 ألف ر.س', en: 'SAR 14–20k' } },
+    { role: { ar: 'مهندس أول', en: 'Senior Engineer' }, range: { ar: '22–32 ألف ر.س', en: 'SAR 22–32k' } },
+    { role: { ar: 'مدير مشروع/عمليات', en: 'Project / Ops Manager' }, range: { ar: '35–55 ألف ر.س', en: 'SAR 35–55k' } },
+  ],
+  consulting: [
+    { role: { ar: 'محلل', en: 'Analyst' }, range: { ar: '18–25 ألف ر.س', en: 'SAR 18–25k' } },
+    { role: { ar: 'مستشار', en: 'Consultant' }, range: { ar: '28–40 ألف ر.س', en: 'SAR 28–40k' } },
+    { role: { ar: 'مدير ارتباط', en: 'Engagement Manager' }, range: { ar: '45–70 ألف ر.س', en: 'SAR 45–70k' } },
+  ],
+  government: [
+    { role: { ar: 'أخصائي', en: 'Specialist' }, range: { ar: '14–20 ألف ر.س', en: 'SAR 14–20k' } },
+    { role: { ar: 'مدير برنامج', en: 'Program Manager' }, range: { ar: '25–38 ألف ر.س', en: 'SAR 25–38k' } },
+    { role: { ar: 'مدير عام', en: 'Director' }, range: { ar: '45–70 ألف ر.س', en: 'SAR 45–70k' } },
+  ],
+  tech: [
+    { role: { ar: 'محلل بيانات', en: 'Data Analyst' }, range: { ar: '13–20 ألف ر.س', en: 'SAR 13–20k' } },
+    { role: { ar: 'مهندس بيانات', en: 'Data Engineer' }, range: { ar: '22–32 ألف ر.س', en: 'SAR 22–32k' } },
+    { role: { ar: 'قائد منتج', en: 'Product Lead' }, range: { ar: '35–55 ألف ر.س', en: 'SAR 35–55k' } },
+  ],
+};
+
+// In-demand skills to learn, each with a place to learn it.
+export const skills: Record<Exclude<FieldTag, 'all'>, { name: LS; link: string }[]> = {
+  finance: [
+    { name: { ar: 'النمذجة المالية (Excel)', en: 'Financial modeling (Excel)' }, link: 'https://corporatefinanceinstitute.com' },
+    { name: { ar: 'التقييم وDCF', en: 'Valuation & DCF' }, link: 'https://www.coursera.org' },
+    { name: { ar: 'Power BI', en: 'Power BI' }, link: 'https://learn.microsoft.com/power-bi/' },
+    { name: { ar: 'أساسيات بلومبرغ', en: 'Bloomberg basics' }, link: 'https://www.bloomberg.com/professional/' },
+  ],
+  energy: [
+    { name: { ar: 'نمذجة أنظمة الطاقة', en: 'Energy systems modeling' }, link: 'https://www.coursera.org' },
+    { name: { ar: 'تصميم الطاقة الشمسية (PVsyst)', en: 'Solar design (PVsyst)' }, link: 'https://www.udemy.com' },
+    { name: { ar: 'إدارة المشاريع', en: 'Project management' }, link: 'https://www.pmi.org' },
+    { name: { ar: 'Power BI', en: 'Power BI' }, link: 'https://learn.microsoft.com/power-bi/' },
+  ],
+  consulting: [
+    { name: { ar: 'حل دراسات الحالة', en: 'Case solving' }, link: 'https://www.preplounge.com' },
+    { name: { ar: 'بناء العروض (PowerPoint)', en: 'Slide writing (PowerPoint)' }, link: 'https://www.coursera.org' },
+    { name: { ar: 'Excel المتقدم', en: 'Advanced Excel' }, link: 'https://www.coursera.org' },
+    { name: { ar: 'سرد البيانات', en: 'Data storytelling' }, link: 'https://www.coursera.org' },
+  ],
+  government: [
+    { name: { ar: 'تحليل السياسات', en: 'Policy analysis' }, link: 'https://www.edx.org' },
+    { name: { ar: 'إدارة أصحاب المصلحة', en: 'Stakeholder management' }, link: 'https://www.coursera.org' },
+    { name: { ar: 'البيانات لصنع القرار', en: 'Data for decisions' }, link: 'https://www.coursera.org' },
+    { name: { ar: 'الكتابة التنفيذية', en: 'Executive writing' }, link: 'https://www.coursera.org' },
+  ],
+  tech: [
+    { name: { ar: 'بايثون', en: 'Python' }, link: 'https://www.coursera.org' },
+    { name: { ar: 'SQL', en: 'SQL' }, link: 'https://www.datacamp.com' },
+    { name: { ar: 'السحابة (AWS)', en: 'Cloud (AWS)' }, link: 'https://aws.amazon.com/training/' },
+    { name: { ar: 'تعلّم الآلة', en: 'Machine learning' }, link: 'https://www.coursera.org' },
+  ],
+};
+
+// Professional communities and associations to join in the field.
+export const communities: Record<Exclude<FieldTag, 'all'>, { name: LS; desc: LS; url: string }[]> = {
+  finance: [
+    { name: { ar: 'جمعية CFA السعودية', en: 'CFA Society Saudi Arabia' }, desc: { ar: 'مجتمع المحللين الماليين', en: 'Financial analysts community' }, url: 'https://www.cfainstitute.org' },
+    { name: { ar: 'فنتك السعودية', en: 'Fintech Saudi' }, desc: { ar: 'مجتمع التقنية المالية', en: 'Fintech community' }, url: 'https://fintechsaudi.com' },
+  ],
+  energy: [
+    { name: { ar: 'الهيئة السعودية للمهندسين', en: 'Saudi Council of Engineers' }, desc: { ar: 'العضوية المهنية للمهندسين', en: 'Professional membership for engineers' }, url: 'https://www.saudieng.sa' },
+    { name: { ar: 'فعاليات كابسارك', en: 'KAPSARC events' }, desc: { ar: 'أبحاث وفعاليات الطاقة', en: 'Energy research & events' }, url: 'https://www.kapsarc.org' },
+  ],
+  consulting: [
+    { name: { ar: 'مجتمع مسك', en: 'Misk community' }, desc: { ar: 'قادة وريادة أعمال', en: 'Leaders & entrepreneurship' }, url: 'https://misk.org.sa' },
+    { name: { ar: 'منتدى مستشار', en: 'Mustashar forum' }, desc: { ar: 'تدريب الاستشارات', en: 'Consulting training' }, url: 'https://mustashar.org' },
+  ],
+  government: [
+    { name: { ar: 'خرّيجو معهد الإدارة', en: 'IPA alumni' }, desc: { ar: 'شبكة السياسات والإدارة', en: 'Policy & admin network' }, url: 'https://www.ipa.edu.sa' },
+    { name: { ar: 'مجتمع مسك', en: 'Misk community' }, desc: { ar: 'قادة المستقبل', en: 'Future leaders' }, url: 'https://misk.org.sa' },
+  ],
+  tech: [
+    { name: { ar: 'مجتمع سدايا', en: 'SDAIA community' }, desc: { ar: 'الذكاء الاصطناعي والبيانات', en: 'AI & data' }, url: 'https://sdaia.gov.sa' },
+    { name: { ar: 'ملتقيات التقنية (LEAP)', en: 'Tech meetups (LEAP)' }, desc: { ar: 'فعاليات ومجتمع تقني', en: 'Tech events & community' }, url: 'https://onegiantleap.com' },
   ],
 };
 
@@ -776,6 +884,10 @@ export const ui = {
     levelLabel: { ar: 'المستوى الوظيفي المستهدف', en: 'Target seniority' },
     levelHint: { ar: 'درجتك تتغيّر حسب المستوى الذي تستهدفه', en: 'Your score changes with the level you aim for' },
     improvementsTitle: { ar: 'ما الذي يرفع درجتك', en: 'What raises your score' },
+    scoreFactorsTitle: { ar: 'ما الذي يبني درجتك', en: "What's behind your score" },
+    strengthStrong: { ar: 'قوي', en: 'Strong' },
+    strengthGood: { ar: 'جيد', en: 'Good' },
+    strengthGrowing: { ar: 'قيد البناء', en: 'Growing' },
     quickWin: { ar: 'أسرع مكسب', en: 'Quickest win' },
     reachable: { ar: 'درجتك إن أكملت هذه الخطوات', en: 'Your reachable score' },
     areasTitle: { ar: 'أعلى مساراتك', en: 'Your top areas' },
@@ -959,6 +1071,18 @@ export const ui = {
     fullTime: { ar: 'دوام كامل', en: 'Full-time' },
     best: { ar: 'الأفضل في مجالك', en: 'Best in field' },
     viewProgram: { ar: 'صفحة البرنامج', en: 'Program page' },
+    worthItTitle: { ar: 'هل تستحق الدراسة العليا؟', en: 'Is a graduate degree worth it?' },
+    worthIt: { ar: 'لمسارك، الماجستير يرفع سقف راتبك ويفتح الأدوار القيادية أسرع — خاصة من جامعة قوية في مجالك. القرار يعتمد على هدفك ووقتك.', en: 'For your path, a master’s raises your salary ceiling and opens senior roles faster — especially from a university strong in your field. It depends on your goal and your time.' },
+    admissionsTitle: { ar: 'متطلبات القبول النموذجية', en: 'Typical admission requirements' },
+    admissions: {
+      ar: ['معدّل تراكمي جيد (3.0+ من 4 عادةً).', 'اختبار GMAT أو GRE لبعض البرامج.', 'إثبات لغة إنجليزية: IELTS 6.5+ أو TOEFL 90+.', 'خطابات توصية + بيان غرض + سيرة ذاتية.'],
+      en: ['A solid GPA (usually 3.0+ / 4).', 'GMAT or GRE for some programs.', 'English proof: IELTS 6.5+ or TOEFL 90+.', 'Recommendation letters + statement of purpose + CV.'],
+    },
+    timelineTitle: { ar: 'الجدول الزمني للتقديم', en: 'Application timeline' },
+    timeline: {
+      ar: ['ابدأ قبل 9–12 شهرًا من موعد البدء.', 'جهّز اختبارات اللغة وGMAT مبكرًا.', 'مواعيد التقديم غالبًا في الخريف للقبول التالي.', 'قدّم على المنح بالتوازي مع طلب القبول.'],
+      en: ['Start 9–12 months before your intended start.', 'Sit language tests and the GMAT early.', 'Deadlines are often in the autumn for the next intake.', 'Apply for scholarships in parallel with admission.'],
+    },
     fundingTitle: { ar: 'التمويل والدعم', en: 'Funding & support' },
     funding: {
       ar: ['ابتعاث الموظفين أو إجازة دراسية من جهة عملك للبرامج الجزئية.', 'برنامج الابتعاث (خادم الحرمين / KASP) للدراسة بالخارج.', 'منح الجامعات نفسها — كاوست تغطّي الرسوم وراتبًا شهريًا.'],
@@ -982,7 +1106,7 @@ export const ui = {
     experience: { ar: 'الخبرة', en: 'Experience' },
     certNeeded: { ar: 'شهادة مطلوبة', en: 'Certification' },
     other: { ar: 'أخرى', en: 'Also' },
-    ready: { ar: 'أنت شبه جاهز لهذا المستوى!', en: "You're nearly ready for this level!" },
+    ready: { ar: 'أنت جاهز لهذا المستوى — لا فجوات تذكر!', en: "You're ready for this level — no real gaps!" },
   },
   opp: {
     eyebrow: { ar: 'فرص ومصادر', en: 'Opportunities & resources' },
@@ -1005,6 +1129,13 @@ export const ui = {
     visit: { ar: 'زيارة', en: 'Visit' },
     cvGuideTitle: { ar: 'كيف تكتب سيرة قوية', en: 'How to write a strong CV' },
     interviewTitle: { ar: 'نصائح للمقابلات', en: 'Interview tips' },
+    salaryTitle: { ar: 'الرواتب في مجالك', en: 'Salaries in your field' },
+    salarySub: { ar: 'نطاقات تقريبية شهرية في السوق السعودي.', en: 'Approximate monthly ranges in the Saudi market.' },
+    skillsTitle: { ar: 'مهارات مطلوبة تتعلّمها', en: 'In-demand skills to learn' },
+    skillsSub: { ar: 'ابدأ بهذه المهارات لرفع قيمتك سريعًا.', en: 'Start with these to raise your value fast.' },
+    learn: { ar: 'تعلّمها', en: 'Learn it' },
+    communitiesTitle: { ar: 'مجتمعات وجمعيات مهنية', en: 'Communities & associations' },
+    communitiesSub: { ar: 'انضم لتوسّع شبكتك وتبقى على اطّلاع.', en: 'Join to grow your network and stay current.' },
   },
   referral: {
     title: { ar: 'أهدِ صديقًا خصم 20%', en: 'Give a friend 20% off' },

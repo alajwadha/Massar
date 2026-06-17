@@ -62,6 +62,10 @@ import {
   tamheer,
   careerDays,
   gradPrograms,
+  saudiUniStrength,
+  salaries,
+  skills,
+  communities,
   nationalPortals,
   companyCareers,
   cvGuide,
@@ -501,6 +505,27 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
               <Eyebrow>{ui.overview.scoreLabel[locale]}</Eyebrow>
               <h1 className="mt-2 text-balance text-[24px] font-semibold leading-[1.12] tracking-tight text-stone-900 dark:text-stone-50 sm:text-[34px]">{activePath.name[locale]}</h1>
               <p className="mt-2 text-sm text-stone-500 dark:text-stone-400">{ui.overview.levelHint[locale]}</p>
+
+              {/* What's behind your score (education incl. university, experience, ...) */}
+              <div className="mt-4">
+                <div className="text-xs font-bold text-stone-700 dark:text-stone-200">{ui.overview.scoreFactorsTitle[locale]}</div>
+                <ul className="mt-2 space-y-1.5">
+                  {plan.scoreFactors.map((f, i) => {
+                    const tint = f.strength === 'strong' ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : f.strength === 'good' ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300' : SOFT;
+                    const sLabel = f.strength === 'strong' ? ui.overview.strengthStrong[locale] : f.strength === 'good' ? ui.overview.strengthGood[locale] : ui.overview.strengthGrowing[locale];
+                    return (
+                      <li key={i} className="flex items-start gap-2 text-[12.5px]">
+                        <span className={cn('mt-0.5 shrink-0 rounded-md px-1.5 py-0.5 text-[10px] font-bold', tint)}>{sLabel}</span>
+                        <span className="min-w-0"><span className="font-semibold text-stone-700 dark:text-stone-200">{f.label[locale]}:</span> <span className="text-stone-500 dark:text-stone-400">{f.detail[locale]}</span></span>
+                      </li>
+                    );
+                  })}
+                  <li className="flex items-start gap-2 text-[12.5px]">
+                    <span className={cn('mt-0.5 shrink-0 rounded-md px-1.5 py-0.5 text-[10px] font-bold', certsDoneCount >= 3 ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300' : SOFT)}>{certsDoneCount >= 3 ? ui.overview.strengthGood[locale] : ui.overview.strengthGrowing[locale]}</span>
+                    <span className="min-w-0"><span className="font-semibold text-stone-700 dark:text-stone-200">{ui.overview.certsLabel[locale]}:</span> <span className="text-stone-500 dark:text-stone-400">{certsDoneCount}/{certsTotal}</span></span>
+                  </li>
+                </ul>
+              </div>
 
               <LevelGaps locale={locale} />
 
@@ -1083,6 +1108,11 @@ function Study({ locale }: { locale: Loc }) {
     </a>
   );
 
+  const lists = [
+    { Icon: FileText, title: ui.study.admissionsTitle[locale], items: ui.study.admissions[locale] },
+    { Icon: CalendarDays, title: ui.study.timelineTitle[locale], items: ui.study.timeline[locale] },
+  ];
+
   return (
     <div className="space-y-7">
       <div>
@@ -1091,8 +1121,18 @@ function Study({ locale }: { locale: Loc }) {
         <p className="mt-1 text-sm text-stone-500 dark:text-stone-400">{ui.study.sub[locale]}</p>
       </div>
 
+      {/* Is it worth it? */}
+      <Card className="flex items-start gap-3 p-5">
+        <div className={cn('grid h-10 w-10 shrink-0 place-items-center rounded-xl', SOFT)}><GraduationCap className={cn('h-5 w-5', ACCENT)} /></div>
+        <div className="min-w-0">
+          <h3 className="text-sm font-bold text-stone-900 dark:text-stone-50">{ui.study.worthItTitle[locale]}</h3>
+          <p className="mt-0.5 text-[13px] leading-relaxed text-stone-500 dark:text-stone-400">{ui.study.worthIt[locale]}</p>
+        </div>
+      </Card>
+
       <div>
         <SectionTitle icon={GraduationCap} title={ui.study.inSaudi[locale]} sub={ui.study.inSaudiSub[locale]} />
+        <div className="mb-3 rounded-2xl bg-amber-400/[0.12] px-3.5 py-2.5 text-[12.5px] font-semibold text-amber-700 dark:text-amber-300">{saudiUniStrength[field][locale]}</div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{saudi.map((p, i) => <Program key={i} p={p} />)}</div>
       </div>
 
@@ -1101,12 +1141,28 @@ function Study({ locale }: { locale: Loc }) {
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{worldwide.map((p, i) => <Program key={i} p={p} />)}</div>
       </div>
 
+      {/* Admissions + timeline */}
+      <div className="grid gap-5 lg:grid-cols-2">
+        {lists.map((l) => (
+          <Card key={l.title} className="p-5">
+            <SectionTitle icon={l.Icon} title={l.title} />
+            <ul className="space-y-2">
+              {l.items.map((t, i) => (
+                <li key={i} className="flex items-start gap-2 text-[13px] text-stone-600 dark:text-stone-300">
+                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" /> {t}
+                </li>
+              ))}
+            </ul>
+          </Card>
+        ))}
+      </div>
+
       <Card className="p-5">
         <SectionTitle icon={Wallet} title={ui.study.fundingTitle[locale]} />
         <ul className="space-y-2">
           {ui.study.funding[locale].map((t, i) => (
             <li key={i} className="flex items-start gap-2 text-[13px] text-stone-600 dark:text-stone-300">
-              <span className={cn('mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500')} /> {t}
+              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" /> {t}
             </li>
           ))}
         </ul>
@@ -1131,8 +1187,9 @@ function SectionTitle({ icon: Icon, title, sub }: { icon: typeof GraduationCap; 
 
 function Opportunities({ locale }: { locale: Loc }) {
   const plan = usePlan();
-  const { level } = useProgress();
-  const field = plan.primaryPath.icon as Exclude<FieldTag, 'all'>;
+  const { level, activePathId } = useProgress();
+  const activePath = plan.paths.find((p) => p.id === (activePathId ?? plan.primaryPath.id)) ?? plan.primaryPath;
+  const field = activePath.icon as Exclude<FieldTag, 'all'>;
   const isEntry = level === 'entry';
 
   const days = [...careerDays].sort((a, b) => {
@@ -1204,6 +1261,19 @@ function Opportunities({ locale }: { locale: Loc }) {
         </div>
       </Card>
 
+      {/* Salaries */}
+      <div>
+        <SectionTitle icon={TrendingUp} title={ui.opp.salaryTitle[locale]} sub={ui.opp.salarySub[locale]} />
+        <div className="grid gap-3 sm:grid-cols-3">
+          {salaries[field].map((s, i) => (
+            <Card key={i} className="p-4 sm:p-5">
+              <div className="text-[13px] font-semibold text-stone-700 dark:text-stone-200">{s.role[locale]}</div>
+              <Serif className="mt-1 block text-2xl tracking-tight text-stone-900 dark:text-stone-50 sm:text-3xl">{s.range[locale]}</Serif>
+            </Card>
+          ))}
+        </div>
+      </div>
+
       {/* Career days */}
       <div>
         <SectionTitle icon={CalendarDays} title={ui.opp.careerDaysTitle[locale]} sub={ui.opp.careerDaysSub[locale]} />
@@ -1229,6 +1299,21 @@ function Opportunities({ locale }: { locale: Loc }) {
               </a>
             );
           })}
+        </div>
+      </div>
+
+      {/* Skills to learn */}
+      <div>
+        <SectionTitle icon={Sparkles} title={ui.opp.skillsTitle[locale]} sub={ui.opp.skillsSub[locale]} />
+        <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
+          {skills[field].map((sk, i) => (
+            <a key={i} href={sk.link} target="_blank" rel="noopener noreferrer" className="group">
+              <Card className="flex items-center justify-between gap-2 p-3.5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]">
+                <span className="min-w-0 truncate text-[13px] font-semibold text-stone-800 dark:text-stone-100">{sk.name[locale]}</span>
+                <span className={cn('inline-flex shrink-0 items-center gap-1 text-[11px] font-bold', ACCENT)}>{ui.opp.learn[locale]} <ArrowUpRight className="h-3 w-3" /></span>
+              </Card>
+            </a>
+          ))}
         </div>
       </div>
 
@@ -1283,6 +1368,24 @@ function Opportunities({ locale }: { locale: Loc }) {
               </div>
             </div>
           )}
+        </div>
+      </div>
+
+      {/* Communities & associations */}
+      <div>
+        <SectionTitle icon={Users} title={ui.opp.communitiesTitle[locale]} sub={ui.opp.communitiesSub[locale]} />
+        <div className="grid gap-2.5 sm:grid-cols-2">
+          {communities[field].map((c, i) => (
+            <a key={i} href={c.url} target="_blank" rel="noopener noreferrer" className="group">
+              <Card className="flex items-center gap-3 p-3.5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]">
+                <div className="min-w-0 flex-1">
+                  <div className="text-[13.5px] font-semibold text-stone-900 dark:text-stone-50">{c.name[locale]}</div>
+                  <div className="truncate text-[11.5px] text-stone-400 dark:text-stone-500">{c.desc[locale]}</div>
+                </div>
+                <ArrowUpRight className="h-4 w-4 shrink-0 text-stone-300 group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
+              </Card>
+            </a>
+          ))}
         </div>
       </div>
 
