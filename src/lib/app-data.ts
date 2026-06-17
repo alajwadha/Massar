@@ -174,6 +174,7 @@ export type CareerPath = {
   roles: LS; // the positions this path leads to (for a new job OR a promotion)
   accent: AccentKey;
   icon: 'finance' | 'energy' | 'consulting' | 'government' | 'tech';
+  gradFields: ('finance' | 'energy' | 'consulting' | 'government' | 'tech')[]; // relevant graduate majors (Study tab)
   months: number;
   scoreByLevel: Record<Level, number>; // CV competitiveness 0-100 per seniority
   primary?: boolean;
@@ -194,6 +195,7 @@ export const paths: CareerPath[] = [
     roles: { ar: 'محلل استثمار ← محلل أول ← مدير محفظة', en: 'Investment Analyst → Senior Analyst → Portfolio Manager' },
     accent: 'brand',
     icon: 'finance',
+    gradFields: ['finance', 'energy'],
     months: 16,
     scoreByLevel: { entry: 96, mid: 80, senior: 58, director: 40 },
     primary: true,
@@ -214,6 +216,7 @@ export const paths: CareerPath[] = [
     roles: { ar: 'مهندس ← مهندس أول ← مدير مشروع/عمليات', en: 'Engineer → Senior Engineer → Project / Operations Manager' },
     accent: 'sky',
     icon: 'energy',
+    gradFields: ['energy', 'tech'],
     months: 12,
     scoreByLevel: { entry: 94, mid: 76, senior: 54, director: 36 },
     trail: { ar: 'التناضح العكسي → الطاقة الشمسية → PMP → CEM → Six Sigma', en: 'Reverse Osmosis → Solar PV → PMP → CEM → Six Sigma' },
@@ -233,6 +236,7 @@ export const paths: CareerPath[] = [
     roles: { ar: 'محلل ← مستشار ← مدير ارتباط', en: 'Analyst → Consultant → Engagement Manager' },
     accent: 'violet',
     icon: 'consulting',
+    gradFields: ['consulting', 'finance'],
     months: 12,
     scoreByLevel: { entry: 84, mid: 64, senior: 44, director: 28 },
     trail: { ar: 'مهارات الاستشارات → دراسات الحالة → GMAT → FMVA', en: 'Consulting Skills → Case Prep → GMAT → FMVA' },
@@ -252,6 +256,7 @@ export const paths: CareerPath[] = [
     roles: { ar: 'أخصائي سياسات ← مدير برنامج ← مدير عام', en: 'Policy Specialist → Program Manager → Director' },
     accent: 'amber',
     icon: 'government',
+    gradFields: ['government', 'consulting'],
     months: 18,
     scoreByLevel: { entry: 86, mid: 66, senior: 46, director: 30 },
     trail: { ar: 'تمويل المناخ → دبلوم السياسات → PMP → PgMP', en: 'Climate Finance → Policy Diploma → PMP → PgMP' },
@@ -271,6 +276,7 @@ export const paths: CareerPath[] = [
     roles: { ar: 'محلل بيانات ← مهندس بيانات ← قائد منتج', en: 'Data Analyst → Data Engineer → Product Lead' },
     accent: 'rose',
     icon: 'tech',
+    gradFields: ['tech', 'consulting'],
     months: 12,
     scoreByLevel: { entry: 80, mid: 60, senior: 40, director: 26 },
     trail: { ar: 'تحليل البيانات → AWS → Scrum → تحليلات متقدمة', en: 'Data Analyst → AWS → Scrum → Advanced Analytics' },
@@ -875,6 +881,12 @@ export const ui = {
     wPicks: { ar: 'تواصل اليوم', en: "Today's picks" },
     wGoal: { ar: 'هدف الأسبوع', en: 'Weekly goal' },
     wSnapshot: { ar: 'ملخّص التتبّع', en: 'Outreach snapshot' },
+    wSalary: { ar: 'الراتب المتوقّع', en: 'Salary peek' },
+    wCert: { ar: 'شهادتك الحالية', en: 'Current certification' },
+    wCareerDay: { ar: 'أقرب يوم مهني', en: 'Next career day' },
+    salaryPeekTitle: { ar: 'الراتب المتوقّع (مبتدئ)', en: 'Expected salary (entry)' },
+    certPeekTitle: { ar: 'شهادتك الحالية', en: 'Your current certification' },
+    careerDayTitle: { ar: 'أقرب يوم مهني', en: 'Next career day' },
     goalTitle: { ar: 'هدف هذا الأسبوع', en: "This week's goal" },
     goalHint: { ar: (a: number, b: number) => `${a} من ${b} تواصلات`, en: (a: number, b: number) => `${a} of ${b} reach-outs` },
     goalDone: { ar: 'أنجزت هدف الأسبوع 🎉', en: "You hit this week's goal 🎉" },
@@ -961,6 +973,8 @@ export const ui = {
     hrHint: { ar: 'مسؤولو التوظيف · البوابة الرسمية', en: 'Recruiters · the official channel' },
     placeholderNote: { ar: 'نعرض لك مسؤولي توظيف من قاعدتنا مؤقتًا. ارفع جهات اتصالك في لينكدإن لتظهر أقرب الأشخاص إلى أهدافك للتواصل معهم أولًا.', en: 'Showing recruiters from our database for now. Upload your LinkedIn connections to reveal the warmest intros to reach out to first.' },
     outreachLog: { ar: 'متابعة رسائلك', en: 'Your outreach' },
+    reachedLabel: { ar: 'تواصلت معهم', en: 'reached' },
+    reachedOf: { ar: (a: number, b: number) => `${a} من ${b}`, en: (a: number, b: number) => `${a} of ${b}` },
     industry: { ar: 'المجال', en: 'Industry' },
     allIndustries: { ar: 'كل المجالات', en: 'All industries' },
     search: { ar: 'ابحث بالاسم أو الشركة…', en: 'Search by name or company…' },
@@ -1063,6 +1077,7 @@ export const ui = {
     eyebrow: { ar: 'الدراسات العليا', en: 'Graduate study' },
     title: { ar: 'ارفع مؤهلك بدرجة عليا', en: 'Level up with a graduate degree' },
     sub: { ar: 'خيارات بدوام جزئي داخل السعودية وأنت تعمل، أو بدوام كامل في أفضل جامعات العالم في مجالك.', en: 'Part-time options inside Saudi while you work, or full-time at the best universities worldwide in your field.' },
+    chosenFor: { ar: (p: string) => `اختيرت لتناسب مسارك: ${p}`, en: (p: string) => `Chosen to fit your path: ${p}` },
     inSaudi: { ar: 'في السعودية', en: 'In Saudi Arabia' },
     inSaudiSub: { ar: 'مناسبة للدراسة أثناء العمل', en: 'Good to study while working' },
     worldwide: { ar: 'حول العالم', en: 'Worldwide' },
@@ -1085,8 +1100,18 @@ export const ui = {
     },
     fundingTitle: { ar: 'التمويل والدعم', en: 'Funding & support' },
     funding: {
-      ar: ['ابتعاث الموظفين أو إجازة دراسية من جهة عملك للبرامج الجزئية.', 'برنامج الابتعاث (خادم الحرمين / KASP) للدراسة بالخارج.', 'منح الجامعات نفسها — كاوست تغطّي الرسوم وراتبًا شهريًا.'],
-      en: ['Employer sponsorship or study leave for part-time programs.', 'King Salman scholarship (KASP) for studying abroad.', 'University scholarships — KAUST covers tuition plus a monthly stipend.'],
+      ar: [
+        'برنامج «بعثتك» من وزارة التعليم للدراسة في أفضل الجامعات عالميًا.',
+        'ابتعاث جهة عملك أو إجازة دراسية مدفوعة (شائع للبرامج بدوام جزئي).',
+        'زمالة كاوست — رسوم كاملة + راتب شهري + سكن.',
+        'منح التفوّق والمساعدات البحثية/التدريسية داخل الجامعة.',
+      ],
+      en: [
+        'The Ministry of Education “Your Scholarship” (بعثتك) program for top global universities.',
+        'Employer sponsorship or paid study leave (common for part-time).',
+        'KAUST fellowship — full tuition + a monthly stipend + housing.',
+        'University merit scholarships and teaching/research assistantships.',
+      ],
     },
   },
   cmd: {

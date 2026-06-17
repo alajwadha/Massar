@@ -390,8 +390,11 @@ const HOME_WIDGETS: { id: string; label: keyof typeof ui.overview }[] = [
   { id: 'picks', label: 'wPicks' },
   { id: 'goal', label: 'wGoal' },
   { id: 'snapshot', label: 'wSnapshot' },
+  { id: 'salary', label: 'wSalary' },
+  { id: 'currentCert', label: 'wCert' },
+  { id: 'careerDay', label: 'wCareerDay' },
 ];
-const WIDGET_DEFAULT: Record<string, boolean> = { nextMove: false, network: false, cvReview: true, stats: true, picks: true, goal: false, snapshot: false };
+const WIDGET_DEFAULT: Record<string, boolean> = { nextMove: false, network: false, cvReview: true, stats: true, picks: true, goal: false, snapshot: false, salary: false, currentCert: false, careerDay: false };
 const WEEKLY_GOAL = 5;
 
 function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; openPath: (id: string) => void }) {
@@ -438,8 +441,16 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
   ];
 
   const W = (id: string) => homeWidgets[id] ?? WIDGET_DEFAULT[id];
-  const railOn = ['nextMove', 'network', 'goal', 'snapshot'].filter(W);
+  const railOn = ['nextMove', 'network', 'goal', 'snapshot', 'salary', 'currentCert', 'careerDay'].filter(W);
   const goalDone = sent >= WEEKLY_GOAL;
+  // Data for the optional widgets.
+  const field = activePath.icon as Exclude<FieldTag, 'all'>;
+  const salaryEntry = salaries[field]?.[0];
+  const nextDay = [...careerDays].sort((a, b) => {
+    const ra = a.fields.includes(field) || a.fields.includes('all') ? 0 : 1;
+    const rb = b.fields.includes(field) || b.fields.includes('all') ? 0 : 1;
+    return ra - rb;
+  })[0];
 
   return (
     <div className="space-y-3 sm:space-y-4">
@@ -629,6 +640,38 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
                   </div>
                 </div>
               </Card>
+            )}
+            {W('salary') && salaryEntry && (
+              <Card className="p-5">
+                <div className="text-[10.5px] font-semibold uppercase tracking-wider text-stone-400 dark:text-stone-500">{ui.overview.salaryPeekTitle[locale]}</div>
+                <Serif className="mt-1 block text-3xl tracking-tight text-stone-900 dark:text-stone-50">{salaryEntry.range[locale]}</Serif>
+                <div className="mt-0.5 text-[11.5px] text-stone-400 dark:text-stone-500">{salaryEntry.role[locale]}</div>
+              </Card>
+            )}
+            {W('currentCert') && current && (
+              <button type="button" onClick={() => go('paths')} className="group text-start">
+                <Card className="flex h-full items-center gap-3 p-5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.45)]">
+                  <div className={cn('grid h-10 w-10 shrink-0 place-items-center rounded-xl', SOFT)}><BadgeCheck className="h-5 w-5 text-stone-700 dark:text-stone-200" /></div>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-[10.5px] font-semibold uppercase tracking-wider text-stone-400 dark:text-stone-500">{ui.overview.certPeekTitle[locale]}</div>
+                    <div className="mt-0.5 truncate font-bold text-stone-900 dark:text-stone-50">{current.name[locale]}</div>
+                  </div>
+                  <ArrowUpRight className="h-5 w-5 shrink-0 text-stone-300 transition-colors group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
+                </Card>
+              </button>
+            )}
+            {W('careerDay') && nextDay && (
+              <a href={nextDay.link} target="_blank" rel="noopener noreferrer" className="group">
+                <Card className="flex h-full items-center gap-3 p-5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.45)]">
+                  <div className={cn('grid h-10 w-10 shrink-0 place-items-center rounded-xl', SOFT)}><CalendarDays className="h-5 w-5 text-stone-700 dark:text-stone-200" /></div>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-[10.5px] font-semibold uppercase tracking-wider text-stone-400 dark:text-stone-500">{ui.overview.careerDayTitle[locale]}</div>
+                    <div className="mt-0.5 truncate font-bold text-stone-900 dark:text-stone-50">{nextDay.title[locale]}</div>
+                    <div className="text-[11.5px] text-stone-400 dark:text-stone-500">{nextDay.when[locale]}</div>
+                  </div>
+                  <ArrowUpRight className="h-5 w-5 shrink-0 text-stone-300 transition-colors group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
+                </Card>
+              </a>
             )}
           </div>
         )}
@@ -927,8 +970,9 @@ function Contacts({ locale }: { locale: Loc }) {
 
   // Connections: the uploaded network if present, otherwise HR contacts as
   // placeholders (same ranking rules) until the CSV is uploaded.
-  const ranked = useMemo(() => rankConnections(network ?? plan.hrContacts, planTargets(plan)).slice(0, cap), [network, plan, cap]);
-  const isPlaceholder = part === 'connections' && !network;
+  // Connections are the customer's OWN uploaded network only (HR lives in its own
+  // tab, not mixed in here).
+  const ranked = useMemo(() => (network ? rankConnections(network, planTargets(plan)).slice(0, cap) : []), [network, plan, cap]);
   const hrSectors = useMemo(() => Array.from(new Set(plan.hrContacts.map((c) => c.sector).filter(Boolean) as string[])), [plan.hrContacts]);
   const hrTiers = useMemo(() => Array.from(new Set(plan.hrContacts.map((c) => c.companyTier).filter(Boolean) as CompanyTier[])), [plan.hrContacts]);
 
@@ -977,14 +1021,12 @@ function Contacts({ locale }: { locale: Loc }) {
 
       {part === 'connections' && <NetworkPanel locale={locale} count={network ? ranked.length : null} onFile={onFile} onClear={clear} />}
 
-      {isPlaceholder && (
-        <div className="mt-3 rounded-2xl bg-amber-400/[0.12] px-3.5 py-2.5 text-[12.5px] font-semibold text-amber-700 dark:text-amber-300">{ui.contacts.placeholderNote[locale]}</div>
+      {(part === 'hr' || network) && (
+        <Card className="mt-3 flex items-center gap-2.5 px-4 py-3">
+          <Search className="h-4 w-4 shrink-0 text-stone-400 dark:text-stone-500" />
+          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={ui.contacts.search[locale]} className="w-full bg-transparent text-sm text-stone-900 outline-none placeholder:text-stone-400 dark:text-stone-50 dark:placeholder:text-stone-500" />
+        </Card>
       )}
-
-      <Card className="mt-3 flex items-center gap-2.5 px-4 py-3">
-        <Search className="h-4 w-4 shrink-0 text-stone-400 dark:text-stone-500" />
-        <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={ui.contacts.search[locale]} className="w-full bg-transparent text-sm text-stone-900 outline-none placeholder:text-stone-400 dark:text-stone-50 dark:placeholder:text-stone-500" />
-      </Card>
 
       {part === 'hr' && (
         <div className="mt-3 space-y-2">
@@ -993,9 +1035,10 @@ function Contacts({ locale }: { locale: Loc }) {
         </div>
       )}
 
-      {items.length === 0 ? (
-        <p className="mt-10 text-center text-sm text-stone-400 dark:text-stone-500">{ui.contacts.empty[locale]}</p>
-      ) : (
+      {(part === 'hr' || network) &&
+        (items.length === 0 ? (
+          <p className="mt-10 text-center text-sm text-stone-400 dark:text-stone-500">{ui.contacts.empty[locale]}</p>
+        ) : (
           <>
             {active.length > 0 && (
               <div className="mt-6">
@@ -1016,7 +1059,7 @@ function Contacts({ locale }: { locale: Loc }) {
               )}
             </div>
           </>
-        )}
+        ))}
     </div>
   );
 }
@@ -1025,36 +1068,32 @@ function Contacts({ locale }: { locale: Loc }) {
 // The message tracker now lives inside Contacts: a compact funnel of the outreach
 // the customer has logged (sent / replied / awaiting / follow-up) + reply rate.
 function OutreachLog({ locale }: { locale: Loc }) {
+  const plan = usePlan();
+  const { network } = useNetwork();
   const { statuses } = useProgress();
   const vals = Object.values(statuses);
+  const sent = vals.filter((s) => s === 'sent').length;
   const replied = vals.filter((s) => s === 'replied').length;
   const followup = vals.filter((s) => s === 'followup').length;
-  const pending = vals.filter((s) => s === 'sent').length;
-  const sent = replied + followup + pending;
-  const rate = sent ? Math.round((replied / sent) * 100) : 0;
+  const reached = sent + replied + followup;
+  const total = (network?.length ?? 0) + plan.hrContacts.length;
+  const pct = total ? Math.round((reached / total) * 100) : 0;
   const cards = [
-    { v: sent, l: ui.tracker.sent[locale], c: 'text-stone-900 dark:text-stone-50' },
-    { v: replied, l: ui.tracker.replied[locale], c: 'text-emerald-600 dark:text-emerald-300' },
-    { v: pending, l: ui.tracker.pending[locale], c: 'text-amber-600 dark:text-amber-300' },
-    { v: followup, l: ui.tracker.followup[locale], c: 'text-rose-600 dark:text-rose-300' },
-  ];
-  const legend = [
-    { cls: 'bg-emerald-500', w: sent ? (replied / sent) * 100 : 0 },
-    { cls: 'bg-amber-400', w: sent ? (followup / sent) * 100 : 0 },
-    { cls: 'bg-stone-400', w: sent ? (pending / sent) * 100 : 0 },
+    { v: sent, l: ui.contacts.status_sent[locale], c: 'text-stone-900 dark:text-stone-50' },
+    { v: replied, l: ui.contacts.status_replied[locale], c: 'text-emerald-600 dark:text-emerald-300' },
+    { v: followup, l: ui.contacts.status_followup[locale], c: 'text-amber-600 dark:text-amber-300' },
   ];
 
   return (
     <Card className="p-5">
       <div className="flex items-center justify-between gap-3">
         <h3 className="text-sm font-bold text-stone-900 dark:text-stone-50">{ui.contacts.outreachLog[locale]}</h3>
-        {sent > 0 && (
-          <span className="text-xs font-semibold text-stone-500 dark:text-stone-400">
-            <span className="font-bold text-stone-900 tabular-nums dark:text-stone-50">{rate}%</span> {ui.tracker.replyRate[locale]}
-          </span>
-        )}
+        <span className="text-xs font-semibold text-stone-500 dark:text-stone-400">
+          <span className="font-bold text-stone-900 tabular-nums dark:text-stone-50">{pct}%</span> {ui.contacts.reachedLabel[locale]}
+          <span className="ms-1 text-stone-400 dark:text-stone-500">· {ui.contacts.reachedOf[locale](reached, total)}</span>
+        </span>
       </div>
-      <div className="mt-3 grid grid-cols-4 gap-2 sm:gap-3">
+      <div className="mt-3 grid grid-cols-3 gap-2 sm:gap-3">
         {cards.map((c) => (
           <div key={c.l} className={cn('px-2 py-2.5 text-center', INSET)}>
             <Serif className={cn('block text-2xl tabular-nums sm:text-3xl', c.c)}>{c.v}</Serif>
@@ -1062,13 +1101,9 @@ function OutreachLog({ locale }: { locale: Loc }) {
           </div>
         ))}
       </div>
-      {sent > 0 ? (
-        <div className="mt-3 flex h-2 overflow-hidden rounded-full bg-stone-900/[0.06] dark:bg-white/10">
-          {legend.map((l, i) => <div key={i} className={l.cls} style={{ width: `${l.w}%` }} />)}
-        </div>
-      ) : (
-        <p className="mt-3 text-[12px] text-stone-400 dark:text-stone-500">{ui.tracker.empty[locale]}</p>
-      )}
+      <div className="mt-3 h-2 overflow-hidden rounded-full bg-stone-900/[0.06] dark:bg-white/10">
+        <motion.div className="h-full rounded-full bg-amber-500 dark:bg-amber-400" initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 0.8, ease: EASE }} />
+      </div>
     </Card>
   );
 }
@@ -1081,8 +1116,15 @@ function Study({ locale }: { locale: Loc }) {
   const plan = usePlan();
   const { activePathId } = useProgress();
   const activePath = plan.paths.find((p) => p.id === (activePathId ?? plan.primaryPath.id)) ?? plan.primaryPath;
-  const field = activePath.icon as Exclude<FieldTag, 'all'>;
-  const programs = gradPrograms[field] ?? gradPrograms.energy;
+  // Programs span the path's relevant majors (not just one), deduped by uni+program.
+  const fields = activePath.gradFields;
+  const seen = new Set<string>();
+  const programs = fields.flatMap((f) => gradPrograms[f] ?? []).filter((p) => {
+    const k = p.uni.en + p.program.en;
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
   const saudi = programs.filter((p) => p.saudi);
   const worldwide = programs.filter((p) => !p.saudi);
 
@@ -1119,6 +1161,7 @@ function Study({ locale }: { locale: Loc }) {
         <Eyebrow>{ui.study.eyebrow[locale]}</Eyebrow>
         <h1 className="mt-2 text-2xl font-semibold tracking-tight text-stone-900 dark:text-stone-50">{ui.study.title[locale]}</h1>
         <p className="mt-1 text-sm text-stone-500 dark:text-stone-400">{ui.study.sub[locale]}</p>
+        <p className={cn('mt-1.5 text-[12.5px] font-semibold', ACCENT)}>{ui.study.chosenFor[locale](activePath.name[locale])}</p>
       </div>
 
       {/* Is it worth it? */}
@@ -1132,7 +1175,11 @@ function Study({ locale }: { locale: Loc }) {
 
       <div>
         <SectionTitle icon={GraduationCap} title={ui.study.inSaudi[locale]} sub={ui.study.inSaudiSub[locale]} />
-        <div className="mb-3 rounded-2xl bg-amber-400/[0.12] px-3.5 py-2.5 text-[12.5px] font-semibold text-amber-700 dark:text-amber-300">{saudiUniStrength[field][locale]}</div>
+        <div className="mb-3 space-y-1.5">
+          {fields.map((f) => (
+            <div key={f} className="rounded-2xl bg-amber-400/[0.12] px-3.5 py-2.5 text-[12.5px] font-semibold text-amber-700 dark:text-amber-300">{saudiUniStrength[f][locale]}</div>
+          ))}
+        </div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{saudi.map((p, i) => <Program key={i} p={p} />)}</div>
       </div>
 
