@@ -546,11 +546,11 @@ const aliCvReview: CvReview = {
     { ar: 'شهادة تمويل مناخي من كابسارك تغطي الحوكمة البيئية وأسواق الكربون', en: 'A KAPSARC Climate Finance credential covering ESG and carbon markets' },
   ],
   issues: [
-    { id: 'finance', kind: 'format', text: { ar: 'تحتاج شهادة مالية، ابدأ بمستوى CFA الأول.', en: 'A finance certification is needed, start with CFA Level 1.' }, severity: 'high' },
-    { id: 'summary', kind: 'summary', text: { ar: 'اجعل ملخصك يبدأ باقتصاديات الطاقة لا بالعمليات.', en: 'Lead your summary with energy economics, not operations.' }, severity: 'high' },
-    { id: 'whitespace', kind: 'length', text: { ar: 'هناك فراغات كثيرة، اضبط التنسيق ليملأ الصفحة.', en: 'There is too much white space, tighten the layout to fill the page.' }, severity: 'med' },
-    { id: 'typo', kind: 'typo', text: { ar: 'راجعها مرة أخرى، قد يكون فيها خطأ مطبعي بسيط.', en: 'Proofread once more, a small typo or two may have slipped in.' }, severity: 'med' },
-    { id: 'projects', kind: 'bullet', text: { ar: 'أبرز مشاريعك في موضع أعلى، فهي نقطة قوة.', en: 'Feature your projects higher up, they are a strong asset.' }, severity: 'low' },
+    { id: 'finance', kind: 'format', text: { ar: 'تحتاج شهادة مالية، ابدأ بمستوى CFA الأول.', en: 'Add a finance certification, start with CFA Level 1.' }, severity: 'high' },
+    { id: 'impact', kind: 'bullet', text: { ar: 'أضف الأثر المالي أو تحسّن الكفاءة لأبرز إنجازاتك، لا الإنتاج فقط.', en: 'Add the money or efficiency result to your top bullets, not just the output.' }, severity: 'high' },
+    { id: 'summary', kind: 'summary', text: { ar: 'اجعل ملخصك يبدأ بـ«اقتصادي طاقة» لا «طالب دراسات عليا».', en: 'Lead the summary as an energy economist, not "graduate student".' }, severity: 'med' },
+    { id: 'skills', kind: 'format', text: { ar: 'مهاراتك كلها هندسية، أضف النمذجة المالية في Excel.', en: 'Your skills are all engineering tools, add financial modeling in Excel.' }, severity: 'med' },
+    { id: 'years', kind: 'typo', text: { ar: 'استبدل «نحو سنتين» برقم محدد.', en: 'Replace "roughly two years" with a firm number.' }, severity: 'low' },
   ],
 };
 
@@ -646,7 +646,9 @@ export const careerDays: { title: LS; org: LS; when: LS; city: LS; fields: Field
 // (full-time). `best` flags the strongest programs in that field; `link` points at
 // that field's program/department page (approximate, verify before applying).
 export type GradTier = 'high' | 'respected' | 'solid' | 'accessible';
-export type GradProgram = { uni: LS; program: LS; location: LS; link: string; tier: GradTier };
+// top30 flags universities ranked in the world's top 30, which qualify for the
+// Saudi "Pioneers" scholarship (a guaranteed full scholarship once you hold an offer).
+export type GradProgram = { uni: LS; program: LS; location: LS; link: string; tier: GradTier; top30?: boolean };
 
 // Full-time degree options per field, four per major, ordered hardest to easiest:
 // a high-level school that is hard to get into but NOT impossible (think Berkeley,
@@ -654,32 +656,32 @@ export type GradProgram = { uni: LS; program: LS; location: LS; link: string; ti
 // easier ones. The near-impossible names (MIT, Stanford, Harvard, LBS) are excluded.
 export const gradPrograms: Record<Exclude<FieldTag, 'all'>, GradProgram[]> = {
   finance: [
-    { tier: 'high', uni: { ar: 'إمبريال كوليدج لندن', en: 'Imperial College London' }, program: { ar: 'ماجستير التمويل', en: 'MSc Finance' }, location: { ar: 'لندن، المملكة المتحدة', en: 'London, UK' }, link: 'https://www.imperial.ac.uk/business-school/' },
+    { tier: 'high', top30: true, uni: { ar: 'إمبريال كوليدج لندن', en: 'Imperial College London' }, program: { ar: 'ماجستير التمويل', en: 'MSc Finance' }, location: { ar: 'لندن، المملكة المتحدة', en: 'London, UK' }, link: 'https://www.imperial.ac.uk/business-school/' },
     { tier: 'respected', uni: { ar: 'جامعة بوكوني', en: 'Bocconi University' }, program: { ar: 'ماجستير التمويل', en: 'MSc Finance' }, location: { ar: 'ميلانو، إيطاليا', en: 'Milan, Italy' }, link: 'https://www.unibocconi.eu' },
     { tier: 'solid', uni: { ar: 'كلية روتردام للإدارة', en: 'Rotterdam School of Management' }, program: { ar: 'ماجستير التمويل', en: 'MSc Finance' }, location: { ar: 'روتردام، هولندا', en: 'Rotterdam, Netherlands' }, link: 'https://www.rsm.nl' },
     { tier: 'accessible', uni: { ar: 'جامعة ستراثكلايد', en: 'University of Strathclyde' }, program: { ar: 'ماجستير التمويل', en: 'MSc Finance' }, location: { ar: 'غلاسكو، المملكة المتحدة', en: 'Glasgow, UK' }, link: 'https://www.strath.ac.uk/business/' },
   ],
   energy: [
-    { tier: 'high', uni: { ar: 'جامعة كاليفورنيا، بيركلي', en: 'UC Berkeley' }, program: { ar: 'الطاقة والموارد', en: 'Energy and Resources' }, location: { ar: 'كاليفورنيا، الولايات المتحدة', en: 'California, USA' }, link: 'https://erg.berkeley.edu' },
+    { tier: 'high', top30: true, uni: { ar: 'جامعة كاليفورنيا، بيركلي', en: 'UC Berkeley' }, program: { ar: 'الطاقة والموارد', en: 'Energy and Resources' }, location: { ar: 'كاليفورنيا، الولايات المتحدة', en: 'California, USA' }, link: 'https://erg.berkeley.edu' },
     { tier: 'respected', uni: { ar: 'كلية كولورادو للمناجم', en: 'Colorado School of Mines' }, program: { ar: 'هندسة أنظمة الطاقة', en: 'Energy Systems Engineering' }, location: { ar: 'الولايات المتحدة', en: 'United States' }, link: 'https://www.mines.edu' },
     { tier: 'solid', uni: { ar: 'جامعة هيريوت وات', en: 'Heriot-Watt University' }, program: { ar: 'هندسة الطاقة المتجددة', en: 'Renewable Energy Engineering' }, location: { ar: 'المملكة المتحدة', en: 'United Kingdom' }, link: 'https://www.hw.ac.uk' },
     { tier: 'accessible', uni: { ar: 'جامعة كالغاري', en: 'University of Calgary' }, program: { ar: 'تطوير الطاقة المستدامة', en: 'Sustainable Energy Development' }, location: { ar: 'كندا', en: 'Canada' }, link: 'https://www.ucalgary.ca' },
   ],
   consulting: [
-    { tier: 'high', uni: { ar: 'جامعة كورنيل', en: 'Cornell University' }, program: { ar: 'ماجستير إدارة الأعمال', en: 'MBA, Johnson' }, location: { ar: 'نيويورك، الولايات المتحدة', en: 'New York, USA' }, link: 'https://www.johnson.cornell.edu' },
+    { tier: 'high', top30: true, uni: { ar: 'جامعة كورنيل', en: 'Cornell University' }, program: { ar: 'ماجستير إدارة الأعمال', en: 'MBA, Johnson' }, location: { ar: 'نيويورك، الولايات المتحدة', en: 'New York, USA' }, link: 'https://www.johnson.cornell.edu' },
     { tier: 'respected', uni: { ar: 'كلية IE لإدارة الأعمال', en: 'IE Business School' }, program: { ar: 'ماجستير إدارة الأعمال', en: 'MBA' }, location: { ar: 'مدريد، إسبانيا', en: 'Madrid, Spain' }, link: 'https://www.ie.edu/business-school/' },
     { tier: 'solid', uni: { ar: 'كلية كرانفيلد للإدارة', en: 'Cranfield School of Management' }, program: { ar: 'ماجستير إدارة الأعمال', en: 'MBA' }, location: { ar: 'المملكة المتحدة', en: 'United Kingdom' }, link: 'https://www.cranfield.ac.uk/som' },
     { tier: 'accessible', uni: { ar: 'جامعة دورهام', en: 'Durham University' }, program: { ar: 'ماجستير إدارة الأعمال', en: 'MBA' }, location: { ar: 'المملكة المتحدة', en: 'United Kingdom' }, link: 'https://www.durham.ac.uk/business/' },
   ],
   government: [
-    { tier: 'high', uni: { ar: 'جامعة جونز هوبكنز', en: 'Johns Hopkins SAIS' }, program: { ar: 'ماجستير السياسات العامة', en: 'Master of Public Policy' }, location: { ar: 'واشنطن، الولايات المتحدة', en: 'Washington, USA' }, link: 'https://sais.jhu.edu' },
+    { tier: 'high', top30: true, uni: { ar: 'جامعة جونز هوبكنز', en: 'Johns Hopkins SAIS' }, program: { ar: 'ماجستير السياسات العامة', en: 'Master of Public Policy' }, location: { ar: 'واشنطن، الولايات المتحدة', en: 'Washington, USA' }, link: 'https://sais.jhu.edu' },
     { tier: 'respected', uni: { ar: 'معهد العلوم السياسية', en: 'Sciences Po' }, program: { ar: 'ماجستير السياسات العامة', en: 'Master in Public Policy' }, location: { ar: 'باريس، فرنسا', en: 'Paris, France' }, link: 'https://www.sciencespo.fr/en' },
-    { tier: 'solid', uni: { ar: 'جامعة إدنبرة', en: 'University of Edinburgh' }, program: { ar: 'السياسات العامة', en: 'Public Policy' }, location: { ar: 'المملكة المتحدة', en: 'United Kingdom' }, link: 'https://www.ed.ac.uk' },
+    { tier: 'solid', top30: true, uni: { ar: 'جامعة إدنبرة', en: 'University of Edinburgh' }, program: { ar: 'السياسات العامة', en: 'Public Policy' }, location: { ar: 'المملكة المتحدة', en: 'United Kingdom' }, link: 'https://www.ed.ac.uk' },
     { tier: 'accessible', uni: { ar: 'جامعة يورك', en: 'University of York' }, program: { ar: 'السياسات العامة', en: 'Public Policy' }, location: { ar: 'المملكة المتحدة', en: 'United Kingdom' }, link: 'https://www.york.ac.uk' },
   ],
   tech: [
-    { tier: 'high', uni: { ar: 'جامعة كارنيجي ميلون', en: 'Carnegie Mellon University' }, program: { ar: 'علوم الحاسب والذكاء الاصطناعي', en: 'Computer Science / AI' }, location: { ar: 'بنسلفانيا، الولايات المتحدة', en: 'Pennsylvania, USA' }, link: 'https://www.cs.cmu.edu' },
-    { tier: 'respected', uni: { ar: 'جامعة إدنبرة', en: 'University of Edinburgh' }, program: { ar: 'الذكاء الاصطناعي والمعلوماتية', en: 'AI and Informatics' }, location: { ar: 'المملكة المتحدة', en: 'United Kingdom' }, link: 'https://www.ed.ac.uk/informatics' },
+    { tier: 'high', top30: true, uni: { ar: 'جامعة كارنيجي ميلون', en: 'Carnegie Mellon University' }, program: { ar: 'علوم الحاسب والذكاء الاصطناعي', en: 'Computer Science / AI' }, location: { ar: 'بنسلفانيا، الولايات المتحدة', en: 'Pennsylvania, USA' }, link: 'https://www.cs.cmu.edu' },
+    { tier: 'respected', top30: true, uni: { ar: 'جامعة إدنبرة', en: 'University of Edinburgh' }, program: { ar: 'الذكاء الاصطناعي والمعلوماتية', en: 'AI and Informatics' }, location: { ar: 'المملكة المتحدة', en: 'United Kingdom' }, link: 'https://www.ed.ac.uk/informatics' },
     { tier: 'solid', uni: { ar: 'جامعة ساوثهامبتون', en: 'University of Southampton' }, program: { ar: 'علوم الحاسب', en: 'Computer Science' }, location: { ar: 'المملكة المتحدة', en: 'United Kingdom' }, link: 'https://www.southampton.ac.uk' },
     { tier: 'accessible', uni: { ar: 'جامعة غلاسكو', en: 'University of Glasgow' }, program: { ar: 'علوم الحاسب', en: 'Computer Science' }, location: { ar: 'المملكة المتحدة', en: 'United Kingdom' }, link: 'https://www.gla.ac.uk' },
   ],
@@ -1087,15 +1089,17 @@ export const ui = {
     fullTimeSub: { ar: 'جامعات قوية في متناولك فعلًا، من الأصعب إلى الأسهل قبولًا', en: 'Strong universities you can realistically reach, hardest to easiest' },
     partTimeTitle: { ar: 'في السعودية', en: 'In Saudi Arabia' },
     partTimeSub: { ar: 'ادرس وأنت تعمل، أقرب خيارين إليك', en: 'Study while you work, your two nearest options' },
-    tierHigh: { ar: 'صعبة لكن ممكنة', en: 'Hard but reachable' },
+    tierHigh: { ar: 'عالمية المستوى', en: 'World class' },
     tierRespected: { ar: 'مرموقة ومعروفة', en: 'Respected and well known' },
     tierSolid: { ar: 'خيار قوي', en: 'A solid choice' },
     tierAccessible: { ar: 'أسهل قبولًا', en: 'Easier to get into' },
     nearYou: { ar: 'الأقرب إليك', en: 'Nearest you' },
     majorsHere: { ar: 'تخصصات متاحة هنا', en: 'Majors here' },
-    reqBrief: { ar: ['معدل تراكمي جيد واختبار لغة (آيلتس 6.5 أو توفل 90)', 'GMAT أو GRE لبعض البرامج، مع خطاب غرض وتوصيات'], en: ['A good GPA and an English test (IELTS 6.5 or TOEFL 90)', 'GMAT or GRE for some, plus an SOP and references'] },
-    timelineBrief: { ar: ['ابدأ قبل 9 إلى 12 شهرًا', 'أغلب المواعيد في الخريف'], en: ['Start 9 to 12 months ahead', 'Most deadlines fall in autumn'] },
-    fundingBrief: { ar: ['برنامج «بعثتك» لأفضل الجامعات', 'ابتعاث جهة العمل أو زمالة كاوست'], en: ['The بعثتك program for top universities', 'Employer sponsorship or a KAUST fellowship'] },
+    pioneersBadge: { ar: 'منحة رواد', en: 'Pioneers scholarship' },
+    pioneersNote: { ar: 'برنامج رواد يضمن منحة كاملة عند حصولك على قبول من جامعة ضمن أفضل 30 عالميًا.', en: 'The Pioneers program guarantees a full scholarship once you hold an offer from a top-30 university.' },
+    reqBrief: { ar: ['معدل تراكمي جيد واختبار لغة (آيلتس 6.5 أو توفل 90)', 'توصيات وخطاب أهداف (مقال قصير عن طموحك)، وبعضها يطلب GMAT أو GRE'], en: ['A good GPA and an English test (IELTS 6.5 or TOEFL 90)', 'References and a short goals essay (statement of purpose); some ask for GMAT or GRE'] },
+    timelineBrief: { ar: ['ابدأ قبل سنة تقريبًا', 'مواعيد أمريكا غالبًا في ديسمبر، وبريطانيا تتفاوت'], en: ['Start about a year ahead', 'US deadlines are mostly December, UK varies'] },
+    fundingBrief: { ar: ['منحة حكومية (بعثتك)'], en: ['Government scholarship (بعثتك)'] },
     viewProgram: { ar: 'صفحة البرنامج', en: 'Program page' },
     worthItTitle: { ar: 'هل تستحق الدراسة العليا؟', en: 'Is a graduate degree worth it?' },
     worthIt: { ar: 'لمسارك، الماجستير يرفع سقف راتبك ويفتح الأدوار القيادية أسرع، خاصة من جامعة قوية في مجالك. القرار يعتمد على هدفك ووقتك.', en: 'For your path, a master’s raises your ceiling and opens senior roles faster, especially from a university strong in your field. It comes down to your goal and your time.' },

@@ -1144,28 +1144,31 @@ function Study({ locale }: { locale: Loc }) {
         </div>
       </Card>
 
-      {/* The essentials up top, briefly: requirements, timeline, funding */}
-      <div className="grid gap-3 sm:grid-cols-3">
-        {essentials.map((e) => (
-          <Card key={e.title} className="p-4">
-            <div className="mb-2 flex items-center gap-2">
-              <e.Icon className={cn('h-4 w-4', ACCENT)} />
-              <h3 className="text-[13px] font-bold text-stone-900 dark:text-stone-50">{e.title}</h3>
+      {/* The essentials, briefly, all in one widget: requirements, timeline, funding */}
+      <Card className="p-5">
+        <div className="grid gap-5 sm:grid-cols-3">
+          {essentials.map((e, idx) => (
+            <div key={e.title} className={cn(idx > 0 && 'sm:border-s sm:border-stone-200/70 sm:ps-5 dark:sm:border-white/10')}>
+              <div className="mb-2 flex items-center gap-2">
+                <e.Icon className={cn('h-4 w-4', ACCENT)} />
+                <h3 className="text-[13px] font-bold text-stone-900 dark:text-stone-50">{e.title}</h3>
+              </div>
+              <ul className="space-y-1.5">
+                {e.items.map((t, i) => (
+                  <li key={i} className="flex items-start gap-2 text-[12.5px] text-stone-600 dark:text-stone-300">
+                    <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-amber-500" /> {t}
+                  </li>
+                ))}
+              </ul>
             </div>
-            <ul className="space-y-1.5">
-              {e.items.map((t, i) => (
-                <li key={i} className="flex items-start gap-2 text-[12.5px] text-stone-600 dark:text-stone-300">
-                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-amber-500" /> {t}
-                </li>
-              ))}
-            </ul>
-          </Card>
-        ))}
-      </div>
+          ))}
+        </div>
+      </Card>
 
       {/* Full-time, BY MAJOR: each major gets four universities strong in that field */}
       <div className="space-y-6">
         <SectionTitle icon={Globe} title={ui.study.fullTimeTitle[locale]} sub={ui.study.fullTimeSub[locale]} />
+        <div className={cn('-mt-2 rounded-2xl bg-amber-400/[0.12] px-3.5 py-2.5 text-[12.5px] font-semibold text-amber-700 dark:text-amber-300')}>★ {ui.study.pioneersNote[locale]}</div>
         {fields.map((f) => (
           <div key={f}>
             <h3 className="mb-2.5 flex items-center gap-2 text-[13px] font-bold text-stone-900 dark:text-stone-50">
@@ -1181,6 +1184,7 @@ function Study({ locale }: { locale: Loc }) {
                     </div>
                     <h4 className="mt-2 text-[14px] font-semibold text-stone-900 dark:text-stone-50">{p.uni[locale]}</h4>
                     <div className="mt-0.5 text-[12.5px] text-stone-600 dark:text-stone-300">{p.program[locale]}</div>
+                    {p.top30 && <span className="mt-1.5 inline-flex w-fit items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-[9.5px] font-bold text-amber-700 dark:text-amber-300">★ {ui.study.pioneersBadge[locale]}</span>}
                     <div className="mt-2.5 flex flex-wrap items-center gap-2 text-[11.5px]">
                       <span className="inline-flex items-center gap-1 text-stone-400 dark:text-stone-500"><Globe className="h-3 w-3" /> {p.location[locale]}</span>
                       <span className={cn('ms-auto inline-flex items-center gap-1 font-semibold', ACCENT)}>{ui.study.viewProgram[locale]} <ArrowUpRight className="h-3 w-3" /></span>
