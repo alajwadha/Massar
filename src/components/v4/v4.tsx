@@ -385,7 +385,7 @@ const HOME_WIDGETS: { id: string; label: keyof typeof ui.overview }[] = [
   { id: 'goal', label: 'wGoal' },
   { id: 'snapshot', label: 'wSnapshot' },
 ];
-const WIDGET_DEFAULT: Record<string, boolean> = { nextMove: true, network: true, cvReview: true, stats: true, picks: true, goal: false, snapshot: false };
+const WIDGET_DEFAULT: Record<string, boolean> = { nextMove: false, network: false, cvReview: true, stats: true, picks: true, goal: false, snapshot: false };
 const WEEKLY_GOAL = 5;
 
 function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; openPath: (id: string) => void }) {
@@ -393,6 +393,11 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
   const { network } = useNetwork();
   const { level, setLevel, statuses, certsDone, activePathId, homeWidgets, setWidget } = useProgress();
   const [customizing, setCustomizing] = useState(false);
+  const [shuffle, setShuffle] = useState(0);
+  // Day-of-epoch for the daily rotation; starts at 0 so SSR and the first client
+  // render match (no hydration mismatch), then advances to today after mount.
+  const [day, setDay] = useState(0);
+  useEffect(() => setDay(Math.floor(Date.now() / 86_400_000)), []);
 
   // The customer's chosen path drives Home (falls back to the plan's primary).
   const activePath = plan.paths.find((p) => p.id === (activePathId ?? plan.primaryPath.id)) ?? plan.primaryPath;
@@ -410,9 +415,10 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
   const current = activePath.certs.find((c) => c.status === 'current');
 
   // Connection picks: the uploaded network if present, otherwise HR contacts as
-  // placeholders (same ranking rules), shown until the CSV is uploaded.
+  // placeholders (same ranking rules). Rotates daily, and the shuffle button
+  // advances the rotation on demand. Works for both network and placeholders.
   const ranked = rankConnections(network ?? plan.hrContacts, planTargets(plan));
-  const todays = network ? dailyPicks(ranked, 3, Math.floor(Date.now() / 86_400_000)) : ranked.slice(0, 3);
+  const todays = dailyPicks(ranked, 3, day + shuffle);
 
   const nm: { title: string; desc: string; go: Tab } = !network
     ? { title: ui.overview.nextMove.connectTitle[locale], desc: ui.overview.nextMove.connectDesc[locale], go: 'contacts' }
@@ -618,9 +624,14 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
         <div className="pt-1">
           <div className="mb-1 flex items-end justify-between gap-3">
             <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-50">{ui.overview.actionsTitle[locale]}</h2>
-            <button type="button" onClick={() => go('contacts')} className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-stone-900 hover:text-stone-500 dark:text-stone-100 dark:hover:text-stone-400">
-              {ui.overview.openContacts[locale]} <ArrowLeft className="h-4 w-4 ltr:rotate-180" />
-            </button>
+            <div className="flex shrink-0 items-center gap-2">
+              <button type="button" onClick={() => setShuffle((s) => s + 1)} title={ui.contacts.shuffle[locale]} aria-label={ui.contacts.shuffle[locale]} className={cn('grid h-8 w-8 place-items-center rounded-full', GHOST)}>
+                <Shuffle className="h-3.5 w-3.5" />
+              </button>
+              <button type="button" onClick={() => go('contacts')} className="inline-flex items-center gap-1 text-sm font-semibold text-stone-900 hover:text-stone-500 dark:text-stone-100 dark:hover:text-stone-400">
+                {ui.overview.openContacts[locale]} <ArrowLeft className="h-4 w-4 ltr:rotate-180" />
+              </button>
+            </div>
           </div>
           <p className="text-sm text-stone-400 dark:text-stone-500">{network ? ui.overview.actionsSub[locale] : ui.contacts.placeholderNote[locale]}</p>
           {todays.length > 0 && <CardGrid items={todays.map((r) => ({ contact: r.contact, kind: r.kind, reason: r.reason[locale] }))} locale={locale} />}
@@ -1499,15 +1510,17 @@ function Shell() {
       </div>
 
       <main className="mx-auto w-full max-w-5xl px-5 pb-10 pt-7 sm:px-8">
-        <AnimatePresence mode="wait">
-          <motion.div key={tab + (pathSel ?? '')} initial={reduce ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? undefined : { opacity: 0, y: -6 }} transition={{ duration: 0.26, ease: EASE }}>
-            {tab === 'home' && <Home locale={locale} go={go} openPath={openPath} />}
-            {tab === 'paths' && <Paths locale={locale} selId={pathSel} setSelId={setPathSel} />}
-            {tab === 'contacts' && <Contacts locale={locale} />}
-            {tab === 'tracker' && <Tracker locale={locale} />}
-            {tab === 'opportunities' && <Opportunities locale={locale} />}
-          </motion.div>
-        </AnimatePresence>
+        {/* A plain keyed motion.div (NOT AnimatePresence mode="wait"): it remounts
+            on tab change and fades in. mode="wait" would wait for the old tab to
+            finish exiting, and a layoutId element inside Home hangs that exit in
+            production, leaving the new tab unmounted (the "only home works" bug). */}
+        <motion.div key={tab + (pathSel ?? '')} initial={reduce ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.24, ease: EASE }}>
+          {tab === 'home' && <Home locale={locale} go={go} openPath={openPath} />}
+          {tab === 'paths' && <Paths locale={locale} selId={pathSel} setSelId={setPathSel} />}
+          {tab === 'contacts' && <Contacts locale={locale} />}
+          {tab === 'tracker' && <Tracker locale={locale} />}
+          {tab === 'opportunities' && <Opportunities locale={locale} />}
+        </motion.div>
       </main>
 
       <FeedbackFooter locale={locale} />
