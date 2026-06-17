@@ -629,12 +629,15 @@ export const tamheer = {
   ] as LS[],
 };
 
+// Dates are concrete (month + year), refreshed to the next upcoming edition; the
+// card carries a "check the site" caveat since exact days can shift.
 export const careerDays: { title: LS; org: LS; when: LS; city: LS; fields: FieldTag[]; link: string }[] = [
-  { title: { ar: 'يوم المهنة - جامعة الملك فهد', en: 'KFUPM Career Day' }, org: { ar: 'جامعة الملك فهد للبترول والمعادن', en: 'KFUPM' }, when: { ar: 'سنويًا · فبراير', en: 'Annually · February' }, city: { ar: 'الظهران', en: 'Dhahran' }, fields: ['energy', 'tech'], link: 'https://www.kfupm.edu.sa' },
-  { title: { ar: 'مؤتمر القطاع المالي', en: 'Financial Sector Conference' }, org: { ar: 'البنك المركزي وهيئة السوق المالية', en: 'SAMA & CMA' }, when: { ar: 'سنويًا · الربع الأول', en: 'Annually · Q1' }, city: { ar: 'الرياض', en: 'Riyadh' }, fields: ['finance'], link: 'https://www.fsc.sa' },
-  { title: { ar: 'ليب التقني (LEAP)', en: 'LEAP Tech' }, org: { ar: 'وزارة الاتصالات', en: 'MCIT' }, when: { ar: 'سنويًا · فبراير', en: 'Annually · February' }, city: { ar: 'الرياض', en: 'Riyadh' }, fields: ['tech'], link: 'https://onegiantleap.com' },
-  { title: { ar: 'منتدى مسك العالمي', en: 'Misk Global Forum' }, org: { ar: 'مؤسسة مسك', en: 'Misk Foundation' }, when: { ar: 'سنويًا · الربع الرابع', en: 'Annually · Q4' }, city: { ar: 'الرياض', en: 'Riyadh' }, fields: ['all'], link: 'https://miskglobalforum.com' },
-  { title: { ar: 'ملتقى التوظيف - طاقات', en: 'Taqat Job Fair' }, org: { ar: 'صندوق تنمية الموارد البشرية (هدف)', en: 'HRDF (Hadaf)' }, when: { ar: 'دوريًا على مدار السنة', en: 'Recurring through the year' }, city: { ar: 'عدة مدن', en: 'Multiple cities' }, fields: ['all'], link: 'https://www.taqat.sa' },
+  { title: { ar: '24 فنتك', en: '24 Fintech' }, org: { ar: 'فنتك السعودية', en: 'Fintech Saudi' }, when: { ar: 'سبتمبر 2026', en: 'September 2026' }, city: { ar: 'الرياض', en: 'Riyadh' }, fields: ['finance', 'tech'], link: 'https://www.24fintech.com' },
+  { title: { ar: 'منتدى بيبان', en: 'Biban Forum' }, org: { ar: 'منشآت', en: "Monsha'at" }, when: { ar: 'نوفمبر 2026', en: 'November 2026' }, city: { ar: 'الرياض', en: 'Riyadh' }, fields: ['all', 'consulting'], link: 'https://biban.sa' },
+  { title: { ar: 'منتدى مسك العالمي', en: 'Misk Global Forum' }, org: { ar: 'مؤسسة مسك', en: 'Misk Foundation' }, when: { ar: 'نوفمبر 2026', en: 'November 2026' }, city: { ar: 'الرياض', en: 'Riyadh' }, fields: ['all'], link: 'https://miskglobalforum.com' },
+  { title: { ar: 'مؤتمر القطاع المالي', en: 'Financial Sector Conference' }, org: { ar: 'البنك المركزي وهيئة السوق المالية', en: 'SAMA & CMA' }, when: { ar: 'فبراير 2027', en: 'February 2027' }, city: { ar: 'الرياض', en: 'Riyadh' }, fields: ['finance'], link: 'https://www.fsc.sa' },
+  { title: { ar: 'ليب التقني (LEAP)', en: 'LEAP Tech' }, org: { ar: 'وزارة الاتصالات', en: 'MCIT' }, when: { ar: 'فبراير 2027', en: 'February 2027' }, city: { ar: 'الرياض', en: 'Riyadh' }, fields: ['tech'], link: 'https://onegiantleap.com' },
+  { title: { ar: 'يوم المهنة، جامعة الملك فهد', en: 'KFUPM Career Day' }, org: { ar: 'جامعة الملك فهد للبترول والمعادن', en: 'KFUPM' }, when: { ar: 'فبراير 2027', en: 'February 2027' }, city: { ar: 'الظهران', en: 'Dhahran' }, fields: ['energy', 'tech'], link: 'https://www.kfupm.edu.sa' },
 ];
 
 // Graduate-study options per field for the «الدراسات / Study» tab. Two buckets:
@@ -650,28 +653,28 @@ export type GradProgram = { uni: LS; program: LS; location: LS; link: string; ti
 export const gradPrograms: Record<Exclude<FieldTag, 'all'>, GradProgram[]> = {
   finance: [
     { tier: 'saudi', uni: { ar: 'جامعة الملك سعود', en: 'King Saud University' }, program: { ar: 'ماجستير التمويل', en: 'MSc Finance' }, location: { ar: 'الرياض', en: 'Riyadh' }, link: 'https://business.ksu.edu.sa' },
-    { tier: 'top', uni: { ar: 'جامعة مانشستر', en: 'University of Manchester' }, program: { ar: 'ماجستير التمويل', en: 'MSc Finance' }, location: { ar: 'المملكة المتحدة', en: 'United Kingdom' }, link: 'https://www.alliancembs.manchester.ac.uk' },
-    { tier: 'accessible', uni: { ar: 'جامعة ليدز', en: 'University of Leeds' }, program: { ar: 'ماجستير التمويل', en: 'MSc Finance' }, location: { ar: 'المملكة المتحدة', en: 'United Kingdom' }, link: 'https://business.leeds.ac.uk' },
+    { tier: 'top', uni: { ar: 'جامعة بوكوني', en: 'Bocconi University' }, program: { ar: 'ماجستير التمويل', en: 'MSc Finance' }, location: { ar: 'ميلانو، إيطاليا', en: 'Milan, Italy' }, link: 'https://www.unibocconi.eu' },
+    { tier: 'accessible', uni: { ar: 'جامعة ستراثكلايد', en: 'University of Strathclyde' }, program: { ar: 'ماجستير التمويل', en: 'MSc Finance' }, location: { ar: 'غلاسكو، المملكة المتحدة', en: 'Glasgow, UK' }, link: 'https://www.strath.ac.uk/business/' },
   ],
   energy: [
     { tier: 'saudi', uni: { ar: 'جامعة الملك عبدالله (كاوست)', en: 'KAUST' }, program: { ar: 'علوم وهندسة الطاقة', en: 'Energy Science and Engineering' }, location: { ar: 'ثول', en: 'Thuwal' }, link: 'https://cemse.kaust.edu.sa' },
-    { tier: 'top', uni: { ar: 'جامعة بيردو', en: 'Purdue University' }, program: { ar: 'هندسة وأنظمة الطاقة', en: 'Energy and Power Engineering' }, location: { ar: 'الولايات المتحدة', en: 'United States' }, link: 'https://engineering.purdue.edu' },
-    { tier: 'accessible', uni: { ar: 'جامعة ولاية أريزونا', en: 'Arizona State University' }, program: { ar: 'الطاقة المستدامة', en: 'Sustainable Energy' }, location: { ar: 'الولايات المتحدة', en: 'United States' }, link: 'https://www.asu.edu' },
+    { tier: 'top', uni: { ar: 'كلية كولورادو للمناجم', en: 'Colorado School of Mines' }, program: { ar: 'هندسة أنظمة الطاقة', en: 'Energy Systems Engineering' }, location: { ar: 'الولايات المتحدة', en: 'United States' }, link: 'https://www.mines.edu' },
+    { tier: 'accessible', uni: { ar: 'جامعة هيريوت وات', en: 'Heriot-Watt University' }, program: { ar: 'هندسة الطاقة المتجددة', en: 'Renewable Energy Engineering' }, location: { ar: 'المملكة المتحدة', en: 'United Kingdom' }, link: 'https://www.hw.ac.uk' },
   ],
   consulting: [
-    { tier: 'saudi', uni: { ar: 'جامعة الملك عبدالله (كاوست)', en: 'KAUST' }, program: { ar: 'ماجستير إدارة الأعمال', en: 'MBA' }, location: { ar: 'ثول', en: 'Thuwal' }, link: 'https://www.kaust.edu.sa' },
-    { tier: 'top', uni: { ar: 'جامعة ديوك', en: 'Duke University' }, program: { ar: 'ماجستير إدارة الأعمال، فوكوا', en: 'MBA, Fuqua' }, location: { ar: 'الولايات المتحدة', en: 'United States' }, link: 'https://www.fuqua.duke.edu' },
-    { tier: 'accessible', uni: { ar: 'جامعة ولاية أريزونا', en: 'Arizona State University' }, program: { ar: 'ماجستير إدارة الأعمال، كاري', en: 'MBA, W. P. Carey' }, location: { ar: 'الولايات المتحدة', en: 'United States' }, link: 'https://wpcarey.asu.edu' },
+    { tier: 'saudi', uni: { ar: 'جامعة الفيصل', en: 'Alfaisal University' }, program: { ar: 'ماجستير إدارة الأعمال', en: 'MBA' }, location: { ar: 'الرياض', en: 'Riyadh' }, link: 'https://cob.alfaisal.edu' },
+    { tier: 'top', uni: { ar: 'كلية IE لإدارة الأعمال', en: 'IE Business School' }, program: { ar: 'ماجستير إدارة الأعمال', en: 'MBA' }, location: { ar: 'مدريد، إسبانيا', en: 'Madrid, Spain' }, link: 'https://www.ie.edu/business-school/' },
+    { tier: 'accessible', uni: { ar: 'كلية كرانفيلد للإدارة', en: 'Cranfield School of Management' }, program: { ar: 'ماجستير إدارة الأعمال', en: 'MBA' }, location: { ar: 'المملكة المتحدة', en: 'United Kingdom' }, link: 'https://www.cranfield.ac.uk/som' },
   ],
   government: [
     { tier: 'saudi', uni: { ar: 'معهد الإدارة العامة', en: 'IPA' }, program: { ar: 'السياسات والإدارة العامة', en: 'Public Policy and Administration' }, location: { ar: 'الرياض', en: 'Riyadh' }, link: 'https://www.ipa.edu.sa' },
-    { tier: 'top', uni: { ar: 'جامعة ديوك', en: 'Duke University' }, program: { ar: 'السياسات العامة، سانفورد', en: 'Public Policy, Sanford' }, location: { ar: 'الولايات المتحدة', en: 'United States' }, link: 'https://sanford.duke.edu' },
-    { tier: 'accessible', uni: { ar: 'جامعة ولاية أريزونا', en: 'Arizona State University' }, program: { ar: 'الإدارة والسياسات العامة', en: 'Public Affairs' }, location: { ar: 'الولايات المتحدة', en: 'United States' }, link: 'https://watts.asu.edu' },
+    { tier: 'top', uni: { ar: 'معهد العلوم السياسية', en: 'Sciences Po' }, program: { ar: 'ماجستير السياسات العامة', en: 'Master in Public Policy' }, location: { ar: 'باريس، فرنسا', en: 'Paris, France' }, link: 'https://www.sciencespo.fr/en' },
+    { tier: 'accessible', uni: { ar: 'جامعة يورك', en: 'University of York' }, program: { ar: 'السياسات العامة', en: 'Public Policy' }, location: { ar: 'المملكة المتحدة', en: 'United Kingdom' }, link: 'https://www.york.ac.uk' },
   ],
   tech: [
     { tier: 'saudi', uni: { ar: 'جامعة الملك عبدالله (كاوست)', en: 'KAUST' }, program: { ar: 'علوم الحاسب والذكاء الاصطناعي', en: 'Computer Science and AI' }, location: { ar: 'ثول', en: 'Thuwal' }, link: 'https://cemse.kaust.edu.sa' },
-    { tier: 'top', uni: { ar: 'جامعة بيردو', en: 'Purdue University' }, program: { ar: 'علوم الحاسب', en: 'Computer Science' }, location: { ar: 'الولايات المتحدة', en: 'United States' }, link: 'https://www.cs.purdue.edu' },
-    { tier: 'accessible', uni: { ar: 'جامعة ولاية أريزونا', en: 'Arizona State University' }, program: { ar: 'علوم الحاسب', en: 'Computer Science' }, location: { ar: 'الولايات المتحدة', en: 'United States' }, link: 'https://scai.engineering.asu.edu' },
+    { tier: 'top', uni: { ar: 'جامعة إدنبرة', en: 'University of Edinburgh' }, program: { ar: 'الذكاء الاصطناعي والمعلوماتية', en: 'AI and Informatics' }, location: { ar: 'المملكة المتحدة', en: 'United Kingdom' }, link: 'https://www.ed.ac.uk/informatics' },
+    { tier: 'accessible', uni: { ar: 'جامعة ساوثهامبتون', en: 'University of Southampton' }, program: { ar: 'علوم الحاسب', en: 'Computer Science' }, location: { ar: 'المملكة المتحدة', en: 'United Kingdom' }, link: 'https://www.southampton.ac.uk' },
   ],
 };
 
@@ -766,6 +769,38 @@ export function careersUrlFor(companyEn: string): string | undefined {
   const c = companyEn.toLowerCase();
   return companyCareers.find((e) => e.match.some((m) => c.includes(m)))?.url;
 }
+
+// A broad directory of Saudi employer career pages, across sectors and company
+// sizes (NOT only the big names). Tagged by field so the most relevant surface
+// first. The product is for promotions and smaller employers too, not just giants.
+export const companyPortals: { name: LS; url: string; fields: FieldTag[] }[] = [
+  { name: { ar: 'صندوق الاستثمارات العامة', en: 'PIF' }, url: 'https://www.pif.gov.sa/en/careers/', fields: ['finance', 'all'] },
+  { name: { ar: 'سنابل للاستثمار', en: 'Sanabil Investments' }, url: 'https://www.sanabil.com', fields: ['finance'] },
+  { name: { ar: 'جدوى للاستثمار', en: 'Jadwa Investment' }, url: 'https://www.jadwa.com', fields: ['finance'] },
+  { name: { ar: 'البنك الأهلي السعودي', en: 'Saudi National Bank' }, url: 'https://www.alahli.com/en-us/careers', fields: ['finance'] },
+  { name: { ar: 'مصرف الراجحي', en: 'Al Rajhi Bank' }, url: 'https://www.alrajhibank.com.sa', fields: ['finance'] },
+  { name: { ar: 'بنك الرياض', en: 'Riyad Bank' }, url: 'https://www.riyadbank.com', fields: ['finance'] },
+  { name: { ar: 'السوق المالية (تداول)', en: 'Saudi Exchange (Tadawul)' }, url: 'https://www.saudiexchange.sa', fields: ['finance'] },
+  { name: { ar: 'أرامكو السعودية', en: 'Saudi Aramco' }, url: 'https://www.aramco.com/en/careers', fields: ['energy'] },
+  { name: { ar: 'سابك', en: 'SABIC' }, url: 'https://www.sabic.com/en/careers', fields: ['energy'] },
+  { name: { ar: 'معادن', en: "Ma'aden" }, url: 'https://www.maaden.com.sa/en/careers', fields: ['energy'] },
+  { name: { ar: 'أكوا باور', en: 'ACWA Power' }, url: 'https://acwapower.com/en/careers/', fields: ['energy'] },
+  { name: { ar: 'كابسارك', en: 'KAPSARC' }, url: 'https://www.kapsarc.org/careers/', fields: ['energy', 'government'] },
+  { name: { ar: 'نيوم', en: 'NEOM' }, url: 'https://www.neom.com/en-us/careers', fields: ['all', 'energy', 'tech'] },
+  { name: { ar: 'البحر الأحمر العالمية', en: 'Red Sea Global' }, url: 'https://careers.redseaglobal.com', fields: ['all', 'consulting'] },
+  { name: { ar: 'روشن', en: 'ROSHN' }, url: 'https://www.roshn.sa/en/careers', fields: ['all'] },
+  { name: { ar: 'ماكنزي وشركاه', en: 'McKinsey & Company' }, url: 'https://www.mckinsey.com/careers', fields: ['consulting'] },
+  { name: { ar: 'مجموعة بوسطن الاستشارية', en: 'BCG' }, url: 'https://careers.bcg.com', fields: ['consulting'] },
+  { name: { ar: 'بين آند كومباني', en: 'Bain & Company' }, url: 'https://www.bain.com/careers/', fields: ['consulting'] },
+  { name: { ar: 'ستراتيجي&', en: 'Strategy&' }, url: 'https://www.strategyand.pwc.com/m1/en/careers.html', fields: ['consulting', 'finance'] },
+  { name: { ar: 'بي دبليو سي الشرق الأوسط', en: 'PwC Middle East' }, url: 'https://www.pwc.com/m1/en/careers.html', fields: ['consulting', 'finance'] },
+  { name: { ar: 'إرنست ويونغ', en: 'EY' }, url: 'https://www.ey.com/en_sa/careers', fields: ['consulting', 'finance'] },
+  { name: { ar: 'كي بي إم جي', en: 'KPMG' }, url: 'https://kpmg.com/sa/en/home/careers.html', fields: ['consulting', 'finance'] },
+  { name: { ar: 'stc', en: 'stc' }, url: 'https://www.stc.com.sa/content/stc/sa/en/personal/about-stc/careers.html', fields: ['tech'] },
+  { name: { ar: 'علم', en: 'Elm' }, url: 'https://www.elm.sa/en/careers', fields: ['tech', 'government'] },
+  { name: { ar: 'سدايا', en: 'SDAIA' }, url: 'https://sdaia.gov.sa', fields: ['tech', 'government'] },
+  { name: { ar: 'موبايلي', en: 'Mobily' }, url: 'https://www.mobily.com.sa', fields: ['tech'] },
+];
 
 // Generic, founder-curated CV and interview guidance (the same for everyone).
 export const cvGuide: LS[] = [
@@ -1112,7 +1147,8 @@ export const ui = {
     mastersSub: { ar: 'برامج قوية في مجالك، الخيارات السعودية أولًا.', en: 'Strong programs in your field, Saudi options first.' },
     jobPortalsTitle: { ar: 'بوابات التوظيف', en: 'Where to apply' },
     portalsTitle: { ar: 'البوابات الرسمية', en: 'Official portals' },
-    companyPortalsTitle: { ar: 'الشركات المستهدفة', en: 'Target companies' },
+    companyPortalsTitle: { ar: 'صفحات التوظيف في الشركات', en: 'Company career pages' },
+    companyPortalsSub: { ar: 'تصفّح ووظّف مباشرة، بدءًا بما يناسب مجالك.', en: 'Browse and apply directly, the most relevant to your field first.' },
     apply: { ar: 'تقديم', en: 'Apply' },
     visit: { ar: 'زيارة', en: 'Visit' },
     cvGuideTitle: { ar: 'كيف تكتب سيرة قوية', en: 'How to write a strong CV' },

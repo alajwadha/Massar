@@ -53,7 +53,6 @@ import {
   fillTemplate,
   linkedinUrl,
   scaledAdd,
-  careersUrlFor,
   referralLink,
   LEVELS,
   SECTOR_LABELS,
@@ -67,7 +66,7 @@ import {
   partTimeSaudi,
   skills,
   nationalPortals,
-  companyCareers,
+  companyPortals,
   cvGuide,
   interviewTips,
   ui,
@@ -1107,11 +1106,10 @@ function Study({ locale }: { locale: Loc }) {
   const plan = usePlan();
   const { activePathId } = useProgress();
   const activePath = plan.paths.find((p) => p.id === (activePathId ?? plan.primaryPath.id)) ?? plan.primaryPath;
-  // Three majors that fit this path; the primary one (fields[0]) drives the
-  // university tiers shown below.
+  // Three majors that fit this path; each major gets its own three universities
+  // (one Saudi, one respected-but-gettable, one easier) strong in THAT field.
   const fields = activePath.gradFields;
   const primary = fields[0];
-  const fullTime = gradPrograms[primary] ?? [];
   // Saudi part-time options that suit any of the path's majors, ordered with the
   // ones nearest the customer's region first (their location comes from the CV).
   const region = plan.profile.region;
@@ -1136,46 +1134,43 @@ function Study({ locale }: { locale: Loc }) {
         <p className={cn('mt-1.5 text-[12.5px] font-semibold', ACCENT)}>{ui.study.chosenFor[locale](activePath.name[locale])}</p>
       </div>
 
-      {/* Is it worth it? + the majors that fit this path */}
-      <Card className="p-5">
-        <div className="flex items-start gap-3">
-          <div className={cn('grid h-10 w-10 shrink-0 place-items-center rounded-xl', SOFT)}><GraduationCap className={cn('h-5 w-5', ACCENT)} /></div>
-          <div className="min-w-0">
-            <h3 className="text-sm font-bold text-stone-900 dark:text-stone-50">{ui.study.worthItTitle[locale]}</h3>
-            <p className="mt-0.5 text-[13px] leading-relaxed text-stone-500 dark:text-stone-400">{ui.study.worthIt[locale]}</p>
-          </div>
-        </div>
-        <div className="mt-4">
-          <div className="text-[11px] font-bold uppercase tracking-wide text-stone-400 dark:text-stone-500">{ui.study.majorsLabel[locale]}</div>
-          <div className="mt-2 flex flex-wrap gap-1.5">
-            {fields.map((f) => (
-              <span key={f} className={cn('rounded-full px-3 py-1 text-[12.5px] font-semibold', SOFT)}>{fieldMajors[f][locale]}</span>
-            ))}
-          </div>
+      {/* Is it worth it? */}
+      <Card className="flex items-start gap-3 p-5">
+        <div className={cn('grid h-10 w-10 shrink-0 place-items-center rounded-xl', SOFT)}><GraduationCap className={cn('h-5 w-5', ACCENT)} /></div>
+        <div className="min-w-0">
+          <h3 className="text-sm font-bold text-stone-900 dark:text-stone-50">{ui.study.worthItTitle[locale]}</h3>
+          <p className="mt-0.5 text-[13px] leading-relaxed text-stone-500 dark:text-stone-400">{ui.study.worthIt[locale]}</p>
         </div>
       </Card>
 
-      {/* Full-time, three tiers: one Saudi, one respected-but-gettable, one easier */}
-      <div>
+      {/* Full-time, BY MAJOR: each major gets three universities strong in that field */}
+      <div className="space-y-6">
         <SectionTitle icon={Globe} title={ui.study.fullTimeTitle[locale]} sub={ui.study.fullTimeSub[locale]} />
-        <div className="grid gap-3 sm:grid-cols-3">
-          {fullTime.map((p, i) => (
-            <a key={i} href={p.link} target="_blank" rel="noopener noreferrer" className="group">
-              <Card className={cn('flex h-full flex-col p-4 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]', p.tier === 'saudi' && 'border-amber-500/30 dark:border-amber-400/25')}>
-                <div className="flex items-center justify-between gap-2">
-                  <span className={cn('rounded-full px-2 py-0.5 text-[10px] font-bold', p.tier === 'saudi' ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : SOFT)}>{tierLabel(p.tier)}</span>
-                  <ArrowUpRight className="h-4 w-4 shrink-0 text-stone-300 transition-colors group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
-                </div>
-                <h3 className="mt-2 text-[14px] font-semibold text-stone-900 dark:text-stone-50">{p.uni[locale]}</h3>
-                <div className="mt-0.5 text-[12.5px] text-stone-600 dark:text-stone-300">{p.program[locale]}</div>
-                <div className="mt-2.5 flex flex-wrap items-center gap-2 text-[11.5px]">
-                  <span className="inline-flex items-center gap-1 text-stone-400 dark:text-stone-500"><Globe className="h-3 w-3" /> {p.location[locale]}</span>
-                  <span className={cn('ms-auto inline-flex items-center gap-1 font-semibold', ACCENT)}>{ui.study.viewProgram[locale]} <ArrowUpRight className="h-3 w-3" /></span>
-                </div>
-              </Card>
-            </a>
-          ))}
-        </div>
+        {fields.map((f) => (
+          <div key={f}>
+            <h3 className="mb-2.5 flex items-center gap-2 text-[13px] font-bold text-stone-900 dark:text-stone-50">
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-500" /> {fieldMajors[f][locale]}
+            </h3>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {(gradPrograms[f] ?? []).map((p, i) => (
+                <a key={i} href={p.link} target="_blank" rel="noopener noreferrer" className="group">
+                  <Card className={cn('flex h-full flex-col p-4 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]', p.tier === 'saudi' && 'border-amber-500/30 dark:border-amber-400/25')}>
+                    <div className="flex items-center justify-between gap-2">
+                      <span className={cn('rounded-full px-2 py-0.5 text-[10px] font-bold', p.tier === 'saudi' ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : SOFT)}>{tierLabel(p.tier)}</span>
+                      <ArrowUpRight className="h-4 w-4 shrink-0 text-stone-300 transition-colors group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
+                    </div>
+                    <h4 className="mt-2 text-[14px] font-semibold text-stone-900 dark:text-stone-50">{p.uni[locale]}</h4>
+                    <div className="mt-0.5 text-[12.5px] text-stone-600 dark:text-stone-300">{p.program[locale]}</div>
+                    <div className="mt-2.5 flex flex-wrap items-center gap-2 text-[11.5px]">
+                      <span className="inline-flex items-center gap-1 text-stone-400 dark:text-stone-500"><Globe className="h-3 w-3" /> {p.location[locale]}</span>
+                      <span className={cn('ms-auto inline-flex items-center gap-1 font-semibold', ACCENT)}>{ui.study.viewProgram[locale]} <ArrowUpRight className="h-3 w-3" /></span>
+                    </div>
+                  </Card>
+                </a>
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* Part-time inside Saudi (study while working), nearest first */}
@@ -1267,19 +1262,11 @@ function Opportunities({ locale }: { locale: Loc }) {
     { Icon: FileText, title: ui.opp.cvGuideTitle[locale], items: cvGuide },
     { Icon: MessageCircle, title: ui.opp.interviewTitle[locale], items: interviewTips },
   ];
-  const targetCompanies = useMemo(() => {
-    const seen = new Set<string>();
-    const out: { name: { ar: string; en: string }; url: string }[] = [];
-    for (const t of planTargets(plan)) {
-      const url = careersUrlFor(t);
-      const entry = companyCareers.find((e) => e.url === url);
-      if (url && entry && !seen.has(url)) {
-        seen.add(url);
-        out.push({ name: entry.name, url });
-      }
-    }
-    return out;
-  }, [plan]);
+  // A broad set of company career pages, the ones matching the active field first.
+  const companies = useMemo(() => {
+    const rank = (e: (typeof companyPortals)[number]) => (e.fields.includes(field) ? 0 : e.fields.includes('all') ? 1 : 2);
+    return [...companyPortals].sort((a, b) => rank(a) - rank(b));
+  }, [field]);
   const [copied, setCopied] = useState(false);
   const refUrl = typeof window !== 'undefined' ? referralLink(window.location.origin, locale, plan.slug) : '';
   const copyRef = async () => {
@@ -1386,41 +1373,34 @@ function Opportunities({ locale }: { locale: Loc }) {
         ))}
       </div>
 
-      {/* Where to apply: national portals + target-company portals, one section */}
+      {/* Where to apply: official portals, then a broad set of company career pages */}
       <div>
         <SectionTitle icon={Globe} title={ui.opp.jobPortalsTitle[locale]} />
-        <div className="grid gap-5 lg:grid-cols-2">
-          <div>
-            <div className="mb-2 text-[11px] font-bold uppercase tracking-wide text-stone-400 dark:text-stone-500">{ui.opp.portalsTitle[locale]}</div>
-            <div className="grid gap-2.5 sm:grid-cols-2">
-              {nationalPortals.map((p, i) => (
-                <a key={i} href={p.url} target="_blank" rel="noopener noreferrer" className="group">
-                  <Card className="flex items-center gap-3 p-3.5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]">
-                    <div className="min-w-0 flex-1">
-                      <div className="text-[13.5px] font-semibold text-stone-900 dark:text-stone-50">{p.name[locale]}</div>
-                      <div className="truncate text-[11.5px] text-stone-400 dark:text-stone-500">{p.desc[locale]}</div>
-                    </div>
-                    <ArrowUpRight className="h-4 w-4 shrink-0 text-stone-300 group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
-                  </Card>
-                </a>
-              ))}
-            </div>
-          </div>
-          {targetCompanies.length > 0 && (
-            <div>
-              <div className="mb-2 text-[11px] font-bold uppercase tracking-wide text-stone-400 dark:text-stone-500">{ui.opp.companyPortalsTitle[locale]}</div>
-              <div className="grid gap-2.5 sm:grid-cols-2">
-                {targetCompanies.map((c, i) => (
-                  <a key={i} href={c.url} target="_blank" rel="noopener noreferrer" className="group">
-                    <Card className="flex items-center gap-3 p-3.5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]">
-                      <span className="min-w-0 flex-1 truncate text-[13.5px] font-semibold text-stone-900 dark:text-stone-50">{c.name[locale]}</span>
-                      <span className={cn('inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold', SOFT)}>{ui.opp.apply[locale]} <ArrowUpRight className="h-3 w-3" /></span>
-                    </Card>
-                  </a>
-                ))}
-              </div>
-            </div>
-          )}
+        <div className="mb-2 text-[11px] font-bold uppercase tracking-wide text-stone-400 dark:text-stone-500">{ui.opp.portalsTitle[locale]}</div>
+        <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
+          {nationalPortals.map((p, i) => (
+            <a key={i} href={p.url} target="_blank" rel="noopener noreferrer" className="group">
+              <Card className="flex items-center gap-3 p-3.5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]">
+                <div className="min-w-0 flex-1">
+                  <div className="text-[13.5px] font-semibold text-stone-900 dark:text-stone-50">{p.name[locale]}</div>
+                  <div className="truncate text-[11.5px] text-stone-400 dark:text-stone-500">{p.desc[locale]}</div>
+                </div>
+                <ArrowUpRight className="h-4 w-4 shrink-0 text-stone-300 group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
+              </Card>
+            </a>
+          ))}
+        </div>
+        <div className="mt-5 text-[11px] font-bold uppercase tracking-wide text-stone-400 dark:text-stone-500">{ui.opp.companyPortalsTitle[locale]}</div>
+        <p className="mb-2.5 mt-0.5 text-[12px] text-stone-400 dark:text-stone-500">{ui.opp.companyPortalsSub[locale]}</p>
+        <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
+          {companies.map((c, i) => (
+            <a key={i} href={c.url} target="_blank" rel="noopener noreferrer" className="group">
+              <Card className="flex items-center gap-3 p-3.5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]">
+                <span className="min-w-0 flex-1 truncate text-[13.5px] font-semibold text-stone-900 dark:text-stone-50">{c.name[locale]}</span>
+                <span className={cn('inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold', SOFT)}>{ui.opp.apply[locale]} <ArrowUpRight className="h-3 w-3" /></span>
+              </Card>
+            </a>
+          ))}
         </div>
       </div>
 
