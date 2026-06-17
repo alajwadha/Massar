@@ -1119,6 +1119,8 @@ function Study({ locale }: { locale: Loc }) {
 
   const tierLabel = (t: GradProgram['tier']) =>
     (t === 'high' ? ui.study.tierHigh : t === 'respected' ? ui.study.tierRespected : t === 'solid' ? ui.study.tierSolid : ui.study.tierAccessible)[locale];
+  const deadlineFor = (loc: string) =>
+    (/USA|United States/.test(loc) ? ui.study.deadlineUS : /UK|United Kingdom/.test(loc) ? ui.study.deadlineUK : ui.study.deadlineOther)[locale];
 
   const essentials = [
     { Icon: FileText, title: ui.study.reqLabel[locale], items: ui.study.reqBrief[locale] },
@@ -1185,9 +1187,10 @@ function Study({ locale }: { locale: Loc }) {
                     </div>
                     <h4 className="mt-2 text-[14px] font-semibold text-stone-900 dark:text-stone-50">{p.uni[locale]}</h4>
                     <div className="mt-0.5 text-[12.5px] text-stone-600 dark:text-stone-300">{p.program[locale]}</div>
-                    {p.top30 && <span className="mt-1.5 inline-flex w-fit items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-[9.5px] font-bold text-amber-700 dark:text-amber-300">★ {ui.study.pioneersBadge[locale]}</span>}
-                    <div className="mt-2.5 flex flex-wrap items-center gap-2 text-[11.5px]">
+                    <span className={cn('mt-1.5 inline-flex w-fit items-center gap-1 rounded-full px-2 py-0.5 text-[9.5px] font-bold', p.top30 ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : SOFT)}>★ {(p.top30 ? ui.study.pioneersBadge : ui.study.imdadBadge)[locale]}</span>
+                    <div className="mt-2.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11.5px]">
                       <span className="inline-flex items-center gap-1 text-stone-400 dark:text-stone-500"><Globe className="h-3 w-3" /> {p.location[locale]}</span>
+                      <span className="inline-flex items-center gap-1 text-stone-400 dark:text-stone-500"><CalendarDays className="h-3 w-3" /> {deadlineFor(p.location.en)}</span>
                       <span className={cn('ms-auto inline-flex items-center gap-1 font-semibold', ACCENT)}>{ui.study.viewProgram[locale]} <ArrowUpRight className="h-3 w-3" /></span>
                     </div>
                   </Card>
@@ -1476,12 +1479,12 @@ function FeedbackFooter({ locale }: { locale: Loc }) {
 
 /* ------------------------------------------------------------ command palette -- */
 
-const NAV: { id: Tab; Icon: typeof LayoutDashboard }[] = [
+const NAV: { id: Tab; Icon: typeof LayoutDashboard; pro?: boolean }[] = [
   { id: 'home', Icon: LayoutDashboard },
   { id: 'paths', Icon: Compass },
   { id: 'contacts', Icon: Users },
-  { id: 'tracker', Icon: GraduationCap },
-  { id: 'opportunities', Icon: Briefcase },
+  { id: 'tracker', Icon: GraduationCap, pro: true },
+  { id: 'opportunities', Icon: Briefcase, pro: true },
 ];
 
 function CommandPalette({ open, setOpen, locale, go, openPath }: { open: boolean; setOpen: (v: boolean) => void; locale: Loc; go: (t: Tab) => void; openPath: (id: string) => void }) {
@@ -1596,6 +1599,8 @@ function Shell() {
                   {on && <motion.span layoutId="v4-nav" className="absolute inset-0 -z-10 rounded-full bg-stone-900 dark:bg-stone-100" transition={SPRING} />}
                   <n.Icon className="h-4 w-4 shrink-0" />
                   <span className="hidden md:inline">{ui.nav[n.id][locale]}</span>
+                  {n.pro && <span className={cn('ms-0.5 hidden rounded px-1 text-[8.5px] font-bold leading-tight md:inline', on ? 'bg-white/20 text-white dark:bg-stone-900/20 dark:text-stone-900' : 'bg-amber-500/15 text-amber-700 dark:text-amber-300')}>Pro</span>}
+                  {n.pro && <span className="absolute end-1 top-0.5 h-1.5 w-1.5 rounded-full bg-amber-500 md:hidden" />}
                 </button>
               );
             })}
