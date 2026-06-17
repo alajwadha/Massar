@@ -58,6 +58,7 @@ import {
   SECTOR_LABELS,
   TIER_LABELS,
   TIER_CAP,
+  TIER_PATHS,
   tamheer,
   careerDays,
   gradPrograms,
@@ -818,7 +819,8 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
 }
 
 function Paths({ locale, selId, setSelId }: { locale: Loc; selId: string | null; setSelId: (id: string | null) => void }) {
-  const { paths, primaryPath } = usePlan();
+  const { paths: allPaths, primaryPath, tier } = usePlan();
+  const paths = allPaths.slice(0, TIER_PATHS[tier]);
   const { level, activePathId } = useProgress();
   const activeId = activePathId ?? primaryPath.id;
   const selected = selId ? paths.find((p) => p.id === selId) : null;
@@ -1495,7 +1497,8 @@ const NAV: { id: Tab; Icon: typeof LayoutDashboard; pro?: boolean }[] = [
 ];
 
 function CommandPalette({ open, setOpen, locale, go, openPath }: { open: boolean; setOpen: (v: boolean) => void; locale: Loc; go: (t: Tab) => void; openPath: (id: string) => void }) {
-  const { paths } = usePlan();
+  const { paths: allPaths, tier } = usePlan();
+  const paths = allPaths.slice(0, TIER_PATHS[tier]);
   const [q, setQ] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -1556,11 +1559,23 @@ function CommandPalette({ open, setOpen, locale, go, openPath }: { open: boolean
 
 /* ----------------------------------------------------------------- shell -- */
 
+function ProUpsell({ locale }: { locale: Loc }) {
+  return (
+    <div className="mx-auto max-w-md py-6">
+      <Card className="flex flex-col items-center gap-3 p-8 text-center">
+        <div className={cn('grid h-12 w-12 place-items-center rounded-2xl', SOFT)}><KeyRound className={cn('h-6 w-6', ACCENT)} /></div>
+        <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-50">{ui.shell.proLockTitle[locale]}</h2>
+        <p className="text-[13px] leading-relaxed text-stone-500 dark:text-stone-400">{ui.shell.proLockBody[locale]}</p>
+      </Card>
+    </div>
+  );
+}
+
 function Shell() {
   const locale = useLocale() as Loc;
   const pathname = usePathname();
   const reduce = useReducedMotion();
-  const { profile } = usePlan();
+  const { profile, tier } = usePlan();
   const [tab, setTab] = useState<Tab>('home');
   const [pathSel, setPathSel] = useState<string | null>(null);
   const [cmdOpen, setCmdOpen] = useState(false);
@@ -1642,8 +1657,8 @@ function Shell() {
           {tab === 'home' && <Home locale={locale} go={go} openPath={openPath} />}
           {tab === 'paths' && <Paths locale={locale} selId={pathSel} setSelId={setPathSel} />}
           {tab === 'contacts' && <Contacts locale={locale} />}
-          {tab === 'tracker' && <Study locale={locale} />}
-          {tab === 'opportunities' && <Opportunities locale={locale} />}
+          {tab === 'tracker' && (tier === 'pro' ? <Study locale={locale} /> : <ProUpsell locale={locale} />)}
+          {tab === 'opportunities' && (tier === 'pro' ? <Opportunities locale={locale} /> : <ProUpsell locale={locale} />)}
         </motion.div>
       </main>
 

@@ -161,7 +161,10 @@ export const TIER_LABELS: Record<CompanyTier, LS> = {
 };
 
 // Number of HR contacts delivered per package tier.
-export const TIER_CAP = { starter: 100, pro: 300 } as const;
+// Per tier: connections shown AND HR contacts each capped at this (Starter 150 + 150,
+// Pro 300 + 300). Pathways shown are capped by TIER_PATHS. Pro also unlocks the Pro pages.
+export const TIER_CAP = { starter: 150, pro: 300 } as const;
+export const TIER_PATHS = { starter: 3, pro: 5 } as const;
 export type PlanTier = keyof typeof TIER_CAP;
 
 /* ----------------------------------------------------- connections (targets) -- */
@@ -891,6 +894,8 @@ export const ui = {
   shell: {
     greeting: { ar: 'أهلًا بعودتك', en: 'Welcome back' },
     disclaimer: { ar: 'تأكد من التفاصيل قبل أي خطوة. قد نخطئ في أمرٍ ما، لكن مستقبلك يهمّنا.', en: 'Double-check the details before you act. We might get something wrong, but your future matters to us.' },
+    proLockTitle: { ar: 'هذه ميزة Pro', en: 'A Pro feature' },
+    proLockBody: { ar: 'هذه الصفحة ضمن باقة Pro. رقِّ باقتك لفتح الدراسات العليا والمصادر.', en: 'This page is part of the Pro plan. Upgrade to unlock graduate study and resources.' },
     plan: { ar: 'الباقة الاحترافية', en: 'Pro plan' },
     journey: { ar: 'إنجاز خطتك المهنية', en: 'Your plan progress' },
     demoBadge: { ar: 'خطتك أنت', en: 'Your plan' },
