@@ -80,16 +80,16 @@ export const LEVELS: { id: Level; label: LS }[] = [
   { id: 'director', label: { ar: 'قيادي', en: 'Director' } },
 ];
 
-// A credential's marginal value depends on seniority: it matters most at mid,
-// less at entry (you are already near the ceiling) and at director (where the
-// real gap is experience, not certificates). So the same cert adds a different
-// amount at each level. We scale one base delta by a per-level weight rather
-// than hand-authoring a number per cert per level.
+// A credential is most transformative early in a career: an entry candidate who
+// earns a CFA jumps a lot. It matters progressively less at senior levels, where
+// experience (not another certificate) becomes the real differentiator. So we
+// scale one base delta DOWN as seniority rises, rather than hand-authoring a
+// number per cert per level. Entry keeps the full boost.
 export const LEVEL_DELTA_WEIGHT: Record<Level, number> = {
-  entry: 0.55,
-  mid: 1,
-  senior: 0.85,
-  director: 0.6,
+  entry: 1,
+  mid: 0.85,
+  senior: 0.7,
+  director: 0.55,
 };
 
 export function scaledAdd(baseDelta: number, level: Level): number {
@@ -702,7 +702,7 @@ export const ui = {
     paths: { ar: 'المسارات', en: 'Paths' },
     contacts: { ar: 'التواصل', en: 'Contacts' },
     tracker: { ar: 'المتتبّع', en: 'Tracker' },
-    opportunities: { ar: 'فرص', en: 'Opportunities' },
+    opportunities: { ar: 'النمو', en: 'Grow' },
   },
   shell: {
     greeting: { ar: 'أهلًا بعودتك', en: 'Welcome back' },
@@ -715,8 +715,20 @@ export const ui = {
     title: { ar: 'خطتك المهنية كاملة، في مكان واحد', en: 'Your whole career plan, in one place' },
     journeyLabel: { ar: 'من خطتك', en: 'of your plan' },
     certsLabel: { ar: 'شهادات أنجزتها', en: 'Certifications done' },
-    sentLabel: { ar: 'رسائل أرسلتها', en: 'Messages sent' },
+    sentLabel: { ar: 'جهات تواصلت معها', en: 'Contacts reached' },
     repliesLabel: { ar: 'ردود وصلتك', en: 'Replies' },
+    nextMove: {
+      eyebrow: { ar: 'خطوتك التالية', en: 'Your next move' },
+      connectTitle: { ar: 'اربط شبكتك', en: 'Connect your network' },
+      connectDesc: { ar: 'ارفع جهات اتصالك لنُظهر أقرب الأشخاص إلى أهدافك.', en: 'Upload your connections to surface the warmest intros.' },
+      reachTitle: { ar: 'تواصل اليوم', en: 'Reach out today' },
+      reachDesc: { ar: (n: number) => `${n} من شبكتك جاهزون للتواصل الآن.`, en: (n: number) => `${n} people from your network are ready now.` },
+      certTitle: { ar: 'واصل تقدّمك', en: 'Keep your momentum' },
+      certDesc: { ar: (c: string) => `أكمل شهادتك الحالية: ${c}.`, en: (c: string) => `Continue your current certification: ${c}.` },
+    },
+    networkTitle: { ar: 'شبكتك', en: 'Your network' },
+    networkCount: { ar: (n: number) => `${n} جهة مرتّبة حسب قربها من أهدافك`, en: (n: number) => `${n} connections ranked by fit` },
+    networkEmpty: { ar: 'لم ترفع شبكتك بعد', en: 'No network uploaded yet' },
     scoreLabel: { ar: 'درجة تنافسية سيرتك', en: 'Your CV competitiveness' },
     scoreFor: { ar: 'لهدف', en: 'for' },
     levelLabel: { ar: 'المستوى الوظيفي المستهدف', en: 'Target seniority' },
@@ -870,14 +882,21 @@ export const ui = {
       ar: 'أنت تحدّث حالة كل تواصل بنفسك (لا نصل إلى لينكدإن)، وهنا تتجمّع أرقامك.',
       en: 'You update each outreach status yourself (we never touch LinkedIn); your numbers add up here.',
     },
-    sent: { ar: 'رسائل أرسلتها', en: 'Messages sent' },
+    sent: { ar: 'جهات تواصلت معها', en: 'Contacts reached' },
     replied: { ar: 'ردود إيجابية', en: 'Positive replies' },
+    ofRoadmap: { ar: 'من خارطتك', en: 'of your roadmap' },
     pending: { ar: 'بانتظار الردّ', en: 'Awaiting reply' },
     followup: { ar: 'تحتاج متابعة', en: 'Need follow-up' },
     replyRate: { ar: 'معدّل الردّ', en: 'Reply rate' },
     vsBenchmark: { ar: 'كل ما تحدّثه ينعكس هنا فورًا', en: 'Everything you log shows up here instantly' },
     breakdown: { ar: 'توزيع تواصلك', en: 'Your outreach breakdown' },
     empty: { ar: 'حدّث حالة كل تواصل من بطاقات «التواصل»، وستظهر أرقامك هنا.', en: 'Update each outreach from the Contacts cards and your numbers appear here.' },
+    progressTitle: { ar: 'تقدّمك', en: 'Your progress' },
+    certsDoneLabel: { ar: 'شهادات أنجزتها', en: 'Certifications done' },
+    certsLeftLabel: { ar: 'شهادات متبقية', en: 'Certifications left' },
+    outreachLabel: { ar: 'جهات تواصلت معها', en: 'Contacts reached' },
+    prepTitle: { ar: 'استعد', en: 'Prepare' },
+    prepSub: { ar: 'جهّز سيرتك ومقابلاتك قبل التواصل.', en: 'Sharpen your CV and interviews before you reach out.' },
   },
   cmd: {
     placeholder: { ar: 'ابحث أو انتقل…', en: 'Search or jump to…' },
@@ -912,8 +931,9 @@ export const ui = {
     relevantToYou: { ar: 'يناسب مجالك', en: 'Matches your field' },
     mastersTitle: { ar: 'الدراسات العليا', en: 'Graduate study' },
     mastersSub: { ar: 'برامج قوية في مجالك، الخيارات السعودية أولًا.', en: 'Strong programs in your field, Saudi options first.' },
-    portalsTitle: { ar: 'بوابات التوظيف الرسمية', en: 'Official job portals' },
-    companyPortalsTitle: { ar: 'بوابات توظيف الشركات المستهدفة', en: 'Target company career portals' },
+    jobPortalsTitle: { ar: 'بوابات التوظيف', en: 'Where to apply' },
+    portalsTitle: { ar: 'البوابات الرسمية', en: 'Official portals' },
+    companyPortalsTitle: { ar: 'الشركات المستهدفة', en: 'Target companies' },
     apply: { ar: 'تقديم', en: 'Apply' },
     visit: { ar: 'زيارة', en: 'Visit' },
     cvGuideTitle: { ar: 'كيف تكتب سيرة قوية', en: 'How to write a strong CV' },

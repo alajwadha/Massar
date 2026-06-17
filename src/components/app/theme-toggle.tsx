@@ -14,8 +14,12 @@ export function ThemeToggle() {
 
   const toggle = () => {
     const next = !dark;
+    const root = document.documentElement;
+    // Briefly enable color transitions so the theme morphs smoothly (see globals.css).
+    root.classList.add('theme-anim');
+    window.setTimeout(() => root.classList.remove('theme-anim'), 450);
     setDark(next);
-    document.documentElement.classList.toggle('dark', next);
+    root.classList.toggle('dark', next);
     try {
       localStorage.setItem('masaar:theme', next ? 'dark' : 'light');
     } catch {
