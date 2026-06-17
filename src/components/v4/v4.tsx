@@ -67,6 +67,7 @@ import {
   nationalPortals,
   companyPortals,
   companyIndustries,
+  industryFields,
   cvGuide,
   interviewTips,
   ui,
@@ -1104,6 +1105,8 @@ function Study({ locale }: { locale: Loc }) {
   // strong in THAT field, hardest to easiest (no Saudi in these tiers).
   const fields = activePath.gradFields;
   const primary = fields[0];
+  const nextDeg = ({ diploma: 'bachelor', bachelor: 'master', master: 'phd', phd: 'phd' } as const)[plan.profile.degree];
+  const dWord = ui.study.degreeWord[nextDeg][locale];
   // Only TWO Saudi options (study while working): best match for the path's majors,
   // nearest the customer's region (from the CV) first.
   const region = plan.profile.region;
@@ -1168,7 +1171,7 @@ function Study({ locale }: { locale: Loc }) {
         {fields.map((f) => (
           <div key={f}>
             <h3 className="mb-2.5 flex items-center gap-2 text-[13px] font-bold text-stone-900 dark:text-stone-50">
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-500" /> {fieldMajors[f][locale]}
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-500" /> {dWord} {fieldMajors[f][locale]}
             </h3>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {(gradPrograms[f] ?? []).map((p, i) => (
@@ -1216,7 +1219,7 @@ function Study({ locale }: { locale: Loc }) {
                   <div className="mt-3 text-[10.5px] font-semibold uppercase tracking-wide text-stone-500 dark:text-stone-400">{ui.study.majorsHere[locale]}</div>
                   <div className="mt-1.5 flex flex-wrap gap-1.5">
                     {majors.map((f) => (
-                      <span key={f} className={cn('rounded-full px-2.5 py-1 text-[11.5px] font-semibold', SOFT)}>{fieldMajors[f][locale]}</span>
+                      <span key={f} className={cn('rounded-full px-2.5 py-1 text-[11.5px] font-semibold', SOFT)}>{dWord} {fieldMajors[f][locale]}</span>
                     ))}
                   </div>
                   <span className={cn('mt-3 inline-flex items-center gap-1 text-[11.5px] font-semibold', ACCENT)}>{ui.study.viewProgram[locale]} <ArrowUpRight className="h-3 w-3" /></span>
@@ -1250,6 +1253,7 @@ function Opportunities({ locale }: { locale: Loc }) {
   const { level, activePathId } = useProgress();
   const activePath = plan.paths.find((p) => p.id === (activePathId ?? plan.primaryPath.id)) ?? plan.primaryPath;
   const field = activePath.icon as Exclude<FieldTag, 'all'>;
+  const fields = activePath.gradFields;
   const isEntry = level === 'entry';
 
   const days = [...careerDays].sort((a, b) => {
@@ -1388,7 +1392,7 @@ function Opportunities({ locale }: { locale: Loc }) {
         <div className="mt-5 text-[11px] font-bold uppercase tracking-wide text-stone-500 dark:text-stone-400">{ui.opp.companyPortalsTitle[locale]}</div>
         <p className="mb-2.5 mt-0.5 text-[12px] text-stone-500 dark:text-stone-400">{ui.opp.companyPortalsSub[locale]}</p>
         <div className="space-y-4">
-          {companyIndustries.map((ind) => {
+          {companyIndustries.filter((ind) => industryFields[ind.id].some((f) => f === 'all' || fields.includes(f))).map((ind) => {
             const list = companyPortals.filter((c) => c.industry === ind.id);
             if (!list.length) return null;
             return (

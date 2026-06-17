@@ -15,6 +15,9 @@ export function tr(s: LS, locale: Loc): string {
 // Saudi region, used to surface the nearest universities when the customer's
 // location is known from their CV (optional: omit region if it is not on the CV).
 export type SaudiRegion = 'eastern' | 'central' | 'western' | 'other';
+// Highest completed degree; the Study tab targets the NEXT one up
+// (diploma -> bachelor -> master -> phd).
+export type Degree = 'diploma' | 'bachelor' | 'master' | 'phd';
 
 export const profile = {
   name: { ar: 'علي الأجود', en: 'Ali Alajwad' } satisfies LS,
@@ -25,6 +28,8 @@ export const profile = {
   // From the CV: Ras Al-Khair plant, so the Eastern Province is home base.
   location: { ar: 'المنطقة الشرقية', en: 'Eastern Province' } satisfies LS,
   region: 'eastern' as SaudiRegion,
+  // Completed BEng (Manchester); the master's is in progress, so next = master.
+  degree: 'bachelor' as Degree,
 };
 
 // CV competitiveness for the primary target, plus the cheapest-first improvements
@@ -769,6 +774,16 @@ export const companyIndustries: { id: CompanyIndustry; label: LS }[] = [
   { id: 'giga', label: { ar: 'المشاريع الكبرى والعقار', en: 'Gigaprojects and real estate' } },
   { id: 'consumer', label: { ar: 'الاستهلاك والصحة واللوجستيات', en: 'Consumer, health and logistics' } },
 ];
+// Which career fields each industry is relevant to, so clearly-unrelated industries
+// are hidden (e.g. consumer/health for an energy engineer). 'all' shows for everyone.
+export const industryFields: Record<CompanyIndustry, (Exclude<FieldTag, 'all'> | 'all')[]> = {
+  banking: ['finance', 'government'],
+  energy: ['energy'],
+  consulting: ['all'],
+  tech: ['tech', 'government'],
+  giga: ['all'],
+  consumer: ['tech'],
+};
 export const companyPortals: { name: LS; url: string; industry: CompanyIndustry; size: CompanySize }[] = [
   { name: { ar: 'صندوق الاستثمارات العامة', en: 'PIF' }, url: 'https://www.pif.gov.sa', industry: 'banking', size: 'big' },
   { name: { ar: 'البنك الأهلي السعودي', en: 'Saudi National Bank' }, url: 'https://www.snb.com', industry: 'banking', size: 'big' },
@@ -1111,6 +1126,7 @@ export const ui = {
     partTimeTitle: { ar: 'في السعودية', en: 'In Saudi Arabia' },
     partTimeSub: { ar: 'ادرس وأنت تعمل، أقرب خيارين إليك', en: 'Study while you work, your two nearest options' },
     partTimeHow: { ar: 'برامج تنفيذية تُقام مساءً أو نهاية الأسبوع، فتدرس وأنت محتفظ بوظيفتك، عادةً خلال سنتين إلى ثلاث.', en: 'Executive programs run evenings or weekends, so you study while keeping your job, usually over two to three years.' },
+    degreeWord: { diploma: { ar: 'دبلوم في', en: 'Diploma in' }, bachelor: { ar: 'بكالوريوس في', en: "Bachelor's in" }, master: { ar: 'ماجستير في', en: "Master's in" }, phd: { ar: 'دكتوراه في', en: 'PhD in' } },
     tierHigh: { ar: 'عالمية، صعبة القبول', en: 'World class, hard to get in' },
     tierRespected: { ar: 'مرموقة ومعروفة', en: 'Respected and well known' },
     tierSolid: { ar: 'خيار قوي', en: 'A solid choice' },
