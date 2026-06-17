@@ -12,12 +12,19 @@ export function tr(s: LS, locale: Loc): string {
 
 /* ----------------------------------------------------------------- profile -- */
 
+// Saudi region, used to surface the nearest universities when the customer's
+// location is known from their CV (optional: omit region if it is not on the CV).
+export type SaudiRegion = 'eastern' | 'central' | 'western' | 'other';
+
 export const profile = {
   name: { ar: 'علي الأجود', en: 'Ali Alajwad' } satisfies LS,
   headline: {
     ar: 'مهندس عمليات · ماجستير اقتصاديات الطاقة من كورنيل',
     en: 'Operations Engineer · M.Eng Energy Economics, Cornell',
   } satisfies LS,
+  // From the CV: Ras Al-Khair plant, so the Eastern Province is home base.
+  location: { ar: 'المنطقة الشرقية', en: 'Eastern Province' } satisfies LS,
+  region: 'eastern' as SaudiRegion,
 };
 
 // CV competitiveness for the primary target, plus the cheapest-first improvements
@@ -195,16 +202,16 @@ export const paths: CareerPath[] = [
     roles: { ar: 'محلل استثمار ← محلل أول ← مدير محفظة', en: 'Investment Analyst → Senior Analyst → Portfolio Manager' },
     accent: 'brand',
     icon: 'finance',
-    gradFields: ['finance', 'energy'],
+    gradFields: ['energy', 'finance', 'government'],
     months: 16,
     scoreByLevel: { entry: 96, mid: 80, senior: 58, director: 40 },
     primary: true,
     trail: { ar: 'تمويل المناخ → CME-1 → FMVA → CFA L1 → CFA L2', en: 'Climate Finance → CME-1 → FMVA → CFA L1 → CFA L2' },
     certs: [
       { name: { ar: 'تمويل المناخ', en: 'Climate Finance' }, desc: { ar: 'برنامج تمويل المناخ والتمويل المستدام وأسواق الكربون من مدرسة كابسارك للسياسة العامة. يربط خبرتك في الطاقة بلغة الاستثمار والـ ESG، وهي ميزة نادرة في سوق صناديق تحوّل الطاقة.', en: 'KAPSARC’s climate finance, sustainable finance, and carbon-markets program. It connects your energy background to the language of investment and ESG, a rare edge in the energy-transition fund market.' }, gain: { ar: 'يربط خبرتك في الطاقة بعالم الاستثمار المستدام', en: 'Bridges your energy background into sustainable investing' }, scoreAdd: 7, official: 'https://www.kapsarc.org', status: 'done', cost: { ar: 'منجزة', en: 'Completed' }, duration: { ar: 'أنجزتها', en: 'Completed' } },
-      { name: { ar: 'CME-1', en: 'CME-1' }, desc: { ar: 'الشهادة التأسيسية من المعهد المالي، وهي مطلب تنظيمي للعمل في الأسواق المالية السعودية. تغطّي أساسيات الأنظمة والمنتجات المالية وقواعد هيئة السوق المالية — خطوتك الأولى نحو دور استثماري معتمد.', en: 'The Financial Academy’s foundational license, a regulatory requirement to work in Saudi capital markets. It covers financial regulations, products, and CMA rules — your first step toward an accredited investment role.' }, gain: { ar: 'ترخيص للعمل في الأسواق المالية السعودية', en: 'License to work in Saudi capital markets' }, opens: [{ ar: 'محلل أسواق مالية', en: 'Capital Markets Analyst' }, { ar: 'محلل استثمار مبتدئ', en: 'Investment Analyst (entry)' }], scoreAdd: 6, official: 'https://fa.gov.sa', status: 'current', cost: { ar: '2,000 ر.س', en: '2,000 SAR' }, duration: { ar: '6–8 أسابيع', en: '6–8 weeks' }, hadaf: true, hadafNote: { ar: 'يدعمها صندوق هدف', en: 'Hadaf-supported' }, why: { ar: 'أسرع خطوة معتمدة تنقلك رسميًا إلى مسار الاستثمار، وتؤهّلك لأدوار الأسواق العامة في الصندوق. ابدأ بها قبل CFA.', en: 'The fastest accredited step that formally moves you into the investment track and qualifies you for PIF public-markets roles. Do it before the CFA.' } },
-      { name: { ar: 'FMVA', en: 'FMVA' }, desc: { ar: 'برنامج معهد تمويل الشركات لبناء النماذج المالية وتقييم الشركات. عملي بالكامل: تتخرّج منه قادرًا على بناء نموذج مالي متكامل من الصفر، وهي المهارة الأكثر طلبًا في فرق الاستثمار والصفقات.', en: 'CFI’s hands-on program for financial modeling and company valuation. You finish able to build a full model from scratch — the most in-demand skill on investment and deals teams.' }, gain: { ar: 'إتقان النمذجة المالية المطلوبة في الصفقات', en: 'Deal-grade financial modeling skills' }, opens: [{ ar: 'محلل مالي', en: 'Financial Analyst' }, { ar: 'زميل استثمار', en: 'Investment Associate' }], scoreAdd: 8, official: 'https://corporatefinanceinstitute.com/certifications/fmva-program/', status: 'future', cost: { ar: '$497', en: '$497' }, duration: { ar: '3 أشهر', en: '3 months' } },
-      { name: { ar: 'CFA المستوى الأول', en: 'CFA Level 1' }, desc: { ar: 'المستوى الأول من شهادة محلل مالي معتمد، المعيار العالمي الأرفع في إدارة الاستثمار. يغطّي الأخلاقيات والأدوات الكمية والاقتصاد وتحليل القوائم المالية، وهو حجر الأساس لأي دور استثماري في الصندوق.', en: 'Level 1 of the Chartered Financial Analyst program, the global gold standard in investment management. It spans ethics, quantitative methods, economics, and financial reporting — the foundation for any investment role at PIF.' }, gain: { ar: 'المعيار الذهبي لوظائف الاستثمار في الصندوق', en: 'The gold standard for PIF investment roles' }, opens: [{ ar: 'محلل استثمار في الصندوق', en: 'Investment Analyst at PIF' }, { ar: 'محلل أبحاث أسهم', en: 'Equity Research Analyst' }], scoreAdd: 15, official: CFA, status: 'future', cost: { ar: '5,500 ر.س', en: '5,500 SAR' }, duration: { ar: '6 أشهر · 300 ساعة', en: '6 months · 300h' }, hadaf: true, hadafNote: { ar: 'تسترجع نحو 2,750 ر.س عبر هدف', en: 'Reclaim ~2,750 SAR via Hadaf' } },
+      { name: { ar: 'CME-1', en: 'CME-1' }, desc: { ar: 'الشهادة التأسيسية من المعهد المالي، وهي مطلب تنظيمي للعمل في الأسواق المالية السعودية. تغطّي أساسيات الأنظمة والمنتجات المالية وقواعد هيئة السوق المالية, خطوتك الأولى نحو دور استثماري معتمد.', en: 'The Financial Academy’s foundational license, a regulatory requirement to work in Saudi capital markets. It covers financial regulations, products, and CMA rules, your first step toward an accredited investment role.' }, gain: { ar: 'ترخيص للعمل في الأسواق المالية السعودية', en: 'License to work in Saudi capital markets' }, opens: [{ ar: 'محلل أسواق مالية', en: 'Capital Markets Analyst' }, { ar: 'محلل استثمار مبتدئ', en: 'Investment Analyst (entry)' }], scoreAdd: 6, official: 'https://fa.gov.sa', status: 'current', cost: { ar: '2,000 ر.س', en: '2,000 SAR' }, duration: { ar: '6 إلى 8 أسابيع', en: '6 to 8 weeks' }, hadaf: true, hadafNote: { ar: 'يدعمها صندوق هدف', en: 'Hadaf-supported' }, why: { ar: 'أسرع خطوة معتمدة تنقلك رسميًا إلى مسار الاستثمار، وتؤهّلك لأدوار الأسواق العامة في الصندوق. ابدأ بها قبل CFA.', en: 'The fastest accredited step that formally moves you into the investment track and qualifies you for PIF public-markets roles. Do it before the CFA.' } },
+      { name: { ar: 'FMVA', en: 'FMVA' }, desc: { ar: 'برنامج معهد تمويل الشركات لبناء النماذج المالية وتقييم الشركات. عملي بالكامل: تتخرّج منه قادرًا على بناء نموذج مالي متكامل من الصفر، وهي المهارة الأكثر طلبًا في فرق الاستثمار والصفقات.', en: 'CFI’s hands-on program for financial modeling and company valuation. You finish able to build a full model from scratch, the most in-demand skill on investment and deals teams.' }, gain: { ar: 'إتقان النمذجة المالية المطلوبة في الصفقات', en: 'Deal-grade financial modeling skills' }, opens: [{ ar: 'محلل مالي', en: 'Financial Analyst' }, { ar: 'زميل استثمار', en: 'Investment Associate' }], scoreAdd: 8, official: 'https://corporatefinanceinstitute.com/certifications/fmva-program/', status: 'future', cost: { ar: '$497', en: '$497' }, duration: { ar: '3 أشهر', en: '3 months' } },
+      { name: { ar: 'CFA المستوى الأول', en: 'CFA Level 1' }, desc: { ar: 'المستوى الأول من شهادة محلل مالي معتمد، المعيار العالمي الأرفع في إدارة الاستثمار. يغطّي الأخلاقيات والأدوات الكمية والاقتصاد وتحليل القوائم المالية، وهو حجر الأساس لأي دور استثماري في الصندوق.', en: 'Level 1 of the Chartered Financial Analyst program, the global gold standard in investment management. It spans ethics, quantitative methods, economics, and financial reporting, the foundation for any investment role at PIF.' }, gain: { ar: 'المعيار الذهبي لوظائف الاستثمار في الصندوق', en: 'The gold standard for PIF investment roles' }, opens: [{ ar: 'محلل استثمار في الصندوق', en: 'Investment Analyst at PIF' }, { ar: 'محلل أبحاث أسهم', en: 'Equity Research Analyst' }], scoreAdd: 15, official: CFA, status: 'future', cost: { ar: '5,500 ر.س', en: '5,500 SAR' }, duration: { ar: '6 أشهر · 300 ساعة', en: '6 months · 300h' }, hadaf: true, hadafNote: { ar: 'تسترجع نحو 2,750 ر.س عبر هدف', en: 'Reclaim ~2,750 SAR via Hadaf' } },
       { name: { ar: 'CFA المستوى الثاني', en: 'CFA Level 2' }, desc: { ar: 'المستوى المتقدّم من برنامج CFA، ويركّز على تطبيق أدوات التقييم على فئات الأصول المختلفة. اجتيازه يضعك في نخبة المحللين ويفتح الأدوار القيادية في صناديق الاستثمار.', en: 'The advanced CFA level, focused on applying valuation tools across asset classes. Passing it puts you among elite analysts and opens senior fund roles.' }, gain: { ar: 'يفتح الأدوار القيادية في صناديق الاستثمار', en: 'Opens senior investment-fund roles' }, opens: [{ ar: 'محلل استثمار أول', en: 'Senior Investment Analyst' }, { ar: 'زميل إدارة محافظ', en: 'Portfolio Associate' }], scoreAdd: 12, official: CFA, status: 'future', cost: { ar: '5,500 ر.س', en: '5,500 SAR' }, duration: { ar: '8 أشهر', en: '8 months' }, hadaf: true },
     ],
     targetCompanies: ['Public Investment Fund', 'PIF', 'KAPSARC', 'Saudi National Bank', 'Sanabil', 'Jadwa', 'NEOM'],
@@ -216,16 +223,16 @@ export const paths: CareerPath[] = [
     roles: { ar: 'مهندس ← مهندس أول ← مدير مشروع/عمليات', en: 'Engineer → Senior Engineer → Project / Operations Manager' },
     accent: 'sky',
     icon: 'energy',
-    gradFields: ['energy', 'tech'],
+    gradFields: ['energy', 'tech', 'consulting'],
     months: 12,
     scoreByLevel: { entry: 94, mid: 76, senior: 54, director: 36 },
     trail: { ar: 'التناضح العكسي → الطاقة الشمسية → PMP → CEM → Six Sigma', en: 'Reverse Osmosis → Solar PV → PMP → CEM → Six Sigma' },
     certs: [
-      { name: { ar: 'التناضح العكسي', en: 'Reverse Osmosis' }, desc: { ar: 'شهادة مهندس متخصص في التناضح العكسي من أكاديمية المياه. تثبت خبرتك التشغيلية في أكبر محطات التحلية — أساس قوي لأدوار الطاقة والمياه.', en: 'Reverse Osmosis Specialist Engineer from the Water Academy. It certifies your operational expertise at the largest desalination plants — a strong base for power and water roles.' }, gain: { ar: 'تثبت خبرتك في أكبر محطات التحلية', en: 'Certifies your large-scale desalination expertise' }, scoreAdd: 7, official: 'https://wa.edu.sa', status: 'done', cost: { ar: 'منجزة', en: 'Completed' }, duration: { ar: 'أنجزتها', en: 'Completed' } },
+      { name: { ar: 'التناضح العكسي', en: 'Reverse Osmosis' }, desc: { ar: 'شهادة مهندس متخصص في التناضح العكسي من أكاديمية المياه. تثبت خبرتك التشغيلية في أكبر محطات التحلية, أساس قوي لأدوار الطاقة والمياه.', en: 'Reverse Osmosis Specialist Engineer from the Water Academy. It certifies your operational expertise at the largest desalination plants, a strong base for power and water roles.' }, gain: { ar: 'تثبت خبرتك في أكبر محطات التحلية', en: 'Certifies your large-scale desalination expertise' }, scoreAdd: 7, official: 'https://wa.edu.sa', status: 'done', cost: { ar: 'منجزة', en: 'Completed' }, duration: { ar: 'أنجزتها', en: 'Completed' } },
       { name: { ar: 'تصميم الطاقة الشمسية', en: 'Solar PV Design' }, desc: { ar: 'مصمم أنظمة طاقة شمسية معتمد من أكاديمية المياه. يضيف تصميم المتجددة إلى خبرتك في التوليد التقليدي.', en: 'Certified Solar PV Designer from the Water Academy. It adds renewables design to your conventional-generation experience.' }, gain: { ar: 'تصميم المتجددة المطلوب في أكوا ونيوم', en: 'Renewables design valued at ACWA and NEOM' }, scoreAdd: 6, official: 'https://wa.edu.sa', status: 'done', cost: { ar: 'منجزة', en: 'Completed' }, duration: { ar: 'أنجزتها', en: 'Completed' } },
-      { name: { ar: 'PMP', en: 'PMP' }, desc: { ar: 'شهادة محترف إدارة المشاريع من معهد PMI، الأكثر اعترافًا عالميًا. لقيادة مشاريع الطاقة الكبرى في أرامكو وأكوا باور ومشاريع رؤية 2030.', en: 'PMI’s Project Management Professional, the most globally recognized PM credential — for leading major energy projects at Aramco, ACWA Power, and Vision 2030.' }, gain: { ar: 'يؤهّلك لقيادة مشاريع الطاقة الكبرى', en: 'Qualifies you to lead major energy projects' }, opens: [{ ar: 'مدير مشروع', en: 'Project Manager' }, { ar: 'مهندس أول', en: 'Senior Engineer' }], scoreAdd: 10, official: 'https://www.pmi.org/certifications/project-management-pmp', status: 'current', cost: { ar: '4,000 ر.س', en: '4,000 SAR' }, duration: { ar: '4 أشهر', en: '4 months' }, hadaf: true },
+      { name: { ar: 'PMP', en: 'PMP' }, desc: { ar: 'شهادة محترف إدارة المشاريع من معهد PMI، الأكثر اعترافًا عالميًا. لقيادة مشاريع الطاقة الكبرى في أرامكو وأكوا باور ومشاريع رؤية 2030.', en: 'PMI’s Project Management Professional, the most globally recognized PM credential, for leading major energy projects at Aramco, ACWA Power, and Vision 2030.' }, gain: { ar: 'يؤهّلك لقيادة مشاريع الطاقة الكبرى', en: 'Qualifies you to lead major energy projects' }, opens: [{ ar: 'مدير مشروع', en: 'Project Manager' }, { ar: 'مهندس أول', en: 'Senior Engineer' }], scoreAdd: 10, official: 'https://www.pmi.org/certifications/project-management-pmp', status: 'current', cost: { ar: '4,000 ر.س', en: '4,000 SAR' }, duration: { ar: '4 أشهر', en: '4 months' }, hadaf: true },
       { name: { ar: 'CEM', en: 'CEM' }, desc: { ar: 'مدير طاقة معتمد من جمعية مهندسي الطاقة (AEE). يثبت قدرتك على تحليل استهلاك الطاقة وتصميم حلول الكفاءة.', en: 'Certified Energy Manager from the AEE. It proves you can analyze energy use and design efficiency solutions.' }, gain: { ar: 'خبرة معتمدة في كفاءة الطاقة', en: 'Certified energy-efficiency expertise' }, opens: [{ ar: 'مدير طاقة', en: 'Energy Manager' }, { ar: 'أخصائي كفاءة', en: 'Efficiency Specialist' }], scoreAdd: 9, official: 'https://www.aeecenter.org/certified-energy-manager-cem/', status: 'future', cost: { ar: '$1,500', en: '$1,500' }, duration: { ar: '3 أشهر', en: '3 months' } },
-      { name: { ar: 'Six Sigma', en: 'Six Sigma' }, desc: { ar: 'الحزام الأخضر في منهجية ستة سيجما لتحسين العمليات وتقليل الهدر، وهي منهجية تعتمدها أرامكو وكبرى الشركات الصناعية.', en: 'Green Belt in Six Sigma for process improvement and waste reduction — relied on by Aramco and major industrial firms.' }, gain: { ar: 'تحسين العمليات المطلوب في أرامكو', en: 'Process improvement valued at Aramco' }, scoreAdd: 7, official: 'https://asq.org/cert/six-sigma-green-belt', status: 'future', cost: { ar: '2,500 ر.س', en: '2,500 SAR' }, duration: { ar: 'شهران', en: '2 months' }, hadaf: true },
+      { name: { ar: 'Six Sigma', en: 'Six Sigma' }, desc: { ar: 'الحزام الأخضر في منهجية ستة سيجما لتحسين العمليات وتقليل الهدر، وهي منهجية تعتمدها أرامكو وكبرى الشركات الصناعية.', en: 'Green Belt in Six Sigma for process improvement and waste reduction, relied on by Aramco and major industrial firms.' }, gain: { ar: 'تحسين العمليات المطلوب في أرامكو', en: 'Process improvement valued at Aramco' }, scoreAdd: 7, official: 'https://asq.org/cert/six-sigma-green-belt', status: 'future', cost: { ar: '2,500 ر.س', en: '2,500 SAR' }, duration: { ar: 'شهران', en: '2 months' }, hadaf: true },
     ],
     targetCompanies: ['Saudi Aramco', 'Aramco', 'ACWA Power', 'NEOM', 'Water Authority', 'SWCC', 'Marafiq', 'SABIC'],
   },
@@ -236,7 +243,7 @@ export const paths: CareerPath[] = [
     roles: { ar: 'محلل ← مستشار ← مدير ارتباط', en: 'Analyst → Consultant → Engagement Manager' },
     accent: 'violet',
     icon: 'consulting',
-    gradFields: ['consulting', 'finance'],
+    gradFields: ['consulting', 'finance', 'tech'],
     months: 12,
     scoreByLevel: { entry: 84, mid: 64, senior: 44, director: 28 },
     trail: { ar: 'مهارات الاستشارات → دراسات الحالة → GMAT → FMVA', en: 'Consulting Skills → Case Prep → GMAT → FMVA' },
@@ -256,7 +263,7 @@ export const paths: CareerPath[] = [
     roles: { ar: 'أخصائي سياسات ← مدير برنامج ← مدير عام', en: 'Policy Specialist → Program Manager → Director' },
     accent: 'amber',
     icon: 'government',
-    gradFields: ['government', 'consulting'],
+    gradFields: ['government', 'consulting', 'finance'],
     months: 18,
     scoreByLevel: { entry: 86, mid: 66, senior: 46, director: 30 },
     trail: { ar: 'تمويل المناخ → دبلوم السياسات → PMP → PgMP', en: 'Climate Finance → Policy Diploma → PMP → PgMP' },
@@ -264,7 +271,7 @@ export const paths: CareerPath[] = [
       { name: { ar: 'تمويل المناخ', en: 'Climate Finance' }, desc: { ar: 'برنامج تمويل المناخ والاستدامة من كابسارك. يربط نمذجتك لمسار 2060 بأدوات السياسة والتمويل المناخي.', en: 'KAPSARC’s climate finance and sustainability program. It ties your 2060-pathway modeling to policy and climate-finance tools.' }, gain: { ar: 'يربط نمذجتك بالسياسة والتمويل المناخي', en: 'Links your modeling to climate policy and finance' }, scoreAdd: 7, official: 'https://www.kapsarc.org', status: 'done', cost: { ar: 'منجزة', en: 'Completed' }, duration: { ar: 'أنجزتها', en: 'Completed' } },
       { name: { ar: 'دبلوم السياسات العامة', en: 'Public Policy Diploma' }, desc: { ar: 'دبلوم متخصّص في تحليل وصياغة السياسات العامة. يؤهّلك لمكاتب الاستراتيجية والتخطيط في الوزارات والهيئات.', en: 'A specialized diploma in public-policy analysis and design. It prepares you for strategy and planning offices in ministries and authorities.' }, gain: { ar: 'صياغة وتحليل سياسات الطاقة', en: 'Energy policy design and analysis' }, opens: [{ ar: 'محلل سياسات', en: 'Policy Analyst' }, { ar: 'مسؤول استراتيجية', en: 'Strategy Officer' }], scoreAdd: 9, official: 'https://www.spsp.edu.sa/', status: 'current', cost: { ar: '5,000 ر.س', en: '5,000 SAR' }, duration: { ar: '5 أشهر', en: '5 months' }, hadaf: true },
       { name: { ar: 'PMP', en: 'PMP' }, desc: { ar: 'محترف إدارة المشاريع من PMI، لقيادة مشاريع التحول ضمن رؤية 2030 داخل الجهات الحكومية.', en: 'PMI’s Project Management Professional, for leading Vision 2030 transformation projects in government.' }, gain: { ar: 'قيادة مشاريع رؤية 2030', en: 'Lead Vision 2030 projects' }, scoreAdd: 9, official: 'https://www.pmi.org/certifications/project-management-pmp', status: 'future', cost: { ar: '4,000 ر.س', en: '4,000 SAR' }, duration: { ar: '4 أشهر', en: '4 months' }, hadaf: true },
-      { name: { ar: 'PgMP', en: 'PgMP' }, desc: { ar: 'محترف إدارة البرامج من PMI، المستوى الأعلى من PMP، لقيادة محافظ المشاريع على مستوى المؤسسة.', en: 'PMI’s Program Management Professional, above PMP — for leading enterprise-level project portfolios.' }, gain: { ar: 'إدارة برامج الطاقة الكبرى', en: 'Manage large energy programs' }, opens: [{ ar: 'مدير برامج', en: 'Program Director' }], scoreAdd: 8, official: 'https://www.pmi.org/certifications/program-management-pgmp', status: 'future', cost: { ar: '$800', en: '$800' }, duration: { ar: '4 أشهر', en: '4 months' } },
+      { name: { ar: 'PgMP', en: 'PgMP' }, desc: { ar: 'محترف إدارة البرامج من PMI، المستوى الأعلى من PMP، لقيادة محافظ المشاريع على مستوى المؤسسة.', en: 'PMI’s Program Management Professional, above PMP, for leading enterprise-level project portfolios.' }, gain: { ar: 'إدارة برامج الطاقة الكبرى', en: 'Manage large energy programs' }, opens: [{ ar: 'مدير برامج', en: 'Program Director' }], scoreAdd: 8, official: 'https://www.pmi.org/certifications/program-management-pgmp', status: 'future', cost: { ar: '$800', en: '$800' }, duration: { ar: '4 أشهر', en: '4 months' } },
       { name: { ar: 'دكتوراه إدارة الأعمال', en: 'DBA' }, desc: { ar: 'دكتوراه إدارة الأعمال، أعلى مؤهل تطبيقي للأدوار القيادية العليا في السياسات والاستراتيجية.', en: 'The Doctor of Business Administration, the top applied qualification for senior policy and strategy leadership.' }, gain: { ar: 'المؤهل الأعلى للقيادة', en: 'Top leadership credential' }, scoreAdd: 12, official: 'https://www.mba.com/', status: 'future', cost: { ar: 'يختلف', en: 'Varies' }, duration: { ar: '12 شهرًا', en: '12 months' } },
     ],
     targetCompanies: ['Ministry of Energy', 'KAPSARC', 'Ministry', 'Royal Commission', 'SEEC', 'Energy Efficiency', 'Vision 2030'],
@@ -276,13 +283,13 @@ export const paths: CareerPath[] = [
     roles: { ar: 'محلل بيانات ← مهندس بيانات ← قائد منتج', en: 'Data Analyst → Data Engineer → Product Lead' },
     accent: 'rose',
     icon: 'tech',
-    gradFields: ['tech', 'consulting'],
+    gradFields: ['tech', 'consulting', 'finance'],
     months: 12,
     scoreByLevel: { entry: 80, mid: 60, senior: 40, director: 26 },
     trail: { ar: 'تحليل البيانات → AWS → Scrum → تحليلات متقدمة', en: 'Data Analyst → AWS → Scrum → Advanced Analytics' },
     certs: [
       { name: { ar: 'تحليل البيانات', en: 'Data Analyst' }, desc: { ar: 'شهادة محلل بيانات من IBM، تغطّي أدوات التحليل والتصوّر واتخاذ القرار بالبيانات. تكمّل خلفيتك في الذكاء الاصطناعي ومشروع نموذجك التنبؤي.', en: 'IBM’s Data Analyst certificate covering analysis, visualization, and data-driven decisions. It complements your AI background and your predictive-model project.' }, gain: { ar: 'تحليل البيانات واتخاذ القرار', en: 'Data analysis and decision-making' }, scoreAdd: 6, official: 'https://www.ibm.com/training/badge/data-analyst', status: 'done', cost: { ar: 'منجزة', en: 'Completed' }, duration: { ar: 'أنجزتها', en: 'Completed' } },
-      { name: { ar: 'AWS SAA', en: 'AWS SAA' }, desc: { ar: 'مهندس حلول معتمد على منصة AWS (المستوى المساعد). يثبت قدرتك على تصميم أنظمة سحابية موثوقة، وهي من أكثر الشهادات طلبًا في الجهات التقنية.', en: 'AWS Certified Solutions Architect – Associate. It proves you can design reliable cloud systems, one of the most in-demand tech credentials.' }, gain: { ar: 'تصميم الحلول السحابية المطلوبة', en: 'In-demand cloud architecture' }, opens: [{ ar: 'مهندس حلول', en: 'Solutions Architect' }, { ar: 'مهندس سحابة', en: 'Cloud Engineer' }], scoreAdd: 9, official: 'https://aws.amazon.com/certification/certified-solutions-architect-associate/', status: 'current', cost: { ar: '$150', en: '$150' }, duration: { ar: '3 أشهر', en: '3 months' } },
+      { name: { ar: 'AWS SAA', en: 'AWS SAA' }, desc: { ar: 'مهندس حلول معتمد على منصة AWS (المستوى المساعد). يثبت قدرتك على تصميم أنظمة سحابية موثوقة، وهي من أكثر الشهادات طلبًا في الجهات التقنية.', en: 'AWS Certified Solutions Architect - Associate. It proves you can design reliable cloud systems, one of the most in-demand tech credentials.' }, gain: { ar: 'تصميم الحلول السحابية المطلوبة', en: 'In-demand cloud architecture' }, opens: [{ ar: 'مهندس حلول', en: 'Solutions Architect' }, { ar: 'مهندس سحابة', en: 'Cloud Engineer' }], scoreAdd: 9, official: 'https://aws.amazon.com/certification/certified-solutions-architect-associate/', status: 'current', cost: { ar: '$150', en: '$150' }, duration: { ar: '3 أشهر', en: '3 months' } },
       { name: { ar: 'PSM', en: 'PSM' }, desc: { ar: 'سكرَم ماستر محترف، لقيادة فرق التطوير الرشيقة. أساس العمل في فرق المنتجات التقنية الحديثة.', en: 'Professional Scrum Master, for leading agile development teams. Foundational to modern tech product teams.' }, gain: { ar: 'قيادة فرق أجايل', en: 'Lead agile teams' }, scoreAdd: 6, official: 'https://www.scrum.org/professional-scrum-master-certifications', status: 'future', cost: { ar: '$200', en: '$200' }, duration: { ar: 'شهر', en: '1 month' } },
       { name: { ar: 'تحليلات متقدمة', en: 'Advanced Analytics' }, desc: { ar: 'برنامج تحليلات وتعلّم آلة متقدم يبني على أساسك في الذكاء الاصطناعي ومشروعك التنبؤي لمحطة كورنيل.', en: 'An advanced analytics and machine-learning program building on your AI foundation and your Cornell-plant predictive project.' }, gain: { ar: 'نمذجة تنبؤية لأنظمة الطاقة', en: 'Predictive modeling for energy systems' }, opens: [{ ar: 'عالم بيانات', en: 'Data Scientist' }, { ar: 'مهندس تعلم آلة', en: 'ML Engineer' }], scoreAdd: 9, official: 'https://www.coursera.org/professional-certificates/google-data-analytics', status: 'future', cost: { ar: '3,500 ر.س', en: '3,500 SAR' }, duration: { ar: '3 أشهر', en: '3 months' }, hadaf: true },
       { name: { ar: 'ماجستير إدارة الأعمال', en: 'MBA' }, desc: { ar: 'ماجستير إدارة الأعمال، يجمع بين خبرتك التقنية والإدارة للانتقال إلى قيادة المنتجات والاستراتيجية الرقمية.', en: 'The MBA, bridging your technical expertise and management for product leadership and digital strategy.' }, gain: { ar: 'يجمع التقنية بالإدارة', en: 'Bridges tech and management' }, scoreAdd: 12, official: 'https://www.mba.com/', status: 'future', cost: { ar: 'يختلف', en: 'Varies' }, duration: { ar: '6 أشهر', en: '6 months' } },
@@ -321,7 +328,7 @@ export const templates: Template[] = [
     title: { ar: 'جسر شخصي', en: 'Personal Bridge' },
     preview: {
       ar: 'السلام عليكم أستاذ {الاسم}، أنا علي الأجود، خرّيج هندسة من مانشستر وعملت في رأس الخير. تابعت مسيرتك في {الشركة}، وأطمح لمسار مشابه في الاستثمار والطاقة.',
-      en: "As-salamu alaykum {firstName}, I'm Ali Alajwad — a Manchester engineering graduate with experience at Ras Al-Khair. I've followed your path at {company} and aspire to a similar route in energy investment.",
+      en: "As-salamu alaykum {firstName}, I'm Ali Alajwad, a Manchester engineering graduate with experience at Ras Al-Khair. I've followed your path at {company} and aspire to a similar route in energy investment.",
     },
     tone: { ar: 'ودّي', en: 'Warm' },
   },
@@ -415,8 +422,8 @@ export function parseUploadedConnections(text: string): Contact[] {
     out.push({
       id: `up-${i}`,
       name: { ar: name, en: name },
-      role: { ar: position || '—', en: position || '—' },
-      company: { ar: company || '—', en: company || '—' },
+      role: { ar: position || '', en: position || '' },
+      company: { ar: company || '', en: company || '' },
       status: 'new',
       when: { ar: 'من شبكتك', en: 'In your network' },
       linkedin: url || undefined,
@@ -529,27 +536,27 @@ export type CustomerPlan = {
 
 const aliCvReview: CvReview = {
   headline: {
-    ar: 'سيرتك قوية بأساس متين، يفصلك عنها القليل لإغلاق الفجوات.',
-    en: 'Strong foundation, just a few gaps to close.',
+    ar: 'ملف طاقة لافت. الخطوة القادمة أن تقدّمه بلغة المستثمر لا المشغّل.',
+    en: 'A standout energy profile. The next step is to frame it for investors, not operators.',
   },
   strengths: [
-    { ar: 'ماجستير اقتصاديات الطاقة من كورنيل', en: 'M.Eng Energy Economics, Cornell' },
-    { ar: 'سنتان خبرة تشغيلية في رأس الخير', en: '2 years hands-on operations at Ras Al-Khair' },
-    { ar: 'ثنائي اللغة + مشروع نمذجة تنبؤية بالذكاء الاصطناعي', en: 'Bilingual + an AI predictive-modeling project' },
-    { ar: 'هندسة من مانشستر مع شهادات معتمدة', en: 'Manchester engineering degree with certifications' },
+    { ar: 'ماجستير اقتصاديات وهندسة الطاقة من كورنيل بمعدل 3.95 مع تخصص فرعي في الذكاء الاصطناعي', en: 'Cornell M.Eng in Energy Economics, GPA 3.95, with an AI and ML minor' },
+    { ar: 'قُدت 30 مشغّلًا في رأس الخير، أكبر محطة طاقة وتحلية في العالم', en: "Led 30 operators at Ras Al-Khair, the world's largest power and desalination plant" },
+    { ar: 'نمذجة فعلية لتحوّل الطاقة: مسار LEAP للسعودية 2060 وعمل تقني اقتصادي بالذكاء الاصطناعي', en: 'Real transition modeling: a Saudi 2060 LEAP pathway and AI techno-economic work' },
+    { ar: 'شهادة تمويل مناخي من كابسارك تغطي الحوكمة البيئية وأسواق الكربون', en: 'A KAPSARC Climate Finance credential covering ESG and carbon markets' },
   ],
   issues: [
-    { id: 'bullets', kind: 'bullet', text: { ar: 'أضف أرقامًا وأثرًا قابلًا للقياس لأبرز 3 إنجازات', en: 'Add concrete metrics and impact to your top 3 bullets' }, severity: 'high' },
-    { id: 'length', kind: 'length', text: { ar: 'اختصر السيرة إلى صفحتين كحد أقصى', en: 'Trim the CV to 2 pages maximum' }, severity: 'med' },
-    { id: 'summary', kind: 'summary', text: { ar: 'أضف ملخصًا من سطرين موجّهًا للاستثمار في الطاقة', en: 'Add a 2-line summary aimed at energy investment' }, severity: 'med' },
-    { id: 'keywords', kind: 'format', text: { ar: 'استخدم كلمات مفتاحية من إعلانات الصندوق وكابسارك', en: 'Mirror keywords from PIF and KAPSARC job posts' }, severity: 'low' },
+    { id: 'summary', kind: 'summary', text: { ar: 'ملخصك يبدأ بالعمليات. اجعله يبدأ باقتصاديات الطاقة من كورنيل وأعمال النمذجة ليناسب أدوار الاستثمار.', en: 'Your summary leads with operations. Lead instead with Cornell energy economics and your modeling work, so it reads for an investment role.' }, severity: 'high' },
+    { id: 'impact', kind: 'bullet', text: { ar: 'إنجازاتك تُظهر الإنتاج (2,700 ميغاواط، مليون م³ يوميًا) لا الأثر المالي. أضف الوفورات أو تحسّن الكفاءة من متابعتك للغاز وتوزيع الأحمال.', en: 'Your bullets show output (2,700 MWh, 1M m³/day) but not money. Add the cost saved or efficiency gained from your gas tracking and load work.' }, severity: 'high' },
+    { id: 'finance', kind: 'format', text: { ar: 'لا توجد شهادة مالية بعد عدا التمويل المناخي. مستوى أول من CFA أو شهادة نمذجة مالية يسدّ أكبر فجوة للتحوّل نحو الاستثمار.', en: 'No finance credential yet beyond Climate Finance. A CFA Level 1 or a financial-modeling cert closes the biggest gap for an investment move.' }, severity: 'med' },
+    { id: 'keywords', kind: 'contact', text: { ar: 'استخدم مصطلحات صندوق الاستثمارات وكابسارك: استراتيجية تحوّل الطاقة، التحليل التقني الاقتصادي، تمويل المشاريع. لديك الجوهر، فقط سمِّه بلغتهم.', en: 'Mirror the words PIF and KAPSARC use: energy-transition strategy, techno-economic analysis, project finance. You have the substance, name it their way.' }, severity: 'low' },
   ],
 };
 
 const aliScoreFactors: ScoreFactor[] = [
-  { label: { ar: 'التعليم', en: 'Education' }, detail: { ar: 'ماجستير اقتصاديات الطاقة — كورنيل (ضمن أفضل 20 عالميًا)', en: 'M.Eng Energy Economics — Cornell (world top-20)' }, strength: 'strong' },
-  { label: { ar: 'الخبرة', en: 'Experience' }, detail: { ar: 'سنتان في عمليات رأس الخير', en: '2 years — Ras Al-Khair operations' }, strength: 'good' },
-  { label: { ar: 'ملاءمة المجال', en: 'Field fit' }, detail: { ar: 'طاقة + تمويل', en: 'Energy + finance' }, strength: 'strong' },
+  { label: { ar: 'التعليم', en: 'Education' }, detail: { ar: 'ماجستير اقتصاديات الطاقة من كورنيل بمعدل 3.95، وبكالوريوس هندسة من مانشستر', en: 'Cornell M.Eng Energy Economics, GPA 3.95, plus a Manchester engineering degree' }, strength: 'strong' },
+  { label: { ar: 'الخبرة', en: 'Experience' }, detail: { ar: 'سنتان بقيادة 30 مشغّلًا في أكبر محطة طاقة وتحلية في العالم', en: 'Two years leading 30 operators at the world’s largest power and desalination plant' }, strength: 'good' },
+  { label: { ar: 'ملاءمة المجال', en: 'Field fit' }, detail: { ar: 'طاقة وتمويل، وهو هدفك تمامًا', en: 'Energy and finance, exactly your target' }, strength: 'strong' },
 ];
 
 const aliLevelGaps: Record<Level, LevelGap> = {
@@ -634,50 +641,59 @@ export const careerDays: { title: LS; org: LS; when: LS; city: LS; fields: Field
 // Saudi (often part-time / executive, good while working) and Worldwide
 // (full-time). `best` flags the strongest programs in that field; `link` points at
 // that field's program/department page (approximate, verify before applying).
-export type GradMode = 'part_time' | 'full_time';
-export type GradProgram = { uni: LS; program: LS; location: LS; link: string; mode: GradMode; saudi: boolean; best?: boolean };
+export type GradTier = 'saudi' | 'top' | 'accessible';
+export type GradProgram = { uni: LS; program: LS; location: LS; link: string; tier: GradTier };
 
+// Full-time degree options per field, in three tiers a customer can realistically
+// aim at: a strong Saudi school, a well-known but gettable global university (NOT
+// the near-impossible names), and a solid, more attainable option.
 export const gradPrograms: Record<Exclude<FieldTag, 'all'>, GradProgram[]> = {
   finance: [
-    { uni: { ar: 'جامعة الملك فهد للبترول والمعادن', en: 'KFUPM' }, program: { ar: 'ماجستير التمويل', en: 'MSc Finance' }, location: { ar: 'الظهران', en: 'Dhahran' }, link: 'https://cim.kfupm.edu.sa', mode: 'part_time', saudi: true },
-    { uni: { ar: 'جامعة الفيصل', en: 'Alfaisal University' }, program: { ar: 'ماجستير تنفيذي - تمويل', en: 'Executive MBA — Finance' }, location: { ar: 'الرياض', en: 'Riyadh' }, link: 'https://cob.alfaisal.edu', mode: 'part_time', saudi: true },
-    { uni: { ar: 'جامعة الملك سعود', en: 'King Saud University' }, program: { ar: 'ماجستير إدارة الأعمال (مسائي)', en: 'MBA (evening)' }, location: { ar: 'الرياض', en: 'Riyadh' }, link: 'https://business.ksu.edu.sa', mode: 'part_time', saudi: true },
-    { uni: { ar: 'كلية لندن للأعمال', en: 'London Business School' }, program: { ar: 'ماجستير التمويل', en: 'Masters in Finance' }, location: { ar: 'لندن', en: 'London' }, link: 'https://www.london.edu/masters-degrees/masters-in-finance', mode: 'full_time', saudi: false, best: true },
-    { uni: { ar: 'كلية لندن للاقتصاد', en: 'LSE' }, program: { ar: 'ماجستير التمويل', en: 'MSc Finance' }, location: { ar: 'لندن', en: 'London' }, link: 'https://www.lse.ac.uk/finance', mode: 'full_time', saudi: false, best: true },
-    { uni: { ar: 'إم آي تي سلون', en: 'MIT Sloan' }, program: { ar: 'ماجستير التمويل', en: 'Master of Finance' }, location: { ar: 'بوسطن', en: 'Boston' }, link: 'https://mitsloan.mit.edu/mfin', mode: 'full_time', saudi: false, best: true },
+    { tier: 'saudi', uni: { ar: 'جامعة الملك سعود', en: 'King Saud University' }, program: { ar: 'ماجستير التمويل', en: 'MSc Finance' }, location: { ar: 'الرياض', en: 'Riyadh' }, link: 'https://business.ksu.edu.sa' },
+    { tier: 'top', uni: { ar: 'جامعة مانشستر', en: 'University of Manchester' }, program: { ar: 'ماجستير التمويل', en: 'MSc Finance' }, location: { ar: 'المملكة المتحدة', en: 'United Kingdom' }, link: 'https://www.alliancembs.manchester.ac.uk' },
+    { tier: 'accessible', uni: { ar: 'جامعة ليدز', en: 'University of Leeds' }, program: { ar: 'ماجستير التمويل', en: 'MSc Finance' }, location: { ar: 'المملكة المتحدة', en: 'United Kingdom' }, link: 'https://business.leeds.ac.uk' },
   ],
   energy: [
-    { uni: { ar: 'جامعة الملك عبدالله (كاوست)', en: 'KAUST' }, program: { ar: 'علوم وهندسة الطاقة', en: 'Energy Science & Engineering' }, location: { ar: 'ثول', en: 'Thuwal' }, link: 'https://cemse.kaust.edu.sa', mode: 'full_time', saudi: true, best: true },
-    { uni: { ar: 'جامعة الملك فهد للبترول والمعادن', en: 'KFUPM' }, program: { ar: 'هندسة البترول والطاقة', en: 'Petroleum & Energy Engineering' }, location: { ar: 'الظهران', en: 'Dhahran' }, link: 'https://www.kfupm.edu.sa', mode: 'part_time', saudi: true },
-    { uni: { ar: 'جامعة الملك سعود', en: 'King Saud University' }, program: { ar: 'هندسة الطاقة المتجددة', en: 'Renewable Energy Eng.' }, location: { ar: 'الرياض', en: 'Riyadh' }, link: 'https://engineering.ksu.edu.sa', mode: 'part_time', saudi: true },
-    { uni: { ar: 'إمبريال كوليدج لندن', en: 'Imperial College London' }, program: { ar: 'مستقبل الطاقة المستدامة', en: 'Sustainable Energy Futures' }, location: { ar: 'لندن', en: 'London' }, link: 'https://www.imperial.ac.uk/study/courses/postgraduate-taught/sustainable-energy-futures/', mode: 'full_time', saudi: false, best: true },
-    { uni: { ar: 'جامعة ستانفورد', en: 'Stanford University' }, program: { ar: 'علوم وهندسة الطاقة', en: 'Energy Science & Engineering' }, location: { ar: 'كاليفورنيا', en: 'California' }, link: 'https://energy.stanford.edu', mode: 'full_time', saudi: false, best: true },
+    { tier: 'saudi', uni: { ar: 'جامعة الملك عبدالله (كاوست)', en: 'KAUST' }, program: { ar: 'علوم وهندسة الطاقة', en: 'Energy Science and Engineering' }, location: { ar: 'ثول', en: 'Thuwal' }, link: 'https://cemse.kaust.edu.sa' },
+    { tier: 'top', uni: { ar: 'جامعة بيردو', en: 'Purdue University' }, program: { ar: 'هندسة وأنظمة الطاقة', en: 'Energy and Power Engineering' }, location: { ar: 'الولايات المتحدة', en: 'United States' }, link: 'https://engineering.purdue.edu' },
+    { tier: 'accessible', uni: { ar: 'جامعة ولاية أريزونا', en: 'Arizona State University' }, program: { ar: 'الطاقة المستدامة', en: 'Sustainable Energy' }, location: { ar: 'الولايات المتحدة', en: 'United States' }, link: 'https://www.asu.edu' },
   ],
   consulting: [
-    { uni: { ar: 'جامعة الفيصل', en: 'Alfaisal University' }, program: { ar: 'ماجستير إدارة الأعمال التنفيذي', en: 'Executive MBA' }, location: { ar: 'الرياض', en: 'Riyadh' }, link: 'https://cob.alfaisal.edu', mode: 'part_time', saudi: true },
-    { uni: { ar: 'جامعة الملك عبدالله (كاوست)', en: 'KAUST' }, program: { ar: 'ماجستير إدارة الأعمال', en: 'MBA' }, location: { ar: 'ثول', en: 'Thuwal' }, link: 'https://www.kaust.edu.sa', mode: 'full_time', saudi: true },
-    { uni: { ar: 'جامعة الملك سعود', en: 'King Saud University' }, program: { ar: 'ماجستير إدارة الأعمال', en: 'MBA' }, location: { ar: 'الرياض', en: 'Riyadh' }, link: 'https://business.ksu.edu.sa', mode: 'part_time', saudi: true },
-    { uni: { ar: 'إنسياد', en: 'INSEAD' }, program: { ar: 'ماجستير إدارة الأعمال', en: 'MBA' }, location: { ar: 'فونتينبلو/أبوظبي', en: 'Fontainebleau / Abu Dhabi' }, link: 'https://www.insead.edu/master-programmes/mba', mode: 'full_time', saudi: false, best: true },
-    { uni: { ar: 'كلية لندن للأعمال', en: 'London Business School' }, program: { ar: 'ماجستير إدارة الأعمال', en: 'MBA' }, location: { ar: 'لندن', en: 'London' }, link: 'https://www.london.edu/masters-degrees/mba', mode: 'full_time', saudi: false, best: true },
-    { uni: { ar: 'وارتون', en: 'Wharton' }, program: { ar: 'ماجستير إدارة الأعمال', en: 'MBA' }, location: { ar: 'فيلادلفيا', en: 'Philadelphia' }, link: 'https://mba.wharton.upenn.edu', mode: 'full_time', saudi: false, best: true },
+    { tier: 'saudi', uni: { ar: 'جامعة الملك عبدالله (كاوست)', en: 'KAUST' }, program: { ar: 'ماجستير إدارة الأعمال', en: 'MBA' }, location: { ar: 'ثول', en: 'Thuwal' }, link: 'https://www.kaust.edu.sa' },
+    { tier: 'top', uni: { ar: 'جامعة ديوك', en: 'Duke University' }, program: { ar: 'ماجستير إدارة الأعمال، فوكوا', en: 'MBA, Fuqua' }, location: { ar: 'الولايات المتحدة', en: 'United States' }, link: 'https://www.fuqua.duke.edu' },
+    { tier: 'accessible', uni: { ar: 'جامعة ولاية أريزونا', en: 'Arizona State University' }, program: { ar: 'ماجستير إدارة الأعمال، كاري', en: 'MBA, W. P. Carey' }, location: { ar: 'الولايات المتحدة', en: 'United States' }, link: 'https://wpcarey.asu.edu' },
   ],
   government: [
-    { uni: { ar: 'معهد الإدارة العامة', en: 'IPA / SPSP' }, program: { ar: 'السياسات العامة', en: 'Public Policy' }, location: { ar: 'الرياض', en: 'Riyadh' }, link: 'https://www.spsp.edu.sa', mode: 'part_time', saudi: true },
-    { uni: { ar: 'جامعة الملك سعود', en: 'King Saud University' }, program: { ar: 'ماجستير الإدارة العامة', en: 'Master of Public Admin.' }, location: { ar: 'الرياض', en: 'Riyadh' }, link: 'https://business.ksu.edu.sa', mode: 'part_time', saudi: true },
-    { uni: { ar: 'جامعة نايف العربية', en: 'Naif Arab University' }, program: { ar: 'السياسات والإدارة', en: 'Policy & Administration' }, location: { ar: 'الرياض', en: 'Riyadh' }, link: 'https://www.nauss.edu.sa', mode: 'part_time', saudi: true },
-    { uni: { ar: 'كلية كينيدي - هارفارد', en: 'Harvard Kennedy School' }, program: { ar: 'ماجستير السياسات العامة', en: 'Master in Public Policy' }, location: { ar: 'بوسطن', en: 'Boston' }, link: 'https://www.hks.harvard.edu/educational-programs/masters-programs/master-public-policy', mode: 'full_time', saudi: false, best: true },
-    { uni: { ar: 'كلية بلافاتنيك - أكسفورد', en: 'Oxford Blavatnik' }, program: { ar: 'ماجستير السياسات العامة', en: 'Master of Public Policy' }, location: { ar: 'أكسفورد', en: 'Oxford' }, link: 'https://www.bsg.ox.ac.uk/study/master-public-policy', mode: 'full_time', saudi: false, best: true },
-    { uni: { ar: 'كلية لندن للاقتصاد', en: 'LSE' }, program: { ar: 'ماجستير الإدارة العامة', en: 'MPA Public Administration' }, location: { ar: 'لندن', en: 'London' }, link: 'https://www.lse.ac.uk/school-of-public-policy', mode: 'full_time', saudi: false, best: true },
+    { tier: 'saudi', uni: { ar: 'معهد الإدارة العامة', en: 'IPA' }, program: { ar: 'السياسات والإدارة العامة', en: 'Public Policy and Administration' }, location: { ar: 'الرياض', en: 'Riyadh' }, link: 'https://www.ipa.edu.sa' },
+    { tier: 'top', uni: { ar: 'جامعة ديوك', en: 'Duke University' }, program: { ar: 'السياسات العامة، سانفورد', en: 'Public Policy, Sanford' }, location: { ar: 'الولايات المتحدة', en: 'United States' }, link: 'https://sanford.duke.edu' },
+    { tier: 'accessible', uni: { ar: 'جامعة ولاية أريزونا', en: 'Arizona State University' }, program: { ar: 'الإدارة والسياسات العامة', en: 'Public Affairs' }, location: { ar: 'الولايات المتحدة', en: 'United States' }, link: 'https://watts.asu.edu' },
   ],
   tech: [
-    { uni: { ar: 'جامعة الملك عبدالله (كاوست)', en: 'KAUST' }, program: { ar: 'علوم الحاسب / الذكاء الاصطناعي', en: 'Computer Science / AI' }, location: { ar: 'ثول', en: 'Thuwal' }, link: 'https://cemse.kaust.edu.sa', mode: 'full_time', saudi: true, best: true },
-    { uni: { ar: 'جامعة الملك فهد للبترول والمعادن', en: 'KFUPM' }, program: { ar: 'علوم الحاسب', en: 'Computer Science' }, location: { ar: 'الظهران', en: 'Dhahran' }, link: 'https://www.kfupm.edu.sa', mode: 'part_time', saudi: true },
-    { uni: { ar: 'جامعة الأمير محمد بن فهد', en: 'PMU' }, program: { ar: 'ماجستير علم البيانات', en: 'MS Data Science' }, location: { ar: 'الخبر', en: 'Khobar' }, link: 'https://www.pmu.edu.sa', mode: 'part_time', saudi: true },
-    { uni: { ar: 'جامعة ستانفورد', en: 'Stanford University' }, program: { ar: 'ماجستير علوم الحاسب (ذكاء اصطناعي)', en: 'MS Computer Science (AI)' }, location: { ar: 'كاليفورنيا', en: 'California' }, link: 'https://cs.stanford.edu', mode: 'full_time', saudi: false, best: true },
-    { uni: { ar: 'جامعة كارنيجي ميلون', en: 'Carnegie Mellon' }, program: { ar: 'ماجستير الذكاء الاصطناعي', en: 'MS Artificial Intelligence' }, location: { ar: 'بيتسبرغ', en: 'Pittsburgh' }, link: 'https://www.cs.cmu.edu', mode: 'full_time', saudi: false, best: true },
-    { uni: { ar: 'إم آي تي', en: 'MIT' }, program: { ar: 'الهندسة الكهربائية وعلوم الحاسب', en: 'EECS' }, location: { ar: 'بوسطن', en: 'Boston' }, link: 'https://www.eecs.mit.edu', mode: 'full_time', saudi: false, best: true },
+    { tier: 'saudi', uni: { ar: 'جامعة الملك عبدالله (كاوست)', en: 'KAUST' }, program: { ar: 'علوم الحاسب والذكاء الاصطناعي', en: 'Computer Science and AI' }, location: { ar: 'ثول', en: 'Thuwal' }, link: 'https://cemse.kaust.edu.sa' },
+    { tier: 'top', uni: { ar: 'جامعة بيردو', en: 'Purdue University' }, program: { ar: 'علوم الحاسب', en: 'Computer Science' }, location: { ar: 'الولايات المتحدة', en: 'United States' }, link: 'https://www.cs.purdue.edu' },
+    { tier: 'accessible', uni: { ar: 'جامعة ولاية أريزونا', en: 'Arizona State University' }, program: { ar: 'علوم الحاسب', en: 'Computer Science' }, location: { ar: 'الولايات المتحدة', en: 'United States' }, link: 'https://scai.engineering.asu.edu' },
   ],
 };
+
+// The graduate major that fits each field (shown as chips at the top of Study).
+export const fieldMajors: Record<Exclude<FieldTag, 'all'>, LS> = {
+  finance: { ar: 'التمويل', en: 'Finance' },
+  energy: { ar: 'اقتصاديات وهندسة الطاقة', en: 'Energy Economics and Engineering' },
+  consulting: { ar: 'إدارة الأعمال', en: 'Business and Management' },
+  government: { ar: 'السياسات العامة', en: 'Public Policy' },
+  tech: { ar: 'علوم الحاسب والذكاء الاصطناعي', en: 'Computer Science and AI' },
+};
+
+// Saudi part-time / executive options (study while working). Each is tagged with the
+// fields it suits and a region, so the ones nearest the customer can come first.
+export type PartTimeUni = { uni: LS; program: LS; city: LS; region: SaudiRegion; link: string; fields: Exclude<FieldTag, 'all'>[] };
+export const partTimeSaudi: PartTimeUni[] = [
+  { uni: { ar: 'جامعة الملك فهد للبترول والمعادن', en: 'KFUPM' }, program: { ar: 'ماجستير تنفيذي في الطاقة والمالية والحاسب', en: 'Executive MSc in Energy, Finance, CS' }, city: { ar: 'الظهران', en: 'Dhahran' }, region: 'eastern', link: 'https://cim.kfupm.edu.sa', fields: ['energy', 'finance', 'tech'] },
+  { uni: { ar: 'جامعة الأمير محمد بن فهد', en: 'PMU' }, program: { ar: 'ماجستير علم البيانات وإدارة الأعمال', en: 'MS Data Science and MBA' }, city: { ar: 'الخبر', en: 'Khobar' }, region: 'eastern', link: 'https://www.pmu.edu.sa', fields: ['tech', 'consulting', 'finance'] },
+  { uni: { ar: 'جامعة الملك سعود', en: 'King Saud University' }, program: { ar: 'ماجستير إدارة الأعمال (مسائي)', en: 'MBA, evening' }, city: { ar: 'الرياض', en: 'Riyadh' }, region: 'central', link: 'https://business.ksu.edu.sa', fields: ['finance', 'consulting', 'government'] },
+  { uni: { ar: 'مدرسة كابسارك للسياسة العامة', en: 'KAPSARC School' }, program: { ar: 'السياسات العامة والطاقة', en: 'Public Policy and Energy' }, city: { ar: 'الرياض', en: 'Riyadh' }, region: 'central', link: 'https://www.kapsarc.org', fields: ['energy', 'government'] },
+  { uni: { ar: 'كلية الأمير محمد بن سلمان', en: 'MBSC' }, program: { ar: 'ماجستير إدارة الأعمال وريادة الأعمال', en: 'MBA and Entrepreneurship' }, city: { ar: 'مدينة الملك عبدالله الاقتصادية', en: 'KAEC' }, region: 'western', link: 'https://www.mbsc.edu.sa', fields: ['consulting', 'finance', 'government'] },
+];
 
 // Field-specific note on which Saudi university leads (shown in Study > In Saudi).
 export const saudiUniStrength: Record<Exclude<FieldTag, 'all'>, LS> = {
@@ -686,35 +702,6 @@ export const saudiUniStrength: Record<Exclude<FieldTag, 'all'>, LS> = {
   consulting: { ar: 'كاوست وجامعة الفيصل الأبرز محليًا لإدارة الأعمال.', en: 'KAUST and Alfaisal lead locally for business & management.' },
   government: { ar: 'معهد الإدارة العامة هو المرجع المحلي للسياسات والإدارة.', en: 'IPA is the local reference for policy & administration.' },
   tech: { ar: 'كاوست وجامعة الملك فهد الأقوى محليًا في الحاسب والذكاء الاصطناعي.', en: 'KAUST and KFUPM are the strongest locally for computing & AI.' },
-};
-
-// Indicative monthly salary ranges in the Saudi market (SAR), entry to senior.
-export const salaries: Record<Exclude<FieldTag, 'all'>, { role: LS; range: LS }[]> = {
-  finance: [
-    { role: { ar: 'محلل استثمار (مبتدئ)', en: 'Investment Analyst (entry)' }, range: { ar: '12–18 ألف ر.س', en: 'SAR 12–18k' } },
-    { role: { ar: 'محلل أول', en: 'Senior Analyst' }, range: { ar: '20–30 ألف ر.س', en: 'SAR 20–30k' } },
-    { role: { ar: 'مدير محفظة', en: 'Portfolio Manager' }, range: { ar: '35–60 ألف ر.س', en: 'SAR 35–60k' } },
-  ],
-  energy: [
-    { role: { ar: 'مهندس', en: 'Engineer' }, range: { ar: '14–20 ألف ر.س', en: 'SAR 14–20k' } },
-    { role: { ar: 'مهندس أول', en: 'Senior Engineer' }, range: { ar: '22–32 ألف ر.س', en: 'SAR 22–32k' } },
-    { role: { ar: 'مدير مشروع/عمليات', en: 'Project / Ops Manager' }, range: { ar: '35–55 ألف ر.س', en: 'SAR 35–55k' } },
-  ],
-  consulting: [
-    { role: { ar: 'محلل', en: 'Analyst' }, range: { ar: '18–25 ألف ر.س', en: 'SAR 18–25k' } },
-    { role: { ar: 'مستشار', en: 'Consultant' }, range: { ar: '28–40 ألف ر.س', en: 'SAR 28–40k' } },
-    { role: { ar: 'مدير ارتباط', en: 'Engagement Manager' }, range: { ar: '45–70 ألف ر.س', en: 'SAR 45–70k' } },
-  ],
-  government: [
-    { role: { ar: 'أخصائي', en: 'Specialist' }, range: { ar: '14–20 ألف ر.س', en: 'SAR 14–20k' } },
-    { role: { ar: 'مدير برنامج', en: 'Program Manager' }, range: { ar: '25–38 ألف ر.س', en: 'SAR 25–38k' } },
-    { role: { ar: 'مدير عام', en: 'Director' }, range: { ar: '45–70 ألف ر.س', en: 'SAR 45–70k' } },
-  ],
-  tech: [
-    { role: { ar: 'محلل بيانات', en: 'Data Analyst' }, range: { ar: '13–20 ألف ر.س', en: 'SAR 13–20k' } },
-    { role: { ar: 'مهندس بيانات', en: 'Data Engineer' }, range: { ar: '22–32 ألف ر.س', en: 'SAR 22–32k' } },
-    { role: { ar: 'قائد منتج', en: 'Product Lead' }, range: { ar: '35–55 ألف ر.س', en: 'SAR 35–55k' } },
-  ],
 };
 
 // In-demand skills to learn, each with a place to learn it.
@@ -748,30 +735,6 @@ export const skills: Record<Exclude<FieldTag, 'all'>, { name: LS; link: string }
     { name: { ar: 'SQL', en: 'SQL' }, link: 'https://www.datacamp.com' },
     { name: { ar: 'السحابة (AWS)', en: 'Cloud (AWS)' }, link: 'https://aws.amazon.com/training/' },
     { name: { ar: 'تعلّم الآلة', en: 'Machine learning' }, link: 'https://www.coursera.org' },
-  ],
-};
-
-// Professional communities and associations to join in the field.
-export const communities: Record<Exclude<FieldTag, 'all'>, { name: LS; desc: LS; url: string }[]> = {
-  finance: [
-    { name: { ar: 'جمعية CFA السعودية', en: 'CFA Society Saudi Arabia' }, desc: { ar: 'مجتمع المحللين الماليين', en: 'Financial analysts community' }, url: 'https://www.cfainstitute.org' },
-    { name: { ar: 'فنتك السعودية', en: 'Fintech Saudi' }, desc: { ar: 'مجتمع التقنية المالية', en: 'Fintech community' }, url: 'https://fintechsaudi.com' },
-  ],
-  energy: [
-    { name: { ar: 'الهيئة السعودية للمهندسين', en: 'Saudi Council of Engineers' }, desc: { ar: 'العضوية المهنية للمهندسين', en: 'Professional membership for engineers' }, url: 'https://www.saudieng.sa' },
-    { name: { ar: 'فعاليات كابسارك', en: 'KAPSARC events' }, desc: { ar: 'أبحاث وفعاليات الطاقة', en: 'Energy research & events' }, url: 'https://www.kapsarc.org' },
-  ],
-  consulting: [
-    { name: { ar: 'مجتمع مسك', en: 'Misk community' }, desc: { ar: 'قادة وريادة أعمال', en: 'Leaders & entrepreneurship' }, url: 'https://misk.org.sa' },
-    { name: { ar: 'منتدى مستشار', en: 'Mustashar forum' }, desc: { ar: 'تدريب الاستشارات', en: 'Consulting training' }, url: 'https://mustashar.org' },
-  ],
-  government: [
-    { name: { ar: 'خرّيجو معهد الإدارة', en: 'IPA alumni' }, desc: { ar: 'شبكة السياسات والإدارة', en: 'Policy & admin network' }, url: 'https://www.ipa.edu.sa' },
-    { name: { ar: 'مجتمع مسك', en: 'Misk community' }, desc: { ar: 'قادة المستقبل', en: 'Future leaders' }, url: 'https://misk.org.sa' },
-  ],
-  tech: [
-    { name: { ar: 'مجتمع سدايا', en: 'SDAIA community' }, desc: { ar: 'الذكاء الاصطناعي والبيانات', en: 'AI & data' }, url: 'https://sdaia.gov.sa' },
-    { name: { ar: 'ملتقيات التقنية (LEAP)', en: 'Tech meetups (LEAP)' }, desc: { ar: 'فعاليات ومجتمع تقني', en: 'Tech events & community' }, url: 'https://onegiantleap.com' },
   ],
 };
 
@@ -881,10 +844,8 @@ export const ui = {
     wPicks: { ar: 'تواصل اليوم', en: "Today's picks" },
     wGoal: { ar: 'هدف الأسبوع', en: 'Weekly goal' },
     wSnapshot: { ar: 'ملخّص التتبّع', en: 'Outreach snapshot' },
-    wSalary: { ar: 'الراتب المتوقّع', en: 'Salary peek' },
     wCert: { ar: 'شهادتك الحالية', en: 'Current certification' },
     wCareerDay: { ar: 'أقرب يوم مهني', en: 'Next career day' },
-    salaryPeekTitle: { ar: 'الراتب المتوقّع (مبتدئ)', en: 'Expected salary (entry)' },
     certPeekTitle: { ar: 'شهادتك الحالية', en: 'Your current certification' },
     careerDayTitle: { ar: 'أقرب يوم مهني', en: 'Next career day' },
     goalTitle: { ar: 'هدف هذا الأسبوع', en: "This week's goal" },
@@ -933,8 +894,8 @@ export const ui = {
     totalScore: { ar: 'إجمالي ما يضيفه لدرجتك', en: 'Total score boost' },
     picksTitle: { ar: 'ابدأ بهؤلاء الخمسة', en: 'Start with these five' },
     picksSub: {
-      ar: 'الأعلى منصبًا، ومن تشاركهم قاسمًا مشتركًا — مع رسالة جاهزة لكل واحد.',
-      en: 'The most senior, and people you share common ground with — each with a ready message.',
+      ar: 'الأعلى منصبًا، ومن تشاركهم قاسمًا مشتركًا, مع رسالة جاهزة لكل واحد.',
+      en: 'The most senior, and people you share common ground with, each with a ready message.',
     },
     kindTop: { ar: 'منصب رفيع', en: 'Senior' },
     kindMid: { ar: 'مستوى متوسط', en: 'Mid-level' },
@@ -1012,11 +973,11 @@ export const ui = {
       ar: 'ارفع ملف جهات اتصالك (Connections.csv) لنرتّب شبكتك ونُبرز أقرب الأشخاص إلى أهدافك للتواصل معهم أولًا. المقدمة الدافئة تتفوّق على الرسالة الباردة، والملف يبقى في متصفحك ولا نخزّنه.',
       en: 'Upload your Connections.csv so we can rank your network and surface the people closest to your targets to reach out to first. A warm intro beats a cold message, and the file stays in your browser; we never store it.',
     },
-    note: { ar: 'يستغرق لينكدإن من 12 إلى 24 ساعة لإرسال الملف إلى بريدك.', en: 'LinkedIn takes 12–24 hours to email you the file.' },
+    note: { ar: 'يستغرق لينكدإن من 12 إلى 24 ساعة لإرسال الملف إلى بريدك.', en: 'LinkedIn takes 12 to 24 hours to email you the file.' },
     upload: { ar: 'ارفع Connections.csv', en: 'Upload Connections.csv' },
     matched: { ar: (n: number) => `حمّلنا ${n} جهة من شبكتك`, en: (n: number) => `Loaded ${n} of your connections` },
     ranked: { ar: 'رتّبنا الأقرب إلى أهدافك في الأعلى.', en: 'The closest matches to your targets are on top.' },
-    none: { ar: 'لم نتعرّف على أي جهة — جرّب ملفًا آخر.', en: 'No connections found — try another file.' },
+    none: { ar: 'لم نتعرّف على أي جهة, جرّب ملفًا آخر.', en: 'No connections found, try another file.' },
     clear: { ar: 'إزالة الملف', en: 'Clear file' },
     locked: { ar: 'ارفع جهات اتصالك لعرض أقرب من تعرفهم هنا', en: 'Upload your connections to reveal who you know here' },
     howPhone: { ar: '📱 من تطبيق الجوال', en: '📱 On the phone app' },
@@ -1026,13 +987,13 @@ export const ui = {
         'افتح تطبيق لينكدإن واضغط صورتك ثم «الإعدادات».',
         'اختر «خصوصية البيانات» ثم «الحصول على نسخة من بياناتك».',
         'اختر «جهات الاتصال» فقط، ثم «اطلب الأرشيف».',
-        'خلال 12–24 ساعة يصلك بريد فيه رابط التحميل — نزّل Connections.csv ثم ارفعه هنا.',
+        'خلال 12 إلى 24 ساعة يصلك بريد فيه رابط التحميل, نزّل Connections.csv ثم ارفعه هنا.',
       ],
       en: [
         'Open the LinkedIn app, tap your photo, then Settings.',
         'Go to Data privacy, then "Get a copy of your data".',
         'Pick "Connections" only, then Request archive.',
-        'Within 12–24h you get an email with a download link — get Connections.csv and upload it here.',
+        'Within 12 to 24h you get an email with a download link, get Connections.csv and upload it here.',
       ],
     },
     laptopSteps: {
@@ -1040,13 +1001,13 @@ export const ui = {
         'افتح linkedin.com واضغط «أنا» ثم «الإعدادات والخصوصية».',
         'من «خصوصية البيانات» اختر «الحصول على نسخة من بياناتك».',
         'اختر «جهات الاتصال» تحديدًا، ثم «اطلب الأرشيف».',
-        'خلال 12–24 ساعة يصلك بريد فيه الرابط — نزّل Connections.csv ثم ارفعه هنا.',
+        'خلال 12 إلى 24 ساعة يصلك بريد فيه الرابط, نزّل Connections.csv ثم ارفعه هنا.',
       ],
       en: [
         'Open linkedin.com, click Me, then Settings & Privacy.',
         'Under Data privacy, choose "Get a copy of your data".',
         'Select "Connections" specifically, then Request archive.',
-        'Within 12–24h you get an email with the link — download Connections.csv and upload it here.',
+        'Within 12 to 24h you get an email with the link, download Connections.csv and upload it here.',
       ],
     },
   },
@@ -1076,41 +1037,43 @@ export const ui = {
   study: {
     eyebrow: { ar: 'الدراسات العليا', en: 'Graduate study' },
     title: { ar: 'ارفع مؤهلك بدرجة عليا', en: 'Level up with a graduate degree' },
-    sub: { ar: 'خيارات بدوام جزئي داخل السعودية وأنت تعمل، أو بدوام كامل في أفضل جامعات العالم في مجالك.', en: 'Part-time options inside Saudi while you work, or full-time at the best universities worldwide in your field.' },
+    sub: { ar: 'خيارات سعودية بدوام جزئي وأنت تعمل، ودرجات بدوام كامل في جامعات قوية يمكنك الوصول إليها فعلًا.', en: 'Saudi part-time options while you work, and full-time degrees at strong universities you can realistically reach.' },
     chosenFor: { ar: (p: string) => `اختيرت لتناسب مسارك: ${p}`, en: (p: string) => `Chosen to fit your path: ${p}` },
-    inSaudi: { ar: 'في السعودية', en: 'In Saudi Arabia' },
-    inSaudiSub: { ar: 'مناسبة للدراسة أثناء العمل', en: 'Good to study while working' },
-    worldwide: { ar: 'حول العالم', en: 'Worldwide' },
-    worldwideSub: { ar: 'برامج بدوام كامل في أقوى الجامعات', en: 'Full-time at top universities' },
-    partTime: { ar: 'دوام جزئي', en: 'Part-time' },
-    fullTime: { ar: 'دوام كامل', en: 'Full-time' },
-    best: { ar: 'الأفضل في مجالك', en: 'Best in field' },
+    majorsLabel: { ar: 'تخصصات تناسب مسارك', en: 'Majors that fit your path' },
+    fullTimeTitle: { ar: 'بدوام كامل', en: 'Full-time degrees' },
+    fullTimeSub: { ar: 'خيار سعودي، وجامعة عالمية مرموقة، وخيار أسهل قبولًا', en: 'A Saudi option, a respected global university, and an easier one to get into' },
+    partTimeTitle: { ar: 'بدوام جزئي في السعودية', en: 'Part-time in Saudi Arabia' },
+    partTimeSub: { ar: 'ادرس وأنت تعمل، والأقرب إليك أولًا', en: 'Study while you work, the nearest to you first' },
+    tierSaudi: { ar: 'في السعودية', en: 'In Saudi Arabia' },
+    tierTop: { ar: 'جامعة عالمية مرموقة', en: 'Respected and well known' },
+    tierAccessible: { ar: 'أسهل قبولًا', en: 'Easier to get into' },
+    nearYou: { ar: 'الأقرب إليك', en: 'Nearest you' },
     viewProgram: { ar: 'صفحة البرنامج', en: 'Program page' },
     worthItTitle: { ar: 'هل تستحق الدراسة العليا؟', en: 'Is a graduate degree worth it?' },
-    worthIt: { ar: 'لمسارك، الماجستير يرفع سقف راتبك ويفتح الأدوار القيادية أسرع — خاصة من جامعة قوية في مجالك. القرار يعتمد على هدفك ووقتك.', en: 'For your path, a master’s raises your salary ceiling and opens senior roles faster — especially from a university strong in your field. It depends on your goal and your time.' },
+    worthIt: { ar: 'لمسارك، الماجستير يرفع سقف راتبك ويفتح الأدوار القيادية أسرع، خاصة من جامعة قوية في مجالك. القرار يعتمد على هدفك ووقتك.', en: 'For your path, a master’s raises your ceiling and opens senior roles faster, especially from a university strong in your field. It comes down to your goal and your time.' },
     admissionsTitle: { ar: 'متطلبات القبول النموذجية', en: 'Typical admission requirements' },
     admissions: {
-      ar: ['معدّل تراكمي جيد (3.0+ من 4 عادةً).', 'اختبار GMAT أو GRE لبعض البرامج.', 'إثبات لغة إنجليزية: IELTS 6.5+ أو TOEFL 90+.', 'خطابات توصية + بيان غرض + سيرة ذاتية.'],
-      en: ['A solid GPA (usually 3.0+ / 4).', 'GMAT or GRE for some programs.', 'English proof: IELTS 6.5+ or TOEFL 90+.', 'Recommendation letters + statement of purpose + CV.'],
+      ar: ['معدّل تراكمي جيد (3.0 من 4 فأعلى عادةً).', 'اختبار GMAT أو GRE لبعض البرامج.', 'إثبات لغة إنجليزية: IELTS 6.5 أو TOEFL 90 فأعلى.', 'خطابات توصية وبيان غرض وسيرة ذاتية.'],
+      en: ['A solid GPA (usually 3.0 / 4 or higher).', 'GMAT or GRE for some programs.', 'English proof: IELTS 6.5 or TOEFL 90 and up.', 'Recommendation letters, a statement of purpose, and a CV.'],
     },
     timelineTitle: { ar: 'الجدول الزمني للتقديم', en: 'Application timeline' },
     timeline: {
-      ar: ['ابدأ قبل 9–12 شهرًا من موعد البدء.', 'جهّز اختبارات اللغة وGMAT مبكرًا.', 'مواعيد التقديم غالبًا في الخريف للقبول التالي.', 'قدّم على المنح بالتوازي مع طلب القبول.'],
-      en: ['Start 9–12 months before your intended start.', 'Sit language tests and the GMAT early.', 'Deadlines are often in the autumn for the next intake.', 'Apply for scholarships in parallel with admission.'],
+      ar: ['ابدأ قبل 9 إلى 12 شهرًا من موعد البدء.', 'جهّز اختبارات اللغة وGMAT مبكرًا.', 'مواعيد التقديم غالبًا في الخريف للقبول التالي.', 'قدّم على المنح بالتوازي مع طلب القبول.'],
+      en: ['Start 9 to 12 months before your intended start.', 'Sit language tests and the GMAT early.', 'Deadlines are often in the autumn for the next intake.', 'Apply for scholarships in parallel with admission.'],
     },
-    fundingTitle: { ar: 'التمويل والدعم', en: 'Funding & support' },
+    fundingTitle: { ar: 'التمويل والدعم', en: 'Funding and support' },
     funding: {
       ar: [
         'برنامج «بعثتك» من وزارة التعليم للدراسة في أفضل الجامعات عالميًا.',
         'ابتعاث جهة عملك أو إجازة دراسية مدفوعة (شائع للبرامج بدوام جزئي).',
-        'زمالة كاوست — رسوم كاملة + راتب شهري + سكن.',
-        'منح التفوّق والمساعدات البحثية/التدريسية داخل الجامعة.',
+        'زمالة كاوست: رسوم كاملة وراتب شهري وسكن.',
+        'منح التفوّق والمساعدات البحثية والتدريسية داخل الجامعة.',
       ],
       en: [
         'The Ministry of Education “Your Scholarship” (بعثتك) program for top global universities.',
-        'Employer sponsorship or paid study leave (common for part-time).',
-        'KAUST fellowship — full tuition + a monthly stipend + housing.',
-        'University merit scholarships and teaching/research assistantships.',
+        'Employer sponsorship or paid study leave (common while working).',
+        'KAUST fellowship: full tuition, a monthly stipend, and housing.',
+        'University merit scholarships and teaching or research assistantships.',
       ],
     },
   },
@@ -1131,7 +1094,7 @@ export const ui = {
     experience: { ar: 'الخبرة', en: 'Experience' },
     certNeeded: { ar: 'شهادة مطلوبة', en: 'Certification' },
     other: { ar: 'أخرى', en: 'Also' },
-    ready: { ar: 'أنت جاهز لهذا المستوى — لا فجوات تذكر!', en: "You're ready for this level — no real gaps!" },
+    ready: { ar: 'أنت جاهز لهذا المستوى, لا فجوات تذكر!', en: "You're ready for this level, no real gaps!" },
   },
   opp: {
     eyebrow: { ar: 'فرص ومصادر', en: 'Opportunities & resources' },
@@ -1154,13 +1117,9 @@ export const ui = {
     visit: { ar: 'زيارة', en: 'Visit' },
     cvGuideTitle: { ar: 'كيف تكتب سيرة قوية', en: 'How to write a strong CV' },
     interviewTitle: { ar: 'نصائح للمقابلات', en: 'Interview tips' },
-    salaryTitle: { ar: 'الرواتب في مجالك', en: 'Salaries in your field' },
-    salarySub: { ar: 'نطاقات تقريبية شهرية في السوق السعودي.', en: 'Approximate monthly ranges in the Saudi market.' },
     skillsTitle: { ar: 'مهارات مطلوبة تتعلّمها', en: 'In-demand skills to learn' },
     skillsSub: { ar: 'ابدأ بهذه المهارات لرفع قيمتك سريعًا.', en: 'Start with these to raise your value fast.' },
     learn: { ar: 'تعلّمها', en: 'Learn it' },
-    communitiesTitle: { ar: 'مجتمعات وجمعيات مهنية', en: 'Communities & associations' },
-    communitiesSub: { ar: 'انضم لتوسّع شبكتك وتبقى على اطّلاع.', en: 'Join to grow your network and stay current.' },
   },
   referral: {
     title: { ar: 'أهدِ صديقًا خصم 20%', en: 'Give a friend 20% off' },

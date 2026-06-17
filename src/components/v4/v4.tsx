@@ -63,9 +63,9 @@ import {
   careerDays,
   gradPrograms,
   saudiUniStrength,
-  salaries,
+  fieldMajors,
+  partTimeSaudi,
   skills,
-  communities,
   nationalPortals,
   companyCareers,
   cvGuide,
@@ -83,7 +83,7 @@ import {
 } from '@/lib/app-data';
 
 /* =============================================================================
-   v4 "Atlas" — an editorial bento dashboard. Warm paper / crisp near-black with
+   v4 "Atlas", an editorial bento dashboard. Warm paper / crisp near-black with
    SOLID elevated cards (the dark theme reworked for contrast), a single rationed
    gold accent, an Instrument-Serif display face, a masked grid + film grain,
    spring motion with layoutId morphs, a ⌘K palette, and a فرص/Opportunities hub.
@@ -390,11 +390,10 @@ const HOME_WIDGETS: { id: string; label: keyof typeof ui.overview }[] = [
   { id: 'picks', label: 'wPicks' },
   { id: 'goal', label: 'wGoal' },
   { id: 'snapshot', label: 'wSnapshot' },
-  { id: 'salary', label: 'wSalary' },
   { id: 'currentCert', label: 'wCert' },
   { id: 'careerDay', label: 'wCareerDay' },
 ];
-const WIDGET_DEFAULT: Record<string, boolean> = { nextMove: false, network: false, cvReview: true, stats: true, picks: true, goal: false, snapshot: false, salary: false, currentCert: false, careerDay: false };
+const WIDGET_DEFAULT: Record<string, boolean> = { nextMove: false, network: false, cvReview: true, stats: true, picks: true, goal: false, snapshot: false, currentCert: false, careerDay: false };
 const WEEKLY_GOAL = 5;
 
 function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; openPath: (id: string) => void }) {
@@ -441,11 +440,10 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
   ];
 
   const W = (id: string) => homeWidgets[id] ?? WIDGET_DEFAULT[id];
-  const railOn = ['nextMove', 'network', 'goal', 'snapshot', 'salary', 'currentCert', 'careerDay'].filter(W);
+  const railOn = ['nextMove', 'network', 'goal', 'snapshot', 'currentCert', 'careerDay'].filter(W);
   const goalDone = sent >= WEEKLY_GOAL;
   // Data for the optional widgets.
   const field = activePath.icon as Exclude<FieldTag, 'all'>;
-  const salaryEntry = salaries[field]?.[0];
   const nextDay = [...careerDays].sort((a, b) => {
     const ra = a.fields.includes(field) || a.fields.includes('all') ? 0 : 1;
     const rb = b.fields.includes(field) || b.fields.includes('all') ? 0 : 1;
@@ -639,13 +637,6 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
                     <div className="text-[10.5px] text-stone-400 dark:text-stone-500">{ui.tracker.replied[locale]}</div>
                   </div>
                 </div>
-              </Card>
-            )}
-            {W('salary') && salaryEntry && (
-              <Card className="p-5">
-                <div className="text-[10.5px] font-semibold uppercase tracking-wider text-stone-400 dark:text-stone-500">{ui.overview.salaryPeekTitle[locale]}</div>
-                <Serif className="mt-1 block text-3xl tracking-tight text-stone-900 dark:text-stone-50">{salaryEntry.range[locale]}</Serif>
-                <div className="mt-0.5 text-[11.5px] text-stone-400 dark:text-stone-500">{salaryEntry.role[locale]}</div>
               </Card>
             )}
             {W('currentCert') && current && (
@@ -955,8 +946,8 @@ function Contacts({ locale }: { locale: Loc }) {
   const [query, setQuery] = useState('');
   const [hrSector, setHrSector] = useState<string>('all');
   const [hrTier, setHrTier] = useState<CompanyTier | 'all'>('all');
-  const [shown, setShown] = useState(24);
-  useEffect(() => setShown(24), [part, query, hrSector, hrTier, network]);
+  const [shown, setShown] = useState(3);
+  useEffect(() => setShown(3), [part, query, hrSector, hrTier, network]);
 
   const cap = TIER_CAP[plan.tier];
   const onFile = (file: File) => {
@@ -1051,8 +1042,8 @@ function Contacts({ locale }: { locale: Loc }) {
               <CardGrid items={main.slice(0, shown)} locale={locale} />
               {main.length > shown && (
                 <div className="mt-5 flex flex-col items-center gap-2">
-                  <button type="button" onClick={() => setShown((s) => s + 24)} className={cn('rounded-full px-5 py-2.5 text-sm font-bold', PILL)}>
-                    {ui.contacts.showMore[locale](Math.min(24, main.length - shown))}
+                  <button type="button" onClick={() => setShown((s) => s + 12)} className={cn('rounded-full px-5 py-2.5 text-sm font-bold', PILL)}>
+                    {ui.contacts.showMore[locale](Math.min(12, main.length - shown))}
                   </button>
                   <span className="text-[11px] text-stone-400 dark:text-stone-500">{ui.contacts.showing[locale](Math.min(shown, main.length), main.length)}</span>
                 </div>
@@ -1116,39 +1107,20 @@ function Study({ locale }: { locale: Loc }) {
   const plan = usePlan();
   const { activePathId } = useProgress();
   const activePath = plan.paths.find((p) => p.id === (activePathId ?? plan.primaryPath.id)) ?? plan.primaryPath;
-  // Programs span the path's relevant majors (not just one), deduped by uni+program.
+  // Three majors that fit this path; the primary one (fields[0]) drives the
+  // university tiers shown below.
   const fields = activePath.gradFields;
-  const seen = new Set<string>();
-  const programs = fields.flatMap((f) => gradPrograms[f] ?? []).filter((p) => {
-    const k = p.uni.en + p.program.en;
-    if (seen.has(k)) return false;
-    seen.add(k);
-    return true;
-  });
-  const saudi = programs.filter((p) => p.saudi);
-  const worldwide = programs.filter((p) => !p.saudi);
+  const primary = fields[0];
+  const fullTime = gradPrograms[primary] ?? [];
+  // Saudi part-time options that suit any of the path's majors, ordered with the
+  // ones nearest the customer's region first (their location comes from the CV).
+  const region = plan.profile.region;
+  const partTime = partTimeSaudi
+    .filter((u) => u.fields.some((f) => fields.includes(f)))
+    .sort((a, b) => (region ? Number(b.region === region) - Number(a.region === region) : 0));
 
-  const Program = ({ p }: { p: GradProgram }) => (
-    <a href={p.link} target="_blank" rel="noopener noreferrer" className="group">
-      <Card className="flex h-full flex-col p-4 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]">
-        <div className="flex items-start justify-between gap-2">
-          <div className="min-w-0">
-            <div className="flex flex-wrap items-center gap-1.5">
-              <h3 className="text-[14px] font-semibold text-stone-900 dark:text-stone-50">{p.uni[locale]}</h3>
-              {p.best && <span className="rounded-full bg-amber-500/15 px-1.5 py-0.5 text-[9.5px] font-bold text-amber-700 dark:text-amber-300">★ {ui.study.best[locale]}</span>}
-            </div>
-            <div className="mt-0.5 text-[12.5px] text-stone-600 dark:text-stone-300">{p.program[locale]}</div>
-          </div>
-          <ArrowUpRight className="h-4 w-4 shrink-0 text-stone-300 transition-colors group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
-        </div>
-        <div className="mt-2.5 flex flex-wrap items-center gap-2 text-[11.5px]">
-          <span className={cn('rounded-md px-2 py-0.5 font-semibold', SOFT)}>{p.mode === 'part_time' ? ui.study.partTime[locale] : ui.study.fullTime[locale]}</span>
-          <span className="inline-flex items-center gap-1 text-stone-400 dark:text-stone-500"><Globe className="h-3 w-3" /> {p.location[locale]}</span>
-          <span className={cn('ms-auto inline-flex items-center gap-1 font-semibold', ACCENT)}>{ui.study.viewProgram[locale]} <ArrowUpRight className="h-3 w-3" /></span>
-        </div>
-      </Card>
-    </a>
-  );
+  const tierLabel = (t: GradProgram['tier']) =>
+    (t === 'saudi' ? ui.study.tierSaudi : t === 'top' ? ui.study.tierTop : ui.study.tierAccessible)[locale];
 
   const lists = [
     { Icon: FileText, title: ui.study.admissionsTitle[locale], items: ui.study.admissions[locale] },
@@ -1164,28 +1136,75 @@ function Study({ locale }: { locale: Loc }) {
         <p className={cn('mt-1.5 text-[12.5px] font-semibold', ACCENT)}>{ui.study.chosenFor[locale](activePath.name[locale])}</p>
       </div>
 
-      {/* Is it worth it? */}
-      <Card className="flex items-start gap-3 p-5">
-        <div className={cn('grid h-10 w-10 shrink-0 place-items-center rounded-xl', SOFT)}><GraduationCap className={cn('h-5 w-5', ACCENT)} /></div>
-        <div className="min-w-0">
-          <h3 className="text-sm font-bold text-stone-900 dark:text-stone-50">{ui.study.worthItTitle[locale]}</h3>
-          <p className="mt-0.5 text-[13px] leading-relaxed text-stone-500 dark:text-stone-400">{ui.study.worthIt[locale]}</p>
+      {/* Is it worth it? + the majors that fit this path */}
+      <Card className="p-5">
+        <div className="flex items-start gap-3">
+          <div className={cn('grid h-10 w-10 shrink-0 place-items-center rounded-xl', SOFT)}><GraduationCap className={cn('h-5 w-5', ACCENT)} /></div>
+          <div className="min-w-0">
+            <h3 className="text-sm font-bold text-stone-900 dark:text-stone-50">{ui.study.worthItTitle[locale]}</h3>
+            <p className="mt-0.5 text-[13px] leading-relaxed text-stone-500 dark:text-stone-400">{ui.study.worthIt[locale]}</p>
+          </div>
+        </div>
+        <div className="mt-4">
+          <div className="text-[11px] font-bold uppercase tracking-wide text-stone-400 dark:text-stone-500">{ui.study.majorsLabel[locale]}</div>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {fields.map((f) => (
+              <span key={f} className={cn('rounded-full px-3 py-1 text-[12.5px] font-semibold', SOFT)}>{fieldMajors[f][locale]}</span>
+            ))}
+          </div>
         </div>
       </Card>
 
+      {/* Full-time, three tiers: one Saudi, one respected-but-gettable, one easier */}
       <div>
-        <SectionTitle icon={GraduationCap} title={ui.study.inSaudi[locale]} sub={ui.study.inSaudiSub[locale]} />
-        <div className="mb-3 space-y-1.5">
-          {fields.map((f) => (
-            <div key={f} className="rounded-2xl bg-amber-400/[0.12] px-3.5 py-2.5 text-[12.5px] font-semibold text-amber-700 dark:text-amber-300">{saudiUniStrength[f][locale]}</div>
+        <SectionTitle icon={Globe} title={ui.study.fullTimeTitle[locale]} sub={ui.study.fullTimeSub[locale]} />
+        <div className="grid gap-3 sm:grid-cols-3">
+          {fullTime.map((p, i) => (
+            <a key={i} href={p.link} target="_blank" rel="noopener noreferrer" className="group">
+              <Card className={cn('flex h-full flex-col p-4 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]', p.tier === 'saudi' && 'border-amber-500/30 dark:border-amber-400/25')}>
+                <div className="flex items-center justify-between gap-2">
+                  <span className={cn('rounded-full px-2 py-0.5 text-[10px] font-bold', p.tier === 'saudi' ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : SOFT)}>{tierLabel(p.tier)}</span>
+                  <ArrowUpRight className="h-4 w-4 shrink-0 text-stone-300 transition-colors group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
+                </div>
+                <h3 className="mt-2 text-[14px] font-semibold text-stone-900 dark:text-stone-50">{p.uni[locale]}</h3>
+                <div className="mt-0.5 text-[12.5px] text-stone-600 dark:text-stone-300">{p.program[locale]}</div>
+                <div className="mt-2.5 flex flex-wrap items-center gap-2 text-[11.5px]">
+                  <span className="inline-flex items-center gap-1 text-stone-400 dark:text-stone-500"><Globe className="h-3 w-3" /> {p.location[locale]}</span>
+                  <span className={cn('ms-auto inline-flex items-center gap-1 font-semibold', ACCENT)}>{ui.study.viewProgram[locale]} <ArrowUpRight className="h-3 w-3" /></span>
+                </div>
+              </Card>
+            </a>
           ))}
         </div>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{saudi.map((p, i) => <Program key={i} p={p} />)}</div>
       </div>
 
+      {/* Part-time inside Saudi (study while working), nearest first */}
       <div>
-        <SectionTitle icon={Globe} title={ui.study.worldwide[locale]} sub={ui.study.worldwideSub[locale]} />
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{worldwide.map((p, i) => <Program key={i} p={p} />)}</div>
+        <SectionTitle icon={GraduationCap} title={ui.study.partTimeTitle[locale]} sub={ui.study.partTimeSub[locale]} />
+        <div className="mb-3 rounded-2xl bg-amber-400/[0.12] px-3.5 py-2.5 text-[12.5px] font-semibold text-amber-700 dark:text-amber-300">{saudiUniStrength[primary][locale]}</div>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {partTime.map((u, i) => {
+            const near = !!region && u.region === region;
+            return (
+              <a key={i} href={u.link} target="_blank" rel="noopener noreferrer" className="group">
+                <Card className="flex h-full flex-col p-4 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <h3 className="text-[14px] font-semibold text-stone-900 dark:text-stone-50">{u.uni[locale]}</h3>
+                      {near && <span className="rounded-full bg-amber-500/15 px-1.5 py-0.5 text-[9.5px] font-bold text-amber-700 dark:text-amber-300">{ui.study.nearYou[locale]}</span>}
+                    </div>
+                    <ArrowUpRight className="h-4 w-4 shrink-0 text-stone-300 transition-colors group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
+                  </div>
+                  <div className="mt-0.5 text-[12.5px] text-stone-600 dark:text-stone-300">{u.program[locale]}</div>
+                  <div className="mt-2.5 flex items-center gap-2 text-[11.5px]">
+                    <span className="inline-flex items-center gap-1 text-stone-400 dark:text-stone-500"><Globe className="h-3 w-3" /> {u.city[locale]}</span>
+                    <span className={cn('ms-auto inline-flex items-center gap-1 font-semibold', ACCENT)}>{ui.study.viewProgram[locale]} <ArrowUpRight className="h-3 w-3" /></span>
+                  </div>
+                </Card>
+              </a>
+            );
+          })}
+        </div>
       </div>
 
       {/* Admissions + timeline */}
@@ -1308,19 +1327,6 @@ function Opportunities({ locale }: { locale: Loc }) {
         </div>
       </Card>
 
-      {/* Salaries */}
-      <div>
-        <SectionTitle icon={TrendingUp} title={ui.opp.salaryTitle[locale]} sub={ui.opp.salarySub[locale]} />
-        <div className="grid gap-3 sm:grid-cols-3">
-          {salaries[field].map((s, i) => (
-            <Card key={i} className="p-4 sm:p-5">
-              <div className="text-[13px] font-semibold text-stone-700 dark:text-stone-200">{s.role[locale]}</div>
-              <Serif className="mt-1 block text-2xl tracking-tight text-stone-900 dark:text-stone-50 sm:text-3xl">{s.range[locale]}</Serif>
-            </Card>
-          ))}
-        </div>
-      </div>
-
       {/* Career days */}
       <div>
         <SectionTitle icon={CalendarDays} title={ui.opp.careerDaysTitle[locale]} sub={ui.opp.careerDaysSub[locale]} />
@@ -1418,23 +1424,6 @@ function Opportunities({ locale }: { locale: Loc }) {
         </div>
       </div>
 
-      {/* Communities & associations */}
-      <div>
-        <SectionTitle icon={Users} title={ui.opp.communitiesTitle[locale]} sub={ui.opp.communitiesSub[locale]} />
-        <div className="grid gap-2.5 sm:grid-cols-2">
-          {communities[field].map((c, i) => (
-            <a key={i} href={c.url} target="_blank" rel="noopener noreferrer" className="group">
-              <Card className="flex items-center gap-3 p-3.5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]">
-                <div className="min-w-0 flex-1">
-                  <div className="text-[13.5px] font-semibold text-stone-900 dark:text-stone-50">{c.name[locale]}</div>
-                  <div className="truncate text-[11.5px] text-stone-400 dark:text-stone-500">{c.desc[locale]}</div>
-                </div>
-                <ArrowUpRight className="h-4 w-4 shrink-0 text-stone-300 group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
-              </Card>
-            </a>
-          ))}
-        </div>
-      </div>
 
       {/* Referral */}
       <Card className="overflow-hidden p-5 sm:p-6">
@@ -1580,7 +1569,6 @@ function Shell() {
   const locale = useLocale() as Loc;
   const pathname = usePathname();
   const reduce = useReducedMotion();
-  const { profile } = usePlan();
   const [tab, setTab] = useState<Tab>('home');
   const [pathSel, setPathSel] = useState<string | null>(null);
   const [cmdOpen, setCmdOpen] = useState(false);
@@ -1611,20 +1599,28 @@ function Shell() {
       </div>
 
       <header className="sticky top-0 z-50 border-b border-stone-200/70 bg-[#f7f6f2]/80 backdrop-blur-xl dark:border-white/[0.07] dark:bg-[#0a0a0b]/80">
-        <div className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between px-5 sm:px-8">
-          <div className="flex items-center gap-2.5">
+        <div className="mx-auto flex h-16 w-full max-w-5xl items-center gap-2 px-4 sm:gap-3 sm:px-8">
+          <div className="flex shrink-0 items-center gap-2.5">
             <span className="grid h-8 w-8 place-items-center rounded-xl bg-stone-900 font-extrabold text-white dark:bg-stone-100 dark:text-stone-900">م</span>
-            <span className="text-lg font-semibold tracking-tight">مسار</span>
+            <span className="hidden text-lg font-semibold tracking-tight sm:inline">مسار</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="me-1 hidden items-center gap-2 text-end sm:flex">
-              <div className="leading-tight">
-                <div className="text-[11px] text-stone-400 dark:text-stone-500">{ui.shell.greeting[locale]}</div>
-                <div className="text-sm font-semibold">{profile.name[locale]}</div>
-              </div>
-              <span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-stone-700 to-stone-900 text-sm font-bold text-stone-50 dark:from-stone-500 dark:to-stone-700">{profile.name[locale].charAt(0)}</span>
-            </div>
-            <button type="button" onClick={() => setCmdOpen(true)} aria-label={ui.cmd.placeholder[locale]} className={cn('hidden h-9 items-center gap-1.5 rounded-full px-3 text-[12px] font-semibold sm:inline-flex', GHOST)}>
+
+          {/* Primary nav, on the same line as the controls (labels collapse to icons on phone) */}
+          <nav className={cn('mx-auto flex gap-0.5 rounded-full p-1', CARD)}>
+            {NAV.map((n) => {
+              const on = tab === n.id;
+              return (
+                <button key={n.id} type="button" onClick={() => go(n.id)} className={cn('relative flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[13px] font-semibold transition-colors sm:gap-2 sm:px-3.5 sm:py-2 sm:text-sm', on ? 'text-white dark:text-stone-900' : 'text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100')}>
+                  {on && <motion.span layoutId="v4-nav" className="absolute inset-0 -z-10 rounded-full bg-stone-900 dark:bg-stone-100" transition={SPRING} />}
+                  <n.Icon className="h-4 w-4 shrink-0" />
+                  <span className="hidden md:inline">{ui.nav[n.id][locale]}</span>
+                </button>
+              );
+            })}
+          </nav>
+
+          <div className="flex shrink-0 items-center gap-2">
+            <button type="button" onClick={() => setCmdOpen(true)} aria-label={ui.cmd.placeholder[locale]} className={cn('hidden h-9 items-center gap-1.5 rounded-full px-3 text-[12px] font-semibold lg:inline-flex', GHOST)}>
               <Command className="h-3.5 w-3.5" /> K
             </button>
             <ThemeToggle />
@@ -1634,22 +1630,6 @@ function Shell() {
           </div>
         </div>
       </header>
-
-      {/* Floating segmented nav (labels collapse to icons on phone) */}
-      <div className="sticky top-[68px] z-40 mt-4 flex justify-center px-4">
-        <nav className={cn('flex gap-0.5 rounded-full p-1 sm:gap-1', CARD)}>
-          {NAV.map((n) => {
-            const on = tab === n.id;
-            return (
-              <button key={n.id} type="button" onClick={() => go(n.id)} className={cn('relative flex items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold transition-colors sm:px-3.5', on ? 'text-white dark:text-stone-900' : 'text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100')}>
-                {on && <motion.span layoutId="v4-nav" className="absolute inset-0 -z-10 rounded-full bg-stone-900 dark:bg-stone-100" transition={SPRING} />}
-                <n.Icon className="h-4 w-4 shrink-0" />
-                <span className="hidden sm:inline">{ui.nav[n.id][locale]}</span>
-              </button>
-            );
-          })}
-        </nav>
-      </div>
 
       <main className="mx-auto w-full max-w-5xl px-5 pb-10 pt-7 sm:px-8">
         {/* A plain keyed motion.div (NOT AnimatePresence mode="wait"): it remounts
