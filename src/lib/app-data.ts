@@ -644,37 +644,42 @@ export const careerDays: { title: LS; org: LS; when: LS; city: LS; fields: Field
 // Saudi (often part-time / executive, good while working) and Worldwide
 // (full-time). `best` flags the strongest programs in that field; `link` points at
 // that field's program/department page (approximate, verify before applying).
-export type GradTier = 'saudi' | 'top' | 'accessible';
+export type GradTier = 'reach' | 'top' | 'accessible' | 'saudi';
 export type GradProgram = { uni: LS; program: LS; location: LS; link: string; tier: GradTier };
 
-// Full-time degree options per field, in three tiers a customer can realistically
-// aim at: a strong Saudi school, a well-known but gettable global university (NOT
-// the near-impossible names), and a solid, more attainable option.
+// Full-time degree options per field, in four tiers: a world-class reach (the best
+// in that field), a respected but gettable global university, a solid easier-to-enter
+// option, and a strong Saudi school. Each major shows its own four.
 export const gradPrograms: Record<Exclude<FieldTag, 'all'>, GradProgram[]> = {
   finance: [
-    { tier: 'saudi', uni: { ar: 'جامعة الملك سعود', en: 'King Saud University' }, program: { ar: 'ماجستير التمويل', en: 'MSc Finance' }, location: { ar: 'الرياض', en: 'Riyadh' }, link: 'https://business.ksu.edu.sa' },
+    { tier: 'reach', uni: { ar: 'كلية لندن للأعمال', en: 'London Business School' }, program: { ar: 'ماجستير التمويل', en: 'Masters in Finance' }, location: { ar: 'لندن، المملكة المتحدة', en: 'London, UK' }, link: 'https://www.london.edu/masters-degrees/masters-in-finance' },
     { tier: 'top', uni: { ar: 'جامعة بوكوني', en: 'Bocconi University' }, program: { ar: 'ماجستير التمويل', en: 'MSc Finance' }, location: { ar: 'ميلانو، إيطاليا', en: 'Milan, Italy' }, link: 'https://www.unibocconi.eu' },
     { tier: 'accessible', uni: { ar: 'جامعة ستراثكلايد', en: 'University of Strathclyde' }, program: { ar: 'ماجستير التمويل', en: 'MSc Finance' }, location: { ar: 'غلاسكو، المملكة المتحدة', en: 'Glasgow, UK' }, link: 'https://www.strath.ac.uk/business/' },
+    { tier: 'saudi', uni: { ar: 'جامعة الملك سعود', en: 'King Saud University' }, program: { ar: 'ماجستير التمويل', en: 'MSc Finance' }, location: { ar: 'الرياض', en: 'Riyadh' }, link: 'https://business.ksu.edu.sa' },
   ],
   energy: [
-    { tier: 'saudi', uni: { ar: 'جامعة الملك عبدالله (كاوست)', en: 'KAUST' }, program: { ar: 'علوم وهندسة الطاقة', en: 'Energy Science and Engineering' }, location: { ar: 'ثول', en: 'Thuwal' }, link: 'https://cemse.kaust.edu.sa' },
+    { tier: 'reach', uni: { ar: 'جامعة ستانفورد', en: 'Stanford University' }, program: { ar: 'علوم وهندسة الطاقة', en: 'Energy Science and Engineering' }, location: { ar: 'كاليفورنيا، الولايات المتحدة', en: 'California, USA' }, link: 'https://energy.stanford.edu' },
     { tier: 'top', uni: { ar: 'كلية كولورادو للمناجم', en: 'Colorado School of Mines' }, program: { ar: 'هندسة أنظمة الطاقة', en: 'Energy Systems Engineering' }, location: { ar: 'الولايات المتحدة', en: 'United States' }, link: 'https://www.mines.edu' },
     { tier: 'accessible', uni: { ar: 'جامعة هيريوت وات', en: 'Heriot-Watt University' }, program: { ar: 'هندسة الطاقة المتجددة', en: 'Renewable Energy Engineering' }, location: { ar: 'المملكة المتحدة', en: 'United Kingdom' }, link: 'https://www.hw.ac.uk' },
+    { tier: 'saudi', uni: { ar: 'جامعة الملك عبدالله (كاوست)', en: 'KAUST' }, program: { ar: 'علوم وهندسة الطاقة', en: 'Energy Science and Engineering' }, location: { ar: 'ثول', en: 'Thuwal' }, link: 'https://cemse.kaust.edu.sa' },
   ],
   consulting: [
-    { tier: 'saudi', uni: { ar: 'جامعة الفيصل', en: 'Alfaisal University' }, program: { ar: 'ماجستير إدارة الأعمال', en: 'MBA' }, location: { ar: 'الرياض', en: 'Riyadh' }, link: 'https://cob.alfaisal.edu' },
+    { tier: 'reach', uni: { ar: 'كلية هارفارد للأعمال', en: 'Harvard Business School' }, program: { ar: 'ماجستير إدارة الأعمال', en: 'MBA' }, location: { ar: 'بوسطن، الولايات المتحدة', en: 'Boston, USA' }, link: 'https://www.hbs.edu/mba/' },
     { tier: 'top', uni: { ar: 'كلية IE لإدارة الأعمال', en: 'IE Business School' }, program: { ar: 'ماجستير إدارة الأعمال', en: 'MBA' }, location: { ar: 'مدريد، إسبانيا', en: 'Madrid, Spain' }, link: 'https://www.ie.edu/business-school/' },
     { tier: 'accessible', uni: { ar: 'كلية كرانفيلد للإدارة', en: 'Cranfield School of Management' }, program: { ar: 'ماجستير إدارة الأعمال', en: 'MBA' }, location: { ar: 'المملكة المتحدة', en: 'United Kingdom' }, link: 'https://www.cranfield.ac.uk/som' },
+    { tier: 'saudi', uni: { ar: 'جامعة الفيصل', en: 'Alfaisal University' }, program: { ar: 'ماجستير إدارة الأعمال', en: 'MBA' }, location: { ar: 'الرياض', en: 'Riyadh' }, link: 'https://cob.alfaisal.edu' },
   ],
   government: [
-    { tier: 'saudi', uni: { ar: 'معهد الإدارة العامة', en: 'IPA' }, program: { ar: 'السياسات والإدارة العامة', en: 'Public Policy and Administration' }, location: { ar: 'الرياض', en: 'Riyadh' }, link: 'https://www.ipa.edu.sa' },
+    { tier: 'reach', uni: { ar: 'كلية كينيدي بجامعة هارفارد', en: 'Harvard Kennedy School' }, program: { ar: 'ماجستير السياسات العامة', en: 'Master in Public Policy' }, location: { ar: 'بوسطن، الولايات المتحدة', en: 'Boston, USA' }, link: 'https://www.hks.harvard.edu' },
     { tier: 'top', uni: { ar: 'معهد العلوم السياسية', en: 'Sciences Po' }, program: { ar: 'ماجستير السياسات العامة', en: 'Master in Public Policy' }, location: { ar: 'باريس، فرنسا', en: 'Paris, France' }, link: 'https://www.sciencespo.fr/en' },
     { tier: 'accessible', uni: { ar: 'جامعة يورك', en: 'University of York' }, program: { ar: 'السياسات العامة', en: 'Public Policy' }, location: { ar: 'المملكة المتحدة', en: 'United Kingdom' }, link: 'https://www.york.ac.uk' },
+    { tier: 'saudi', uni: { ar: 'معهد الإدارة العامة', en: 'IPA' }, program: { ar: 'السياسات والإدارة العامة', en: 'Public Policy and Administration' }, location: { ar: 'الرياض', en: 'Riyadh' }, link: 'https://www.ipa.edu.sa' },
   ],
   tech: [
-    { tier: 'saudi', uni: { ar: 'جامعة الملك عبدالله (كاوست)', en: 'KAUST' }, program: { ar: 'علوم الحاسب والذكاء الاصطناعي', en: 'Computer Science and AI' }, location: { ar: 'ثول', en: 'Thuwal' }, link: 'https://cemse.kaust.edu.sa' },
+    { tier: 'reach', uni: { ar: 'معهد ماساتشوستس للتقنية (MIT)', en: 'MIT' }, program: { ar: 'الهندسة الكهربائية وعلوم الحاسب', en: 'EECS' }, location: { ar: 'ماساتشوستس، الولايات المتحدة', en: 'Massachusetts, USA' }, link: 'https://www.eecs.mit.edu' },
     { tier: 'top', uni: { ar: 'جامعة إدنبرة', en: 'University of Edinburgh' }, program: { ar: 'الذكاء الاصطناعي والمعلوماتية', en: 'AI and Informatics' }, location: { ar: 'المملكة المتحدة', en: 'United Kingdom' }, link: 'https://www.ed.ac.uk/informatics' },
     { tier: 'accessible', uni: { ar: 'جامعة ساوثهامبتون', en: 'University of Southampton' }, program: { ar: 'علوم الحاسب', en: 'Computer Science' }, location: { ar: 'المملكة المتحدة', en: 'United Kingdom' }, link: 'https://www.southampton.ac.uk' },
+    { tier: 'saudi', uni: { ar: 'جامعة الملك عبدالله (كاوست)', en: 'KAUST' }, program: { ar: 'علوم الحاسب والذكاء الاصطناعي', en: 'Computer Science and AI' }, location: { ar: 'ثول', en: 'Thuwal' }, link: 'https://cemse.kaust.edu.sa' },
   ],
 };
 
@@ -1076,9 +1081,10 @@ export const ui = {
     chosenFor: { ar: (p: string) => `اختيرت لتناسب مسارك: ${p}`, en: (p: string) => `Chosen to fit your path: ${p}` },
     majorsLabel: { ar: 'تخصصات تناسب مسارك', en: 'Majors that fit your path' },
     fullTimeTitle: { ar: 'بدوام كامل', en: 'Full-time degrees' },
-    fullTimeSub: { ar: 'خيار سعودي، وجامعة عالمية مرموقة، وخيار أسهل قبولًا', en: 'A Saudi option, a respected global university, and an easier one to get into' },
+    fullTimeSub: { ar: 'الأفضل عالميًا، وجامعة مرموقة، وأخرى أسهل قبولًا، وخيار سعودي', en: 'A world-class reach, a respected one, an easier one, and a Saudi option' },
     partTimeTitle: { ar: 'بدوام جزئي في السعودية', en: 'Part-time in Saudi Arabia' },
     partTimeSub: { ar: 'ادرس وأنت تعمل، والأقرب إليك أولًا', en: 'Study while you work, the nearest to you first' },
+    tierReach: { ar: 'الأفضل عالميًا', en: 'Top in the world' },
     tierSaudi: { ar: 'في السعودية', en: 'In Saudi Arabia' },
     tierTop: { ar: 'جامعة عالمية مرموقة', en: 'Respected and well known' },
     tierAccessible: { ar: 'أسهل قبولًا', en: 'Easier to get into' },

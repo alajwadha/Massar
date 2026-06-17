@@ -1118,7 +1118,7 @@ function Study({ locale }: { locale: Loc }) {
     .sort((a, b) => (region ? Number(b.region === region) - Number(a.region === region) : 0));
 
   const tierLabel = (t: GradProgram['tier']) =>
-    (t === 'saudi' ? ui.study.tierSaudi : t === 'top' ? ui.study.tierTop : ui.study.tierAccessible)[locale];
+    (t === 'reach' ? ui.study.tierReach : t === 'top' ? ui.study.tierTop : t === 'accessible' ? ui.study.tierAccessible : ui.study.tierSaudi)[locale];
 
   const lists = [
     { Icon: FileText, title: ui.study.admissionsTitle[locale], items: ui.study.admissions[locale] },
@@ -1143,7 +1143,7 @@ function Study({ locale }: { locale: Loc }) {
         </div>
       </Card>
 
-      {/* Full-time, BY MAJOR: each major gets three universities strong in that field */}
+      {/* Full-time, BY MAJOR: each major gets four universities strong in that field */}
       <div className="space-y-6">
         <SectionTitle icon={Globe} title={ui.study.fullTimeTitle[locale]} sub={ui.study.fullTimeSub[locale]} />
         {fields.map((f) => (
@@ -1151,12 +1151,12 @@ function Study({ locale }: { locale: Loc }) {
             <h3 className="mb-2.5 flex items-center gap-2 text-[13px] font-bold text-stone-900 dark:text-stone-50">
               <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-500" /> {fieldMajors[f][locale]}
             </h3>
-            <div className="grid gap-3 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {(gradPrograms[f] ?? []).map((p, i) => (
                 <a key={i} href={p.link} target="_blank" rel="noopener noreferrer" className="group">
-                  <Card className={cn('flex h-full flex-col p-4 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]', p.tier === 'saudi' && 'border-amber-500/30 dark:border-amber-400/25')}>
+                  <Card className={cn('flex h-full flex-col p-4 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]', p.tier === 'saudi' && 'border-amber-500/30 dark:border-amber-400/25', p.tier === 'reach' && 'border-stone-900/20 dark:border-white/20')}>
                     <div className="flex items-center justify-between gap-2">
-                      <span className={cn('rounded-full px-2 py-0.5 text-[10px] font-bold', p.tier === 'saudi' ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : SOFT)}>{tierLabel(p.tier)}</span>
+                      <span className={cn('rounded-full px-2 py-0.5 text-[10px] font-bold', p.tier === 'reach' ? 'bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900' : p.tier === 'saudi' ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : SOFT)}>{tierLabel(p.tier)}</span>
                       <ArrowUpRight className="h-4 w-4 shrink-0 text-stone-300 transition-colors group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
                     </div>
                     <h4 className="mt-2 text-[14px] font-semibold text-stone-900 dark:text-stone-50">{p.uni[locale]}</h4>
