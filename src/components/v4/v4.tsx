@@ -1121,9 +1121,9 @@ function Study({ locale }: { locale: Loc }) {
     (t === 'high' ? ui.study.tierHigh : t === 'respected' ? ui.study.tierRespected : t === 'solid' ? ui.study.tierSolid : ui.study.tierAccessible)[locale];
 
   const essentials = [
-    { Icon: FileText, title: ui.study.admissionsTitle[locale], items: ui.study.reqBrief[locale] },
-    { Icon: CalendarDays, title: ui.study.timelineTitle[locale], items: ui.study.timelineBrief[locale] },
-    { Icon: Wallet, title: ui.study.fundingTitle[locale], items: ui.study.fundingBrief[locale] },
+    { Icon: FileText, title: ui.study.reqLabel[locale], items: ui.study.reqBrief[locale] },
+    { Icon: CalendarDays, title: ui.study.timelineLabel[locale], items: ui.study.timelineBrief[locale] },
+    { Icon: Wallet, title: ui.study.fundingLabel[locale], items: ui.study.fundingBrief[locale] },
   ];
 
   return (
@@ -1144,8 +1144,9 @@ function Study({ locale }: { locale: Loc }) {
         </div>
       </Card>
 
-      {/* The essentials, briefly, all in one widget: requirements, timeline, funding */}
+      {/* The essentials, briefly, all under ONE title: requirements, timeline, funding */}
       <Card className="p-5">
+        <h2 className="mb-4 text-base font-semibold text-stone-900 dark:text-stone-50">{ui.study.essentialsTitle[locale]}</h2>
         <div className="grid gap-5 sm:grid-cols-3">
           {essentials.map((e, idx) => (
             <div key={e.title} className={cn(idx > 0 && 'sm:border-s sm:border-stone-200/70 sm:ps-5 dark:sm:border-white/10')}>
