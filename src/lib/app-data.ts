@@ -725,10 +725,10 @@ export const saudiUniStrength: Record<Exclude<FieldTag, 'all'>, LS> = {
 
 // In-demand, future-ready skills that suit any pathway (general, not field-specific).
 export const skills: { name: LS; link: string }[] = [
-  { name: { ar: 'إجادة الذكاء الاصطناعي والتوليدي', en: 'AI and GenAI literacy' }, link: 'https://www.deeplearning.ai' },
-  { name: { ar: 'تحليل البيانات (Excel وSQL)', en: 'Data analysis (Excel and SQL)' }, link: 'https://www.datacamp.com' },
+  { name: { ar: 'إجادة الذكاء الاصطناعي والتوليدي', en: 'AI and GenAI literacy' }, link: 'https://www.coursera.org' },
+  { name: { ar: 'تحليل البيانات (Excel وSQL)', en: 'Data analysis (Excel and SQL)' }, link: 'https://www.coursera.org' },
   { name: { ar: 'التواصل والعرض', en: 'Communication and presenting' }, link: 'https://www.coursera.org' },
-  { name: { ar: 'إدارة المشاريع', en: 'Project management' }, link: 'https://www.pmi.org' },
+  { name: { ar: 'إدارة المشاريع', en: 'Project management' }, link: 'https://www.coursera.org' },
   { name: { ar: 'حل المشكلات', en: 'Problem solving' }, link: 'https://www.coursera.org' },
   { name: { ar: 'المرونة والتعلّم المستمر', en: 'Adaptability and learning' }, link: 'https://www.coursera.org' },
   { name: { ar: 'القيادة والعمل الجماعي', en: 'Leadership and teamwork' }, link: 'https://www.coursera.org' },
@@ -769,24 +769,16 @@ export function careersUrlFor(companyEn: string): string | undefined {
 // careers page before applying). Later this is filtered by the customer's CV.
 export type CompanyIndustry = 'banking' | 'energy' | 'consulting' | 'tech' | 'giga' | 'consumer';
 export type CompanySize = 'big' | 'medium' | 'small';
-export const companyIndustries: { id: CompanyIndustry; label: LS }[] = [
-  { id: 'banking', label: { ar: 'البنوك والتمويل', en: 'Banking and finance' } },
-  { id: 'energy', label: { ar: 'الطاقة والصناعة', en: 'Energy and industry' } },
-  { id: 'consulting', label: { ar: 'الاستشارات والخدمات', en: 'Consulting and services' } },
-  { id: 'tech', label: { ar: 'التقنية والاتصالات', en: 'Tech and telecom' } },
-  { id: 'giga', label: { ar: 'المشاريع الكبرى والعقار', en: 'Gigaprojects and real estate' } },
-  { id: 'consumer', label: { ar: 'الاستهلاك والصحة واللوجستيات', en: 'Consumer, health and logistics' } },
+// Each industry maps to one HR-DB sector, so the directory is filtered to the
+// customer's CV-derived sectors (the same source that drives their HR contacts).
+export const companyIndustries: { id: CompanyIndustry; label: LS; sector: string }[] = [
+  { id: 'banking', label: { ar: 'البنوك والتمويل', en: 'Banking and finance' }, sector: 'investment_finance' },
+  { id: 'energy', label: { ar: 'الطاقة والصناعة', en: 'Energy and industry' }, sector: 'energy_petrochem' },
+  { id: 'consulting', label: { ar: 'الاستشارات والخدمات', en: 'Consulting and services' }, sector: 'consulting' },
+  { id: 'tech', label: { ar: 'التقنية والاتصالات', en: 'Tech and telecom' }, sector: 'tech_startups' },
+  { id: 'giga', label: { ar: 'المشاريع الكبرى والعقار', en: 'Gigaprojects and real estate' }, sector: 'gigaprojects_realestate' },
+  { id: 'consumer', label: { ar: 'الاستهلاك والصحة واللوجستيات', en: 'Consumer, health and logistics' }, sector: 'retail_fmcg' },
 ];
-// Which career fields each industry is relevant to, so clearly-unrelated industries
-// are hidden (e.g. consumer/health for an energy engineer). 'all' shows for everyone.
-export const industryFields: Record<CompanyIndustry, (Exclude<FieldTag, 'all'> | 'all')[]> = {
-  banking: ['finance', 'government'],
-  energy: ['energy'],
-  consulting: ['all'],
-  tech: ['tech', 'government'],
-  giga: ['all'],
-  consumer: ['tech'],
-};
 export const companyPortals: { name: LS; url: string; industry: CompanyIndustry; size: CompanySize }[] = [
   { name: { ar: 'صندوق الاستثمارات العامة', en: 'PIF' }, url: 'https://www.pif.gov.sa', industry: 'banking', size: 'big' },
   { name: { ar: 'البنك الأهلي السعودي', en: 'Saudi National Bank' }, url: 'https://www.snb.com', industry: 'banking', size: 'big' },
@@ -893,7 +885,8 @@ export const ui = {
   },
   shell: {
     greeting: { ar: 'أهلًا بعودتك', en: 'Welcome back' },
-    disclaimer: { ar: 'تأكد من التفاصيل قبل أي خطوة. قد نخطئ في أمرٍ ما، لكن مستقبلك يهمّنا.', en: 'Double-check the details before you act. We might get something wrong, but your future matters to us.' },
+    disclaimer: { ar: 'تأكد من التفاصيل قبل أي خطوة، فقد نخطئ في أمرٍ ما.', en: 'Double-check the details before you act, we might get something wrong.' },
+    disclaimerWarm: { ar: 'لكن مستقبلك يهمّنا!', en: 'But your future matters to us!' },
     proLockTitle: { ar: 'هذه ميزة Pro', en: 'A Pro feature' },
     proLockBody: { ar: 'هذه الصفحة ضمن باقة Pro. رقِّ باقتك لفتح الدراسات العليا والمصادر.', en: 'This page is part of the Pro plan. Upgrade to unlock graduate study and resources.' },
     plan: { ar: 'الباقة الاحترافية', en: 'Pro plan' },

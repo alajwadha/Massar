@@ -68,7 +68,6 @@ import {
   nationalPortals,
   companyPortals,
   companyIndustries,
-  industryFields,
   cvGuide,
   interviewTips,
   ui,
@@ -1255,7 +1254,6 @@ function Opportunities({ locale }: { locale: Loc }) {
   const { level, activePathId } = useProgress();
   const activePath = plan.paths.find((p) => p.id === (activePathId ?? plan.primaryPath.id)) ?? plan.primaryPath;
   const field = activePath.icon as Exclude<FieldTag, 'all'>;
-  const fields = activePath.gradFields;
   const isEntry = level === 'entry';
 
   const days = [...careerDays].sort((a, b) => {
@@ -1394,7 +1392,7 @@ function Opportunities({ locale }: { locale: Loc }) {
         <div className="mt-5 text-[11px] font-bold uppercase tracking-wide text-stone-500 dark:text-stone-400">{ui.opp.companyPortalsTitle[locale]}</div>
         <p className="mb-2.5 mt-0.5 text-[12px] text-stone-500 dark:text-stone-400">{ui.opp.companyPortalsSub[locale]}</p>
         <div className="space-y-4">
-          {companyIndustries.filter((ind) => industryFields[ind.id].some((f) => f === 'all' || fields.includes(f))).map((ind) => {
+          {companyIndustries.filter((ind) => plan.sectors.includes(ind.sector)).map((ind) => {
             const list = companyPortals.filter((c) => c.industry === ind.id);
             if (!list.length) return null;
             return (
@@ -1664,7 +1662,10 @@ function Shell() {
 
       <FeedbackFooter locale={locale} />
 
-      <p className="mx-auto w-full max-w-5xl px-5 pb-10 text-center text-[11.5px] leading-relaxed text-stone-500 dark:text-stone-400 sm:px-8">{ui.shell.disclaimer[locale]}</p>
+      <div className="mx-auto w-full max-w-5xl px-5 pb-10 text-center text-[11.5px] leading-relaxed text-stone-500 dark:text-stone-400 sm:px-8">
+        <p>{ui.shell.disclaimer[locale]}</p>
+        <p className="mt-0.5 font-medium text-stone-600 dark:text-stone-300">{ui.shell.disclaimerWarm[locale]}</p>
+      </div>
 
       <CommandPalette open={cmdOpen} setOpen={setCmdOpen} locale={locale} go={go} openPath={openPath} />
     </div>
