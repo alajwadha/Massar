@@ -920,8 +920,8 @@ export const ui = {
     interviewTitle: { ar: 'نصائح للمقابلات', en: 'Interview tips' },
   },
   referral: {
-    title: { ar: 'ادعُ صديقًا، واحصلا معًا على ميزة', en: 'Invite a friend, you both win' },
-    body: { ar: 'شارك رابطك: صديقك يحصل على خصم 20% عند الاشتراك، وأنت تحصل على إعادة تقييم مجانية لكل صديق ينضم.', en: 'Share your link: your friend gets 20% off when they join, and you get a free re-score for every friend who signs up.' },
+    title: { ar: 'أهدِ صديقًا خصم 20%', en: 'Give a friend 20% off' },
+    body: { ar: 'شارك رابطك مع من تظن أن مسار يفيده: يحصل على خصم 20% عند الاشتراك عبره.', en: 'Share your link with someone Masaar could help: they get 20% off when they join through it.' },
     yourLink: { ar: 'رابط الدعوة الخاص بك', en: 'Your invite link' },
     copy: { ar: 'انسخ الرابط', en: 'Copy link' },
     copied: { ar: 'تم النسخ', en: 'Copied' },
