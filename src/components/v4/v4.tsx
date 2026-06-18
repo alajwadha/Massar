@@ -27,7 +27,7 @@ import {
   ArrowLeft,
   Building2,
   TrendingUp,
-  Command,
+  ChevronDown,
   CornerDownLeft,
   GraduationCap,
   CalendarDays,
@@ -402,6 +402,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
   const { network } = useNetwork();
   const { level, setLevel, statuses, certsDone, activePathId, setActivePath, homeWidgets, setWidget } = useProgress();
   const [customizing, setCustomizing] = useState(false);
+  const [roleOpen, setRoleOpen] = useState(false);
   const [shuffle, setShuffle] = useState(0);
   // Day-of-epoch for the daily rotation; starts at 0 so SSR and the first client
   // render match (no hydration mismatch), then advances to today after mount.
@@ -454,17 +455,34 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
 
   return (
     <div className="space-y-3 sm:space-y-4">
-      {/* role selector (pick the role the score is for) + customize control */}
-      <div className="flex items-center gap-2">
-        <div className="flex flex-1 gap-2 overflow-x-auto pb-0.5">
-          {paths.map((p) => {
-            const on = p.id === activePath.id;
-            return (
-              <button key={p.id} type="button" onClick={() => setActivePath(p.id)} className={cn('shrink-0 rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold transition-colors', on ? PILL : GHOST)}>
-                {p.name[locale]}
-              </button>
-            );
-          })}
+      {/* role selector (a compact dropdown to pick the role the score is for) + customize */}
+      <div className="flex items-center justify-between gap-2">
+        <div className="relative min-w-0">
+          <button type="button" onClick={() => setRoleOpen((v) => !v)} className={cn('inline-flex max-w-full items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold', GHOST)}>
+            <span className="truncate">{activePath.name[locale]}</span>
+            <ChevronDown className={cn('h-3.5 w-3.5 shrink-0 transition-transform', roleOpen && 'rotate-180')} />
+          </button>
+          {roleOpen && (
+            <>
+              <button type="button" aria-hidden tabIndex={-1} className="fixed inset-0 z-20 cursor-default" onClick={() => setRoleOpen(false)} />
+              <div className="absolute start-0 z-30 mt-1.5 max-h-80 w-72 max-w-[80vw] overflow-auto rounded-2xl border border-stone-200/80 bg-white p-1 shadow-[0_20px_60px_-25px_rgba(28,25,23,0.45)] dark:border-white/10 dark:bg-[#161619]">
+                {paths.map((p) => {
+                  const on = p.id === activePath.id;
+                  return (
+                    <button
+                      key={p.id}
+                      type="button"
+                      onClick={() => { setActivePath(p.id); setRoleOpen(false); }}
+                      className={cn('flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2 text-start text-[13px] font-medium transition-colors', on ? cn(SOFT, 'text-stone-900 dark:text-stone-50') : 'text-stone-600 hover:bg-stone-900/[0.04] dark:text-stone-300 dark:hover:bg-white/[0.05]')}
+                    >
+                      <span className="truncate">{p.name[locale]}</span>
+                      {on && <Check className="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />}
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          )}
         </div>
         <button type="button" onClick={() => setCustomizing((v) => !v)} className={cn('inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-semibold', GHOST)}>
           <Sliders className="h-3.5 w-3.5" /> {ui.overview.customize[locale]}
@@ -1443,7 +1461,14 @@ function ReferralStrip({ locale }: { locale: Loc }) {
           <div className={cn('grid h-10 w-10 shrink-0 place-items-center rounded-xl', SOFT)}><Gift className={cn('h-5 w-5', ACCENT)} /></div>
           <div className="min-w-0">
             <h2 className="text-base font-semibold text-stone-900 dark:text-stone-50">{ui.referral.title[locale]}</h2>
-            <p className="mt-1 text-[13px] leading-relaxed text-stone-600 dark:text-stone-300">{ui.referral.body[locale]}</p>
+            <p className="mt-1 text-[13px] leading-relaxed text-stone-600 dark:text-stone-300">
+              {ui.referral.body[locale].split('30%').map((part, i, arr) => (
+                <span key={i}>
+                  {part}
+                  {i < arr.length - 1 && <strong className="font-bold text-stone-900 dark:text-stone-50">30%</strong>}
+                </span>
+              ))}
+            </p>
           </div>
         </div>
         <div className="mt-4">
@@ -1648,9 +1673,6 @@ function Shell() {
           </nav>
 
           <div className="flex shrink-0 items-center gap-2">
-            <button type="button" onClick={() => setCmdOpen(true)} aria-label={ui.cmd.placeholder[locale]} className={cn('hidden h-9 items-center gap-1.5 rounded-full px-3 text-[12px] font-semibold lg:inline-flex', GHOST)}>
-              <Command className="h-3.5 w-3.5" /> K
-            </button>
             <ThemeToggle />
             <Link href={pathname} locale={locale === 'ar' ? 'en' : 'ar'} className={cn('grid h-9 w-9 place-items-center rounded-full text-xs font-bold', GHOST)}>
               {locale === 'ar' ? 'EN' : 'ع'}
