@@ -1266,17 +1266,6 @@ function Opportunities({ locale }: { locale: Loc }) {
     { Icon: MessageCircle, title: ui.opp.interviewTitle[locale], items: interviewTips },
   ];
   const sizeLabel = (s: CompanySize) => (s === 'big' ? ui.opp.sizeBig : s === 'medium' ? ui.opp.sizeMedium : ui.opp.sizeSmall)[locale];
-  const [copied, setCopied] = useState(false);
-  const refUrl = typeof window !== 'undefined' ? referralLink(window.location.origin, locale, plan.slug) : '';
-  const copyRef = async () => {
-    try {
-      await navigator.clipboard.writeText(refUrl);
-    } catch {
-      /* ignore */
-    }
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
-  };
 
   return (
     <div className="space-y-7">
@@ -1414,29 +1403,37 @@ function Opportunities({ locale }: { locale: Loc }) {
           })}
         </div>
       </div>
+    </div>
+  );
+}
 
-
-      {/* Referral */}
-      <Card className="overflow-hidden p-5 sm:p-6">
+/* ----------------------------------------------------------- referral strip -- */
+// Rendered in the Shell (outside the tab content) so the invite shows on every page.
+function ReferralStrip({ locale }: { locale: Loc }) {
+  const plan = usePlan();
+  const [copied, setCopied] = useState(false);
+  const copyRef = async () => {
+    try {
+      await navigator.clipboard.writeText(referralLink(window.location.origin, locale, plan.slug));
+    } catch {
+      /* ignore */
+    }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1800);
+  };
+  return (
+    <div className="mx-auto w-full max-w-5xl px-5 pb-4 sm:px-8">
+      <Card className="flex flex-col items-start gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
         <div className="flex items-start gap-3">
           <div className={cn('grid h-10 w-10 shrink-0 place-items-center rounded-xl', SOFT)}><Gift className={cn('h-5 w-5', ACCENT)} /></div>
           <div className="min-w-0">
-            <h2 className="text-base font-semibold text-stone-900 dark:text-stone-50">{ui.referral.title[locale]}</h2>
-            <p className="mt-1 text-[13px] leading-relaxed text-stone-600 dark:text-stone-300">{ui.referral.body[locale]}</p>
+            <h2 className="text-sm font-semibold text-stone-900 dark:text-stone-50">{ui.referral.title[locale]}</h2>
+            <p className="mt-0.5 text-[12.5px] leading-relaxed text-stone-600 dark:text-stone-300">{ui.referral.body[locale]}</p>
           </div>
         </div>
-        <div className="mt-4">
-          <div className="text-[11px] font-bold uppercase tracking-wide text-stone-500 dark:text-stone-400">{ui.referral.yourLink[locale]}</div>
-          <div className="mt-2 flex flex-col gap-2 sm:flex-row">
-            <div className={cn('min-w-0 flex-1 truncate rounded-full px-4 py-2.5 text-[13px] font-medium text-stone-600 dark:text-stone-300', INSET)} dir="ltr">{refUrl}</div>
-            <div className="flex gap-2">
-              <button type="button" onClick={copyRef} className={cn('inline-flex flex-1 items-center justify-center gap-1.5 rounded-full px-4 py-2.5 text-sm font-bold sm:flex-none', copied ? cn('text-stone-700 dark:text-stone-200', SOFT) : PILL)}>
-                {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />} {copied ? ui.referral.copied[locale] : ui.referral.copy[locale]}
-              </button>
-            </div>
-          </div>
-          <p className="mt-2 text-[11.5px] text-stone-500 dark:text-stone-400">{ui.referral.pending[locale]}</p>
-        </div>
+        <button type="button" onClick={copyRef} className={cn('inline-flex w-full shrink-0 items-center justify-center gap-1.5 rounded-full px-4 py-2.5 text-sm font-bold sm:w-auto', copied ? cn('text-stone-700 dark:text-stone-200', SOFT) : PILL)}>
+          {copied ? <Check className="h-4 w-4" /> : <Send className="h-4 w-4" />} {copied ? ui.referral.copied[locale] : ui.referral.invite[locale]}
+        </button>
       </Card>
     </div>
   );
@@ -1660,6 +1657,7 @@ function Shell() {
         </motion.div>
       </main>
 
+      <ReferralStrip locale={locale} />
       <FeedbackFooter locale={locale} />
 
       <div className="mx-auto w-full max-w-5xl px-4 pb-10 text-center text-[12.5px] leading-relaxed text-stone-500 dark:text-stone-400 sm:px-8">

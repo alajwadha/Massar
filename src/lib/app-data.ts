@@ -1223,8 +1223,9 @@ export const ui = {
     learn: { ar: 'تعلّمها', en: 'Learn it' },
   },
   referral: {
-    title: { ar: 'أهدِ صديقًا خصم 20%', en: 'Give a friend 20% off' },
-    body: { ar: 'شارك رابطك مع من تظن أن مسار يفيده: يحصل على خصم 20% عند الاشتراك عبره.', en: 'Share your link with someone Masaar could help: they get 20% off when they join through it.' },
+    title: { ar: 'تعرف شخصًا يستحق فرصة أفضل؟', en: 'Know someone who deserves a better shot?' },
+    body: { ar: 'أرسل له مسار، خطوته الأولى نحو وظيفته القادمة.', en: 'Send them Masaar, their first step to the next role.' },
+    invite: { ar: 'ادعُ صديقًا', en: 'Invite a friend' },
     yourLink: { ar: 'رابط الدعوة الخاص بك', en: 'Your invite link' },
     copy: { ar: 'انسخ الرابط', en: 'Copy link' },
     copied: { ar: 'تم النسخ', en: 'Copied' },
