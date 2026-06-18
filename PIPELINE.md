@@ -1,55 +1,297 @@
-# Production pipeline
+# Production pipeline and runbook
 
-How we build and deliver one customer's plan, from the moment they send their CV to
-the moment their link goes out. This is the source of truth for the process. The two
-validation agents check the work against this document.
+How we build and deliver one customer's plan, end to end, plus everything you need to
+actually do it: where the code lives, the data model, a step by step recipe for adding
+a customer, the scoring model, deployment, security, and a worked example.
 
-## Hard rules (never break)
+This is the source of truth for the process. The two validation agents check the work
+against this document.
 
-- Never store or commit the customer's CV. Read it, use it, do not save it.
-- Never rewrite the customer's CV for them. Feedback and review are fine. The CV is
-  theirs and tied to their future, so we do not take responsibility for rewriting it.
-- Never expose HR personal data. The admin database holds real people's details, is
-  Basic Auth gated, and a customer view only ever shows what their tier allows.
-- Ground everything. Every item in the plan must trace to the CV or to a sourced
-  research record. Nothing invented.
-- House style: almost never use dashes in any copy, including the product UI.
+## Contents
 
-## Steps
+1. Overview (the process)
+2. Hard rules
+3. Codebase map
+4. The data model (CustomerPlan)
+5. How to add a new customer (recipe)
+6. The scoring model
+7. Contacts: connections vs HR
+8. The Pro pages (Study and Opportunities) data
+9. Bilingual and RTL
+10. Build, verify, deploy
+11. Security and secrets
+12. The research knowledge base
+13. Worked example: Ali
+14. Not yet built
+
+---
+
+## 1. Overview (the process)
+
+After a customer sends their CV, before their link goes out:
 
 1. Read the CV: profile, current degree, field, strengths, gaps, target sectors.
 2. Score the CV per level for each path (entry, mid, senior, director).
 3. Author the typed CustomerPlan. The grounding rule applies to every item.
 4. Pull the data: HR contacts from the database by sector and tier, connections from
-   the customer's LinkedIn CSV. Then a data sanity pass: sectors match, no duplicates,
-   the ranking produced sensible top picks, and no private HR data shows in the view.
-5. Tier and config check: number of pathways, connection and HR caps, and Pro page
-   gating all match the customer's tier (see Tiers below).
-6. Source and fact check: every concrete claim (deadlines, scholarship names,
-   university tier, salary numbers) is checked against a real source or softened.
-   Every verified fact is written to the research store.
-7. Link health check: every URL in the plan loads and points to the right page.
-8. Render verification: typecheck, production build, and a measured preview at desktop
-   and phone, in Arabic and English, light and dark.
-9. Two agent validation gate (see below).
-10. Preview link first: publish to a private preview URL, click through every tab in
-    both languages, then promote to the customer's real link.
-11. Version the customer record: save a dated snapshot so later check ins can re score
-    against a baseline and every edit is tracked.
-12. Deliver the link. The customer uploads their LinkedIn CSV (parsed in the browser)
-    and works the plan.
+   the customer's LinkedIn CSV. Then a data sanity pass.
+5. Tier and config check: pathways, caps, and Pro gating match the tier.
+6. Source and fact check: every concrete claim checked against a real source or
+   softened. Every verified fact is written to the research store.
+7. Link health check: every URL loads and points to the right page.
+8. Render verification: typecheck, production build, measured preview at desktop and
+   phone, Arabic and English, light and dark.
+9. Two agent validation gate (below).
+10. Preview link first, click through every tab in both languages, then promote.
+11. Version the customer record as a dated snapshot.
+12. Deliver the link. The customer uploads their LinkedIn CSV and works the plan.
 
-## The two agent validation gate
+### The two agent validation gate
 
 - Both agents are given the customer's CV.
 - Agent one checks it technically works: it builds and renders, links resolve, the data
-  is correct, and the tier configuration is right.
+  is correct, the tier configuration is right.
 - Agent two checks it makes sense for this specific person: grounded in their CV, the
-  right field and level, nothing invented or off.
-- Both must pass to deliver the link.
-- If either fails, it comes back, we fix it, and we re run until both pass.
+  right field and level, nothing invented.
+- Both must pass to deliver the link. If either fails, fix it and re run until both pass.
+- Run them with the Agent tool (two reviewers), or a Workflow if orchestration is wanted.
 
-## The research knowledge base
+---
+
+## 2. Hard rules (never break)
+
+- Never store or commit the customer's CV. Read it, use it, do not save it.
+- Never rewrite the customer's CV for them. Feedback and review are fine; the CV is
+  theirs and tied to their future, so we do not take responsibility for rewriting it.
+- The CV review lists only real, CV grounded, CV editable items. Never invent a flaw
+  (no "too much white space" if there is none), and never put "earn a certificate" in
+  the review (that is the certs roadmap, not a CV edit).
+- Never expose HR personal data. `data/hr_contacts.clean.csv` holds 1,209 real people;
+  `/admin` is Basic Auth gated; a customer view only shows what their tier allows.
+- Ground everything. Every item traces to the CV or a sourced research record.
+- House style: almost never use dashes in any copy, including the product UI. They read
+  as machine written.
+- Examples the customer gives are illustrative of the concept or level, not literal
+  content to paste. Derive the real items from their actual CV and verify each.
+
+---
+
+## 3. Codebase map
+
+| What | Where |
+| --- | --- |
+| Data, types, copy, plan registry, helpers | [src/lib/app-data.ts](src/lib/app-data.ts) |
+| HR database reader (server only) | [src/lib/hr-db.ts](src/lib/hr-db.ts) |
+| The real HR rows (1,209) | `data/hr_contacts.clean.csv` |
+| The v4 "Atlas" UI (the product) | [src/components/v4/v4.tsx](src/components/v4/v4.tsx) |
+| Plan context (PlanProvider / usePlan) | [src/components/app/plan-context.tsx](src/components/app/plan-context.tsx) |
+| Client state (network + progress) | [src/components/app/dashboard-state.tsx](src/components/app/dashboard-state.tsx) |
+| Main customer route (serves v4) | [src/app/[locale]/c/[slug]/page.tsx](src/app/[locale]/c/[slug]/page.tsx) |
+| Alias route (also v4) | [src/app/[locale]/v4/[slug]/page.tsx](src/app/[locale]/v4/[slug]/page.tsx) |
+| Locale routing (ar default, RTL) | [src/i18n/routing.ts](src/i18n/routing.ts) |
+| Marketing landing | [src/app/[locale]/page.tsx](src/app/[locale]/page.tsx) |
+| Admin (HR PII, gated) | [src/app/[locale]/admin](src/app/[locale]/admin) |
+| Research knowledge base | [research/README.md](research/README.md) |
+
+Superseded, pending removal: v1 (`/app` demo + the old `Dashboard` and `AppShell`),
+v2 (`/studio`), v3 (`/glass`). They share the same data layer but are not the product.
+
+---
+
+## 4. The data model (CustomerPlan)
+
+Everything that varies per customer is one `CustomerPlan` object, rendered through
+`<PlanProvider>` so each customer is fully isolated. Defined in `src/lib/app-data.ts`:
+
+```ts
+type CustomerPlan = {
+  slug: string;             // the URL: /c/<slug>
+  tier: 'starter' | 'pro';  // caps and Pro page access
+  sectors: string[];        // SECTOR_LABELS keys; drives HR + company filtering
+  profile: { name; headline; location; region; degree };
+  cvScore: { target; improvements[] };   // level-agnostic suggested deltas
+  cvReview: { headline; strengths[]; issues[] };
+  scoreFactors: { label; detail; strength }[];   // why the score is what it is
+  levelGaps: Record<Level, { experience?; other?[] }>; // what blocks the NEXT level
+  journey: { percent; certsDone; certsTotal; messagesSent; replies };
+  connections: Contact[];   // [] here; loaded client-side from the customer's CSV
+  hrContacts: Contact[];    // [] here; filled by the page from hr-db.ts
+  paths: CareerPath[];      // the career paths (capped by TIER_PATHS)
+  primaryPath: CareerPath;
+  templates: Template[];    // outreach message templates
+  tracker: ...;             // activity feed
+};
+```
+
+A `CareerPath` carries `scoreByLevel: Record<Level, number>` (CV competitiveness 0 to
+100 per seniority), `certs: Cert[]`, `targetCompanies: string[]` (used to rank the
+customer's network), `gradFields` (which graduate majors show in Study), `roles`,
+`targets`, `months`, and one `primary?: true`.
+
+Bilingual text everywhere uses `LS = { ar: string; en: string }`.
+
+The registry and lookup:
+
+```ts
+export const plans: Record<string, CustomerPlan> = { [aliPlan.slug]: aliPlan };
+export function getPlan(slug: string) { return plans[slug]; }
+```
+
+The route calls `getPlan(slug)`, 404s if missing, wraps in `withHr(plan)` to fill HR,
+then renders `<PlanProvider plan={...}><V4 /></PlanProvider>`.
+
+---
+
+## 5. How to add a new customer (recipe)
+
+> Reality check first. Today `aliPlan` reuses module level singletons (`profile`,
+> `cvScore`, `paths`, `primaryPath`, `templates`, `tracker`). So the repo currently
+> holds one customer's content at module scope. Before a real second customer, do the
+> one time refactor: move `profile`, `cvScore`, `paths`, `cvReview`, `scoreFactors`,
+> `levelGaps` into a per customer module (for example `src/lib/customers/<slug>.ts`)
+> and have `plans` import each. The steps below assume that per customer shape.
+
+1. Read the CV. Extract `profile`: `name`, `headline`, `location`, `region`
+   (`eastern | central | western | other`), `degree` (`diploma | bachelor | master | phd`).
+2. Choose `tier` (`starter` or `pro`) and `sectors` (a subset of the `SECTOR_LABELS`
+   keys that match their field; this drives both HR pulls and the company directory).
+3. Write `cvReview`: a `headline`, real `strengths[]`, and `issues[]` that are CV
+   grounded and CV editable only. Each issue has `id`, `kind`, `text` (LS), `severity`.
+4. Write `scoreFactors[]` (Education, Experience, Field fit, ... each with a `strength`
+   of `strong | good | growing`) and `levelGaps` (what experience gap blocks each next
+   level; certificate gaps are derived from the path, do not put them here).
+5. Build `paths[]`. Cap the count at `TIER_PATHS[tier]` (3 for Starter, 5 for Pro). For
+   each path set `scoreByLevel` (the scored CV competitiveness 0 to 100 at entry/mid/
+   senior/director), `certs[]`, `targetCompanies[]` (real names, used to rank their
+   network), `gradFields`, `roles`, `targets`, `months`. Mark one `primary: true` and
+   set `primaryPath` to it.
+6. Assemble the `CustomerPlan`. Set `connections: []` and `hrContacts: []` (both filled
+   later, see section 7). Reuse `templates`, `tracker`, `journey` or customize them.
+7. Register it: add the plan to `plans` keyed by its `slug`.
+8. Verify: `npm run typecheck`, `npm run build`, link check, and a rendered preview in
+   both languages and themes (section 10). Then the two agent gate.
+9. Deploy and send them `/<locale>/c/<slug>`.
+
+---
+
+## 6. The scoring model
+
+There is no single hidden formula; the score is authored per path and per level, then
+the UI shows it.
+
+- Each path has `scoreByLevel: { entry, mid, senior, director }`, each 0 to 100. The
+  headline score on Home is the active path's score at the level the customer selects.
+  The same person is competitive for Entry but not Director, and the gap is experience,
+  so the score moves with the level.
+- `scoreFactors[]` is the human readable breakdown (Education, Experience, Field fit)
+  so the number is explainable, not a black box.
+- `levelGaps[level]` states what blocks the next level up (experience and ownership,
+  the things a certificate cannot fix).
+- Certificates add to the score by seniority via
+  `scaledAdd(baseDelta, level) = max(1, round(baseDelta * LEVEL_DELTA_WEIGHT[level]))`,
+  with weights `entry 1, mid 0.85, senior 0.7, director 0.55`. A credential is most
+  transformative early and matters less as experience takes over. `Cert.scoreAdd` is
+  the base delta.
+- `cvScore.improvements[]` are the level agnostic "cheapest first" raises shown on the
+  CV card (each an `action`, a `delta`, and an `effort`).
+
+To recalibrate a customer, set their `scoreByLevel` so a strong profile reads as ready
+for Entry and short on experience for Director.
+
+---
+
+## 7. Contacts: connections vs HR
+
+Two different things, both capped at `TIER_CAP[tier]` (150 for Starter, 300 for Pro).
+
+- Connections are the customer's OWN LinkedIn network. There is no seeded list. On the
+  Contacts tab the customer uploads their `Connections.csv`; `parseUploadedConnections()`
+  parses it in the browser, it is held in session storage by the network provider in
+  `dashboard-state.tsx`, and never sent to a server. `rankConnections(contacts, targets)`
+  ranks them against `planTargets(plan)` (the `targetCompanies` across their paths) to
+  surface the warm intros under each path.
+- HR contacts are RETRIEVED from our real database. `hr-db.ts` is server only (it reads
+  the filesystem; never import it from a client component). `withHr(plan)` fills
+  `plan.hrContacts = getHrContacts(plan.sectors, TIER_CAP[plan.tier])`.
+  `getHrContacts` round robins across the customer's sectors so the capped list stays
+  diverse, and within each sector orders responders first
+  (`mid_market < sme < large < agency < giant`, giants last as aspiration).
+
+Sanity pass: HR rows match the sectors, no duplicates, the ranking looks sensible, and
+no raw PII leaks into anything the customer sees beyond what the product intends.
+
+---
+
+## 8. The Pro pages (Study and Opportunities) data
+
+The v4 nav (in `v4.tsx`) is: `home`, `paths`, `contacts` (free), then `tracker` and
+`opportunities` (both `pro: true`). For a Starter plan those two render a `ProUpsell`
+instead of the page. The `tracker` tab renders the Study page; `opportunities` renders
+the Opportunities page. (Their display labels are the two tab names still to be set.)
+
+Study data (per field, in `app-data.ts`): `gradPrograms` (four universities per field,
+tiered `high | respected | solid | accessible`, with `top30?` flagging Pioneers
+scholarship eligibility), `fieldMajors`, `partTimeSaudi` (in country executive options
+with `region` for proximity), `saudiUniStrength`. Degree aware: the next degree is
+derived from `profile.degree` (diploma to bachelor to master to phd) and prefixes the
+majors.
+
+Opportunities data: `companyPortals` (around 60 employers, each with `industry` and
+`size`) grouped by `companyIndustries`, each industry mapped to a `sector` so the
+directory is filtered to the customer's `plan.sectors`. Plus `skills` (general, all
+linking to Coursera), `careerDays` (dated events), `nationalPortals`, `tamheer`.
+
+---
+
+## 9. Bilingual and RTL
+
+- Arabic first. Routes are under `/[locale]`; `/` redirects to `/ar`. Locales are `ar`
+  and `en`, configured in `src/i18n/routing.ts`. Arabic renders RTL.
+- Every user facing string is `LS = { ar, en }`. Render with `tr(value, locale)` or by
+  indexing `value[locale]`. Never ship a one language string.
+- Always verify both languages and both themes (light and dark) before delivery.
+
+---
+
+## 10. Build, verify, deploy
+
+```bash
+npm run typecheck      # tsc --noEmit
+npm run build          # production build; must pass before deploy
+```
+
+Render verification (preview the production build and measure, do not eyeball only):
+start a local production server, then check the customer page at desktop and phone
+widths, in `ar` and `en`, light and dark. The footer one line fix is the reference for
+why measuring beats eyeballing.
+
+Deploy. The repo branch is `claude/product-dashboard`; pushing it deploys via Vercel
+(framework pinned in `vercel.json`). Manual production deploy:
+
+```powershell
+& 'C:\Users\Ali-h\AppData\Roaming\npm\vercel.cmd' --prod --yes --token <YOUR_VERCEL_TOKEN>
+```
+
+Production alias: `massar-sigma.vercel.app`. Never commit a Vercel token; pass it on the
+command line and revoke it when done. Never `--force` push or skip hooks.
+
+After deploy, the customer link is `https://massar-sigma.vercel.app/<locale>/c/<slug>`.
+
+---
+
+## 11. Security and secrets
+
+- `/admin` is Basic Auth gated (`ADMIN_USER`, `ADMIN_PASSWORD` env vars) and shows the
+  real HR database. Never expose it, never relax the gate, never re enable Vercel
+  deployment protection on the public site without asking.
+- The CV is read only and never committed.
+- Vercel tokens are short lived and passed on the command line, never written to a file
+  in the repo. Revoke after use.
+- Env vars in production: `ADMIN_USER`, `ADMIN_PASSWORD`, `NEXT_PUBLIC_SITE_URL`.
+
+---
+
+## 12. The research knowledge base
 
 A version controlled store at `research/` for every fact we research, so effort
 compounds across customers instead of being redone. Full spec in
@@ -57,26 +299,38 @@ compounds across customers instead of being redone. Full spec in
 
 Reuse rule: before researching anything for a new customer, read the store first,
 filtered by their field, sector, region, and degree. Reuse fresh matches, research only
-the gaps, and write new or updated facts back. It grows into the database and ports
-straight to Supabase later.
+the gaps, write new or updated facts back. It grows into the database and ports straight
+to Supabase later.
 
-## Tiers
+---
 
-- Starter: 3 pathways, 150 connections and 150 HR contacts, no Pro pages.
-- Pro: 5 pathways, 300 connections and 300 HR contacts, plus the Pro pages (Study and
-  Resources).
+## 13. Worked example: Ali
 
-## Effort
+`aliPlan` in `app-data.ts` is customer one.
 
-- Automatable now: link health check, render verification, build and deploy.
-- Light once set up: grounding, data sanity, tier and config check, preview first,
-  version record.
-- Real founder effort per customer: the fact check and the per CV research.
+- Profile: operations engineer, Cornell M.Eng Energy Economics, Eastern Province,
+  degree `bachelor` (the master's is in progress, so the next degree is master).
+- Tier: `pro`. Sectors: investment_finance, energy_petrochem, consulting, government,
+  tech_startups, telecom_it, gigaprojects_realestate, recruitment_agencies.
+- CV review: four CV editable issues only (reframe top bullets for finance, lead the
+  summary as an energy economist, surface SQL and Power BI, replace "roughly two years"
+  with a firm number). No "earn a certificate" item, because that is not a CV edit.
+- Score factors: Education strong, Experience good, Field fit strong. The headline score
+  is his primary path's `scoreByLevel` at the level he selects.
+- Primary path: Energy Investment and Strategy (targets PIF, KAPSARC, energy funds).
+- HR is pulled live from the database for his eight sectors, capped at 300; his
+  connections come from his own uploaded CSV.
+- Link: `massar-sigma.vercel.app/en/c/ali-alajwad` (and `/ar/`).
 
-## Not yet built
+---
+
+## 14. Not yet built
 
 - CV to JSON generator: dropped on cost, so onboarding is manual today.
-- Supabase persistence and the one time per customer refactor: deferred. After it,
-  plan authoring reads from the research store first.
-- The research store currently seeds career days; universities and companies still
-  live in `src/lib/app-data.ts` and migrate during the refactor.
+- The one time per customer refactor (section 5) to split the module level singletons
+  into per customer modules. Required before a real second customer.
+- Supabase persistence. After it, plan authoring reads from the research store and the
+  customer registry instead of hard coded objects.
+- The research store currently seeds career days; universities and companies still live
+  in `app-data.ts` and migrate during the refactor.
+- Two tab names for the Study and Opportunities Pro pages.
