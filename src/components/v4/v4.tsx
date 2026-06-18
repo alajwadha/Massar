@@ -400,7 +400,7 @@ const WEEKLY_GOAL = 5;
 function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; openPath: (id: string) => void }) {
   const plan = usePlan();
   const { network } = useNetwork();
-  const { level, setLevel, statuses, certsDone, activePathId, homeWidgets, setWidget } = useProgress();
+  const { level, setLevel, statuses, certsDone, activePathId, setActivePath, homeWidgets, setWidget } = useProgress();
   const [customizing, setCustomizing] = useState(false);
   const [shuffle, setShuffle] = useState(0);
   // Day-of-epoch for the daily rotation; starts at 0 so SSR and the first client
@@ -410,6 +410,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
 
   // The customer's chosen path drives Home (falls back to the plan's primary).
   const activePath = plan.paths.find((p) => p.id === (activePathId ?? plan.primaryPath.id)) ?? plan.primaryPath;
+  const paths = plan.paths.slice(0, TIER_PATHS[plan.tier]);
 
   const score = activePath.scoreByLevel[level];
   const upcoming = activePath.certs.filter((c) => !certsDone[c.name.en] && c.status !== 'done');
@@ -453,9 +454,19 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
 
   return (
     <div className="space-y-3 sm:space-y-4">
-      {/* customize control */}
-      <div className="flex justify-end">
-        <button type="button" onClick={() => setCustomizing((v) => !v)} className={cn('inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-semibold', GHOST)}>
+      {/* role selector (pick the role the score is for) + customize control */}
+      <div className="flex items-center gap-2">
+        <div className="flex flex-1 gap-2 overflow-x-auto pb-0.5">
+          {paths.map((p) => {
+            const on = p.id === activePath.id;
+            return (
+              <button key={p.id} type="button" onClick={() => setActivePath(p.id)} className={cn('shrink-0 rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold transition-colors', on ? PILL : GHOST)}>
+                {p.name[locale]}
+              </button>
+            );
+          })}
+        </div>
+        <button type="button" onClick={() => setCustomizing((v) => !v)} className={cn('inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-semibold', GHOST)}>
           <Sliders className="h-3.5 w-3.5" /> {ui.overview.customize[locale]}
         </button>
       </div>
@@ -1412,28 +1423,41 @@ function Opportunities({ locale }: { locale: Loc }) {
 function ReferralStrip({ locale }: { locale: Loc }) {
   const plan = usePlan();
   const [copied, setCopied] = useState(false);
+  // Fill the link after mount so the server and first client render match (the
+  // origin is only known in the browser); avoids a hydration text mismatch.
+  const [refUrl, setRefUrl] = useState('');
+  useEffect(() => setRefUrl(referralLink(window.location.origin, locale, plan.slug)), [locale, plan.slug]);
   const copyRef = async () => {
     try {
-      await navigator.clipboard.writeText(referralLink(window.location.origin, locale, plan.slug));
+      await navigator.clipboard.writeText(refUrl);
     } catch {
       /* ignore */
     }
     setCopied(true);
-    setTimeout(() => setCopied(false), 1800);
+    setTimeout(() => setCopied(false), 1500);
   };
   return (
     <div className="mx-auto w-full max-w-5xl px-5 pb-4 sm:px-8">
-      <Card className="flex flex-col items-start gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+      <Card className="overflow-hidden p-5 sm:p-6">
         <div className="flex items-start gap-3">
           <div className={cn('grid h-10 w-10 shrink-0 place-items-center rounded-xl', SOFT)}><Gift className={cn('h-5 w-5', ACCENT)} /></div>
           <div className="min-w-0">
-            <h2 className="text-sm font-semibold text-stone-900 dark:text-stone-50">{ui.referral.title[locale]}</h2>
-            <p className="mt-0.5 text-[12.5px] leading-relaxed text-stone-600 dark:text-stone-300">{ui.referral.body[locale]}</p>
+            <h2 className="text-base font-semibold text-stone-900 dark:text-stone-50">{ui.referral.title[locale]}</h2>
+            <p className="mt-1 text-[13px] leading-relaxed text-stone-600 dark:text-stone-300">{ui.referral.body[locale]}</p>
           </div>
         </div>
-        <button type="button" onClick={copyRef} className={cn('inline-flex w-full shrink-0 items-center justify-center gap-1.5 rounded-full px-4 py-2.5 text-sm font-bold sm:w-auto', copied ? cn('text-stone-700 dark:text-stone-200', SOFT) : PILL)}>
-          {copied ? <Check className="h-4 w-4" /> : <Send className="h-4 w-4" />} {copied ? ui.referral.copied[locale] : ui.referral.invite[locale]}
-        </button>
+        <div className="mt-4">
+          <div className="text-[11px] font-bold uppercase tracking-wide text-stone-500 dark:text-stone-400">{ui.referral.yourLink[locale]}</div>
+          <div className="mt-2 flex flex-col gap-2 sm:flex-row">
+            <div className={cn('min-w-0 flex-1 truncate rounded-full px-4 py-2.5 text-[13px] font-medium text-stone-600 dark:text-stone-300', INSET)} dir="ltr">{refUrl}</div>
+            <div className="flex gap-2">
+              <button type="button" onClick={copyRef} className={cn('inline-flex flex-1 items-center justify-center gap-1.5 rounded-full px-4 py-2.5 text-sm font-bold sm:flex-none', copied ? cn('text-stone-700 dark:text-stone-200', SOFT) : PILL)}>
+                {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />} {copied ? ui.referral.copied[locale] : ui.referral.copy[locale]}
+              </button>
+            </div>
+          </div>
+          <p className="mt-2 text-[11.5px] text-stone-500 dark:text-stone-400">{ui.referral.pending[locale]}</p>
+        </div>
       </Card>
     </div>
   );
@@ -1605,7 +1629,6 @@ function Shell() {
           <div className="flex shrink-0 items-center gap-2.5">
             <span className="grid h-8 w-8 place-items-center rounded-xl bg-stone-900 font-extrabold text-white dark:bg-stone-100 dark:text-stone-900">م</span>
             <span className="hidden text-lg font-semibold tracking-tight sm:inline">مسار</span>
-            <span className={cn('ms-0.5 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide', tier === 'pro' ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : SOFT)}>{tier === 'pro' ? 'Pro' : locale === 'ar' ? 'الأساسية' : 'Starter'}</span>
           </div>
 
           {/* Primary nav, on the same line as the controls (labels collapse to icons on phone) */}
@@ -1617,7 +1640,8 @@ function Shell() {
                   {on && <motion.span layoutId="v4-nav" className="absolute inset-0 -z-10 rounded-full bg-stone-900 dark:bg-stone-100" transition={SPRING} />}
                   <n.Icon className="h-4 w-4 shrink-0" />
                   <span className="hidden md:inline">{ui.nav[n.id][locale]}</span>
-                  {n.pro && tier !== 'pro' && <KeyRound className="ms-0.5 h-3 w-3 shrink-0 text-amber-600 dark:text-amber-400" />}
+                  {n.pro && <span className={cn('ms-0.5 hidden rounded px-1 text-[8.5px] font-bold leading-tight md:inline', on ? 'bg-white/20 text-white dark:bg-stone-900/20 dark:text-stone-900' : 'bg-amber-500/15 text-amber-700 dark:text-amber-300')}>Pro</span>}
+                  {n.pro && <span className="ms-0.5 rounded bg-amber-500/15 px-1 text-[8px] font-bold leading-tight text-amber-700 dark:text-amber-300 md:hidden">Pro</span>}
                 </button>
               );
             })}

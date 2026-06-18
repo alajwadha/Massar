@@ -1224,8 +1224,7 @@ export const ui = {
   },
   referral: {
     title: { ar: 'تعرف شخصًا يستحق فرصة أفضل؟', en: 'Know someone who deserves a better shot?' },
-    body: { ar: 'أرسل له مسار، خطوته الأولى نحو وظيفته القادمة.', en: 'Send them Masaar, their first step to the next role.' },
-    invite: { ar: 'ادعُ صديقًا', en: 'Invite a friend' },
+    body: { ar: 'أرسل له مسار، خطوته الأولى نحو وظيفته القادمة، ويحصل على خصم 30% عند الاشتراك عبر رابطك.', en: 'Send them Masaar, their first step to the next role. They get 30% off when they join through your link.' },
     yourLink: { ar: 'رابط الدعوة الخاص بك', en: 'Your invite link' },
     copy: { ar: 'انسخ الرابط', en: 'Copy link' },
     copied: { ar: 'تم النسخ', en: 'Copied' },
