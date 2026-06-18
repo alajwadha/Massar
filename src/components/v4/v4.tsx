@@ -1662,8 +1662,8 @@ function Shell() {
 
       <FeedbackFooter locale={locale} />
 
-      <div className="mx-auto w-full max-w-5xl px-5 pb-10 text-center text-[12.5px] leading-relaxed text-stone-500 dark:text-stone-400 sm:px-8">
-        <p className="text-balance sm:whitespace-nowrap">{ui.shell.disclaimer[locale]}</p>
+      <div className="mx-auto w-full max-w-5xl px-4 pb-10 text-center text-[12.5px] leading-relaxed text-stone-500 dark:text-stone-400 sm:px-8">
+        <p className="whitespace-nowrap text-[clamp(8px,2.5vw,12.5px)]">{ui.shell.disclaimer[locale]}</p>
         <p className="mt-1 text-[13px] font-bold text-stone-700 dark:text-stone-200">{ui.shell.disclaimerWarm[locale]}</p>
       </div>
 
