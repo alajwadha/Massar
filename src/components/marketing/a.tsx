@@ -21,11 +21,6 @@ import {
   Grain,
   ThemeToggle,
   LangToggle,
-  ScoreCard,
-  PathsCard,
-  ContactsCard,
-  StudyCard,
-  OpportunitiesCard,
   DashboardPreview,
   TARGET_COMPANIES,
   PRICING,
@@ -35,7 +30,7 @@ import {
 } from '@/components/marketing/shared';
 import { cn } from '@/lib/utils';
 import { Link } from '@/i18n/routing';
-import { ArrowUpRight, Check } from 'lucide-react';
+import { ArrowUpRight, Check, Gauge, Route, Users, GraduationCap, Compass } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 /* ------------------------------------------------------------------- copy -- */
@@ -45,7 +40,7 @@ const T = {
   navPlan: { ar: 'الخطة', en: 'The plan' },
   navPricing: { ar: 'السعر', en: 'Pricing' },
   cta: { ar: 'ابدأ الآن', en: 'Get started' },
-  ctaLive: { ar: 'شاهد المنتج', en: 'See the live product' },
+  ctaPricing: { ar: 'شاهد السعر', en: 'See pricing' },
 
   kicker: { ar: 'ملف مسار · سوق العمل السعودي', en: 'The Masaar dossier · the Saudi job market' },
   heroTitle: { ar: 'كن معروفًا قبل أن تتقدّم.', en: 'Be known before you apply.' },
@@ -66,7 +61,12 @@ const T = {
     ar: 'نقرأ سيرتك ونعطيك درجة من ١٠٠ لكل مستوى: مبتدئ، متوسط، خبير، قيادي. الدرجة محافظة عمدًا حتى تثق بها، وتُظهر بالضبط ما الذي يرفعها وبكم. لا إطراء، بل صورة صادقة وخطوات واضحة.',
     en: 'We read your CV and give you a score out of 100 for each level: Entry, Mid, Senior, Director. The score is deliberately conservative so you can trust it, and it shows exactly what raises it and by how much. No flattery, just an honest picture and clear steps.',
   },
-  figScore: { ar: 'الشكل ٠٢ · بطاقة التنافسية', en: 'Figure 02 · the competitiveness card' },
+  scoreFigN: { ar: '٤', en: '4' },
+  scoreFigTitle: { ar: 'أربعة مستويات', en: 'Four levels' },
+  scoreFigBody: {
+    ar: 'درجة محافظة من ١٠٠ لكل مستوى، مع ما يرفعها وبكم.',
+    en: 'A conservative score out of 100 for each level, with what raises it and by how much.',
+  },
 
   s3: { ar: 'الخطة', en: 'The plan' },
   s3body: {
@@ -74,6 +74,12 @@ const T = {
     en: 'From your background we draw career paths that fit you, each with a certifications roadmap ordered by impact. We flag which certificates the government fund Hadaf reimburses about 50 percent of, so you invest your time and money where it truly counts.',
   },
   figPaths: { ar: 'الشكل ٠٣ · المسار والشهادات', en: 'Figure 03 · path and certifications' },
+  planFigN: { ar: '٥٠٪', en: '50%' },
+  planFigTitle: { ar: 'يعيدها هدف', en: 'Hadaf reimburses' },
+  planFigBody: {
+    ar: 'مسارات تناسب خلفيتك، وخارطة شهادات مرتبة حسب الأثر، مع تمييز ما يدعمه صندوق هدف الحكومي.',
+    en: 'Paths that fit your background, a certifications roadmap ordered by impact, with the certificates the government fund Hadaf supports flagged.',
+  },
 
   s4: { ar: 'الناس', en: 'The people' },
   s4body: {
@@ -81,6 +87,12 @@ const T = {
     en: 'Two contact surfaces. The first is your own LinkedIn connections, parsed privately inside your browser alone and ranked into warm introductions. The second is our maintained database of 1,209 HR and recruiting contacts. We draft your outreach messages in your own voice, and you send them yourself, so you stay in control.',
   },
   figPeople: { ar: 'الشكل ٠٤ · من تتواصل معه', en: 'Figure 04 · who to reach' },
+  peopleFigN: { ar: '١٢٠٩', en: '1,209' },
+  peopleFigTitle: { ar: 'جهة توظيف', en: 'recruiting contacts' },
+  peopleFigBody: {
+    ar: 'إضافة إلى جهات لينكدإن لديك، تُحلَّل بسرية داخل متصفحك وحده وتُرتَّب إلى مقدّمات دافئة.',
+    en: 'Alongside your own LinkedIn connections, parsed privately inside your browser alone and ranked into warm introductions.',
+  },
   noteVoice: {
     ar: 'كل رسالة مكتوبة بصوتك، تراجعها وترسلها بنفسك. لا أتمتة، ولا إرسال نيابة عنك.',
     en: 'Every message is in your voice, reviewed and sent by you. No automation, nothing sent on your behalf.',
@@ -90,6 +102,19 @@ const T = {
   s5body: {
     ar: 'إن كان طريقك يمر بالدراسة، نعرض برامج الدراسات العليا حسب التخصص من العالمية إلى المتاحة، وأهليتك للمنح السعودية ومنها منحة رواد لأفضل ٣٠ جامعة، وخيارات الدراسة بدوام جزئي والمواعيد النهائية. وفي قسم الفرص: نحو ٦٠ صفحة توظيف لشركات سعودية مرتبة حسب القطاع، وأيام مهنية بتواريخها، ومهارات مطلوبة، وبرامج وطنية مثل تمهير.',
     en: 'If your route runs through study, we show graduate programs by field from world class to accessible, your eligibility for Saudi scholarships including the Pioneers scholarship for the top 30 universities, part time options, and deadlines. In Opportunities: around 60 Saudi company career pages grouped by sector, dated career days, in demand skills, and national programs like Tamheer.',
+  },
+
+  studyFigN: { ar: '٣٠', en: '30' },
+  studyFigTitle: { ar: 'جامعة لمنحة رواد', en: 'universities for Pioneers' },
+  studyFigBody: {
+    ar: 'برامج الدراسات العليا حسب التخصص، وأهليتك للمنح السعودية، وخيارات الدوام الجزئي والمواعيد النهائية.',
+    en: 'Graduate programs by field, your eligibility for Saudi scholarships, part time options, and deadlines.',
+  },
+  oppFigN: { ar: '٦٠', en: '60' },
+  oppFigTitle: { ar: 'صفحة توظيف', en: 'career pages' },
+  oppFigBody: {
+    ar: 'شركات سعودية مرتبة حسب القطاع، وأيام مهنية بتواريخها، ومهارات مطلوبة، وبرامج وطنية مثل تمهير.',
+    en: 'Saudi companies grouped by sector, dated career days, in demand skills, and national programs like Tamheer.',
   },
 
   s6: { ar: 'السعر', en: 'Pricing' },
@@ -214,12 +239,12 @@ export default function MarketingA({ locale }: { locale: Loc }) {
                   {t('cta')}
                   <ArrowUpRight className="h-4 w-4" />
                 </Link>
-                <Link
-                  href="/c/ali-alajwad"
+                <a
+                  href="#pricing"
                   className={cn('inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-colors', GHOST)}
                 >
-                  {t('ctaLive')}
-                </Link>
+                  {t('ctaPricing')}
+                </a>
               </div>
             </Fade>
 
@@ -269,9 +294,13 @@ export default function MarketingA({ locale }: { locale: Loc }) {
           <Spread className="mt-8 items-start">
             <Fade>
               <p className="max-w-2xl text-lg leading-relaxed text-stone-600 dark:text-stone-300">{t('s2body')}</p>
-              <div className="mt-8 max-w-md">
-                <ScoreCard locale={locale} />
-                <Caption>{t('figScore')}</Caption>
+              <div className={cn('mt-8 max-w-md p-6', INSET)}>
+                <Gauge className={cn('h-6 w-6', ACCENT)} />
+                <div className="mt-4 flex items-baseline gap-3">
+                  <Serif className={cn('text-6xl leading-none', ACCENT)}>{t('scoreFigN')}</Serif>
+                  <Serif className="text-2xl leading-none">{t('scoreFigTitle')}</Serif>
+                </div>
+                <p className="mt-4 text-[15px] leading-relaxed text-stone-600 dark:text-stone-300">{t('scoreFigBody')}</p>
               </div>
             </Fade>
             <Fade delay={0.1} className="lg:border-s lg:ps-10">
@@ -289,9 +318,13 @@ export default function MarketingA({ locale }: { locale: Loc }) {
             <Fade>
               <p className="max-w-2xl text-lg leading-relaxed text-stone-600 dark:text-stone-300">{t('s3body')}</p>
             </Fade>
-            <Fade delay={0.1} className="lg:row-span-2">
-              <PathsCard locale={locale} />
-              <Caption>{t('figPaths')}</Caption>
+            <Fade delay={0.1} className="lg:border-s lg:ps-10">
+              <Route className={cn('h-6 w-6', ACCENT)} />
+              <div className="mt-4 flex items-baseline gap-3">
+                <Serif className={cn('text-6xl leading-none', ACCENT)}>{t('planFigN')}</Serif>
+                <Serif className="text-2xl leading-none">{t('planFigTitle')}</Serif>
+              </div>
+              <p className="mt-4 text-[15px] leading-relaxed text-stone-600 dark:text-stone-300">{t('planFigBody')}</p>
             </Fade>
           </Spread>
         </section>
@@ -310,9 +343,13 @@ export default function MarketingA({ locale }: { locale: Loc }) {
                 </Serif>
               </div>
             </Fade>
-            <Fade delay={0.1}>
-              <ContactsCard locale={locale} />
-              <Caption>{t('figPeople')}</Caption>
+            <Fade delay={0.1} className="lg:border-s lg:ps-10">
+              <Users className={cn('h-6 w-6', ACCENT)} />
+              <div className="mt-4 flex items-baseline gap-3">
+                <Serif className={cn('text-6xl leading-none', ACCENT)}>{t('peopleFigN')}</Serif>
+                <Serif className="text-2xl leading-none">{t('peopleFigTitle')}</Serif>
+              </div>
+              <p className="mt-4 text-[15px] leading-relaxed text-stone-600 dark:text-stone-300">{t('peopleFigBody')}</p>
             </Fade>
           </Spread>
         </section>
@@ -326,13 +363,21 @@ export default function MarketingA({ locale }: { locale: Loc }) {
             <p className="mt-8 max-w-2xl text-lg leading-relaxed text-stone-600 dark:text-stone-300">{t('s5body')}</p>
           </Fade>
           <Fade delay={0.1} className="mt-8 grid gap-5 sm:grid-cols-2">
-            <div>
-              <StudyCard locale={locale} />
-              <Caption>{locale === 'ar' ? 'الشكل ٠٥أ · الدراسة' : 'Figure 05a · study'}</Caption>
+            <div className={cn('p-6', INSET)}>
+              <GraduationCap className={cn('h-6 w-6', ACCENT)} />
+              <div className="mt-4 flex items-baseline gap-3">
+                <Serif className={cn('text-6xl leading-none', ACCENT)}>{t('studyFigN')}</Serif>
+                <Serif className="text-xl leading-none">{t('studyFigTitle')}</Serif>
+              </div>
+              <p className="mt-4 text-[15px] leading-relaxed text-stone-600 dark:text-stone-300">{t('studyFigBody')}</p>
             </div>
-            <div>
-              <OpportunitiesCard locale={locale} />
-              <Caption>{locale === 'ar' ? 'الشكل ٠٥ب · الفرص' : 'Figure 05b · opportunities'}</Caption>
+            <div className={cn('p-6', INSET)}>
+              <Compass className={cn('h-6 w-6', ACCENT)} />
+              <div className="mt-4 flex items-baseline gap-3">
+                <Serif className={cn('text-6xl leading-none', ACCENT)}>{t('oppFigN')}</Serif>
+                <Serif className="text-xl leading-none">{t('oppFigTitle')}</Serif>
+              </div>
+              <p className="mt-4 text-[15px] leading-relaxed text-stone-600 dark:text-stone-300">{t('oppFigBody')}</p>
             </div>
           </Fade>
         </section>
@@ -405,12 +450,12 @@ export default function MarketingA({ locale }: { locale: Loc }) {
                 {t('cta')}
                 <ArrowUpRight className="h-4 w-4" />
               </Link>
-              <Link
-                href="/c/ali-alajwad"
+              <a
+                href="#pricing"
                 className={cn('inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-medium transition-colors', GHOST)}
               >
-                {t('ctaLive')}
-              </Link>
+                {t('ctaPricing')}
+              </a>
             </div>
           </Fade>
         </section>
@@ -425,9 +470,9 @@ export default function MarketingA({ locale }: { locale: Loc }) {
             <span>{t('footMade')}</span>
           </div>
           <div className="flex items-center gap-5">
-            <Link href="/c/ali-alajwad" className="transition-colors hover:text-stone-900 dark:hover:text-white">
-              {t('ctaLive')}
-            </Link>
+            <a href="#pricing" className="transition-colors hover:text-stone-900 dark:hover:text-white">
+              {t('ctaPricing')}
+            </a>
             <span>© {new Date().getFullYear()} {t('footRights')}</span>
           </div>
         </div>

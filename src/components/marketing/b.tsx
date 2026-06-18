@@ -41,13 +41,6 @@ import {
   Grain,
   ThemeToggle,
   LangToggle,
-  MiniRing,
-  ScoreCard,
-  PathsCard,
-  ContactsCard,
-  StudyCard,
-  OpportunitiesCard,
-  BrowserFrame,
   DashboardPreview,
   TARGET_COMPANIES,
   PRICING,
@@ -65,7 +58,6 @@ const T = {
     pricing: { ar: 'الأسعار', en: 'Pricing' },
   },
   cta: { ar: 'ابدأ الآن', en: 'Get started' },
-  live: { ar: 'شاهد المنتج', en: 'See the live product' },
   heroEyebrow: { ar: 'لوحة تحكم مهنية', en: 'Your career console' },
   heroTitle: {
     ar: 'كل ما تحتاجه لوظيفة أو ترقية، في لوحة واحدة.',
@@ -98,63 +90,68 @@ const TILES: {
   span: string;
   icon: typeof Gauge;
   eyebrow: { ar: string; en: string };
+  title: { ar: string; en: string };
   line: { ar: string; en: string };
-  render: (l: Loc) => React.ReactNode;
+  stat?: { value: string; label: { ar: string; en: string } };
 }[] = [
   {
     k: 'score',
     span: 'lg:col-span-3',
     icon: Gauge,
     eyebrow: { ar: 'التنافسية', en: 'Competitiveness' },
+    title: { ar: 'درجة لكل دور ومستوى', en: 'A score per role and level' },
     line: {
       ar: 'درجة من 0 إلى 100 لكل مستوى، تريك بالضبط ما الذي يرفعها، ومحافظة عمدًا.',
       en: 'A 0 to 100 score per level that shows exactly what raises it, kept deliberately conservative.',
     },
-    render: (l) => <ScoreCard locale={l} />,
+    stat: { value: '100', label: { ar: 'أعلى درجة لكل مستوى', en: 'top score per level' } },
   },
   {
     k: 'paths',
     span: 'lg:col-span-3',
     icon: Route,
     eyebrow: { ar: 'المسارات', en: 'Paths and certs' },
+    title: { ar: 'مسارات وشهادات بالأثر', en: 'Paths and certs by impact' },
     line: {
       ar: 'مسارات من خلفيتك، وخارطة شهادات مرتبة بالأثر، تُعلّم ما يسترد هدف نصفه.',
       en: 'Paths from your background and a certs roadmap ordered by impact, flagging what Hadaf reimburses.',
     },
-    render: (l) => <PathsCard locale={l} />,
+    stat: { value: '50%', label: { ar: 'يسترده هدف', en: 'Hadaf reimburses' } },
   },
   {
     k: 'contacts',
     span: 'lg:col-span-2',
     icon: Users,
     eyebrow: { ar: 'الشبكة', en: 'Network' },
+    title: { ar: 'جهات اتصال دافئة', en: 'Warm contacts' },
     line: {
       ar: 'شبكتك تُحلّل في متصفحك بخصوصية، وقاعدة 1,209 من الموارد البشرية.',
       en: 'Your connections parsed privately in your browser, plus 1,209 HR and recruiter contacts.',
     },
-    render: (l) => <ContactsCard locale={l} />,
+    stat: { value: '1,209', label: { ar: 'جهة موارد بشرية', en: 'HR contacts' } },
   },
   {
     k: 'study',
     span: 'lg:col-span-2',
     icon: GraduationCap,
     eyebrow: { ar: 'الدراسة', en: 'Study' },
+    title: { ar: 'برامج عليا ومنح', en: 'Graduate programs and grants' },
     line: {
       ar: 'برامج عليا حسب المجال، أهلية منحة رواد، وخيارات سعودية بدوام جزئي.',
       en: 'Graduate programs by field, Pioneers scholarship eligibility, and Saudi part time options.',
     },
-    render: (l) => <StudyCard locale={l} />,
   },
   {
     k: 'opps',
     span: 'lg:col-span-2',
     icon: Building2,
     eyebrow: { ar: 'الفرص', en: 'Opportunities' },
+    title: { ar: 'فرص ومسارات توظيف', en: 'Openings and hiring tracks' },
     line: {
       ar: 'نحو 60 صفحة توظيف سعودية حسب القطاع، أيام مهنية بمواعيد، وبرامج مثل تمهير.',
       en: 'Around 60 Saudi career pages by sector, dated career days, and programs like Tamheer.',
     },
-    render: (l) => <OpportunitiesCard locale={l} />,
+    stat: { value: '~60', label: { ar: 'صفحة توظيف', en: 'career pages' } },
   },
 ];
 
@@ -254,12 +251,12 @@ export default function MarketingB({ locale }: { locale: Loc }) {
                 {L(T.cta)}
                 <ArrowUpRight className="h-4 w-4" />
               </Link>
-              <Link
-                href="/c/ali-alajwad"
+              <a
+                href="#pricing"
                 className={cn('inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition-colors', GHOST)}
               >
-                {L(T.live)}
-              </Link>
+                {L(T.nav.pricing)}
+              </a>
             </div>
             <div className="mt-6 flex items-center gap-2 text-xs text-stone-500 dark:text-stone-400">
               <Kbd><Command className="h-3 w-3" />K</Kbd>
@@ -326,39 +323,50 @@ export default function MarketingB({ locale }: { locale: Loc }) {
                     </span>
                     <div className="min-w-0">
                       <Eyebrow>{L(tile.eyebrow)}</Eyebrow>
-                      <p className="mt-1.5 text-[13px] leading-snug text-stone-600 dark:text-stone-300">{L(tile.line)}</p>
+                      <Serif className="mt-1.5 block text-[15px] leading-snug text-stone-900 dark:text-white">{L(tile.title)}</Serif>
                     </div>
                   </div>
-                  <div className="mt-auto">{tile.render(locale)}</div>
+                  <p className="text-[13px] leading-snug text-stone-600 dark:text-stone-300">{L(tile.line)}</p>
+                  {tile.stat ? (
+                    <div className="mt-auto flex items-baseline gap-2">
+                      <span className={cn('text-2xl font-semibold tabular-nums', ACCENT)}>{tile.stat.value}</span>
+                      <span className="text-[12px] text-stone-500 dark:text-stone-400">{L(tile.stat.label)}</span>
+                    </div>
+                  ) : null}
                 </motion.div>
               </Reveal>
             );
           })}
 
-          {/* what raises it, MiniRing tile */}
+          {/* what raises it tile */}
           <Reveal delay={0.07} className="flex lg:col-span-2">
             <motion.div whileHover={{ y: -5 }} transition={SPRING} className={cn(CARD, EDGE, 'flex w-full flex-col gap-4 p-5')}>
-              <div>
-                <Eyebrow>{locale === 'ar' ? 'ما الذي يرفعها' : 'What raises it'}</Eyebrow>
-                <p className="mt-1.5 text-[13px] leading-snug text-stone-600 dark:text-stone-300">
-                  {locale === 'ar' ? 'كل خطوة محسوبة بأثرها على الدرجة، بلا مبالغة.' : 'Every step weighted by its effect on the score, never inflated.'}
-                </p>
+              <div className="flex items-start gap-3">
+                <span className={cn('grid h-9 w-9 shrink-0 place-items-center rounded-xl', SOFT)}>
+                  <Gauge className={cn('h-4 w-4', ACCENT)} />
+                </span>
+                <div className="min-w-0">
+                  <Eyebrow>{locale === 'ar' ? 'ما الذي يرفعها' : 'What raises it'}</Eyebrow>
+                  <Serif className="mt-1.5 block text-[15px] leading-snug text-stone-900 dark:text-white">
+                    {locale === 'ar' ? 'كل خطوة محسوبة بأثرها' : 'Every step, weighted'}
+                  </Serif>
+                </div>
               </div>
-              <div className="mt-auto flex items-center gap-4">
-                <MiniRing value={96} size={88} />
-                <ul className="space-y-1.5 text-[13px] text-stone-600 dark:text-stone-300">
-                  {[
-                    { ar: 'صياغة الإنجازات', en: 'Reframe bullets', d: '+6' },
-                    { ar: 'شهادة FMVA', en: 'FMVA', d: '+8' },
-                    { ar: 'CFA المستوى الأول', en: 'CFA Level 1', d: '+15' },
-                  ].map((r) => (
-                    <li key={r.en} className="flex items-center gap-2">
-                      <span className={cn('font-semibold tabular-nums', ACCENT)}>{r.d}</span>
-                      <span>{L(r)}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <p className="text-[13px] leading-snug text-stone-600 dark:text-stone-300">
+                {locale === 'ar' ? 'كل خطوة محسوبة بأثرها على الدرجة، بلا مبالغة.' : 'Every step weighted by its effect on the score, never inflated.'}
+              </p>
+              <ul className="mt-auto space-y-1.5 text-[13px] text-stone-600 dark:text-stone-300">
+                {[
+                  { ar: 'صياغة الإنجازات', en: 'Reframe bullets', d: '+6' },
+                  { ar: 'شهادة FMVA', en: 'FMVA', d: '+8' },
+                  { ar: 'CFA المستوى الأول', en: 'CFA Level 1', d: '+15' },
+                ].map((r) => (
+                  <li key={r.en} className="flex items-center gap-2">
+                    <span className={cn('font-semibold tabular-nums', ACCENT)}>{r.d}</span>
+                    <span>{L(r)}</span>
+                  </li>
+                ))}
+              </ul>
             </motion.div>
           </Reveal>
 
@@ -509,17 +517,37 @@ export default function MarketingB({ locale }: { locale: Loc }) {
         </div>
       </section>
 
-      {/* closing product exhibit */}
+      {/* closing call to action */}
       <section className="mx-auto max-w-5xl px-5 py-12">
         <Reveal>
           <div className="relative">
             <div aria-hidden className="pointer-events-none absolute inset-x-0 top-1/2 -z-0 mx-auto h-64 max-w-2xl -translate-y-1/2 rounded-full bg-amber-500/15 blur-[110px]" />
-            <BrowserFrame className="relative" url="massar-sigma.vercel.app/ar/c/ali-alajwad">
-              <div className="grid gap-3 sm:grid-cols-2">
-                <StudyCard locale={locale} />
-                <OpportunitiesCard locale={locale} />
+            <div className={cn(CARD, EDGE, 'relative flex flex-col items-center gap-5 px-6 py-12 text-center')}>
+              <Eyebrow className="justify-center">{L(T.pricingEyebrow)}</Eyebrow>
+              <h2 className="max-w-xl text-balance text-3xl tracking-tight sm:text-4xl">
+                <Serif>{L(T.heroTitle)}</Serif>
+              </h2>
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                <Link
+                  href={{ pathname: '/checkout', query: { plan: 'pro' } }}
+                  className={cn('inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition-colors', PILL)}
+                >
+                  {L(T.cta)}
+                  <ArrowUpRight className="h-4 w-4" />
+                </Link>
+                <a
+                  href="#pricing"
+                  className={cn('inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition-colors', GHOST)}
+                >
+                  {L(T.nav.pricing)}
+                </a>
               </div>
-            </BrowserFrame>
+              <div className="flex items-center gap-2 text-xs text-stone-500 dark:text-stone-400">
+                <Kbd><Command className="h-3 w-3" />K</Kbd>
+                <span>{L(T.hintRun)}</span>
+                <Kbd><CornerDownLeft className="h-3 w-3" /></Kbd>
+              </div>
+            </div>
           </div>
         </Reveal>
       </section>

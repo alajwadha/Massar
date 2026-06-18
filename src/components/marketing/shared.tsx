@@ -346,7 +346,7 @@ export function OpportunitiesCard({ locale, className }: { locale: Loc; classNam
 
 /* ------------------------------------------------------------ browser frame -- */
 
-export function BrowserFrame({ url = 'massar-sigma.vercel.app/c/ali-alajwad', children, className }: { url?: string; children: React.ReactNode; className?: string }) {
+export function BrowserFrame({ url = 'massar-sigma.vercel.app', children, className }: { url?: string; children: React.ReactNode; className?: string }) {
   return (
     <div className={cn('overflow-hidden rounded-2xl border border-stone-200/80 bg-white/70 shadow-[0_30px_80px_-40px_rgba(28,25,23,0.5)] backdrop-blur dark:border-white/10 dark:bg-[#0f0f12]', className)}>
       <div className="flex items-center gap-2 border-b border-stone-200/70 px-3 py-2 dark:border-white/10">

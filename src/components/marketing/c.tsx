@@ -33,11 +33,6 @@ import {
   Grain,
   ThemeToggle,
   LangToggle,
-  ScoreCard,
-  PathsCard,
-  ContactsCard,
-  StudyCard,
-  OpportunitiesCard,
   DashboardPreview,
   TARGET_COMPANIES,
   PRICING,
@@ -55,7 +50,6 @@ const T = {
     product: { ar: 'المنتج', en: 'Product' },
   },
   cta: { ar: 'ابدأ الآن', en: 'Get started' },
-  live: { ar: 'شاهد المنتج', en: 'See the live product' },
   heroEyebrow: { ar: 'لوظيفة جديدة أو ترقية', en: 'For a new job or a promotion' },
   heroTitle: { ar: 'توقّف عن الإرسال إلى الفراغ.', en: 'Stop applying into the void.' },
   heroSub: {
@@ -96,6 +90,34 @@ const T = {
     ar: 'برامج الدراسات العليا حسب مجالك مع أهلية منحة رواد، وعشرات صفحات التوظيف السعودية مرتبة حسب القطاع مع أيام مهنية مؤرخة وبرامج مثل تمهير.',
     en: 'Graduate programs by field with Pioneers scholarship eligibility, and dozens of Saudi career pages grouped by sector with dated career days and programs like Tamheer.',
   },
+
+  // big bold band statements and stats
+  scoreStat: { ar: 'لكل دور ومستوى', en: 'Per role and level' },
+  scoreStatSub: {
+    ar: 'من مبتدئ إلى قيادي، رقم واحد متحفظ يقول لك أين تقف بالضبط وما الذي يرفعه.',
+    en: 'From Entry to Director, one conservative number that tells you exactly where you stand and what raises it.',
+  },
+  scoreLine: { ar: 'اعرف رقمك قبل أن يقرأه أحد سواك.', en: 'Know your number before anyone else reads it.' },
+
+  planStat: { ar: '٥٠٪', en: '50%' },
+  planStatSub: {
+    ar: 'من تكلفة الشهادات المؤهلة يعوّضها صندوق هدف. نحن نميّز لك أيّها بالضبط، ونرتّبها حسب الأثر.',
+    en: 'of eligible certification costs reimbursed by Hadaf. We flag exactly which ones, ordered by impact.',
+  },
+  planLine: { ar: 'مسار يدفع نصف الطريق نحو الدور التالي.', en: 'A path that pays half the way to your next role.' },
+
+  peopleStat: { ar: '١٢٠٩', en: '1,209' },
+  peopleStatSub: {
+    ar: 'جهة موارد بشرية وتوظيف في قاعدتنا، إضافة إلى شبكتك التي تُحلّل في متصفحك وحده. الوظائف تأتي من أشخاص.',
+    en: 'HR and recruiter contacts in our database, plus your own network parsed privately in your browser. Jobs come from people.',
+  },
+  peopleLine: { ar: 'رسائل تواصل بصوتك، ترسلها أنت بنفسك.', en: 'Outreach drafted in your voice, that you send yourself.' },
+
+  studyStatA: { ar: 'منحة رواد', en: 'Pioneers' },
+  studyStatASub: { ar: 'برامج دراسات عليا حسب مجالك مع أهلية المنحة.', en: 'Graduate programs by field with scholarship eligibility.' },
+  studyStatB: { ar: 'تمهير وأكثر', en: 'Tamheer and more' },
+  studyStatBSub: { ar: 'عشرات صفحات التوظيف السعودية بأيام مهنية مؤرخة.', en: 'Dozens of Saudi career pages with dated career days.' },
+  studyLine: { ar: 'وأبعد من الوظيفة التالية بكثير.', en: 'And far beyond the next job.' },
 
   howEyebrow: { ar: 'كيف يعمل', en: 'How it works' },
   howTitle: { ar: 'أربع خطوات. هذا كل شيء.', en: 'Four steps. That is it.' },
@@ -259,12 +281,12 @@ export default function MarketingC({ locale }: { locale: Loc }) {
               {pick(T.cta, locale)}
               <ArrowUpRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 rtl:rotate-[-90deg]" />
             </Link>
-            <Link
-              href="/c/ali-alajwad"
+            <a
+              href="#pricing"
               className={cn('inline-flex h-12 items-center rounded-full px-6 text-base font-semibold transition-colors', GHOST)}
             >
-              {pick(T.live, locale)}
-            </Link>
+              {pick(T.priceEyebrow, locale)}
+            </a>
           </div>
           <p className="mt-4 text-sm text-stone-500 dark:text-stone-400">{pick(T.heroNote, locale)}</p>
         </Reveal>
@@ -310,38 +332,67 @@ export default function MarketingC({ locale }: { locale: Loc }) {
       {/* CALM LIGHT BAND: your real score */}
       <Band id="product">
         <BandHead eyebrow={T.scoreEyebrow} title={T.scoreTitle} sub={T.scoreSub} locale={locale} />
-        <Reveal delay={0.12} className="mt-12 w-full">
-          <ScoreCard locale={locale} className="mx-auto max-w-xl text-start" />
+        <Reveal delay={0.12} className="mt-12 flex flex-col items-center">
+          <span className={cn('inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold', SOFT)}>
+            <Sparkles className="h-4 w-4" />
+            {pick(T.scoreStat, locale)}
+          </span>
+          <Serif className="mt-6 text-balance text-5xl leading-[1.05] sm:text-6xl">{pick(T.scoreLine, locale)}</Serif>
+          <p className="mt-4 max-w-xl text-pretty text-base text-stone-600 dark:text-stone-300 sm:text-lg">
+            {pick(T.scoreStatSub, locale)}
+          </p>
         </Reveal>
       </Band>
 
       {/* BOLD DARK BAND: your plan, Hadaf pays half */}
       <Band dark>
         <BandHead eyebrow={T.planEyebrow} title={T.planTitle} sub={T.planSub} locale={locale} onDark />
-        <Reveal delay={0.12} className="mt-12 w-full">
-          <PathsCard locale={locale} className="mx-auto max-w-xl text-start" />
+        <Reveal delay={0.12} className="mt-12 flex flex-col items-center">
+          <Serif className="text-7xl leading-none text-amber-400 sm:text-8xl">{pick(T.planStat, locale)}</Serif>
+          <p className="mt-5 max-w-xl text-pretty text-base text-stone-300 sm:text-lg">{pick(T.planStatSub, locale)}</p>
+          <p className="mt-6 inline-flex items-center gap-2 text-base font-semibold text-stone-100">
+            <Route className="h-5 w-5 text-amber-400" />
+            {pick(T.planLine, locale)}
+          </p>
         </Reveal>
       </Band>
 
       {/* CALM LIGHT BAND: the people */}
       <Band>
         <BandHead eyebrow={T.peopleEyebrow} title={T.peopleTitle} sub={T.peopleSub} locale={locale} />
-        <Reveal delay={0.12} className="mt-12 w-full">
-          <ContactsCard locale={locale} className="mx-auto max-w-xl text-start" />
+        <Reveal delay={0.12} className="mt-12 flex flex-col items-center">
+          <Serif className={cn('text-7xl leading-none sm:text-8xl', ACCENT)}>{pick(T.peopleStat, locale)}</Serif>
+          <p className="mt-5 max-w-xl text-pretty text-base text-stone-600 dark:text-stone-300 sm:text-lg">
+            {pick(T.peopleStatSub, locale)}
+          </p>
+          <p className="mt-6 inline-flex items-center gap-2 text-base font-semibold text-stone-900 dark:text-stone-100">
+            <Users className="h-5 w-5 text-amber-500" />
+            {pick(T.peopleLine, locale)}
+          </p>
         </Reveal>
       </Band>
 
       {/* BOLD DARK BAND: study and opportunities, side by side */}
       <Band dark>
         <BandHead eyebrow={T.studyEyebrow} title={T.studyTitle} sub={T.studySub} locale={locale} onDark />
-        <div className="mt-12 grid w-full gap-5 text-start md:grid-cols-2">
-          <Reveal delay={0.1}>
-            <StudyCard locale={locale} />
+        <div className="mt-12 grid w-full gap-6 sm:grid-cols-2">
+          <Reveal delay={0.1} className="flex flex-col items-center">
+            <GraduationCap className="h-8 w-8 text-amber-400" />
+            <Serif className="mt-4 text-balance text-4xl leading-none text-amber-400 sm:text-5xl">{pick(T.studyStatA, locale)}</Serif>
+            <p className="mt-3 max-w-xs text-sm text-stone-400">{pick(T.studyStatASub, locale)}</p>
           </Reveal>
-          <Reveal delay={0.18}>
-            <OpportunitiesCard locale={locale} />
+          <Reveal delay={0.18} className="flex flex-col items-center">
+            <ScanLine className="h-8 w-8 text-amber-400" />
+            <Serif className="mt-4 text-balance text-4xl leading-none text-amber-400 sm:text-5xl">{pick(T.studyStatB, locale)}</Serif>
+            <p className="mt-3 max-w-xs text-sm text-stone-400">{pick(T.studyStatBSub, locale)}</p>
           </Reveal>
         </div>
+        <Reveal delay={0.26} className="mt-10">
+          <p className="inline-flex items-center gap-2 text-base font-semibold text-stone-100">
+            <Sparkles className="h-5 w-5 text-amber-400" />
+            {pick(T.studyLine, locale)}
+          </p>
+        </Reveal>
       </Band>
 
       {/* CALM LIGHT BAND: how it works, four big steps */}
@@ -446,12 +497,7 @@ export default function MarketingC({ locale }: { locale: Loc }) {
             {pick(T.cta, locale)}
             <ArrowUpRight className="h-5.5 w-5.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 rtl:rotate-[-90deg]" />
           </Link>
-          <Link
-            href="/c/ali-alajwad"
-            className="mt-4 text-sm font-semibold text-stone-500 underline-offset-4 hover:underline dark:text-stone-400"
-          >
-            {pick(T.live, locale)}
-          </Link>
+          <p className="mt-4 text-sm text-stone-500 dark:text-stone-400">{pick(T.heroNote, locale)}</p>
         </Reveal>
       </Band>
 
