@@ -1734,6 +1734,7 @@ function Shell() {
           <div className="flex shrink-0 items-center gap-2.5">
             <span className="grid h-8 w-8 place-items-center rounded-xl bg-stone-900 font-extrabold text-white dark:bg-stone-100 dark:text-stone-900">م</span>
             <span className="hidden text-lg font-semibold tracking-tight sm:inline">مسار</span>
+            <span className={cn('ms-0.5 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide', tier === 'pro' ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : SOFT)}>{tier === 'pro' ? 'Pro' : locale === 'ar' ? 'الأساسية' : 'Starter'}</span>
           </div>
 
           {/* Primary nav, on the same line as the controls (hidden in the minimal view) */}
@@ -1748,8 +1749,7 @@ function Shell() {
                     {on && <motion.span layoutId="v4-nav" className="absolute inset-0 -z-10 rounded-full bg-stone-900 dark:bg-stone-100" transition={SPRING} />}
                     <n.Icon className="h-4 w-4 shrink-0" />
                     <span className="hidden md:inline">{ui.nav[n.id][locale]}</span>
-                    {n.pro && <span className={cn('ms-0.5 hidden rounded px-1 text-[8.5px] font-bold leading-tight md:inline', on ? 'bg-white/20 text-white dark:bg-stone-900/20 dark:text-stone-900' : 'bg-amber-500/15 text-amber-700 dark:text-amber-300')}>Pro</span>}
-                    {n.pro && <span className="ms-0.5 rounded bg-amber-500/15 px-1 text-[8px] font-bold leading-tight text-amber-700 dark:text-amber-300 md:hidden">Pro</span>}
+                    {n.pro && tier !== 'pro' && <KeyRound className="ms-0.5 h-3 w-3 shrink-0 text-amber-600 dark:text-amber-400" />}
                   </button>
                 );
               })}

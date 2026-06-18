@@ -4,6 +4,11 @@ import { Instrument_Serif } from 'next/font/google';
 import MarketingA from '@/components/marketing/a';
 import MarketingB from '@/components/marketing/b';
 import MarketingC from '@/components/marketing/c';
+import MarketingD from '@/components/marketing/d';
+import MarketingE from '@/components/marketing/e';
+import MarketingF from '@/components/marketing/f';
+import MarketingG from '@/components/marketing/g';
+import MarketingH from '@/components/marketing/h';
 import type { Loc } from '@/lib/app-data';
 
 // Three from-scratch marketing landing variants in the v4 "Atlas" design, each at
@@ -17,7 +22,7 @@ const serif = Instrument_Serif({
   display: 'swap',
 });
 
-const VERSIONS = { a: MarketingA, b: MarketingB, c: MarketingC } as const;
+const VERSIONS = { a: MarketingA, b: MarketingB, c: MarketingC, d: MarketingD, e: MarketingE, f: MarketingF, g: MarketingG, h: MarketingH } as const;
 
 export function generateStaticParams() {
   return Object.keys(VERSIONS).map((v) => ({ v }));
