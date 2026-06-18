@@ -19,10 +19,9 @@ against this document.
 8. The Pro pages (Study and Opportunities) data
 9. Bilingual and RTL
 10. Build, verify, deploy
-11. Security and secrets
-12. The research knowledge base
-13. Worked example: Ali
-14. Not yet built
+11. The research knowledge base
+12. Worked example: Ali
+13. Not yet built
 
 ---
 
@@ -279,32 +278,19 @@ After deploy, the customer link is `https://massar-sigma.vercel.app/<locale>/c/<
 
 ---
 
-## 11. Security and secrets
-
-- `/admin` is Basic Auth gated (`ADMIN_USER`, `ADMIN_PASSWORD` env vars) and shows the
-  real HR database. Never expose it, never relax the gate, never re enable Vercel
-  deployment protection on the public site without asking.
-- The CV is read only and never committed.
-- Vercel tokens are short lived and passed on the command line, never written to a file
-  in the repo. Revoke after use.
-- Env vars in production: `ADMIN_USER`, `ADMIN_PASSWORD`, `NEXT_PUBLIC_SITE_URL`.
-
----
-
-## 12. The research knowledge base
+## 11. The research knowledge base
 
 A version controlled store at `research/` for every fact we research, so effort
 compounds across customers instead of being redone. Full spec in
 [research/README.md](research/README.md).
 
-Reuse rule: before researching anything for a new customer, read the store first,
-filtered by their field, sector, region, and degree. Reuse fresh matches, research only
-the gaps, write new or updated facts back. It grows into the database and ports straight
-to Supabase later.
+Reuse rule: before researching for a new customer, read the store first (filtered by
+their field, sector, region, and degree), reuse what is there, and add what is missing.
+It grows into the database and ports straight to Supabase later.
 
 ---
 
-## 13. Worked example: Ali
+## 12. Worked example: Ali
 
 `aliPlan` in `app-data.ts` is customer one.
 
@@ -324,7 +310,7 @@ to Supabase later.
 
 ---
 
-## 14. Not yet built
+## 13. Not yet built
 
 - CV to JSON generator: dropped on cost, so onboarding is manual today.
 - The one time per customer refactor (section 5) to split the module level singletons
