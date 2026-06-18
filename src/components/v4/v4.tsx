@@ -1460,15 +1460,15 @@ function ReferralStrip({ locale }: { locale: Loc }) {
         <div className="flex items-start gap-3">
           <div className={cn('grid h-10 w-10 shrink-0 place-items-center rounded-xl', SOFT)}><Gift className={cn('h-5 w-5', ACCENT)} /></div>
           <div className="min-w-0">
-            <h2 className="text-base font-semibold text-stone-900 dark:text-stone-50">{ui.referral.title[locale]}</h2>
-            <p className="mt-1 text-[13px] leading-relaxed text-stone-600 dark:text-stone-300">
-              {ui.referral.body[locale].split('30%').map((part, i, arr) => (
+            <h2 className="text-base font-semibold text-stone-900 dark:text-stone-50">
+              {ui.referral.title[locale].split('30%').map((part, i, arr) => (
                 <span key={i}>
                   {part}
-                  {i < arr.length - 1 && <strong className="font-bold text-stone-900 dark:text-stone-50">30%</strong>}
+                  {i < arr.length - 1 && <strong className="font-bold text-amber-700 dark:text-amber-300">30%</strong>}
                 </span>
               ))}
-            </p>
+            </h2>
+            <p className="mt-1 text-[13px] leading-relaxed text-stone-600 dark:text-stone-300">{ui.referral.body[locale]}</p>
           </div>
         </div>
         <div className="mt-4">

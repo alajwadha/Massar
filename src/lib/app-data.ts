@@ -1223,8 +1223,8 @@ export const ui = {
     learn: { ar: 'تعلّمها', en: 'Learn it' },
   },
   referral: {
-    title: { ar: 'تعرف شخصًا يستحق فرصة أفضل؟', en: 'Know someone who deserves a better shot?' },
-    body: { ar: 'امنحهم خصم 30%!', en: 'Give them 30% off!' },
+    title: { ar: 'تعرف شخصًا يستحق فرصة أفضل؟ امنحهم خصم 30%!', en: 'Know someone who deserves a better shot? Give them 30% off!' },
+    body: { ar: 'أرسل له مسار، خطوته الأولى نحو وظيفته القادمة.', en: 'Send them Masaar, their first step to the next role.' },
     yourLink: { ar: 'رابط الدعوة الخاص بك', en: 'Your invite link' },
     copy: { ar: 'انسخ الرابط', en: 'Copy link' },
     copied: { ar: 'تم النسخ', en: 'Copied' },
