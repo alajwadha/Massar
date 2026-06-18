@@ -5,6 +5,7 @@ import { useLocale } from 'next-intl';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import {
   LayoutDashboard,
+  Feather,
   Compass,
   Users,
   Activity,
@@ -1569,14 +1570,139 @@ function ProUpsell({ locale }: { locale: Loc }) {
   );
 }
 
+/* ---------------------------------------------------------- minimal view -- */
+// A calm, stripped-down view of the same plan for customers who find the full
+// dashboard a lot: just the score, the single next step, and who to reach now.
+// Reuses the same shared state (level, active path, certs done), so it stays in
+// sync with the full view and reflects real progress.
+function MinimalDashboard({ locale }: { locale: Loc }) {
+  const plan = usePlan();
+  const { network } = useNetwork();
+  const { level, setLevel, certsDone, activePathId } = useProgress();
+  const activePath = plan.paths.find((p) => p.id === (activePathId ?? plan.primaryPath.id)) ?? plan.primaryPath;
+  const score = activePath.scoreByLevel[level];
+  const upcoming = activePath.certs.filter((c) => !certsDone[c.name.en]);
+  const next = upcoming.find((c) => c.status === 'current') ?? upcoming[0];
+  const ranked = rankConnections(network ?? plan.hrContacts, planTargets(plan)).slice(0, 3);
+  const levelLabel = (LEVELS.find((l) => l.id === level) ?? LEVELS[0]).label[locale];
+
+  return (
+    <main className="mx-auto w-full max-w-lg px-5 pb-16 pt-10 sm:px-8">
+      <Card className="p-7 text-center">
+        <Eyebrow>{locale === 'ar' ? 'تنافسية سيرتك' : 'Your CV score'}</Eyebrow>
+        <div className="mt-5 flex justify-center text-amber-600 dark:text-amber-400">
+          <ProgressRing value={score} size={140} stroke={7} color="currentColor" track="rgba(120,113,108,0.18)">
+            <div className="leading-none">
+              <Serif className="block text-6xl tracking-tight text-stone-900 dark:text-stone-50">
+                <Counter to={score} />
+              </Serif>
+              <div className="mt-1 text-[11px] font-medium text-stone-500 dark:text-stone-400">/ 100</div>
+            </div>
+          </ProgressRing>
+        </div>
+        <div className="mt-5">
+          <Serif className="text-xl text-stone-900 dark:text-stone-50">{activePath.name[locale]}</Serif>
+        </div>
+        <div className={cn('mt-1 text-sm font-semibold', ACCENT)}>
+          {locale === 'ar' ? `جاهز لمستوى ${levelLabel}` : `Ready for ${levelLabel}`}
+        </div>
+        <div className="mt-5 inline-flex rounded-full border border-stone-200/80 bg-stone-50/80 p-0.5 dark:border-white/10 dark:bg-white/[0.05]">
+          {LEVELS.map((lv) => {
+            const on = level === lv.id;
+            return (
+              <button
+                key={lv.id}
+                type="button"
+                onClick={() => setLevel(lv.id)}
+                className={cn(
+                  'rounded-full px-3 py-1.5 text-[11px] font-bold transition-colors',
+                  on ? 'bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900' : 'text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-white',
+                )}
+              >
+                {lv.label[locale]}
+              </button>
+            );
+          })}
+        </div>
+      </Card>
+
+      {next && (
+        <Card className="mt-4 p-6">
+          <Eyebrow>{locale === 'ar' ? 'خطوتك التالية' : 'Your next step'}</Eyebrow>
+          <div className="mt-3 flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <div className="font-semibold text-stone-900 dark:text-stone-50">{next.name[locale]}</div>
+              <div className="mt-0.5 text-[13px] text-stone-500 dark:text-stone-400">
+                {next.duration[locale]}
+                {next.hadaf ? (locale === 'ar' ? ' · هدف يعوّض نحو ٥٠٪' : ' · Hadaf reimburses about 50%') : ''}
+              </div>
+            </div>
+            <span className="shrink-0 rounded-xl bg-amber-500/[0.12] px-2.5 py-1.5 text-sm font-bold tabular-nums text-amber-700 dark:text-amber-300">
+              +{scaledAdd(next.scoreAdd, level)}
+            </span>
+          </div>
+        </Card>
+      )}
+
+      {ranked.length > 0 && (
+        <Card className="mt-4 p-6">
+          <Eyebrow>{locale === 'ar' ? 'تواصل الآن' : 'Reach out now'}</Eyebrow>
+          <div className="mt-3 space-y-2">
+            {ranked.map((r) => (
+              <div key={r.contact.id} className={cn(INSET, 'flex items-center gap-3 p-2.5')}>
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-stone-700 to-stone-900 text-xs font-bold text-stone-50 dark:from-stone-500 dark:to-stone-700">
+                  {r.contact.name[locale].charAt(0)}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <div className="truncate text-[13px] font-medium text-stone-800 dark:text-stone-100">{r.contact.name[locale]}</div>
+                  <div className="truncate text-[11px] text-stone-500 dark:text-stone-400">
+                    {r.contact.role[locale]} · {r.contact.company[locale]}
+                  </div>
+                </div>
+                {r.contact.linkedin && (
+                  <a
+                    href={r.contact.linkedin}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="LinkedIn"
+                    className="shrink-0 text-stone-400 transition-colors hover:text-stone-700 dark:hover:text-stone-200"
+                  >
+                    <Linkedin className="h-4 w-4" />
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+
+      <p className="mt-7 text-center text-[12px] leading-relaxed text-stone-400 dark:text-stone-500">
+        {locale === 'ar' ? 'هذه نظرة مبسّطة. للوحة الكاملة استخدم الزر في الأعلى.' : 'A simplified view. Use the button at the top for the full dashboard.'}
+      </p>
+    </main>
+  );
+}
+
 function Shell() {
   const locale = useLocale() as Loc;
   const pathname = usePathname();
   const reduce = useReducedMotion();
-  const { profile, tier } = usePlan();
+  const { profile, tier, slug } = usePlan();
   const [tab, setTab] = useState<Tab>('home');
   const [pathSel, setPathSel] = useState<string | null>(null);
   const [cmdOpen, setCmdOpen] = useState(false);
+  const [minimal, setMinimal] = useState(false);
+
+  useEffect(() => {
+    try { setMinimal(localStorage.getItem(`masaar:minimal:${slug}`) === '1'); } catch { /* ignore */ }
+  }, [slug]);
+  const toggleMinimal = () => {
+    setMinimal((v) => {
+      const n = !v;
+      try { localStorage.setItem(`masaar:minimal:${slug}`, n ? '1' : '0'); } catch { /* ignore */ }
+      return n;
+    });
+  };
 
   const go = (t: Tab) => { setTab(t); if (t !== 'paths') setPathSel(null); };
   const openPath = (id: string) => { setTab('paths'); setPathSel(id); };
@@ -1610,26 +1736,36 @@ function Shell() {
             <span className="hidden text-lg font-semibold tracking-tight sm:inline">مسار</span>
           </div>
 
-          {/* Primary nav, on the same line as the controls (labels collapse to icons on phone) */}
-          <nav className={cn('mx-auto flex gap-0.5 rounded-full p-1', CARD)}>
-            {NAV.map((n) => {
-              const on = tab === n.id;
-              return (
-                <button key={n.id} type="button" onClick={() => go(n.id)} className={cn('relative flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[13px] font-semibold transition-colors sm:gap-2 sm:px-3.5 sm:py-2 sm:text-sm', on ? 'text-white dark:text-stone-900' : 'text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100')}>
-                  {on && <motion.span layoutId="v4-nav" className="absolute inset-0 -z-10 rounded-full bg-stone-900 dark:bg-stone-100" transition={SPRING} />}
-                  <n.Icon className="h-4 w-4 shrink-0" />
-                  <span className="hidden md:inline">{ui.nav[n.id][locale]}</span>
-                  {n.pro && <span className={cn('ms-0.5 hidden rounded px-1 text-[8.5px] font-bold leading-tight md:inline', on ? 'bg-white/20 text-white dark:bg-stone-900/20 dark:text-stone-900' : 'bg-amber-500/15 text-amber-700 dark:text-amber-300')}>Pro</span>}
-                  {n.pro && <span className="ms-0.5 rounded bg-amber-500/15 px-1 text-[8px] font-bold leading-tight text-amber-700 dark:text-amber-300 md:hidden">Pro</span>}
-                </button>
-              );
-            })}
-          </nav>
+          {/* Primary nav, on the same line as the controls (hidden in the minimal view) */}
+          {minimal ? (
+            <div className="flex-1" />
+          ) : (
+            <nav className={cn('mx-auto flex gap-0.5 rounded-full p-1', CARD)}>
+              {NAV.map((n) => {
+                const on = tab === n.id;
+                return (
+                  <button key={n.id} type="button" onClick={() => go(n.id)} className={cn('relative flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[13px] font-semibold transition-colors sm:gap-2 sm:px-3.5 sm:py-2 sm:text-sm', on ? 'text-white dark:text-stone-900' : 'text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100')}>
+                    {on && <motion.span layoutId="v4-nav" className="absolute inset-0 -z-10 rounded-full bg-stone-900 dark:bg-stone-100" transition={SPRING} />}
+                    <n.Icon className="h-4 w-4 shrink-0" />
+                    <span className="hidden md:inline">{ui.nav[n.id][locale]}</span>
+                    {n.pro && <span className={cn('ms-0.5 hidden rounded px-1 text-[8.5px] font-bold leading-tight md:inline', on ? 'bg-white/20 text-white dark:bg-stone-900/20 dark:text-stone-900' : 'bg-amber-500/15 text-amber-700 dark:text-amber-300')}>Pro</span>}
+                    {n.pro && <span className="ms-0.5 rounded bg-amber-500/15 px-1 text-[8px] font-bold leading-tight text-amber-700 dark:text-amber-300 md:hidden">Pro</span>}
+                  </button>
+                );
+              })}
+            </nav>
+          )}
 
           <div className="flex shrink-0 items-center gap-2">
-            <button type="button" onClick={() => setCmdOpen(true)} aria-label={ui.cmd.placeholder[locale]} className={cn('hidden h-9 items-center gap-1.5 rounded-full px-3 text-[12px] font-semibold lg:inline-flex', GHOST)}>
-              <Command className="h-3.5 w-3.5" /> K
+            <button type="button" onClick={toggleMinimal} aria-label={minimal ? 'Full dashboard' : 'Minimal view'} className={cn('inline-flex h-9 items-center gap-1.5 rounded-full px-3 text-[12px] font-semibold transition-colors', minimal ? PILL : GHOST)}>
+              {minimal ? <LayoutDashboard className="h-3.5 w-3.5" /> : <Feather className="h-3.5 w-3.5" />}
+              <span className="hidden sm:inline">{minimal ? (locale === 'ar' ? 'اللوحة الكاملة' : 'Full view') : (locale === 'ar' ? 'عرض مبسّط' : 'Minimal')}</span>
             </button>
+            {!minimal && (
+              <button type="button" onClick={() => setCmdOpen(true)} aria-label={ui.cmd.placeholder[locale]} className={cn('hidden h-9 items-center gap-1.5 rounded-full px-3 text-[12px] font-semibold lg:inline-flex', GHOST)}>
+                <Command className="h-3.5 w-3.5" /> K
+              </button>
+            )}
             <ThemeToggle />
             <Link href={pathname} locale={locale === 'ar' ? 'en' : 'ar'} className={cn('grid h-9 w-9 place-items-center rounded-full text-xs font-bold', GHOST)}>
               {locale === 'ar' ? 'EN' : 'ع'}
@@ -1646,21 +1782,25 @@ function Shell() {
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-5xl px-5 pb-10 pt-7 sm:px-8">
-        {/* A plain keyed motion.div (NOT AnimatePresence mode="wait"): it remounts
-            on tab change and fades in. mode="wait" would wait for the old tab to
-            finish exiting, and a layoutId element inside Home hangs that exit in
-            production, leaving the new tab unmounted (the "only home works" bug). */}
-        <motion.div key={tab + (pathSel ?? '')} initial={reduce ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.24, ease: EASE }}>
-          {tab === 'home' && <Home locale={locale} go={go} openPath={openPath} />}
-          {tab === 'paths' && <Paths locale={locale} selId={pathSel} setSelId={setPathSel} />}
-          {tab === 'contacts' && <Contacts locale={locale} />}
-          {tab === 'tracker' && (tier === 'pro' ? <Study locale={locale} /> : <ProUpsell locale={locale} />)}
-          {tab === 'opportunities' && (tier === 'pro' ? <Opportunities locale={locale} /> : <ProUpsell locale={locale} />)}
-        </motion.div>
-      </main>
+      {minimal ? (
+        <MinimalDashboard locale={locale} />
+      ) : (
+        <main className="mx-auto w-full max-w-5xl px-5 pb-10 pt-7 sm:px-8">
+          {/* A plain keyed motion.div (NOT AnimatePresence mode="wait"): it remounts
+              on tab change and fades in. mode="wait" would wait for the old tab to
+              finish exiting, and a layoutId element inside Home hangs that exit in
+              production, leaving the new tab unmounted (the "only home works" bug). */}
+          <motion.div key={tab + (pathSel ?? '')} initial={reduce ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.24, ease: EASE }}>
+            {tab === 'home' && <Home locale={locale} go={go} openPath={openPath} />}
+            {tab === 'paths' && <Paths locale={locale} selId={pathSel} setSelId={setPathSel} />}
+            {tab === 'contacts' && <Contacts locale={locale} />}
+            {tab === 'tracker' && (tier === 'pro' ? <Study locale={locale} /> : <ProUpsell locale={locale} />)}
+            {tab === 'opportunities' && (tier === 'pro' ? <Opportunities locale={locale} /> : <ProUpsell locale={locale} />)}
+          </motion.div>
+        </main>
+      )}
 
-      <FeedbackFooter locale={locale} />
+      {!minimal && <FeedbackFooter locale={locale} />}
 
       <div className="mx-auto w-full max-w-5xl px-4 pb-10 text-center text-[12.5px] leading-relaxed text-stone-500 dark:text-stone-400 sm:px-8">
         <p className="whitespace-nowrap text-[clamp(8px,2.5vw,12.5px)]">{ui.shell.disclaimer[locale]}</p>
