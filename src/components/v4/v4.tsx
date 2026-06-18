@@ -1662,9 +1662,9 @@ function Shell() {
 
       <FeedbackFooter locale={locale} />
 
-      <div className="mx-auto w-full max-w-5xl px-5 pb-10 text-center text-[11.5px] leading-relaxed text-stone-500 dark:text-stone-400 sm:px-8">
+      <div className="mx-auto w-full max-w-5xl px-5 pb-10 text-center text-[12.5px] leading-relaxed text-stone-500 dark:text-stone-400 sm:px-8">
         <p>{ui.shell.disclaimer[locale]}</p>
-        <p className="mt-0.5 font-medium text-stone-600 dark:text-stone-300">{ui.shell.disclaimerWarm[locale]}</p>
+        <p className="mt-1 text-[13px] font-bold text-stone-700 dark:text-stone-200">{ui.shell.disclaimerWarm[locale]}</p>
       </div>
 
       <CommandPalette open={cmdOpen} setOpen={setCmdOpen} locale={locale} go={go} openPath={openPath} />

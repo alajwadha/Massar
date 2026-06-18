@@ -886,7 +886,7 @@ export const ui = {
   shell: {
     greeting: { ar: 'أهلًا بعودتك', en: 'Welcome back' },
     disclaimer: { ar: 'تأكد من التفاصيل قبل أي خطوة، فقد نخطئ في أمرٍ ما.', en: 'Double-check the details before you act, we might get something wrong.' },
-    disclaimerWarm: { ar: 'لكن مستقبلك يهمّنا!', en: 'But your future matters to us!' },
+    disclaimerWarm: { ar: 'مستقبلك يهمّنا!', en: 'Your future matters to us!' },
     proLockTitle: { ar: 'هذه ميزة Pro', en: 'A Pro feature' },
     proLockBody: { ar: 'هذه الصفحة ضمن باقة Pro. رقِّ باقتك لفتح الدراسات العليا والمصادر.', en: 'This page is part of the Pro plan. Upgrade to unlock graduate study and resources.' },
     plan: { ar: 'الباقة الاحترافية', en: 'Pro plan' },
