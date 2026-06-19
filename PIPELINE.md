@@ -66,6 +66,8 @@ Every review covers, in full:
 - Full-time universities: the full-time graduate universities MUST be in the US, the UK, or
   Australia (the destinations Saudi scholarships target). Mix the three across a major. The
   Saudi part-time, study-while-working options are a separate section and stay Saudi.
+- World class: at least ONE university per major must be world top 30 (top30:true), so every
+  major has a world-class, Pioneers-scholarship-eligible reach option.
 - Technical: builds and renders; registered under the right slug with no collision; tier and
   sectors valid; the right number of paths each with a DERIVED score (`withScore`), valid
   icon and gradFields, complete certs with well-formed official links; one primary that
@@ -78,6 +80,7 @@ Every review covers, in full:
 The bar is STRICT. A finding is not a soft note; any one of these fails the gate:
 - Lazy or irrelevant data: an item shown because it exists, not because it fits the person.
 - A full-time graduate university that is not in the US, the UK, or Australia.
+- A major with no world top 30 (world class) university.
 - A claim, score factor, or number that does not point to a specific line in the CV.
 - Generic, template like content that could describe any candidate in the field.
 - An unverified external fact stated as certain.
