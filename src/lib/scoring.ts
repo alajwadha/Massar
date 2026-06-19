@@ -23,6 +23,7 @@ export const EMPLOYER_CALIBER: Record<string, number> = {
   aramco: 96, sabic: 92, 'baker hughes': 90, slb: 90, schlumberger: 90, halliburton: 88,
   'acwa power': 88, maaden: 86, "ma'aden": 86, pif: 95, 'public investment fund': 95, neom: 88,
   sadara: 84, tasnee: 82, zamil: 82, alfanar: 80, hadeed: 82, 'red sea global': 86, 'red sea gateway': 82,
+  saipem: 88, mcdermott: 82, petrofac: 80, worley: 82, 'larsen & toubro': 82, 'l&t': 82, nesma: 76, 'nasser al hajri': 74,
   mckinsey: 96, bcg: 96, 'boston consulting': 96, bain: 96, 'strategy&': 90, kearney: 88, 'oliver wyman': 88,
   deloitte: 84, pwc: 84, ey: 84, kpmg: 84, accenture: 84,
   stc: 86, elm: 84, sdaia: 86, lean: 80, tonomus: 84, google: 95, microsoft: 94, ibm: 86, aws: 92, amazon: 92,

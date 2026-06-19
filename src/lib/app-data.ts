@@ -828,9 +828,221 @@ export const mahdiPlan: CustomerPlan = {
   tracker: mahdiTracker,
 };
 
+/* ----------------------------------------------------- customer: Ali Alhajji -- */
+// Fresh mechanical engineering graduate (Jubail Industrial College, May 2025) on an
+// oil and gas / EPC / pipeline track: junior hook-up engineer at Saipem, prior Saudi
+// Aramco pipeline-integrity internship, Power BI skills, offshore safety certs, and a
+// hydrogen electrolysis senior project. Distinct from Ali Alajwad (different person).
+const alhajjiProfile = {
+  name: { ar: 'علي الحجي', en: 'Ali Alhajji' } satisfies LS,
+  headline: { ar: 'مهندس ميكانيكي · مشاريع EPC وأنظمة الأنابيب · سايبم', en: 'Mechanical Engineer · EPC and Pipeline Systems · Saipem' } satisfies LS,
+  location: { ar: 'الظهران، المنطقة الشرقية', en: 'Dhahran, Eastern Province' } satisfies LS,
+  region: 'eastern' as SaudiRegion,
+  degree: 'bachelor' as Degree,
+};
+
+const alhajjiCvScore = {
+  target: { ar: 'هندسة المشاريع والأنابيب في الطاقة', en: 'Energy Project and Pipeline Engineering' } satisfies LS,
+  improvements: [
+    { action: { ar: 'أضف أرقامًا لإنجازاتك (أثر لوحات Power BI، نسب تحسين الفحص)', en: 'Add metrics to your bullets (Power BI impact, inspection improvement %)' }, delta: 5, effort: { ar: '30 دقيقة', en: '30 min' } },
+    { action: { ar: 'احصل على شهادة CSWIP 3.1 لفحص اللحام', en: 'Earn the CSWIP 3.1 Welding Inspector' }, delta: 9, effort: { ar: 'أسبوع', en: '1 week' } },
+    { action: { ar: 'احصل على شهادة API 570 لفحص الأنابيب', en: 'Earn API 570 Piping Inspector' }, delta: 10, effort: { ar: '3 أشهر', en: '3 months' } },
+  ] as { action: LS; delta: number; effort: LS }[],
+};
+
+const alhajjiCvReview: CvReview = {
+  headline: { ar: 'بداية قوية في النفط والغاز مع اسمين كبيرين. الخطوة القادمة أن تُسنِد كل إنجاز برقم.', en: 'A strong oil and gas start with two big names. The next step is to back every result with a number.' },
+  strengths: [
+    { ar: 'خبرة ميدانية مبكرة في سايبم وأرامكو: هوك-أب بحري وإكمال ميكانيكي ضمن إجراءات EPC', en: 'Early field experience at Saipem and Saudi Aramco: offshore hook-up and mechanical completion under EPC procedures' },
+    { ar: 'مراقبة التآكل ونزاهة الأنابيب في أرامكو عبر مواقع مراقبة التآكل (CMLs)', en: 'Pipeline integrity and corrosion monitoring at Aramco using Corrosion Monitoring Locations (CMLs)' },
+    { ar: 'بناء لوحات Power BI لتقارير الفحص الداخلي، مهارة بيانات نادرة بين المهندسين الميكانيكيين', en: 'Built Power BI dashboards for in-line inspection reports, a data skill rare among mechanical engineers' },
+    { ar: 'معتمد للعمل البحري (BOSIET وH2S) وعضو في هيئة المهندسين السعوديين', en: 'Offshore certified (BOSIET and H2S) and a registered Saudi Council of Engineers member' },
+  ],
+  issues: [
+    { id: 'summary', kind: 'summary', text: { ar: 'ابدأ الملخص بصفة «مهندس ميكانيكي · EPC وأنابيب» وأبرز إنجازك الأبرز، لا بهدف عام.', en: 'Lead the summary as a Mechanical Engineer (EPC and Pipeline) with your headline result, not a generic objective.' }, severity: 'high' },
+    { id: 'impact', kind: 'bullet', text: { ar: 'أغلب النقاط تصف المهام لا النتائج. أضف رقمًا لكل نقطة (أثر اللوحات، نسبة تحسين تصميم الكشط).', en: 'Most bullets describe duties, not results. Add a number to each (dashboard impact, scraping-design improvement %).' }, severity: 'high' },
+    { id: 'skills', kind: 'format', text: { ar: 'اجمع المهارات في مجموعات واضحة: سلامة الأصول، EPC والإكمال الميكانيكي، أدوات البيانات.', en: 'Group skills into clear domains: asset integrity, EPC and mechanical completion, data tools.' }, severity: 'med' },
+    { id: 'length', kind: 'length', text: { ar: 'كخريج جديد، اجعلها صفحة واحدة ووسّع عمق عملك في سايبم وأرامكو.', en: 'As a fresh graduate, keep it to one page and expand the depth of your Saipem and Aramco work.' }, severity: 'low' },
+  ],
+};
+
+const alhajjiScoreFactors: ScoreFactor[] = [
+  { label: { ar: 'التعليم', en: 'Education' }, detail: { ar: 'بكالوريوس هندسة ميكانيكية من الكلية الصناعية بالجبيل (2025)', en: 'BSc Mechanical Engineering, Jubail Industrial College (2025)' }, strength: 'good' },
+  { label: { ar: 'الخبرة', en: 'Experience' }, detail: { ar: 'مهندس في سايبم مع تدريب سابق في أرامكو، بداية مبكرة قوية', en: 'Engineer at Saipem with a prior Aramco internship, a strong early start' }, strength: 'good' },
+  { label: { ar: 'المهارات والأدوات', en: 'Skills and tools' }, detail: { ar: 'سلامة الأنابيب وEPC مع Power BI، مزيج نادر يطابق أدوار الطاقة', en: 'Pipeline integrity and EPC with Power BI, a rare mix that matches energy roles' }, strength: 'strong' },
+];
+
+const alhajjiLevelGaps: Record<Level, LevelGap> = {
+  entry: {},
+  mid: { experience: { ar: 'سنة إلى سنتين إضافيتين بامتلاك نطاق ميداني أو حزمة EPC كاملة', en: '1 to 2 more years owning a field scope or an EPC package end to end' } },
+  senior: {
+    experience: { ar: '5+ سنوات مع مسؤولية أوسع', en: '5 plus years with broader ownership' },
+    other: [{ ar: 'قدت تشغيل أو فحص حزمة كبرى', en: 'Led the commissioning or inspection of a major package' }],
+  },
+  director: {
+    experience: { ar: '10+ سنوات مع خبرة قيادية', en: '10 plus years with leadership experience' },
+    other: [
+      { ar: 'مسؤولية عن الميزانية أو الأرباح والخسائر', en: 'Budget or P&L ownership' },
+      { ar: 'بنيت أو قدت فريقًا', en: 'Built or led a team' },
+    ],
+  },
+};
+
+const alhajjiTracker: typeof tracker = {
+  stats: { sent: 0, replied: 0, pending: 0, followup: 0 },
+  replyRate: 0,
+  weekly: [
+    { label: { ar: 'الأحد', en: 'Sun' }, value: 0 },
+    { label: { ar: 'الإثنين', en: 'Mon' }, value: 0 },
+    { label: { ar: 'الثلاثاء', en: 'Tue' }, value: 0 },
+    { label: { ar: 'الأربعاء', en: 'Wed' }, value: 0 },
+    { label: { ar: 'الخميس', en: 'Thu' }, value: 0 },
+    { label: { ar: 'الجمعة', en: 'Fri' }, value: 0 },
+    { label: { ar: 'السبت', en: 'Sat' }, value: 0 },
+  ],
+  activity: [],
+};
+
+const alhajjiTemplates: Template[] = [
+  { id: 'h1', title: { ar: 'تعريف مباشر', en: 'Direct Introduction' }, preview: {
+    ar: 'السلام عليكم، أنا علي الحجي، مهندس ميكانيكي وخريج جديد بخبرة في الهوك-أب البحري لدى سايبم وسلامة الأنابيب في أرامكو. يهمّني العمل في أدوار هندسة المشاريع والأنابيب لدى {الشركة}، وسأكون ممتنًا لأي توجيه حول الفرص المتاحة. أرفقت سيرتي الذاتية للاطلاع.',
+    en: 'Hi {firstName}, I am Ali Alhajji, a mechanical engineer and recent graduate with offshore hook-up experience at Saipem and pipeline integrity experience at Saudi Aramco. I am very interested in project and pipeline engineering roles at {company}, and would greatly appreciate any guidance on potential opportunities. I have attached my resume for your reference.',
+  }, tone: { ar: 'رسمي', en: 'Formal' } },
+  { id: 'h2', title: { ar: 'ميزة السلامة والبيانات', en: 'Integrity and Data Edge' }, preview: {
+    ar: 'السلام عليكم، أنا علي الحجي، مهندس ميكانيكي يجمع بين سلامة الأنابيب ومراقبة التآكل وبناء لوحات Power BI للفحص. يهمّني العمل في أدوار سلامة الأصول لدى {الشركة}، وأقدّر أي توجيه حول الفرص.',
+    en: 'Hi {firstName}, I am Ali Alhajji, a mechanical engineer who pairs pipeline integrity and corrosion monitoring with building Power BI inspection dashboards. I am interested in asset integrity roles at {company}, and would value any guidance on opportunities.',
+  }, tone: { ar: 'مباشر', en: 'Direct' } },
+  { id: 'h3', title: { ar: 'طلب تعريف', en: 'Referral Ask' }, preview: {
+    ar: 'السلام عليكم، أنا علي الحجي، مهندس ميكانيكي في سايبم لمشاريع EPC البحرية. أبحث عن أدوار في الطاقة لدى {الشركة}، وسأكون ممتنًا لو دللتني على الشخص المناسب أو أي فرص متاحة.',
+    en: 'Hi {firstName}, I am Ali Alhajji, a mechanical engineer at Saipem working on offshore EPC projects. I am exploring energy roles at {company}, and would be grateful if you could point me to the right person or any openings.',
+  }, tone: { ar: 'ودّي', en: 'Warm' } },
+  { id: 'h4', title: { ar: 'مختصرة', en: 'Short' }, preview: {
+    ar: 'السلام عليكم، أنا علي الحجي، مهندس ميكانيكي بخبرة في EPC وسلامة الأنابيب لدى سايبم وأرامكو. سأقدّر أي توجيه حول فرص الطاقة لدى {الشركة}.',
+    en: 'Hi {firstName}, I am Ali Alhajji, a mechanical engineer with EPC and pipeline integrity experience at Saipem and Aramco. I would appreciate any guidance on energy opportunities at {company}.',
+  }, tone: { ar: 'مختصر', en: 'Tight' } },
+];
+
+const alhajjiPaths: CareerPath[] = [
+  {
+    id: 'offshore-epc',
+    name: { ar: 'الهندسة البحرية ومشاريع EPC', en: 'Offshore and EPC Engineering' },
+    targets: { ar: 'سايبم · ماكديرموت · أرامكو · نيوم', en: 'Saipem · McDermott · Aramco · NEOM' },
+    roles: { ar: 'مهندس هوك-أب ← مهندس مشروع ← مدير حزمة', en: 'Hook-Up Engineer → Project Engineer → Package Manager' },
+    accent: 'brand',
+    icon: 'energy',
+    gradFields: ['energy', 'tech'],
+    months: 14,
+    ...withScore({ education: 58, experience: 62, skills: 74, impact: 68, trajectory: 24, employer: 'Saipem', university: 'Jubail Industrial College' }),
+    primary: true,
+    trail: { ar: 'CSWIP 3.1 → API 1169 → بريمافيرا P6 → PMP', en: 'CSWIP 3.1 → API 1169 → Primavera P6 → PMP' },
+    certs: [
+      { name: { ar: 'CSWIP 3.1 لفحص اللحام', en: 'CSWIP 3.1 Welding Inspector' }, desc: { ar: 'شهادة TWI لفحص اللحام، المعيار الميداني في مواقع EPC والبناء. تجعل خبرتك في الإكمال الميكانيكي معترفًا بها رسميًا.', en: 'The TWI welding inspection standard, the field credential on EPC and construction sites. It makes your mechanical completion experience formally recognized.' }, gain: { ar: 'معيار فحص اللحام الميداني', en: 'The field standard for weld inspection' }, opens: [{ ar: 'مفتش جودة', en: 'QA/QC Inspector' }, { ar: 'مهندس إكمال ميكانيكي', en: 'Mechanical Completion Engineer' }], scoreAdd: 9, official: 'https://www.cswip.com', status: 'current', cost: { ar: '≈ 7,500 ر.س', en: '≈ 7,500 SAR' }, duration: { ar: '5 إلى 6 أيام', en: '5 to 6 days' }, why: { ar: 'أسرع شهادة ميدانية ترسّخ صفتك على مواقع EPC. ابدأ بها.', en: 'The fastest field credential that establishes you on EPC sites. Start here.' } },
+      { name: { ar: 'API 1169 لفحص إنشاء الأنابيب', en: 'API 1169 Pipeline Construction Inspector' }, desc: { ar: 'شهادة API لفحص إنشاء خطوط الأنابيب، تربط خبرتك في الأنابيب بأدوار التفتيش على مشاريع المد.', en: 'The API pipeline construction inspection credential, linking your pipeline background to inspection roles on construction projects.' }, gain: { ar: 'فحص مشاريع مد الأنابيب', en: 'Inspect pipeline construction projects' }, scoreAdd: 8, official: 'https://www.api.org/products-and-services/individual-certification-programs/certifications/api1169', status: 'future', cost: { ar: '≈ 2,175 ر.س', en: '≈ 2,175 SAR' }, duration: { ar: 'اختبار واحد · 1 إلى 3 أشهر', en: 'one exam · 1 to 3 months' } },
+      { name: { ar: 'بريمافيرا P6', en: 'Primavera P6' }, desc: { ar: 'أداة جدولة المشاريع المعتمدة في EPC. تتيح لك تخطيط وتتبع جداول المشاريع الكبرى، مهارة يطلبها كل مقاول EPC.', en: 'The project scheduling tool of record in EPC. It lets you plan and track major project schedules, a skill every EPC contractor wants.' }, gain: { ar: 'جدولة مشاريع EPC', en: 'Schedule EPC projects' }, scoreAdd: 8, official: 'https://education.oracle.com/oracle-primavera-p6-enterprise-project-portfolio-management-professional/pexam_1Z0-1129', status: 'future', cost: { ar: '≈ 920 ر.س + الدورة', en: '≈ 920 SAR + course' }, duration: { ar: '3 إلى 5 أيام', en: '3 to 5 days' } },
+      { name: { ar: 'PMP', en: 'PMP' }, desc: { ar: 'شهادة إدارة المشاريع من PMI، المعيار العالمي للانتقال من مهندس ميداني إلى قيادة المشاريع.', en: 'The PMI project management standard, the global benchmark for moving from a field engineer to leading projects.' }, gain: { ar: 'يؤهّلك لقيادة المشاريع', en: 'Qualifies you to lead projects' }, opens: [{ ar: 'مهندس مشروع', en: 'Project Engineer' }, { ar: 'مدير حزمة', en: 'Package Manager' }], scoreAdd: 9, official: 'https://www.pmi.org/certifications/project-management-pmp', status: 'future', cost: { ar: '≈ 2,500 ر.س', en: '≈ 2,500 SAR' }, duration: { ar: '4 أشهر', en: '4 months' }, hadaf: true, hadafNote: { ar: 'يدعمها صندوق هدف', en: 'Hadaf supported' } },
+    ],
+    targetCompanies: ['Saipem', 'McDermott', 'Saudi Aramco', 'NEOM', 'Petrofac', 'Worley', 'Larsen & Toubro'],
+  },
+  {
+    id: 'pipeline-integrity',
+    name: { ar: 'سلامة الأنابيب والأصول', en: 'Pipeline and Asset Integrity' },
+    targets: { ar: 'أرامكو · سابك · معادن · مشغّلو الأنابيب', en: 'Aramco · SABIC · Maaden · pipeline operators' },
+    roles: { ar: 'مهندس سلامة ← مهندس سلامة أول ← مدير سلامة أصول', en: 'Integrity Engineer → Senior Integrity Engineer → Asset Integrity Manager' },
+    accent: 'sky',
+    icon: 'energy',
+    gradFields: ['energy', 'tech'],
+    months: 14,
+    ...withScore({ education: 58, experience: 60, skills: 72, impact: 70, trajectory: 24, employer: 'Saudi Aramco', university: 'Jubail Industrial College' }),
+    trail: { ar: 'API 570 → AMPP CIP → API 653 → PL-300', en: 'API 570 → AMPP CIP → API 653 → PL-300' },
+    certs: [
+      { name: { ar: 'API 570 لفحص الأنابيب', en: 'API 570 Piping Inspector' }, desc: { ar: 'الشهادة الأساسية لفحص الأنابيب، تُوثّق عملك في مواقع مراقبة التآكل (CMLs) في أرامكو وتفتح أدوار سلامة الأصول.', en: 'The core piping inspection credential. It formalizes your Aramco CML work and opens asset integrity roles.' }, gain: { ar: 'معيار فحص الأنابيب', en: 'The standard for piping inspection' }, opens: [{ ar: 'مفتش أنابيب', en: 'Piping Inspector' }, { ar: 'مهندس سلامة', en: 'Integrity Engineer' }], scoreAdd: 10, official: 'https://www.api.org/products-and-services/individual-certification-programs/certifications/api570', status: 'current', cost: { ar: '≈ 4,220 ر.س', en: '≈ 4,220 SAR' }, duration: { ar: 'يوم اختبار · 2 إلى 4 أشهر', en: 'exam day · 2 to 4 months' }, why: { ar: 'أهم شهادة تحوّل خبرتك في أرامكو إلى مؤهّل معترف به. ابدأ بها.', en: 'The credential that turns your Aramco experience into a recognized qualification. Start here.' } },
+      { name: { ar: 'AMPP CIP لفحص الطلاء', en: 'AMPP Coating Inspector (CIP) Level 1' }, desc: { ar: 'شهادة AMPP (ناس سابقًا) لفحص الطلاء ومكافحة التآكل، تبني مباشرة على عملك في مراقبة التآكل.', en: 'The AMPP (formerly NACE) coating and corrosion inspection credential, building directly on your corrosion monitoring work.' }, gain: { ar: 'خبرة معتمدة في مكافحة التآكل', en: 'Certified corrosion expertise' }, scoreAdd: 9, official: 'https://www.ampp.org/education/education-resources/courses-by-program/coating-inspector-program/cip-1', status: 'future', cost: { ar: '≈ 10,600 إلى 11,600 ر.س', en: '≈ 10,600 to 11,600 SAR' }, duration: { ar: '5 إلى 6 أيام', en: '5 to 6 days' } },
+      { name: { ar: 'API 653 لفحص الخزانات', en: 'API 653 Tank Inspector' }, desc: { ar: 'شهادة API لفحص خزانات التخزين فوق الأرضية، توسّع نطاق سلامتك من الأنابيب إلى الخزانات.', en: 'The API aboveground storage tank inspection credential, broadening your integrity scope from piping to tanks.' }, gain: { ar: 'توسيع نطاق سلامة الأصول', en: 'Broaden your asset integrity scope' }, scoreAdd: 8, official: 'https://www.api.org/products-and-services/individual-certification-programs/certifications/api653', status: 'future', cost: { ar: '≈ 4,220 ر.س', en: '≈ 4,220 SAR' }, duration: { ar: 'يوم اختبار · 2 إلى 4 أشهر', en: 'exam day · 2 to 4 months' } },
+      { name: { ar: 'Microsoft PL-300', en: 'Microsoft PL-300' }, desc: { ar: 'شهادة محلل بيانات Power BI من مايكروسوفت، تُوثّق مهارتك الموجودة في بناء لوحات الفحص وتميّزك في أدوار سلامة الأصول.', en: 'The Microsoft Power BI Data Analyst certification. It formalizes the dashboard skill you already have and sets you apart in asset integrity roles.' }, gain: { ar: 'توثيق مهارتك في Power BI', en: 'Certifies your Power BI skill' }, opens: [{ ar: 'محلل بيانات سلامة', en: 'Integrity Data Analyst' }], scoreAdd: 7, official: 'https://learn.microsoft.com/credentials/certifications/data-analyst-associate/', status: 'future', cost: { ar: '≈ 620 ر.س للاختبار', en: '≈ 620 SAR exam' }, duration: { ar: '6 إلى 8 أسابيع', en: '6 to 8 weeks' }, hadaf: true, hadafNote: { ar: 'يدعمها صندوق هدف', en: 'Hadaf supported' } },
+    ],
+    targetCompanies: ['Saudi Aramco', 'SABIC', 'Maaden', 'Baker Hughes', 'SLB', 'Sadara'],
+  },
+  {
+    id: 'mechanical-reliability',
+    name: { ar: 'الهندسة الميكانيكية والموثوقية', en: 'Mechanical and Reliability Engineering' },
+    targets: { ar: 'أرامكو · سابك · سدارة · معادن', en: 'Aramco · SABIC · Sadara · Maaden' },
+    roles: { ar: 'مهندس ميكانيكي ← مهندس موثوقية ← مدير صيانة', en: 'Mechanical Engineer → Reliability Engineer → Maintenance Manager' },
+    accent: 'violet',
+    icon: 'energy',
+    gradFields: ['energy', 'tech'],
+    months: 12,
+    ...withScore({ education: 58, experience: 56, skills: 68, impact: 64, trajectory: 24, employer: 'Saipem', university: 'Jubail Industrial College' }),
+    trail: { ar: 'CMRP → API 510 → ستة سيجما → PMP', en: 'CMRP → API 510 → Six Sigma → PMP' },
+    certs: [
+      { name: { ar: 'CMRP للصيانة والموثوقية', en: 'CMRP (Maintenance and Reliability)' }, desc: { ar: 'شهادة SMRP المعتمدة للصيانة والموثوقية، المعيار للانتقال من الهندسة الميدانية إلى هندسة الموثوقية.', en: 'The ANSI-accredited SMRP maintenance and reliability credential, the standard for moving from field engineering into reliability.' }, gain: { ar: 'معيار هندسة الموثوقية', en: 'The reliability engineering standard' }, opens: [{ ar: 'مهندس موثوقية', en: 'Reliability Engineer' }], scoreAdd: 9, official: 'https://smrp.org/Certification', status: 'current', cost: { ar: '≈ 1,763 ر.س', en: '≈ 1,763 SAR' }, duration: { ar: 'دراسة ذاتية · اختبار', en: 'self-study · exam' }, why: { ar: 'أعلى عائد مقابل تكلفتها لتثبيت مسار الموثوقية. ابدأ بها.', en: 'The best value to lock in a reliability track. Start here.' } },
+      { name: { ar: 'API 510 لفحص أوعية الضغط', en: 'API 510 Pressure Vessel Inspector' }, desc: { ar: 'شهادة API لفحص أوعية الضغط، تضيف عمقًا تقنيًا مطلوبًا في مصافي وعمليات الطاقة.', en: 'The API pressure vessel inspection credential, adding the technical depth refineries and energy operations want.' }, gain: { ar: 'عمق تقني في سلامة المعدات', en: 'Technical depth in equipment integrity' }, scoreAdd: 9, official: 'https://www.api.org/products-and-services/individual-certification-programs/certifications/api510', status: 'future', cost: { ar: '≈ 4,220 ر.س', en: '≈ 4,220 SAR' }, duration: { ar: 'يوم اختبار · 2 إلى 4 أشهر', en: 'exam day · 2 to 4 months' } },
+      { name: { ar: 'ستة سيجما (الحزام الأخضر)', en: 'Lean Six Sigma Green Belt' }, desc: { ar: 'الحزام الأخضر لتحسين العمليات وتقليل الهدر، أداة أساسية في الموثوقية والصيانة.', en: 'The Green Belt for process improvement and waste reduction, a core toolkit in reliability and maintenance.' }, gain: { ar: 'تحسين العمليات', en: 'Process improvement' }, scoreAdd: 7, official: 'https://asq.org/cert/six-sigma-green-belt', status: 'future', cost: { ar: '≈ 1,400 ر.س', en: '≈ 1,400 SAR' }, duration: { ar: 'شهران', en: '2 months' } },
+      { name: { ar: 'PMP', en: 'PMP' }, desc: { ar: 'شهادة PMP لقيادة مشاريع الصيانة والمشاريع الرأسمالية نحو دور إدارة الصيانة.', en: 'PMP for leading maintenance and capital projects toward a maintenance management role.' }, gain: { ar: 'الانتقال إلى إدارة الصيانة', en: 'Step into maintenance management' }, opens: [{ ar: 'مدير صيانة', en: 'Maintenance Manager' }], scoreAdd: 8, official: 'https://www.pmi.org/certifications/project-management-pmp', status: 'future', cost: { ar: '≈ 2,500 ر.س', en: '≈ 2,500 SAR' }, duration: { ar: '4 أشهر', en: '4 months' }, hadaf: true, hadafNote: { ar: 'يدعمها صندوق هدف', en: 'Hadaf supported' } },
+    ],
+    targetCompanies: ['Saudi Aramco', 'SABIC', 'Sadara', 'Maaden', 'Tasnee', 'Baker Hughes'],
+  },
+  {
+    id: 'project-engineering',
+    name: { ar: 'هندسة وإدارة المشاريع', en: 'Project Engineering and Management' },
+    targets: { ar: 'نيوم · البحر الأحمر · سايبم · بكتل', en: 'NEOM · Red Sea Global · Saipem · Bechtel' },
+    roles: { ar: 'مهندس مشروع ← مدير مشروع ← مدير محفظة', en: 'Project Engineer → Project Manager → Portfolio Manager' },
+    accent: 'amber',
+    icon: 'energy',
+    gradFields: ['energy', 'consulting'],
+    months: 16,
+    ...withScore({ education: 58, experience: 58, skills: 66, impact: 64, trajectory: 24, employer: 'Saipem', university: 'Jubail Industrial College' }),
+    trail: { ar: 'بريمافيرا P6 → PMP → ستة سيجما → PgMP', en: 'Primavera P6 → PMP → Six Sigma → PgMP' },
+    certs: [
+      { name: { ar: 'بريمافيرا P6', en: 'Primavera P6' }, desc: { ar: 'أداة الجدولة المعتمدة في EPC والمشاريع الكبرى. أساس دور مهندس المشاريع.', en: 'The scheduling tool of record in EPC and megaprojects. The foundation of a project engineering role.' }, gain: { ar: 'تخطيط وجدولة المشاريع', en: 'Project planning and scheduling' }, opens: [{ ar: 'مهندس تخطيط', en: 'Planning Engineer' }], scoreAdd: 8, official: 'https://education.oracle.com/oracle-primavera-p6-enterprise-project-portfolio-management-professional/pexam_1Z0-1129', status: 'current', cost: { ar: '≈ 920 ر.س + الدورة', en: '≈ 920 SAR + course' }, duration: { ar: '3 إلى 5 أيام', en: '3 to 5 days' }, why: { ar: 'أسرع مهارة تنقلك إلى دور مهندس مشاريع. ابدأ بها.', en: 'The fastest skill that moves you into a project engineer role. Start here.' } },
+      { name: { ar: 'PMP', en: 'PMP' }, desc: { ar: 'المعيار العالمي لإدارة المشاريع، بوابتك من مهندس إلى مدير مشروع في الجهات الكبرى.', en: 'The global project management standard, your gateway from engineer to project manager at major employers.' }, gain: { ar: 'يفتح أدوار إدارة المشاريع', en: 'Opens project management roles' }, opens: [{ ar: 'مدير مشروع', en: 'Project Manager' }], scoreAdd: 10, official: 'https://www.pmi.org/certifications/project-management-pmp', status: 'future', cost: { ar: '≈ 2,500 ر.س', en: '≈ 2,500 SAR' }, duration: { ar: '4 أشهر', en: '4 months' }, hadaf: true, hadafNote: { ar: 'يدعمها صندوق هدف', en: 'Hadaf supported' } },
+      { name: { ar: 'ستة سيجما (الحزام الأخضر)', en: 'Lean Six Sigma Green Belt' }, desc: { ar: 'الحزام الأخضر لتحسين العمليات وإدارة الجودة في المشاريع.', en: 'The Green Belt for process improvement and project quality.' }, gain: { ar: 'تحسين العمليات والجودة', en: 'Process and quality improvement' }, scoreAdd: 7, official: 'https://asq.org/cert/six-sigma-green-belt', status: 'future', cost: { ar: '≈ 1,400 ر.س', en: '≈ 1,400 SAR' }, duration: { ar: 'شهران', en: '2 months' } },
+      { name: { ar: 'PgMP', en: 'PgMP' }, desc: { ar: 'محترف إدارة البرامج من PMI، المستوى الأعلى من PMP لقيادة محافظ المشاريع.', en: 'PMI Program Management Professional, above PMP, for leading project portfolios.' }, gain: { ar: 'قيادة محافظ المشاريع', en: 'Lead project portfolios' }, opens: [{ ar: 'مدير برامج', en: 'Program Manager' }], scoreAdd: 8, official: 'https://www.pmi.org/certifications/program-management-pgmp', status: 'future', cost: { ar: '≈ 3,000 ر.س', en: '≈ 3,000 SAR' }, duration: { ar: '4 إلى 8 أشهر', en: '4 to 8 months' }, hadaf: true, hadafNote: { ar: 'يدعمها صندوق هدف', en: 'Hadaf supported' } },
+    ],
+    targetCompanies: ['NEOM', 'Red Sea Global', 'Saipem', 'Saudi Aramco', 'Worley', 'Bechtel'],
+  },
+  {
+    id: 'hydrogen-energy',
+    name: { ar: 'تحوّل الطاقة والهيدروجين', en: 'Energy Transition and Hydrogen' },
+    targets: { ar: 'نيوم للهيدروجين الأخضر · أكوا باور · أرامكو', en: 'NEOM Green Hydrogen · ACWA Power · Aramco' },
+    roles: { ar: 'مهندس طاقة ← مهندس مشاريع متجددة ← قائد تطوير', en: 'Energy Engineer → Renewables Project Engineer → Development Lead' },
+    accent: 'rose',
+    icon: 'energy',
+    gradFields: ['energy', 'tech'],
+    months: 16,
+    ...withScore({ education: 58, experience: 50, skills: 64, impact: 68, trajectory: 24, employer: 'Saipem', university: 'Jubail Industrial College' }),
+    trail: { ar: 'REP → تصميم الطاقة الشمسية → CEM → PMP', en: 'REP → Solar PV Design → CEM → PMP' },
+    certs: [
+      { name: { ar: 'محترف الطاقة المتجددة REP', en: 'Renewable Energy Professional (REP)' }, desc: { ar: 'شهادة AEE لمحترفي الطاقة المتجددة، تبني على مشروع تخرجك في مولّد الهيدروجين بالتحليل الكهربائي وتربطك بدفع السعودية نحو الهيدروجين الأخضر.', en: 'The AEE renewable energy professional credential. It builds on your hydrogen-electrolysis senior project and connects you to Saudi Arabia’s green hydrogen push.' }, gain: { ar: 'دخول مجال تحول الطاقة', en: 'Enter the energy transition field' }, opens: [{ ar: 'مهندس طاقة متجددة', en: 'Renewable Energy Engineer' }], scoreAdd: 8, official: 'https://www.aeecenter.org/certified-renewable-energy-professional/becoming-a-rep/', status: 'current', cost: { ar: '≈ 1,500 ر.س', en: '≈ 1,500 SAR' }, duration: { ar: '3 إلى 4 أيام', en: '3 to 4 days' }, why: { ar: 'أوضح خطوة تترجم مشروع تخرجك إلى مؤهّل في تحول الطاقة. ابدأ بها.', en: 'The clearest step that turns your senior project into an energy-transition credential. Start here.' } },
+      { name: { ar: 'تصميم الطاقة الشمسية', en: 'Solar PV Design' }, desc: { ar: 'شهادة تصميم الأنظمة الكهروضوئية من أكاديمية المياه، معترف بها عبر امتحان كاكير، تضيف مهارة متجددة عملية.', en: 'The Saudi Water Academy solar PV design certification, recognized via the K.A.CARE exam, adding a practical renewables skill.' }, gain: { ar: 'تصميم أنظمة الطاقة الشمسية', en: 'Design solar PV systems' }, scoreAdd: 7, official: 'https://www.watercademy.com/en/shop/solar-pv-design-899', status: 'future', cost: { ar: '≈ 2,000 إلى 2,400 ر.س', en: '≈ 2,000 to 2,400 SAR' }, duration: { ar: 'دورة قصيرة', en: 'short course' } },
+      { name: { ar: 'مدير طاقة معتمد CEM', en: 'Certified Energy Manager (CEM)' }, desc: { ar: 'شهادة AEE لإدارة الطاقة وكفاءتها، مطلوبة في مشاريع الاستدامة والكفاءة في الجهات الكبرى.', en: 'The AEE energy management and efficiency credential, valued in sustainability and efficiency projects at major employers.' }, gain: { ar: 'خبرة معتمدة في كفاءة الطاقة', en: 'Certified energy-efficiency expertise' }, scoreAdd: 8, official: 'https://www.aeecenter.org/certified-energy-manager/becoming-a-cem/', status: 'future', cost: { ar: '≈ 1,900 ر.س', en: '≈ 1,900 SAR' }, duration: { ar: 'تدريب 5 أيام + اختبار', en: '5-day training + exam' } },
+      { name: { ar: 'PMP', en: 'PMP' }, desc: { ar: 'شهادة PMP لقيادة مشاريع الطاقة المتجددة والهيدروجين نحو أدوار تطوير المشاريع.', en: 'PMP for leading renewables and hydrogen projects toward development roles.' }, gain: { ar: 'قيادة مشاريع المتجددة', en: 'Lead renewables projects' }, scoreAdd: 8, official: 'https://www.pmi.org/certifications/project-management-pmp', status: 'future', cost: { ar: '≈ 2,500 ر.س', en: '≈ 2,500 SAR' }, duration: { ar: '4 أشهر', en: '4 months' }, hadaf: true, hadafNote: { ar: 'يدعمها صندوق هدف', en: 'Hadaf supported' } },
+    ],
+    targetCompanies: ['NEOM', 'ACWA Power', 'Saudi Aramco', 'Air Products', 'SABIC'],
+  },
+];
+
+export const alhajjiPlan: CustomerPlan = {
+  slug: 'ali-alhajji',
+  tier: 'pro',
+  sectors: ['energy_petrochem', 'manufacturing_mining', 'gigaprojects_realestate'],
+  profile: alhajjiProfile,
+  cvScore: alhajjiCvScore,
+  cvReview: alhajjiCvReview,
+  scoreFactors: alhajjiScoreFactors,
+  levelGaps: alhajjiLevelGaps,
+  journey: { percent: 6, certsDone: 0, certsTotal: 4, messagesSent: 0, replies: 0 },
+  connections: [],
+  hrContacts: [],
+  paths: alhajjiPaths,
+  primaryPath: alhajjiPaths[0],
+  templates: alhajjiTemplates,
+  tracker: alhajjiTracker,
+};
+
 export const plans: Record<string, CustomerPlan> = {
   [aliPlan.slug]: aliPlan,
   [mahdiPlan.slug]: mahdiPlan,
+  [alhajjiPlan.slug]: alhajjiPlan,
 };
 
 export function getPlan(slug: string): CustomerPlan | undefined {
@@ -1103,6 +1315,11 @@ export const companyPortals: { name: LS; url: string; industry: CompanyIndustry;
   { name: { ar: 'الفنار', en: 'Alfanar' }, url: 'https://www.alfanar.com', industry: 'manufacturing', size: 'medium' },
   { name: { ar: 'التصنيع', en: 'Tasnee' }, url: 'https://www.tasnee.com', industry: 'manufacturing', size: 'small' },
   { name: { ar: 'حديد', en: 'Hadeed' }, url: 'https://www.hadeed.com.sa', industry: 'manufacturing', size: 'small' },
+  { name: { ar: 'سايبم', en: 'Saipem' }, url: 'https://www.saipem.com', industry: 'manufacturing', size: 'big' },
+  { name: { ar: 'ماكديرموت', en: 'McDermott' }, url: 'https://www.mcdermott.com', industry: 'manufacturing', size: 'big' },
+  { name: { ar: 'بتروفاك', en: 'Petrofac' }, url: 'https://www.petrofac.com', industry: 'manufacturing', size: 'medium' },
+  { name: { ar: 'ورلي', en: 'Worley' }, url: 'https://www.worley.com', industry: 'manufacturing', size: 'medium' },
+  { name: { ar: 'نسما', en: 'Nesma' }, url: 'https://www.nesma.com', industry: 'manufacturing', size: 'medium' },
   { name: { ar: 'البحري', en: 'Bahri' }, url: 'https://www.bahri.sa', industry: 'logistics', size: 'big' },
   { name: { ar: 'البريد السعودي (سبل)', en: 'Saudi Post (SPL)' }, url: 'https://splonline.com.sa', industry: 'logistics', size: 'big' },
   { name: { ar: 'أرامكس', en: 'Aramex' }, url: 'https://www.aramex.com', industry: 'logistics', size: 'big' },
