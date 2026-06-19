@@ -68,10 +68,12 @@ Every review covers, in full:
   study-while-working options are a separate section and stay Saudi.
 - World class: at least ONE university per major must be in the QS World University Rankings
   top 30 (the OVERALL university ranking, NOT the subject/by-major ranking), flagged top30:true,
-  so every major has a genuine world-class, Pioneers-eligible reach option. The OTHER three are
-  chosen and tiered by their strength IN THE FIELD (the subject/by-major ranking), so a school
-  that is elite in the specific subject (for example Heriot-Watt for petroleum) is a strong pick
-  even when its overall rank is lower.
+  so every major has a genuine world-class, Pioneers-eligible reach option.
+- Tiers go by overall standing and admission difficulty as before, only SLIGHTLY weighting the
+  field (subject) ranking: high = world class and hard to get in, respected = respected and well
+  known, solid = a solid choice, accessible = easier to get in. A school that is strong in the
+  specific subject (for example Heriot-Watt for petroleum) can sit a notch higher than its
+  overall rank alone would place it, but the tiering is mainly overall, not by field.
 - Technical: builds and renders; registered under the right slug with no collision; tier and
   sectors valid; the right number of paths each with a DERIVED score (`withScore`), valid
   icon and gradFields, complete certs with well-formed official links; one primary that
