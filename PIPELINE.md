@@ -63,9 +63,9 @@ After a customer sends their CV, before their link goes out:
 Every review covers, in full:
 - Relevance and anti-lazy: every major, program, cert, company, and path fits THIS person's
   field and pathways; nothing is shown merely because it exists in the shared data.
-- Geographic spread: a major's universities must span varied regions and must NOT concentrate
-  in the US, UK, and Australia. Include Saudi and the Gulf, continental Europe, and Asia where
-  strong programs exist (often cheaper and scholarship friendly for a Saudi student).
+- Full-time universities: the full-time graduate universities MUST be in the US, the UK, or
+  Australia (the destinations Saudi scholarships target). Mix the three across a major. The
+  Saudi part-time, study-while-working options are a separate section and stay Saudi.
 - Technical: builds and renders; registered under the right slug with no collision; tier and
   sectors valid; the right number of paths each with a DERIVED score (`withScore`), valid
   icon and gradFields, complete certs with well-formed official links; one primary that
@@ -77,8 +77,7 @@ Every review covers, in full:
 
 The bar is STRICT. A finding is not a soft note; any one of these fails the gate:
 - Lazy or irrelevant data: an item shown because it exists, not because it fits the person.
-- A major whose universities are all or mostly US, UK, and Australia, with no real spread into
-  Saudi/Gulf, continental Europe, or Asia.
+- A full-time graduate university that is not in the US, the UK, or Australia.
 - A claim, score factor, or number that does not point to a specific line in the CV.
 - Generic, template like content that could describe any candidate in the field.
 - An unverified external fact stated as certain.
