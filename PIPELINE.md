@@ -55,6 +55,16 @@ After a customer sends their CV, before their link goes out:
 - Both must pass to deliver the link. If either fails, fix it and re run until both pass.
 - Run them with the Agent tool (two reviewers), or a Workflow if orchestration is wanted.
 
+The bar is STRICT. A finding is not a soft note; any one of these fails the gate and must
+be fixed before deploy:
+- Any strength, score factor, or number that does not point to a specific line in the CV.
+- Generic, template like content that could describe any candidate in the field. Each
+  path, cert, and claim must be justified for THIS person.
+- Unverified external facts (cert cost, official link, Hadaf eligibility, event date)
+  stated as certain. Flag or verify them.
+- A score that does not follow from the rubric inputs (scoring.ts), or rubric inputs that
+  are not grounded in the CV.
+
 ---
 
 ## 2. Hard rules (never break)
@@ -175,27 +185,31 @@ then renders `<PlanProvider plan={...}><V4 /></PlanProvider>`.
 
 ## 6. The scoring model
 
-There is no single hidden formula; the score is authored per path and per level, then
-the UI shows it.
+The score is DERIVED from a rubric (src/lib/scoring.ts), not hand-picked, so it is
+consistent across customers and explainable.
 
-- Each path has `scoreByLevel: { entry, mid, senior, director }`, each 0 to 100. The
-  headline score on Home is the active path's score at the level the customer selects.
-  The same person is competitive for Entry but not Director, and the gap is experience,
-  so the score moves with the level.
-- `scoreFactors[]` is the human readable breakdown (Education, Experience, Field fit)
-  so the number is explainable, not a black box.
-- `levelGaps[level]` states what blocks the next level up (experience and ownership,
-  the things a certificate cannot fix).
-- Certificates add to the score by seniority via
+- Each path carries `scoreInput`: five CV-grounded inputs (education, experience, skills,
+  impact, trajectory) plus the `employer` and `university` names. `withScore()` turns
+  these into `scoreByLevel: { entry, mid, senior, director }` via `computeScoreByLevel()`.
+- Company names matter: `EMPLOYER_CALIBER` lifts the experience input for a recognized
+  employer, and `UNI_RANK` lifts education for a ranked university (lowercase substring
+  lookup). So "Baker Hughes" or "Cornell" raise the score, and the rationale names them.
+- The model: a quality base `B` (weighted education, experience, skills, impact) is
+  blended per level with the seniority signal `trajectory`. Entry leans on quality and
+  sits high; director leans on trajectory and sits low until years and leadership grow.
+  This is why one strong junior is rightly entry ready and far from director, with no
+  number typed by hand.
+- `scoreNote(input, level, locale)` returns the one line "why" shown under the score
+  (top two drivers plus the level read), so the number is transparent to the customer.
+- `scoreFactors[]` and `levelGaps[level]` still give the human readable breakdown and the
+  blockers to the next level.
+- Certificates add on top by seniority via
   `scaledAdd(baseDelta, level) = max(1, round(baseDelta * LEVEL_DELTA_WEIGHT[level]))`,
-  with weights `entry 1, mid 0.85, senior 0.7, director 0.55`. A credential is most
-  transformative early and matters less as experience takes over. `Cert.scoreAdd` is
-  the base delta.
-- `cvScore.improvements[]` are the level agnostic "cheapest first" raises shown on the
-  CV card (each an `action`, a `delta`, and an `effort`).
+  weights `entry 1, mid 0.85, senior 0.7, director 0.55`. `Cert.scoreAdd` is the base delta.
 
-To recalibrate a customer, set their `scoreByLevel` so a strong profile reads as ready
-for Entry and short on experience for Director.
+To recalibrate a customer, adjust their `scoreInput` (grounded in the CV), not the output
+numbers. The constants in scoring.ts (weights, level coefficients, caliber tables) tune
+the model for everyone at once.
 
 ---
 

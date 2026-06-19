@@ -46,6 +46,7 @@ import { Link, usePathname } from '@/i18n/routing';
 import { usePlan } from '@/components/app/plan-context';
 import { DashboardState, useNetwork, useProgress } from '@/components/app/dashboard-state';
 import { ProgressRing, Counter, Avatar } from '@/components/app/ui';
+import { scoreNote } from '@/lib/scoring';
 import {
   rankConnections,
   planTargets,
@@ -414,6 +415,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
   const paths = plan.paths.slice(0, TIER_PATHS[plan.tier]);
 
   const score = activePath.scoreByLevel[level];
+  const whyScore = scoreNote(activePath.scoreInput, level, locale);
   const upcoming = activePath.certs.filter((c) => !certsDone[c.name.en] && c.status !== 'done');
   // "What raises your score" is derived from the active path's remaining certs.
   const imps = upcoming.slice(0, 3).map((c) => ({ name: c.name, d: scaledAdd(c.scoreAdd, level), effort: c.duration, current: c.status === 'current' }));
@@ -544,6 +546,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
               <Eyebrow>{ui.overview.scoreLabel[locale]}</Eyebrow>
               <h1 className="mt-2 text-balance text-[22px] font-semibold leading-[1.12] tracking-tight text-stone-900 dark:text-stone-50 sm:text-[28px]">{activePath.name[locale]}</h1>
               <p className="mt-1.5 text-sm text-stone-600 dark:text-stone-300">{ui.overview.levelHint[locale]}</p>
+              <p className="mt-1.5 text-[12.5px] leading-snug text-stone-500 dark:text-stone-400">{whyScore}</p>
 
               {/* What's behind your score, condensed to chips (full detail on hover) */}
               <div className="mt-3.5">

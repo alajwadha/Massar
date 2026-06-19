@@ -3,6 +3,8 @@
 // In production this object is generated per customer; contacts are RETRIEVED from
 // the database (never invented). Arabic copy is native; numerals are Western.
 
+import { computeScoreByLevel, type ScoreInput } from './scoring';
+
 export type Loc = 'ar' | 'en';
 export type LS = { ar: string; en: string };
 
@@ -191,7 +193,8 @@ export type CareerPath = {
   icon: 'finance' | 'energy' | 'consulting' | 'government' | 'tech' | 'supply';
   gradFields: ('finance' | 'energy' | 'consulting' | 'government' | 'tech' | 'supply')[]; // relevant graduate majors (Study tab)
   months: number;
-  scoreByLevel: Record<Level, number>; // CV competitiveness 0-100 per seniority
+  scoreByLevel: Record<Level, number>; // CV competitiveness 0-100 per seniority (DERIVED from scoreInput)
+  scoreInput: ScoreInput; // the CV-grounded rubric inputs the score is computed from
   primary?: boolean;
   trail: LS;
   certs: Cert[];
@@ -199,6 +202,12 @@ export type CareerPath = {
   // network into the 5 warm intros shown under the path.
   targetCompanies: string[];
 };
+
+// Build a path's derived score from its rubric inputs (see scoring.ts), keeping
+// the inputs alongside so the UI can explain the number.
+function withScore(input: ScoreInput) {
+  return { scoreInput: input, scoreByLevel: computeScoreByLevel(input) };
+}
 
 const CFA = 'https://www.cfainstitute.org/en/programs/cfa';
 
@@ -212,7 +221,7 @@ export const paths: CareerPath[] = [
     icon: 'finance',
     gradFields: ['energy', 'finance', 'government'],
     months: 16,
-    scoreByLevel: { entry: 96, mid: 80, senior: 58, director: 40 },
+    ...withScore({ education: 86, experience: 64, skills: 82, impact: 75, trajectory: 36, employer: 'Ras Al-Khair', university: 'Cornell University' }),
     primary: true,
     trail: { ar: 'تمويل المناخ → CME-1 → FMVA → CFA L1 → CFA L2', en: 'Climate Finance → CME-1 → FMVA → CFA L1 → CFA L2' },
     certs: [
@@ -233,7 +242,7 @@ export const paths: CareerPath[] = [
     icon: 'energy',
     gradFields: ['energy', 'tech', 'consulting'],
     months: 12,
-    scoreByLevel: { entry: 94, mid: 76, senior: 54, director: 36 },
+    ...withScore({ education: 86, experience: 82, skills: 84, impact: 80, trajectory: 36, employer: 'Ras Al-Khair', university: 'Cornell University' }),
     trail: { ar: 'التناضح العكسي → الطاقة الشمسية → PMP → CEM → Six Sigma', en: 'Reverse Osmosis → Solar PV → PMP → CEM → Six Sigma' },
     certs: [
       { name: { ar: 'التناضح العكسي', en: 'Reverse Osmosis' }, desc: { ar: 'شهادة مهندس متخصص في التناضح العكسي من أكاديمية المياه. تثبت خبرتك التشغيلية في أكبر محطات التحلية, أساس قوي لأدوار الطاقة والمياه.', en: 'Reverse Osmosis Specialist Engineer from the Water Academy. It certifies your operational expertise at the largest desalination plants, a strong base for power and water roles.' }, gain: { ar: 'تثبت خبرتك في أكبر محطات التحلية', en: 'Certifies your large-scale desalination expertise' }, scoreAdd: 7, official: 'https://wa.edu.sa', status: 'done', cost: { ar: 'منجزة', en: 'Completed' }, duration: { ar: 'أنجزتها', en: 'Completed' } },
@@ -253,7 +262,7 @@ export const paths: CareerPath[] = [
     icon: 'consulting',
     gradFields: ['consulting', 'finance', 'tech'],
     months: 12,
-    scoreByLevel: { entry: 84, mid: 64, senior: 44, director: 28 },
+    ...withScore({ education: 86, experience: 60, skills: 72, impact: 70, trajectory: 36, employer: 'Ras Al-Khair', university: 'Cornell University' }),
     trail: { ar: 'مهارات الاستشارات → دراسات الحالة → GMAT → FMVA', en: 'Consulting Skills → Case Prep → GMAT → FMVA' },
     certs: [
       { name: { ar: 'مهارات الاستشارات', en: 'Consulting Skills' }, desc: { ar: 'برنامج مهارات الاستشارات الأساسية من مسرّعة مستشار. يمنحك إطار حلّ المشكلات والتواصل التنفيذي المطلوب في المقابلات.', en: 'Foundational consulting skills from the Mustashar accelerator. It gives you the problem-solving and executive-communication frame interviews demand.' }, gain: { ar: 'أساس حلّ المشكلات والتواصل التنفيذي', en: 'Problem-solving and executive-communication base' }, scoreAdd: 6, official: 'https://mustashar.org', status: 'done', cost: { ar: 'منجزة', en: 'Completed' }, duration: { ar: 'أنجزتها', en: 'Completed' } },
@@ -273,7 +282,7 @@ export const paths: CareerPath[] = [
     icon: 'government',
     gradFields: ['government', 'consulting', 'finance'],
     months: 18,
-    scoreByLevel: { entry: 86, mid: 66, senior: 46, director: 30 },
+    ...withScore({ education: 86, experience: 64, skills: 73, impact: 70, trajectory: 36, employer: 'Ras Al-Khair', university: 'Cornell University' }),
     trail: { ar: 'تمويل المناخ → دبلوم السياسات → PMP → PgMP', en: 'Climate Finance → Policy Diploma → PMP → PgMP' },
     certs: [
       { name: { ar: 'تمويل المناخ', en: 'Climate Finance' }, desc: { ar: 'برنامج تمويل المناخ والاستدامة من كابسارك. يربط نمذجتك لمسار 2060 بأدوات السياسة والتمويل المناخي.', en: 'KAPSARC’s climate finance and sustainability program. It ties your 2060-pathway modeling to policy and climate-finance tools.' }, gain: { ar: 'يربط نمذجتك بالسياسة والتمويل المناخي', en: 'Links your modeling to climate policy and finance' }, scoreAdd: 7, official: 'https://www.kapsarc.org', status: 'done', cost: { ar: 'منجزة', en: 'Completed' }, duration: { ar: 'أنجزتها', en: 'Completed' } },
@@ -293,7 +302,7 @@ export const paths: CareerPath[] = [
     icon: 'tech',
     gradFields: ['tech', 'consulting', 'finance'],
     months: 12,
-    scoreByLevel: { entry: 80, mid: 60, senior: 40, director: 26 },
+    ...withScore({ education: 86, experience: 58, skills: 74, impact: 72, trajectory: 36, employer: 'Ras Al-Khair', university: 'Cornell University' }),
     trail: { ar: 'تحليل البيانات → AWS → Scrum → تحليلات متقدمة', en: 'Data Analyst → AWS → Scrum → Advanced Analytics' },
     certs: [
       { name: { ar: 'تحليل البيانات', en: 'Data Analyst' }, desc: { ar: 'شهادة محلل بيانات من IBM، تغطّي أدوات التحليل والتصوّر واتخاذ القرار بالبيانات. تكمّل خلفيتك في الذكاء الاصطناعي ومشروع نموذجك التنبؤي.', en: 'IBM’s Data Analyst certificate covering analysis, visualization, and data-driven decisions. It complements your AI background and your predictive-model project.' }, gain: { ar: 'تحليل البيانات واتخاذ القرار', en: 'Data analysis and decision-making' }, scoreAdd: 6, official: 'https://www.ibm.com/training/badge/data-analyst', status: 'done', cost: { ar: 'منجزة', en: 'Completed' }, duration: { ar: 'أنجزتها', en: 'Completed' } },
@@ -712,7 +721,7 @@ const mahdiPaths: CareerPath[] = [
     icon: 'supply',
     gradFields: ['supply', 'consulting'],
     months: 14,
-    scoreByLevel: { entry: 85, mid: 68, senior: 46, director: 30 },
+    ...withScore({ education: 60, experience: 74, skills: 82, impact: 85, trajectory: 34, employer: 'Baker Hughes', university: 'Jubail Industrial College' }),
     primary: true,
     trail: { ar: 'CPIM → ستة سيجما → CSCP → PMP', en: 'CPIM → Six Sigma → CSCP → PMP' },
     certs: [
@@ -732,7 +741,7 @@ const mahdiPaths: CareerPath[] = [
     icon: 'supply',
     gradFields: ['supply', 'consulting'],
     months: 14,
-    scoreByLevel: { entry: 80, mid: 62, senior: 42, director: 28 },
+    ...withScore({ education: 60, experience: 66, skills: 74, impact: 76, trajectory: 34, employer: 'Baker Hughes', university: 'Jubail Industrial College' }),
     trail: { ar: 'CIPS L4 → CPIM → ستة سيجما → PMP', en: 'CIPS L4 → CPIM → Six Sigma → PMP' },
     certs: [
       { name: { ar: 'دبلوم CIPS المستوى الرابع', en: 'CIPS Level 4 Diploma' }, desc: { ar: 'دبلوم معهد CIPS هو المرجع العالمي لمحترفي المشتريات والتوريد، وأوضح إشارة لجدّيتك في مسار المشتريات.', en: 'The CIPS Level 4 Diploma is the global benchmark for procurement and supply professionals, the clearest signal you are serious about a procurement career.' }, gain: { ar: 'مرجع مهنة المشتريات', en: 'The benchmark for procurement professionals' }, opens: [{ ar: 'أخصائي مشتريات', en: 'Procurement Specialist' }, { ar: 'مشترٍ', en: 'Buyer' }], scoreAdd: 10, official: 'https://www.cips.org', status: 'current', cost: { ar: '≈ 7,000 ر.س', en: '≈ 7,000 SAR' }, duration: { ar: '6 إلى 9 أشهر', en: '6 to 9 months' }, hadaf: true },
@@ -751,7 +760,7 @@ const mahdiPaths: CareerPath[] = [
     icon: 'supply',
     gradFields: ['supply', 'consulting'],
     months: 12,
-    scoreByLevel: { entry: 83, mid: 65, senior: 44, director: 28 },
+    ...withScore({ education: 60, experience: 72, skills: 76, impact: 82, trajectory: 34, employer: 'Baker Hughes', university: 'Jubail Industrial College' }),
     trail: { ar: 'ستة سيجما → CPIM → الحزام الأسود → PMP', en: 'Six Sigma → CPIM → Black Belt → PMP' },
     certs: [
       { name: { ar: 'ستة سيجما (الحزام الأخضر)', en: 'Lean Six Sigma Green Belt' }, desc: { ar: 'الحزام الأخضر هو الأداة الأساسية لتقليل الهدر ورفع الاستغلال، وهي النتائج نفسها التي حقّقتها في بيكر هيوز.', en: 'The Green Belt is the core toolkit for reducing waste and lifting utilization, the same results you delivered at Baker Hughes.' }, gain: { ar: 'يوثّق أدواتك في تحسين العمليات', en: 'Certifies your improvement toolkit' }, opens: [{ ar: 'محلل عمليات', en: 'Operations Analyst' }, { ar: 'تحسين مستمر', en: 'Continuous Improvement' }], scoreAdd: 9, official: 'https://asq.org/cert/six-sigma-green-belt', status: 'current', cost: { ar: '≈ 2,500 ر.س', en: '≈ 2,500 SAR' }, duration: { ar: 'شهران', en: '2 months' }, hadaf: true },
@@ -770,7 +779,7 @@ const mahdiPaths: CareerPath[] = [
     icon: 'supply',
     gradFields: ['supply', 'consulting'],
     months: 12,
-    scoreByLevel: { entry: 78, mid: 60, senior: 40, director: 26 },
+    ...withScore({ education: 60, experience: 62, skills: 72, impact: 74, trajectory: 34, employer: 'Baker Hughes', university: 'Jubail Industrial College' }),
     trail: { ar: 'CLTD → CPIM → ستة سيجما → PMP', en: 'CLTD → CPIM → Six Sigma → PMP' },
     certs: [
       { name: { ar: 'CLTD', en: 'CLTD' }, desc: { ar: 'شهادة ASCM في اللوجستيات والنقل والتوزيع، المعيار العالمي الذي يُعرّفك كأخصائي لوجستيات.', en: 'The ASCM CLTD is the global standard for logistics, transportation and distribution, the credential that marks a logistics specialist.' }, gain: { ar: 'معيار مهنة اللوجستيات', en: 'The standard for the logistics field' }, opens: [{ ar: 'منسق لوجستيات', en: 'Logistics Coordinator' }, { ar: 'مخطط توزيع', en: 'Distribution Planner' }], scoreAdd: 10, official: 'https://www.ascm.org/learning-development/certifications-credentials/cltd/', status: 'current', cost: { ar: '≈ 6,500 ر.س', en: '≈ 6,500 SAR' }, duration: { ar: '3 إلى 5 أشهر', en: '3 to 5 months' }, hadaf: true },
@@ -789,7 +798,7 @@ const mahdiPaths: CareerPath[] = [
     icon: 'tech',
     gradFields: ['tech', 'supply'],
     months: 12,
-    scoreByLevel: { entry: 76, mid: 58, senior: 38, director: 24 },
+    ...withScore({ education: 60, experience: 58, skills: 74, impact: 72, trajectory: 34, employer: 'Baker Hughes', university: 'Jubail Industrial College' }),
     trail: { ar: 'PL-300 → SQL → تحليلات جوجل → ستة سيجما', en: 'PL-300 → SQL → Google Data → Six Sigma' },
     certs: [
       { name: { ar: 'Microsoft PL-300', en: 'Microsoft PL-300' }, desc: { ar: 'شهادة محلل بيانات Power BI من مايكروسوفت، تُوثّق مهارتك في Power BI الموجودة في سيرتك وتفتح أدوار التحليل.', en: 'The Microsoft Power BI Data Analyst certification validates the Power BI skill already on your CV and opens analyst roles.' }, gain: { ar: 'توثيق مهارتك في Power BI', en: 'Certifies your Power BI skill' }, opens: [{ ar: 'محلل بيانات', en: 'Data Analyst' }, { ar: 'محلل ذكاء أعمال', en: 'BI Analyst' }], scoreAdd: 9, official: 'https://learn.microsoft.com/credentials/certifications/power-bi-data-analyst-associate/', status: 'current', cost: { ar: '≈ 600 ر.س للاختبار', en: '≈ 600 SAR exam' }, duration: { ar: '6 إلى 8 أسابيع', en: '6 to 8 weeks' } },
