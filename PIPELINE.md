@@ -81,8 +81,12 @@ Every review covers, in full:
 - Grounding: every strength, score factor, and number traces to a CV line; nothing invented;
   certs are appropriate not padding; Arabic messages never spell the name in Latin letters.
 - Honesty: no unverified external fact stated as certain; Hadaf flagged only where verified;
-  the score follows the rubric inputs; salary ranges are researched from real Saudi sources
-  and saved to salary-benchmarks.json, not estimated.
+  the score follows the rubric inputs; salary ranges are researched from credible Saudi sources
+  (not one fixed list) and saved to salary-benchmarks.json, not estimated.
+- Cross-check against knowledge: each agent sanity-checks every researched figure (salary, cost,
+  ranking, link, program) against its OWN training knowledge, and flags anything that conflicts
+  with what is broadly known or looks implausible (a number too high or low, a wrong ranking, a
+  link that does not look right). Research and training must agree, or the conflict is surfaced.
 
 The bar is STRICT. A finding is not a soft note; any one of these fails the gate:
 - Lazy or irrelevant data: an item shown because it exists, not because it fits the person.
@@ -208,9 +212,10 @@ then renders `<PlanProvider plan={...}><V4 /></PlanProvider>`.
    names, used to rank their network), `gradFields`, `roles`, `targets`, `months`. Mark
    one `primary: true` and set `primaryPath` to it. Also give each path `pros[]`, `cons[]`,
    and a `ladder[]` of four rungs (entry to director, each a role title plus a monthly Saudi
-   salary range). The salary ranges MUST be researched from real Saudi salary sources (Hays,
-   Cooper Fitch, Mercer, Bayt, Glassdoor), never estimated, and saved to
-   research/salary-benchmarks.json so they compound. Pros and cons are grounded in the field
+   salary range). The salary ranges MUST be researched from multiple credible Saudi salary
+   sources (for example Hays, Cooper Fitch, Mercer, Bayt, Glassdoor, GOSI data, company
+   postings, and any other reliable source, NOT limited to these), never estimated, and saved
+   to research/salary-benchmarks.json so they compound. Pros and cons are grounded in the field
    and the person, not generic.
 6. Assemble the `CustomerPlan`. Set `connections: []` and `hrContacts: []` (both filled
    later, see section 7). Reuse `templates`, `tracker`, `journey` or customize them.
