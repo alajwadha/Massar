@@ -16,10 +16,17 @@ When building a new customer's plan:
 
 Effort per customer drops as the store grows.
 
+This is mandatory and covers EVERY collection, not just universities: companies, certs,
+scholarships, salaries, and career days alike. If a customer's field, sector, or situation
+is one we have not covered, research it during onboarding and save it here before authoring.
+Never invent or template a missing fact; research it, save it, then use it. A plan that used
+a fact which is not recorded here did not follow the process.
+
 ## Collections (one JSON file each, an array of records)
 
 - `career-days.json`: career days, forums, and fairs, with dates.
 - `universities.json`: graduate programs by field, with tier, deadlines, and scholarship eligibility.
+- `certifications.json`: certifications by field, with issuing body, cost, official link, duration, and Hadaf eligibility.
 - `companies.json`: employers by sector and size, with the official careers URL.
 - `scholarships.json`: scholarship programs and eligibility.
 - `salary-benchmarks.json`: pay ranges by role, level, and sector.
