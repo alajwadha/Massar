@@ -170,16 +170,49 @@ then renders `<PlanProvider plan={...}><V4 /></PlanProvider>`.
    of `strong | good | growing`) and `levelGaps` (what experience gap blocks each next
    level; certificate gaps are derived from the path, do not put them here).
 5. Build `paths[]`. Cap the count at `TIER_PATHS[tier]` (3 for Starter, 5 for Pro). For
-   each path set `scoreByLevel` (the scored CV competitiveness 0 to 100 at entry/mid/
-   senior/director), `certs[]`, `targetCompanies[]` (real names, used to rank their
-   network), `gradFields`, `roles`, `targets`, `months`. Mark one `primary: true` and
-   set `primaryPath` to it.
+   each path set `scoreInput` via `...withScore({...})` (the five CV-grounded rubric
+   inputs; it derives `scoreByLevel`, see section 6), `certs[]`, `targetCompanies[]` (real
+   names, used to rank their network), `gradFields`, `roles`, `targets`, `months`. Mark
+   one `primary: true` and set `primaryPath` to it.
 6. Assemble the `CustomerPlan`. Set `connections: []` and `hrContacts: []` (both filled
    later, see section 7). Reuse `templates`, `tracker`, `journey` or customize them.
 7. Register it: add the plan to `plans` keyed by its `slug`.
 8. Verify: `npm run typecheck`, `npm run build`, link check, and a rendered preview in
    both languages and themes (section 10). Then the two agent gate.
 9. Deploy and send them `/<locale>/c/<slug>`.
+
+---
+
+## 5b. The authoring playbook (reason per CV, do not fill a template)
+
+The recipe above is where data goes. This is how to think, so each plan is reasoned for
+the person and not a template with the names swapped. Work in this order.
+
+1. Extract the atomic facts from the CV, nothing invented: degree and university, every
+   employer with tenure, hard skills and tools, each quantified result (the numbers),
+   location, languages, current level. These are the only raw material.
+2. Choose the paths from the person's real trajectory and leverage points, not a fixed
+   five. Ask what doors their actual experience opens, what an adjacent pivot is, what a
+   stretch is. The count fits them (cap at TIER_PATHS). Do not pad to five with generic
+   tracks.
+3. Set the rubric inputs per path (section 6), each tied to a specific CV line, plus the
+   real employer and university names so the caliber tables apply. The rubric derives the
+   scores; never type an output number.
+4. Build the cert ladder from the person's GAPS only. Start from what they already have
+   (mark it done or current), then the cheapest high-impact missing step, then up. Do not
+   repeat the same four certs on every path; each cert earns its place for this person and
+   this path.
+5. Pull Study and companies from the research base (research/ and the data module),
+   filtered to their field and constraints: location for proximity, budget, and whether
+   they are employed (then favor part-time and online). Do not hand-pick the same few.
+6. Write the CV review and outreach in their voice: strengths and CV-editable issues each
+   tied to a line, templates that name their real field and employer.
+7. Anti template checklist before the gate. Every claim points to a CV line. Nothing is
+   generic enough to describe another candidate in the field. No invented cost, link, or
+   eligibility. The score follows the rubric. Then run the strict two agent gate (section 1).
+
+The test of a good plan: paste it beside another customer's in the same field. If the
+paths, certs, and wording are interchangeable, it is still a template. Make it specific.
 
 ---
 

@@ -1,1 +1,63 @@
-[]
+{
+  "_meta": {
+    "purpose": "Researched graduate programs that feed the Study tab. Facts snapshot that seeds the future database; the bilingual product copy lives in src/lib/app-data.ts (gradPrograms).",
+    "updated": "2026-06-19",
+    "method": "Compiled via web research by field; official links verified to resolve. tier = admission difficulty (high > respected > solid > accessible). top30 = university in the world top ~30, which qualifies for the Saudi Pioneers full scholarship.",
+    "count": 48
+  },
+  "programs": [
+    { "field": "finance", "tier": "high", "top30": true, "uni": "Columbia University", "program": "MSc in Financial Engineering", "country": "USA", "link": "https://ieor.columbia.edu/financial-engineering-msfe" },
+    { "field": "finance", "tier": "high", "uni": "HEC Paris", "program": "Master in International Finance", "country": "France", "link": "https://www.hec.edu/en/master-s-programs/master-international-finance" },
+    { "field": "finance", "tier": "respected", "top30": true, "uni": "National University of Singapore", "program": "MSc in Financial Engineering", "country": "Singapore", "link": "https://rmi.nus.edu.sg/mfe-program/introduction/" },
+    { "field": "finance", "tier": "respected", "top30": true, "uni": "University of Toronto", "program": "Master of Mathematical Finance", "country": "Canada", "link": "https://www.mmf.utoronto.ca/" },
+    { "field": "finance", "tier": "solid", "uni": "University of Edinburgh", "program": "MSc Finance and Investment", "country": "UK", "link": "https://www.business-school.ed.ac.uk/msc/finance-investment" },
+    { "field": "finance", "tier": "solid", "uni": "Stockholm School of Economics", "program": "MSc in Finance", "country": "Sweden", "link": "https://www.hhs.se/mfin" },
+    { "field": "finance", "tier": "accessible", "uni": "RMIT University", "program": "Master of Finance", "country": "Australia", "link": "https://www.rmit.edu.au/study-with-us/levels-of-study/postgraduate-study/masters-by-coursework/master-of-finance-mc201" },
+    { "field": "finance", "tier": "accessible", "uni": "UCD Smurfit Graduate Business School", "program": "MSc in Finance", "country": "Ireland", "link": "https://www.smurfitschool.ie/programmes/masters/mscinfinance/" },
+
+    { "field": "energy", "tier": "high", "top30": true, "uni": "ETH Zurich", "program": "MSc Energy Science and Technology", "country": "Switzerland", "link": "https://ethz.ch/en/studies/master/degree-programmes/engineering-sciences/energy-science-and-technology.html" },
+    { "field": "energy", "tier": "high", "top30": true, "uni": "Imperial College London", "program": "MSc Sustainable Energy Futures", "country": "UK", "link": "https://www.imperial.ac.uk/study/courses/postgraduate-taught/sustainable-energy-futures/" },
+    { "field": "energy", "tier": "respected", "top30": true, "uni": "National University of Singapore", "program": "MSc in Energy Systems", "country": "Singapore", "link": "https://cde.nus.edu.sg/chbe/masters-of-science-energy-systems/" },
+    { "field": "energy", "tier": "respected", "uni": "UT Austin", "program": "MS in Energy and Earth Resources", "country": "USA", "link": "https://www.jsg.utexas.edu/eer/" },
+    { "field": "energy", "tier": "solid", "uni": "TU Delft", "program": "MSc Sustainable Energy Technology", "country": "Netherlands", "link": "https://www.tudelft.nl/en/education/programmes/masters/set/msc-sustainable-energy-technology" },
+    { "field": "energy", "tier": "solid", "uni": "KTH Royal Institute of Technology", "program": "MSc Sustainable Energy Engineering", "country": "Sweden", "link": "https://www.kth.se/en/studies/master/sustainable-energy-engineering/msc-sustainable-energy-engineering-1.8711" },
+    { "field": "energy", "tier": "accessible", "uni": "University of Stavanger", "program": "MSc Energy, Reservoir and Earth Sciences", "country": "Norway", "link": "https://www.uis.no/en/studies/master-of-science-in-energy-reservoir-and-earth-sciences" },
+    { "field": "energy", "tier": "accessible", "uni": "University of Waterloo", "program": "MES Sustainability Management", "country": "Canada", "link": "https://uwaterloo.ca/future-graduate-students/programs/by-faculty/environment/sustainability-management-master-environmental-studies-mes" },
+
+    { "field": "consulting", "tier": "high", "top30": true, "uni": "MIT Sloan School of Management", "program": "Master of Business Analytics", "country": "USA", "link": "https://mitsloan.mit.edu/master-of-business-analytics" },
+    { "field": "consulting", "tier": "high", "uni": "HEC Paris", "program": "Master in Management", "country": "France", "link": "https://www.hec.edu/en/master-s-programs/master-management" },
+    { "field": "consulting", "tier": "respected", "top30": true, "uni": "NUS Business School", "program": "The NUS MBA", "country": "Singapore", "link": "https://mba.nus.edu.sg/" },
+    { "field": "consulting", "tier": "respected", "top30": true, "uni": "Rotman School of Management, Toronto", "program": "Full-Time MBA", "country": "Canada", "link": "https://www.rotman.utoronto.ca/programs/mba-programs/full-time-mba/" },
+    { "field": "consulting", "tier": "solid", "uni": "Warwick Business School", "program": "MSc Business Analytics and AI", "country": "UK", "link": "https://www.wbs.ac.uk/courses/masters/business-analytics-artificial-intelligence/" },
+    { "field": "consulting", "tier": "solid", "uni": "Rotterdam School of Management", "program": "MScBA Business Analytics and Management", "country": "Netherlands", "link": "https://www.eur.nl/en/master/business-analytics-management" },
+    { "field": "consulting", "tier": "accessible", "top30": true, "uni": "Melbourne Business School", "program": "Full-time MBA", "country": "Australia", "link": "https://mbs.edu/degree-programs/full-time-mba" },
+    { "field": "consulting", "tier": "accessible", "uni": "UCD Smurfit School", "program": "MSc in Management Consultancy", "country": "Ireland", "link": "https://www.smurfitschool.ie/programmes/masters/mscinmanagementconsultancy/" },
+
+    { "field": "government", "tier": "high", "top30": true, "uni": "Lee Kuan Yew School, NUS", "program": "Master in Public Policy", "country": "Singapore", "link": "https://lkyspp.nus.edu.sg/graduate-programmes/master-in-public-policy-mpp" },
+    { "field": "government", "tier": "high", "top30": true, "uni": "Munk School, University of Toronto", "program": "Master of Public Policy", "country": "Canada", "link": "https://munkschool.utoronto.ca/mpp" },
+    { "field": "government", "tier": "respected", "uni": "Hertie School", "program": "Master of Public Policy", "country": "Germany", "link": "https://www.hertie-school.org/en/mpp" },
+    { "field": "government", "tier": "respected", "uni": "Ford School, University of Michigan", "program": "Master of Public Policy", "country": "USA", "link": "https://fordschool.umich.edu/mpp-mpa/mpp" },
+    { "field": "government", "tier": "solid", "uni": "Crawford School, ANU", "program": "Master of Public Policy", "country": "Australia", "link": "https://crawford.anu.edu.au/study/master/public-policy" },
+    { "field": "government", "tier": "solid", "uni": "University College London", "program": "MPA Digital Technologies and Policy", "country": "UK", "link": "https://www.ucl.ac.uk/prospective-students/graduate/taught-degrees/digital-technologies-and-policy-mpa" },
+    { "field": "government", "tier": "accessible", "uni": "KU Leuven", "program": "MAS European Policies and Public Administration", "country": "Belgium", "link": "https://www.kuleuven.be/programmes/master-european-policies-public-administration" },
+    { "field": "government", "tier": "accessible", "uni": "University of Manchester", "program": "MSc International Development: Public Policy and Management", "country": "UK", "link": "https://www.manchester.ac.uk/study/masters/courses/list/01211/msc-international-development-public-policy-and-management/" },
+
+    { "field": "tech", "tier": "high", "top30": true, "uni": "ETH Zurich", "program": "MSc Data Science", "country": "Switzerland", "link": "https://inf.ethz.ch/studies/master/master-ds.html" },
+    { "field": "tech", "tier": "high", "top30": true, "uni": "National University of Singapore", "program": "Master of Computing in AI", "country": "Singapore", "link": "https://www.comp.nus.edu.sg/programmes/pg/mcomp-ai/" },
+    { "field": "tech", "tier": "respected", "top30": true, "uni": "University of Toronto", "program": "MSc in Applied Computing", "country": "Canada", "link": "https://mscac.utoronto.ca/" },
+    { "field": "tech", "tier": "respected", "top30": true, "uni": "University of Melbourne", "program": "Master of Data Science", "country": "Australia", "link": "https://study.unimelb.edu.au/find/courses/graduate/master-of-data-science/" },
+    { "field": "tech", "tier": "solid", "top30": true, "uni": "Technical University of Munich", "program": "MSc Data Engineering and Analytics", "country": "Germany", "link": "https://www.cit.tum.de/en/cit/studies/degree-programs/master-data-engineering-and-analytics/" },
+    { "field": "tech", "tier": "solid", "uni": "University of Manchester", "program": "MSc Artificial Intelligence", "country": "UK", "link": "https://www.manchester.ac.uk/study/masters/courses/list/21574/msc-artificial-intelligence/" },
+    { "field": "tech", "tier": "accessible", "uni": "University of Amsterdam", "program": "MSc Artificial Intelligence", "country": "Netherlands", "link": "https://www.uva.nl/shared-content/programmas/en/masters/artificial-intelligence/artificial-intelligence.html" },
+    { "field": "tech", "tier": "accessible", "uni": "KTH Royal Institute of Technology", "program": "MSc Machine Learning", "country": "Sweden", "link": "https://www.kth.se/en/studies/master/machine-learning/msc-machine-learning-1.48533" },
+
+    { "field": "supply", "tier": "high", "uni": "Zaragoza Logistics Center (MIT SCALE)", "program": "MEng Logistics and Supply Chain Management (ZLOG)", "country": "Spain", "link": "https://www.zlc.edu.es/education/mit-zaragoza-master-of-engineering-in-logistics-and-supply-chain-management-zlog/" },
+    { "field": "supply", "tier": "high", "uni": "University of Michigan, Ross", "program": "Master of Supply Chain Management", "country": "USA", "link": "https://michiganross.umich.edu/graduate/master-of-supply-chain-management" },
+    { "field": "supply", "tier": "respected", "top30": true, "uni": "National University of Singapore", "program": "MSc Supply Chain Management", "country": "Singapore", "link": "https://cde.nus.edu.sg/isem/graduate/coursework/masters-of-science-supply-chain-management-programme/" },
+    { "field": "supply", "tier": "respected", "uni": "Copenhagen Business School", "program": "MSc Supply Chain Management", "country": "Denmark", "link": "https://www.cbs.dk/en/study-programmes/master-programmes/msc-economics-and-business-administration-supply-chain" },
+    { "field": "supply", "tier": "solid", "top30": true, "uni": "University of Melbourne", "program": "Master of Management (Supply Chain)", "country": "Australia", "link": "https://study.unimelb.edu.au/find/courses/graduate/master-of-management-supply-chain-management/" },
+    { "field": "supply", "tier": "solid", "uni": "Eindhoven University of Technology", "program": "MSc Operations Management and Logistics", "country": "Netherlands", "link": "https://www.tue.nl/en/education/graduate-school/master-operations-management-and-logistics" },
+    { "field": "supply", "tier": "accessible", "uni": "Schulich School of Business, York", "program": "Master of Supply Chain Management", "country": "Canada", "link": "https://schulich.yorku.ca/programs/mscm/" },
+    { "field": "supply", "tier": "accessible", "uni": "University of Warwick, WMG", "program": "MSc Supply Chain and Logistics Management", "country": "UK", "link": "https://warwick.ac.uk/fac/sci/wmg/study/masters-degrees/supply-chain-logistics-management/" }
+  ]
+}
