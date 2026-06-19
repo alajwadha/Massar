@@ -412,3 +412,7 @@ It grows into the database and ports straight to Supabase later.
 - The research store currently seeds career days; universities and companies still live
   in `app-data.ts` and migrate during the refactor.
 - Two tab names for the Study and Opportunities Pro pages.
+- CV review undo: when every issue is marked fixed, `CvReviewCard` returns null and the card
+  never returns (`cvFixed` is persisted in localStorage). Fix for next customers: instead of
+  unmounting, show a small "all polished" state (the string `ui.cvBlock.polished` already exists)
+  with an Undo that clears the fixed flags, so it cannot disappear forever.
