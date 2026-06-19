@@ -63,11 +63,12 @@ After a customer sends their CV, before their link goes out:
 Every review covers, in full:
 - Relevance and anti-lazy: every major, program, cert, company, and path fits THIS person's
   field and pathways; nothing is shown merely because it exists in the shared data.
-- Full-time universities: the full-time graduate universities MUST be in the US, the UK, or
-  Australia (the destinations Saudi scholarships target). Mix the three across a major. The
-  Saudi part-time, study-while-working options are a separate section and stay Saudi.
-- World class: at least ONE university per major must be world top 30 (top30:true), so every
-  major has a world-class, Pioneers-scholarship-eligible reach option.
+- Full-time universities: the full-time graduate universities MUST be in the US or the UK only
+  (the destinations Saudi scholarships target). Mix the two across a major. The Saudi part-time,
+  study-while-working options are a separate section and stay Saudi.
+- World class: at least ONE university per major must be in the QS World University Rankings
+  top 30 (the OVERALL university ranking, NOT the subject/by-major ranking), flagged top30:true,
+  so every major has a genuine world-class, Pioneers-eligible reach option.
 - Technical: builds and renders; registered under the right slug with no collision; tier and
   sectors valid; the right number of paths each with a DERIVED score (`withScore`), valid
   icon and gradFields, complete certs with well-formed official links; one primary that
@@ -79,8 +80,9 @@ Every review covers, in full:
 
 The bar is STRICT. A finding is not a soft note; any one of these fails the gate:
 - Lazy or irrelevant data: an item shown because it exists, not because it fits the person.
-- A full-time graduate university that is not in the US, the UK, or Australia.
-- A major with no world top 30 (world class) university.
+- A full-time graduate university that is not in the US or the UK.
+- A major with no QS World top 30 (overall ranking) university, or a top30 flag based on a
+  subject/by-major ranking rather than the overall QS World ranking.
 - A claim, score factor, or number that does not point to a specific line in the CV.
 - Generic, template like content that could describe any candidate in the field.
 - An unverified external fact stated as certain.
