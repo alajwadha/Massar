@@ -83,10 +83,12 @@ Every review covers, in full:
 - Honesty: no unverified external fact stated as certain; Hadaf flagged only where verified;
   the score follows the rubric inputs; salary ranges are researched from credible Saudi sources
   (not one fixed list) and saved to salary-benchmarks.json, not estimated.
-- Cross-check against knowledge: each agent sanity-checks every researched figure (salary, cost,
-  ranking, link, program) against its OWN training knowledge, and flags anything that conflicts
-  with what is broadly known or looks implausible (a number too high or low, a wrong ranking, a
-  link that does not look right). Research and training must agree, or the conflict is surfaced.
+- Cross-check against knowledge: each agent verifies EVERYTHING it reviews against its OWN
+  training knowledge, not only the researched figures. Every fact, number, claim, cert,
+  university, major, salary, ranking, link, company, and score is sanity-checked against what is
+  broadly known, and anything that conflicts or looks implausible (a number too high or low, a
+  wrong ranking, an off cert detail, a link that does not look right, a claim that does not add
+  up) is flagged. Research and training must agree, or the conflict is surfaced before deploy.
 
 The bar is STRICT. A finding is not a soft note; any one of these fails the gate:
 - Lazy or irrelevant data: an item shown because it exists, not because it fits the person.
