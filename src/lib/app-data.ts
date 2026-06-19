@@ -188,8 +188,8 @@ export type CareerPath = {
   targets: LS;
   roles: LS; // the positions this path leads to (for a new job OR a promotion)
   accent: AccentKey;
-  icon: 'finance' | 'energy' | 'consulting' | 'government' | 'tech';
-  gradFields: ('finance' | 'energy' | 'consulting' | 'government' | 'tech')[]; // relevant graduate majors (Study tab)
+  icon: 'finance' | 'energy' | 'consulting' | 'government' | 'tech' | 'supply';
+  gradFields: ('finance' | 'energy' | 'consulting' | 'government' | 'tech' | 'supply')[]; // relevant graduate majors (Study tab)
   months: number;
   scoreByLevel: Record<Level, number>; // CV competitiveness 0-100 per seniority
   primary?: boolean;
@@ -610,8 +610,218 @@ export const aliPlan: CustomerPlan = {
   tracker,
 };
 
+/* ----------------------------------------------------- customer: Mahdi (#2) -- */
+// Supply chain and operations planner. Authored from his CV at onboarding; only
+// derived text ships, never the raw CV. Kept fully separate from aliPlan.
+const mahdiProfile = {
+  name: { ar: 'مهدي العريفي', en: 'Mahdi Alarifi' } satisfies LS,
+  headline: { ar: 'مخطط مواد وسلاسل إمداد · بيكر هيوز', en: 'Materials and Supply Chain Planner · Baker Hughes' } satisfies LS,
+  location: { ar: 'الخبر، المنطقة الشرقية', en: 'Khobar, Eastern Province' } satisfies LS,
+  region: 'eastern' as SaudiRegion,
+  degree: 'bachelor' as Degree,
+};
+
+const mahdiCvScore = {
+  target: { ar: 'تخطيط سلاسل الإمداد والعمليات', en: 'Supply Chain and Operations Planning' } satisfies LS,
+  improvements: [
+    { action: { ar: 'أضف أرقامًا لمزيد من إنجازاتك', en: 'Add metrics to more of your bullets' }, delta: 5, effort: { ar: '30 دقيقة', en: '30 min' } },
+    { action: { ar: 'أكمل شهادة CPIM لتخطيط الإنتاج والمخزون', en: 'Complete the APICS CPIM' }, delta: 10, effort: { ar: '3 أشهر', en: '3 months' } },
+    { action: { ar: 'احصل على الحزام الأخضر في ستة سيجما', en: 'Earn a Lean Six Sigma Green Belt' }, delta: 8, effort: { ar: 'شهران', en: '2 months' } },
+  ] as { action: LS; delta: number; effort: LS }[],
+};
+
+const mahdiCvReview: CvReview = {
+  headline: { ar: 'ملف تشغيلي قوي مدعوم بالبيانات. الخطوة القادمة أن تتصدّر كل نقطة بأثر قابل للقياس.', en: 'A strong, data backed operations profile. The next step is to lead every bullet with measurable impact.' },
+  strengths: [
+    { ar: 'خفض المخزون المتقادم تحت التشغيل بأكثر من 95% عبر التخطيط الاستباقي', en: 'Cut aging work in progress by over 95% through proactive planning' },
+    { ar: 'رفع استغلال الآلات 7% عبر التخطيط اليومي لأكثر من 30 آلة', en: 'Raised machine utilization 7% by daily planning across 30 plus machines' },
+    { ar: 'إتقان أدوات التحليل: Power BI وPower Query وOracle SQL', en: 'Strong analytics tooling: Power BI, Power Query, and Oracle SQL' },
+    { ar: 'قيادة فرق متعددة الوظائف (الهندسة والعمليات والجودة والمستودع) في بيكر هيوز', en: 'Leads cross functional teams across Engineering, Operations, Quality, and Warehouse at Baker Hughes' },
+  ],
+  issues: [
+    { id: 'impact', kind: 'bullet', text: { ar: 'بعض النقاط تصف المهام لا النتائج. أضف رقمًا أو أثرًا لكل نقطة مثلما فعلت مع الـ 95%.', en: 'Some bullets describe duties, not results. Add a number or impact to each, the way you did with the 95 percent.' }, severity: 'high' },
+    { id: 'summary', kind: 'summary', text: { ar: 'ابدأ الملخص بصفة «مخطط سلاسل إمداد» وأبرز إنجازك الأول، لا بهدف عام.', en: 'Lead the summary as a Supply Chain Planner with your headline result, not a generic objective.' }, severity: 'high' },
+    { id: 'skills', kind: 'format', text: { ar: 'اجمع أدوات البيانات (Power BI وSQL وPower Query) في سطر تحليلات واضح ليبرز.', en: 'Group the data tools (Power BI, SQL, Power Query) into one clear analytics line so they stand out.' }, severity: 'med' },
+    { id: 'length', kind: 'length', text: { ar: 'اختصر فقرة الملخص الطويلة إلى سطرين أو ثلاثة.', en: 'Tighten the long summary paragraph to two or three lines.' }, severity: 'low' },
+  ],
+};
+
+const mahdiScoreFactors: ScoreFactor[] = [
+  { label: { ar: 'التعليم', en: 'Education' }, detail: { ar: 'بكالوريوس إدارة سلاسل الإمداد واللوجستيات من الكلية الصناعية بالجبيل بمعدل 3.22', en: 'BSc Supply Chain and Logistics from Jubail Industrial College, GPA 3.22' }, strength: 'good' },
+  { label: { ar: 'الخبرة', en: 'Experience' }, detail: { ar: 'سنتان في بيكر هيوز بنتائج ملموسة في التخطيط وتقليل الهدر', en: 'Two years at Baker Hughes with concrete planning and waste reduction results' }, strength: 'good' },
+  { label: { ar: 'المهارات والأدوات', en: 'Skills and tools' }, detail: { ar: 'تخطيط الإنتاج مع Power BI وSQL، وهي تطابق أدوار التخطيط والتحليل', en: 'Production planning with Power BI and SQL, a direct match for planning and analyst roles' }, strength: 'strong' },
+];
+
+const mahdiLevelGaps: Record<Level, LevelGap> = {
+  entry: {},
+  mid: { experience: { ar: 'سنة إلى سنتين إضافيتين بامتلاك مجال تخطيط متكامل', en: '1 to 2 more years owning an end to end planning area' } },
+  senior: {
+    experience: { ar: '5+ سنوات مع مسؤولية أوسع', en: '5 plus years with broader ownership' },
+    other: [{ ar: 'قِدت مشروع تحسين كبيرًا', en: 'Led a major improvement project' }],
+  },
+  director: {
+    experience: { ar: '10+ سنوات مع خبرة قيادية', en: '10 plus years with leadership experience' },
+    other: [
+      { ar: 'مسؤولية عن الميزانية أو الأرباح والخسائر', en: 'Budget or P&L ownership' },
+      { ar: 'بنيت أو قدت فريقًا', en: 'Built or led a team' },
+    ],
+  },
+};
+
+const mahdiTracker: typeof tracker = {
+  stats: { sent: 0, replied: 0, pending: 0, followup: 0 },
+  replyRate: 0,
+  weekly: [
+    { label: { ar: 'الأحد', en: 'Sun' }, value: 0 },
+    { label: { ar: 'الإثنين', en: 'Mon' }, value: 0 },
+    { label: { ar: 'الثلاثاء', en: 'Tue' }, value: 0 },
+    { label: { ar: 'الأربعاء', en: 'Wed' }, value: 0 },
+    { label: { ar: 'الخميس', en: 'Thu' }, value: 0 },
+    { label: { ar: 'الجمعة', en: 'Fri' }, value: 0 },
+    { label: { ar: 'السبت', en: 'Sat' }, value: 0 },
+  ],
+  activity: [],
+};
+
+const mahdiTemplates: Template[] = [
+  { id: 'm1', title: { ar: 'تعريف مباشر', en: 'Direct Introduction' }, preview: {
+    ar: 'السلام عليكم، أنا مهدي العريفي، خرّيج إدارة سلاسل الإمداد واللوجستيات ولديّ سنتان كمخطط مواد في بيكر هيوز. يهمّني العمل في أدوار سلاسل الإمداد والعمليات لدى {الشركة}، وسأكون ممتنًا لأي توجيه حول الفرص المتاحة. أرفقت سيرتي الذاتية للاطلاع.',
+    en: 'Hi {firstName}, I am Mahdi Alarifi, a Supply Chain and Logistics graduate with two years as a Materials Planner at Baker Hughes. I am very interested in supply chain and operations roles at {company}, and would greatly appreciate any guidance on potential opportunities. I have attached my resume for your reference.',
+  }, tone: { ar: 'رسمي', en: 'Formal' } },
+  { id: 'm2', title: { ar: 'ميزة البيانات', en: 'Data Edge' }, preview: {
+    ar: 'السلام عليكم، أنا مهدي العريفي، مخطط سلاسل إمداد متمكّن من Power BI وSQL مع خبرة تشغيلية في بيكر هيوز. يهمّني العمل في أدوار التخطيط والتحليل لدى {الشركة}، وأقدّر أي توجيه حول الفرص.',
+    en: 'Hi {firstName}, I am Mahdi Alarifi, a supply chain planner skilled in Power BI and SQL, with operations experience at Baker Hughes. I am interested in planning and analytics roles at {company}, and would value any guidance on opportunities.',
+  }, tone: { ar: 'مباشر', en: 'Direct' } },
+  { id: 'm3', title: { ar: 'طلب تعريف', en: 'Referral Ask' }, preview: {
+    ar: 'السلام عليكم، أنا مهدي العريفي، مخطط مواد وسلاسل إمداد في بيكر هيوز. أبحث عن أدوار في سلاسل الإمداد لدى {الشركة}، وسأكون ممتنًا لو دللتني على الشخص المناسب أو أي فرص متاحة.',
+    en: 'Hi {firstName}, I am Mahdi Alarifi, a Materials and Supply Chain Planner at Baker Hughes. I am exploring supply chain roles at {company}, and would be grateful if you could point me to the right person or any openings.',
+  }, tone: { ar: 'ودّي', en: 'Warm' } },
+  { id: 'm4', title: { ar: 'مختصرة', en: 'Short' }, preview: {
+    ar: 'السلام عليكم، أنا مهدي العريفي، خرّيج سلاسل إمداد ولوجستيات مع خبرة تخطيط في بيكر هيوز. سأقدّر أي توجيه حول فرص سلاسل الإمداد لدى {الشركة}.',
+    en: 'Hi {firstName}, I am Mahdi Alarifi, a supply chain and logistics graduate with planning experience at Baker Hughes. I would appreciate any guidance on supply chain opportunities at {company}.',
+  }, tone: { ar: 'مختصر', en: 'Tight' } },
+];
+
+const mahdiPaths: CareerPath[] = [
+  {
+    id: 'supply-chain',
+    name: { ar: 'إدارة سلاسل الإمداد', en: 'Supply Chain Management' },
+    targets: { ar: 'سابك · المراعي · نيوم · نوبكو', en: 'SABIC · Almarai · NEOM · Nupco' },
+    roles: { ar: 'مخطط ← مخطط أول ← مدير سلاسل إمداد', en: 'Planner → Senior Planner → Supply Chain Manager' },
+    accent: 'brand',
+    icon: 'supply',
+    gradFields: ['supply', 'consulting'],
+    months: 14,
+    scoreByLevel: { entry: 85, mid: 68, senior: 46, director: 30 },
+    primary: true,
+    trail: { ar: 'CPIM → ستة سيجما → CSCP → PMP', en: 'CPIM → Six Sigma → CSCP → PMP' },
+    certs: [
+      { name: { ar: 'CPIM', en: 'CPIM' }, desc: { ar: 'شهادة ASCM في تخطيط الإنتاج والمخزون، المعيار العالمي لمخططي الطلب والإمداد. تُوثّق العمل الذي تؤدّيه فعليًا وتجعله معترفًا به.', en: 'The ASCM certification in planning and inventory management, the global standard for demand and supply planners. It formalizes the work you already do and makes it recognized.' }, gain: { ar: 'المعيار المعترف به لأدوار التخطيط', en: 'The recognized standard for planning roles' }, opens: [{ ar: 'مخطط طلب وإمداد', en: 'Demand and Supply Planner' }, { ar: 'محلل سلاسل إمداد', en: 'Supply Chain Analyst' }], scoreAdd: 10, official: 'https://www.ascm.org/learning-development/certifications-credentials/cpim/', status: 'current', cost: { ar: '≈ 6,000 ر.س', en: '≈ 6,000 SAR' }, duration: { ar: '3 إلى 4 أشهر', en: '3 to 4 months' }, hadaf: true, hadafNote: { ar: 'يدعمها صندوق هدف', en: 'Hadaf supported' }, why: { ar: 'أسرع شهادة ترسّخ صفتك كمخطط محترف وتفتح أدوار سلاسل الإمداد. ابدأ بها.', en: 'The fastest credential that establishes you as a professional planner and opens supply chain roles. Start here.' } },
+      { name: { ar: 'ستة سيجما (الحزام الأخضر)', en: 'Lean Six Sigma Green Belt' }, desc: { ar: 'الحزام الأخضر لتحسين العمليات وتقليل الهدر، وهو تحديدًا نوع العمل وراء خفضك للمخزون المتقادم 95%.', en: 'Green Belt in Lean Six Sigma for process improvement and waste reduction, exactly the work behind your 95 percent cut in aging inventory.' }, gain: { ar: 'يوثّق نتائجك في تحسين العمليات', en: 'Certifies your process improvement results' }, scoreAdd: 7, official: 'https://asq.org/cert/six-sigma-green-belt', status: 'future', cost: { ar: '≈ 2,500 ر.س', en: '≈ 2,500 SAR' }, duration: { ar: 'شهران', en: '2 months' }, hadaf: true },
+      { name: { ar: 'CSCP', en: 'CSCP' }, desc: { ar: 'شهادة ASCM لسلسلة الإمداد من المورّد إلى العميل. تنقلك من تخطيط نقطة واحدة إلى إدارة السلسلة كاملة.', en: 'The ASCM certification covering the supply chain end to end, from supplier to customer. It lifts you from planning one node to managing the whole chain.' }, gain: { ar: 'ينقلك من مخطط إلى مالك للسلسلة كاملة', en: 'Moves you from planner to end to end owner' }, opens: [{ ar: 'محلل سلاسل إمداد أول', en: 'Senior Supply Chain Analyst' }, { ar: 'قائد تخطيط', en: 'Planning Lead' }], scoreAdd: 12, official: 'https://www.ascm.org/learning-development/certifications-credentials/cscp/', status: 'future', cost: { ar: '≈ 7,000 ر.س', en: '≈ 7,000 SAR' }, duration: { ar: '4 إلى 6 أشهر', en: '4 to 6 months' }, hadaf: true },
+      { name: { ar: 'PMP', en: 'PMP' }, desc: { ar: 'شهادة إدارة المشاريع من PMI، المعيار العالمي لقيادة المشاريع متعددة الوظائف والانتقال إلى الإدارة.', en: 'The PMI project management standard, for leading cross functional projects and stepping into management.' }, gain: { ar: 'يؤهّلك للقيادة والإدارة', en: 'Qualifies you to lead and manage' }, opens: [{ ar: 'مدير سلاسل إمداد', en: 'Supply Chain Manager' }], scoreAdd: 9, official: 'https://www.pmi.org/certifications/project-management-pmp', status: 'future', cost: { ar: '≈ 4,000 ر.س', en: '≈ 4,000 SAR' }, duration: { ar: '4 أشهر', en: '4 months' }, hadaf: true },
+    ],
+    targetCompanies: ['SABIC', 'Almarai', 'NEOM', 'Nupco', 'Saudi Aramco', 'Maaden', 'Baker Hughes'],
+  },
+  {
+    id: 'procurement',
+    name: { ar: 'المشتريات والتوريد', en: 'Procurement and Sourcing' },
+    targets: { ar: 'أرامكو · نيوم · البحر الأحمر · معادن', en: 'Aramco · NEOM · Red Sea Global · Maaden' },
+    roles: { ar: 'أخصائي مشتريات ← مسؤول فئة ← مدير مشتريات', en: 'Procurement Specialist → Category Lead → Procurement Manager' },
+    accent: 'amber',
+    icon: 'supply',
+    gradFields: ['supply', 'consulting'],
+    months: 14,
+    scoreByLevel: { entry: 80, mid: 62, senior: 42, director: 28 },
+    trail: { ar: 'CIPS L4 → CPIM → ستة سيجما → PMP', en: 'CIPS L4 → CPIM → Six Sigma → PMP' },
+    certs: [
+      { name: { ar: 'دبلوم CIPS المستوى الرابع', en: 'CIPS Level 4 Diploma' }, desc: { ar: 'دبلوم معهد CIPS هو المرجع العالمي لمحترفي المشتريات والتوريد، وأوضح إشارة لجدّيتك في مسار المشتريات.', en: 'The CIPS Level 4 Diploma is the global benchmark for procurement and supply professionals, the clearest signal you are serious about a procurement career.' }, gain: { ar: 'مرجع مهنة المشتريات', en: 'The benchmark for procurement professionals' }, opens: [{ ar: 'أخصائي مشتريات', en: 'Procurement Specialist' }, { ar: 'مشترٍ', en: 'Buyer' }], scoreAdd: 10, official: 'https://www.cips.org', status: 'current', cost: { ar: '≈ 7,000 ر.س', en: '≈ 7,000 SAR' }, duration: { ar: '6 إلى 9 أشهر', en: '6 to 9 months' }, hadaf: true },
+      { name: { ar: 'CPIM', en: 'CPIM' }, desc: { ar: 'شهادة ASCM في التخطيط والمخزون تضيف عمقًا يجعلك مشتريًا أذكى يفهم الطلب.', en: 'The ASCM CPIM adds planning and inventory depth that makes you a sharper buyer who understands demand.' }, gain: { ar: 'عمق تخطيطي لتوريد أذكى', en: 'Planning depth for smarter sourcing' }, scoreAdd: 8, official: 'https://www.ascm.org/learning-development/certifications-credentials/cpim/', status: 'future', cost: { ar: '≈ 6,000 ر.س', en: '≈ 6,000 SAR' }, duration: { ar: '3 إلى 4 أشهر', en: '3 to 4 months' }, hadaf: true },
+      { name: { ar: 'ستة سيجما (الحزام الأخضر)', en: 'Lean Six Sigma Green Belt' }, desc: { ar: 'الحزام الأخضر لخفض التكاليف وتحسين دورة التوريد حتى الدفع.', en: 'Green Belt for cost and process improvement across the source to pay cycle.' }, gain: { ar: 'خفض التكاليف وتحسين العمليات', en: 'Cost and process improvement' }, scoreAdd: 7, official: 'https://asq.org/cert/six-sigma-green-belt', status: 'future', cost: { ar: '≈ 2,500 ر.س', en: '≈ 2,500 SAR' }, duration: { ar: 'شهران', en: '2 months' }, hadaf: true },
+      { name: { ar: 'PMP', en: 'PMP' }, desc: { ar: 'شهادة PMP لقيادة مشاريع التوريد واستراتيجيات الفئات.', en: 'PMP for leading sourcing projects and category strategies.' }, gain: { ar: 'قيادة مشاريع التوريد', en: 'Lead sourcing projects' }, opens: [{ ar: 'مسؤول فئة', en: 'Category Lead' }, { ar: 'مدير مشتريات', en: 'Procurement Manager' }], scoreAdd: 9, official: 'https://www.pmi.org/certifications/project-management-pmp', status: 'future', cost: { ar: '≈ 4,000 ر.س', en: '≈ 4,000 SAR' }, duration: { ar: '4 أشهر', en: '4 months' }, hadaf: true },
+    ],
+    targetCompanies: ['Saudi Aramco', 'NEOM', 'Red Sea Global', 'Maaden', 'SABIC', 'Baker Hughes', 'Sadara'],
+  },
+  {
+    id: 'operations',
+    name: { ar: 'العمليات والتصنيع', en: 'Operations and Manufacturing' },
+    targets: { ar: 'بيكر هيوز · سابك · سدارة · الزامل', en: 'Baker Hughes · SABIC · Sadara · Zamil' },
+    roles: { ar: 'مخطط إنتاج ← مشرف عمليات ← مدير عمليات', en: 'Production Planner → Operations Supervisor → Operations Manager' },
+    accent: 'sky',
+    icon: 'supply',
+    gradFields: ['supply', 'consulting'],
+    months: 12,
+    scoreByLevel: { entry: 83, mid: 65, senior: 44, director: 28 },
+    trail: { ar: 'ستة سيجما → CPIM → الحزام الأسود → PMP', en: 'Six Sigma → CPIM → Black Belt → PMP' },
+    certs: [
+      { name: { ar: 'ستة سيجما (الحزام الأخضر)', en: 'Lean Six Sigma Green Belt' }, desc: { ar: 'الحزام الأخضر هو الأداة الأساسية لتقليل الهدر ورفع الاستغلال، وهي النتائج نفسها التي حقّقتها في بيكر هيوز.', en: 'The Green Belt is the core toolkit for reducing waste and lifting utilization, the same results you delivered at Baker Hughes.' }, gain: { ar: 'يوثّق أدواتك في تحسين العمليات', en: 'Certifies your improvement toolkit' }, opens: [{ ar: 'محلل عمليات', en: 'Operations Analyst' }, { ar: 'تحسين مستمر', en: 'Continuous Improvement' }], scoreAdd: 9, official: 'https://asq.org/cert/six-sigma-green-belt', status: 'current', cost: { ar: '≈ 2,500 ر.س', en: '≈ 2,500 SAR' }, duration: { ar: 'شهران', en: '2 months' }, hadaf: true },
+      { name: { ar: 'CPIM', en: 'CPIM' }, desc: { ar: 'شهادة ASCM لتخطيط الإنتاج ومراقبة المخزون في أرض التصنيع.', en: 'The ASCM CPIM for production planning and inventory control on the manufacturing floor.' }, gain: { ar: 'عمق تخطيطي للعمليات', en: 'Planning depth for operations' }, scoreAdd: 8, official: 'https://www.ascm.org/learning-development/certifications-credentials/cpim/', status: 'future', cost: { ar: '≈ 6,000 ر.س', en: '≈ 6,000 SAR' }, duration: { ar: '3 إلى 4 أشهر', en: '3 to 4 months' }, hadaf: true },
+      { name: { ar: 'ستة سيجما (الحزام الأسود)', en: 'Lean Six Sigma Black Belt' }, desc: { ar: 'الحزام الأسود يقود مشاريع التحسين عبر المصنع ويرشد أصحاب الحزام الأخضر، طريق واضح لدور قائد التحسين المستمر.', en: 'The Black Belt leads improvement projects across the plant and mentors Green Belts, a clear path to a continuous improvement lead role.' }, gain: { ar: 'قيادة التحسين على مستوى المصنع', en: 'Lead plant wide improvement' }, opens: [{ ar: 'قائد التحسين المستمر', en: 'Continuous Improvement Lead' }], scoreAdd: 10, official: 'https://asq.org/cert/six-sigma-black-belt', status: 'future', cost: { ar: '≈ 4,500 ر.س', en: '≈ 4,500 SAR' }, duration: { ar: '4 أشهر', en: '4 months' }, hadaf: true },
+      { name: { ar: 'PMP', en: 'PMP' }, desc: { ar: 'شهادة PMP لقيادة مشاريع العمليات والمشاريع الرأسمالية نحو دور إدارة العمليات.', en: 'PMP for leading operations and capital projects toward an operations management role.' }, gain: { ar: 'الانتقال إلى إدارة العمليات', en: 'Step into operations management' }, opens: [{ ar: 'مدير عمليات', en: 'Operations Manager' }], scoreAdd: 9, official: 'https://www.pmi.org/certifications/project-management-pmp', status: 'future', cost: { ar: '≈ 4,000 ر.س', en: '≈ 4,000 SAR' }, duration: { ar: '4 أشهر', en: '4 months' }, hadaf: true },
+    ],
+    targetCompanies: ['Baker Hughes', 'SABIC', 'Sadara', 'Zamil Industrial', 'Tasnee', 'Saudi Aramco', 'Alfanar'],
+  },
+  {
+    id: 'logistics',
+    name: { ar: 'اللوجستيات والتوزيع', en: 'Logistics and Distribution' },
+    targets: { ar: 'البحري · أرامكس · سار · الموانئ', en: 'Bahri · Aramex · SAR · Mawani' },
+    roles: { ar: 'منسق لوجستيات ← مخطط توزيع ← مدير لوجستيات', en: 'Logistics Coordinator → Distribution Planner → Logistics Manager' },
+    accent: 'violet',
+    icon: 'supply',
+    gradFields: ['supply', 'consulting'],
+    months: 12,
+    scoreByLevel: { entry: 78, mid: 60, senior: 40, director: 26 },
+    trail: { ar: 'CLTD → CPIM → ستة سيجما → PMP', en: 'CLTD → CPIM → Six Sigma → PMP' },
+    certs: [
+      { name: { ar: 'CLTD', en: 'CLTD' }, desc: { ar: 'شهادة ASCM في اللوجستيات والنقل والتوزيع، المعيار العالمي الذي يُعرّفك كأخصائي لوجستيات.', en: 'The ASCM CLTD is the global standard for logistics, transportation and distribution, the credential that marks a logistics specialist.' }, gain: { ar: 'معيار مهنة اللوجستيات', en: 'The standard for the logistics field' }, opens: [{ ar: 'منسق لوجستيات', en: 'Logistics Coordinator' }, { ar: 'مخطط توزيع', en: 'Distribution Planner' }], scoreAdd: 10, official: 'https://www.ascm.org/learning-development/certifications-credentials/cltd/', status: 'current', cost: { ar: '≈ 6,500 ر.س', en: '≈ 6,500 SAR' }, duration: { ar: '3 إلى 5 أشهر', en: '3 to 5 months' }, hadaf: true },
+      { name: { ar: 'CPIM', en: 'CPIM' }, desc: { ar: 'شهادة ASCM في التخطيط والمخزون تقوّي تخطيط التوزيع.', en: 'The ASCM CPIM adds planning and inventory control that strengthens distribution planning.' }, gain: { ar: 'عمق تخطيطي للتوزيع', en: 'Planning depth for distribution' }, scoreAdd: 7, official: 'https://www.ascm.org/learning-development/certifications-credentials/cpim/', status: 'future', cost: { ar: '≈ 6,000 ر.س', en: '≈ 6,000 SAR' }, duration: { ar: '3 إلى 4 أشهر', en: '3 to 4 months' }, hadaf: true },
+      { name: { ar: 'ستة سيجما (الحزام الأخضر)', en: 'Lean Six Sigma Green Belt' }, desc: { ar: 'الحزام الأخضر لتحسين تدفقات المستودعات والنقل.', en: 'Green Belt for improving warehouse and transportation flows.' }, gain: { ar: 'تحسين تدفقات اللوجستيات', en: 'Improve logistics flows' }, scoreAdd: 7, official: 'https://asq.org/cert/six-sigma-green-belt', status: 'future', cost: { ar: '≈ 2,500 ر.س', en: '≈ 2,500 SAR' }, duration: { ar: 'شهران', en: '2 months' }, hadaf: true },
+      { name: { ar: 'PMP', en: 'PMP' }, desc: { ar: 'شهادة PMP لقيادة مشاريع اللوجستيات وتغييرات الشبكة نحو دور مدير لوجستيات.', en: 'PMP for leading logistics projects and network changes toward a logistics manager role.' }, gain: { ar: 'قيادة مشاريع اللوجستيات', en: 'Lead logistics projects' }, opens: [{ ar: 'مدير لوجستيات', en: 'Logistics Manager' }], scoreAdd: 9, official: 'https://www.pmi.org/certifications/project-management-pmp', status: 'future', cost: { ar: '≈ 4,000 ر.س', en: '≈ 4,000 SAR' }, duration: { ar: '4 أشهر', en: '4 months' }, hadaf: true },
+    ],
+    targetCompanies: ['Bahri', 'Aramex', 'SMSA', 'Saudi Post', 'SAR', 'Red Sea Gateway Terminal', 'Almarai'],
+  },
+  {
+    id: 'data-analytics',
+    name: { ar: 'البيانات والتحليل', en: 'Data and Analytics' },
+    targets: { ar: 'سدايا · علم · سابك · المراعي', en: 'SDAIA · Elm · SABIC · Almarai' },
+    roles: { ar: 'محلل بيانات ← محلل أعمال ← مدير تحليلات', en: 'Data Analyst → Business Analyst → Analytics Manager' },
+    accent: 'rose',
+    icon: 'tech',
+    gradFields: ['tech', 'supply'],
+    months: 12,
+    scoreByLevel: { entry: 76, mid: 58, senior: 38, director: 24 },
+    trail: { ar: 'PL-300 → SQL → تحليلات جوجل → ستة سيجما', en: 'PL-300 → SQL → Google Data → Six Sigma' },
+    certs: [
+      { name: { ar: 'Microsoft PL-300', en: 'Microsoft PL-300' }, desc: { ar: 'شهادة محلل بيانات Power BI من مايكروسوفت، تُوثّق مهارتك في Power BI الموجودة في سيرتك وتفتح أدوار التحليل.', en: 'The Microsoft Power BI Data Analyst certification validates the Power BI skill already on your CV and opens analyst roles.' }, gain: { ar: 'توثيق مهارتك في Power BI', en: 'Certifies your Power BI skill' }, opens: [{ ar: 'محلل بيانات', en: 'Data Analyst' }, { ar: 'محلل ذكاء أعمال', en: 'BI Analyst' }], scoreAdd: 9, official: 'https://learn.microsoft.com/credentials/certifications/power-bi-data-analyst-associate/', status: 'current', cost: { ar: '≈ 600 ر.س للاختبار', en: '≈ 600 SAR exam' }, duration: { ar: '6 إلى 8 أسابيع', en: '6 to 8 weeks' } },
+      { name: { ar: 'شهادة Oracle SQL', en: 'Oracle SQL Certification' }, desc: { ar: 'شهادة SQL رسمية تحوّل خبرتك في Oracle SQL إلى مؤهّل موثّق يبحث عنه أصحاب العمل.', en: 'A formal SQL certification turns your Oracle SQL experience into a verifiable credential employers screen for.' }, gain: { ar: 'توثيق مهارتك في SQL', en: 'Verifies your SQL' }, scoreAdd: 6, official: 'https://education.oracle.com', status: 'future', cost: { ar: '≈ 1,200 ر.س', en: '≈ 1,200 SAR' }, duration: { ar: 'شهران', en: '2 months' } },
+      { name: { ar: 'شهادة تحليلات جوجل', en: 'Google Data Analytics' }, desc: { ar: 'الشهادة المهنية في تحليل البيانات من جوجل توسّع مهاراتك عبر مسار التحليل كاملًا من التنظيف إلى العرض.', en: 'The Google Data Analytics professional certificate broadens you across the full analytics workflow, from cleaning to visualization.' }, gain: { ar: 'أساس واسع في التحليل', en: 'A broad analytics foundation' }, scoreAdd: 6, official: 'https://www.coursera.org/professional-certificates/google-data-analytics', status: 'future', cost: { ar: '≈ اشتراك شهري', en: '≈ monthly subscription' }, duration: { ar: '3 إلى 6 أشهر', en: '3 to 6 months' } },
+      { name: { ar: 'ستة سيجما (الحزام الأخضر)', en: 'Lean Six Sigma Green Belt' }, desc: { ar: 'الحزام الأخضر يجمع التحليل بتحسين العمليات، مزيج قوي لأدوار تحليلات العمليات.', en: 'The Green Belt pairs analytics with process improvement, a strong combination for operations analytics roles.' }, gain: { ar: 'تحليل مع تحسين العمليات', en: 'Analytics plus process' }, scoreAdd: 6, official: 'https://asq.org/cert/six-sigma-green-belt', status: 'future', cost: { ar: '≈ 2,500 ر.س', en: '≈ 2,500 SAR' }, duration: { ar: 'شهران', en: '2 months' }, hadaf: true },
+    ],
+    targetCompanies: ['SDAIA', 'Elm', 'SABIC', 'Almarai', 'Baker Hughes', 'Maaden'],
+  },
+];
+
+export const mahdiPlan: CustomerPlan = {
+  slug: 'mahdi-alarifi',
+  tier: 'pro',
+  sectors: ['manufacturing_mining', 'energy_petrochem', 'transport_logistics', 'retail_fmcg', 'gigaprojects_realestate', 'healthcare_pharma'],
+  profile: mahdiProfile,
+  cvScore: mahdiCvScore,
+  cvReview: mahdiCvReview,
+  scoreFactors: mahdiScoreFactors,
+  levelGaps: mahdiLevelGaps,
+  journey: { percent: 8, certsDone: 0, certsTotal: 4, messagesSent: 0, replies: 0 },
+  connections: [],
+  hrContacts: [],
+  paths: mahdiPaths,
+  primaryPath: mahdiPaths[0],
+  templates: mahdiTemplates,
+  tracker: mahdiTracker,
+};
+
 export const plans: Record<string, CustomerPlan> = {
   [aliPlan.slug]: aliPlan,
+  [mahdiPlan.slug]: mahdiPlan,
 };
 
 export function getPlan(slug: string): CustomerPlan | undefined {
@@ -624,7 +834,7 @@ export function getPlan(slug: string): CustomerPlan | undefined {
 // the list each quarter. Field tags (finance/energy/consulting/government/tech)
 // let the tab surface what matches the customer's primary area first.
 
-export type FieldTag = 'finance' | 'energy' | 'consulting' | 'government' | 'tech' | 'all';
+export type FieldTag = 'finance' | 'energy' | 'consulting' | 'government' | 'tech' | 'supply' | 'all';
 
 export const tamheer = {
   link: 'https://www.taqat.sa',
@@ -645,7 +855,8 @@ export const careerDays: { title: LS; org: LS; when: LS; city: LS; fields: Field
   { title: { ar: 'منتدى مسك العالمي', en: 'Misk Global Forum' }, org: { ar: 'مؤسسة مسك', en: 'Misk Foundation' }, when: { ar: 'نوفمبر 2026', en: 'November 2026' }, city: { ar: 'الرياض', en: 'Riyadh' }, fields: ['all'], link: 'https://miskglobalforum.com' },
   { title: { ar: 'مؤتمر القطاع المالي', en: 'Financial Sector Conference' }, org: { ar: 'البنك المركزي وهيئة السوق المالية', en: 'SAMA & CMA' }, when: { ar: 'فبراير 2027', en: 'February 2027' }, city: { ar: 'الرياض', en: 'Riyadh' }, fields: ['finance'], link: 'https://www.fsc.sa' },
   { title: { ar: 'ليب التقني (LEAP)', en: 'LEAP Tech' }, org: { ar: 'وزارة الاتصالات', en: 'MCIT' }, when: { ar: 'فبراير 2027', en: 'February 2027' }, city: { ar: 'الرياض', en: 'Riyadh' }, fields: ['tech'], link: 'https://onegiantleap.com' },
-  { title: { ar: 'يوم المهنة، جامعة الملك فهد', en: 'KFUPM Career Day' }, org: { ar: 'جامعة الملك فهد للبترول والمعادن', en: 'KFUPM' }, when: { ar: 'فبراير 2027', en: 'February 2027' }, city: { ar: 'الظهران', en: 'Dhahran' }, fields: ['energy', 'tech'], link: 'https://www.kfupm.edu.sa' },
+  { title: { ar: 'يوم المهنة، جامعة الملك فهد', en: 'KFUPM Career Day' }, org: { ar: 'جامعة الملك فهد للبترول والمعادن', en: 'KFUPM' }, when: { ar: 'فبراير 2027', en: 'February 2027' }, city: { ar: 'الظهران', en: 'Dhahran' }, fields: ['energy', 'tech', 'supply'], link: 'https://www.kfupm.edu.sa' },
+  { title: { ar: 'سيملس السعودية', en: 'Seamless Saudi Arabia' }, org: { ar: 'تيرابين', en: 'Terrapinn' }, when: { ar: 'سبتمبر 2026', en: 'September 2026' }, city: { ar: 'الرياض', en: 'Riyadh' }, fields: ['supply', 'tech', 'finance'], link: 'https://www.terrapinn.com/exhibition/seamless-saudi-arabia/' },
 ];
 
 // Graduate-study options per field for the «الدراسات / Study» tab. Two buckets:
@@ -692,6 +903,12 @@ export const gradPrograms: Record<Exclude<FieldTag, 'all'>, GradProgram[]> = {
     { tier: 'solid', uni: { ar: 'جامعة ساوثهامبتون', en: 'University of Southampton' }, program: { ar: 'علوم الحاسب', en: 'Computer Science' }, location: { ar: 'المملكة المتحدة', en: 'United Kingdom' }, link: 'https://www.southampton.ac.uk' },
     { tier: 'accessible', uni: { ar: 'جامعة غلاسكو', en: 'University of Glasgow' }, program: { ar: 'علوم الحاسب', en: 'Computer Science' }, location: { ar: 'المملكة المتحدة', en: 'United Kingdom' }, link: 'https://www.gla.ac.uk' },
   ],
+  supply: [
+    { tier: 'high', top30: true, uni: { ar: 'جامعة ميشيغان (آن أربر)', en: 'University of Michigan (Ann Arbor)' }, program: { ar: 'ماجستير إدارة سلاسل الإمداد', en: 'Master of Supply Chain Management' }, location: { ar: 'ميشيغان، الولايات المتحدة', en: 'Michigan, USA' }, link: 'https://michiganross.umich.edu' },
+    { tier: 'respected', uni: { ar: 'كلية كرانفيلد للإدارة', en: 'Cranfield School of Management' }, program: { ar: 'ماجستير اللوجستيات وسلاسل الإمداد', en: 'MSc Logistics and Supply Chain Management' }, location: { ar: 'المملكة المتحدة', en: 'United Kingdom' }, link: 'https://www.cranfield.ac.uk/som' },
+    { tier: 'solid', uni: { ar: 'كلية روتردام للإدارة', en: 'Rotterdam School of Management' }, program: { ar: 'ماجستير إدارة سلاسل الإمداد', en: 'MSc Supply Chain Management' }, location: { ar: 'روتردام، هولندا', en: 'Rotterdam, Netherlands' }, link: 'https://www.rsm.nl' },
+    { tier: 'accessible', uni: { ar: 'جامعة شيفيلد', en: 'University of Sheffield' }, program: { ar: 'ماجستير اللوجستيات وسلاسل الإمداد', en: 'MSc Logistics and Supply Chain Management' }, location: { ar: 'المملكة المتحدة', en: 'United Kingdom' }, link: 'https://www.sheffield.ac.uk' },
+  ],
 };
 
 // The graduate major that fits each field (shown as chips at the top of Study).
@@ -701,15 +918,16 @@ export const fieldMajors: Record<Exclude<FieldTag, 'all'>, LS> = {
   consulting: { ar: 'إدارة الأعمال', en: 'Business and Management' },
   government: { ar: 'السياسات العامة', en: 'Public Policy' },
   tech: { ar: 'علوم الحاسب والذكاء الاصطناعي', en: 'Computer Science and AI' },
+  supply: { ar: 'إدارة سلاسل الإمداد واللوجستيات', en: 'Supply Chain and Logistics Management' },
 };
 
 // Saudi part-time / executive options (study while working). Each is tagged with the
 // fields it suits and a region, so the ones nearest the customer can come first.
 export type PartTimeUni = { uni: LS; program: LS; city: LS; region: SaudiRegion; link: string; fields: Exclude<FieldTag, 'all'>[] };
 export const partTimeSaudi: PartTimeUni[] = [
-  { uni: { ar: 'جامعة الملك فهد للبترول والمعادن', en: 'KFUPM' }, program: { ar: 'ماجستير تنفيذي في الطاقة والمالية والحاسب', en: 'Executive MSc in Energy, Finance, CS' }, city: { ar: 'الظهران', en: 'Dhahran' }, region: 'eastern', link: 'https://cim.kfupm.edu.sa', fields: ['energy', 'finance', 'tech'] },
-  { uni: { ar: 'جامعة الأمير محمد بن فهد', en: 'PMU' }, program: { ar: 'ماجستير علم البيانات وإدارة الأعمال', en: 'MS Data Science and MBA' }, city: { ar: 'الخبر', en: 'Khobar' }, region: 'eastern', link: 'https://www.pmu.edu.sa', fields: ['tech', 'consulting', 'finance'] },
-  { uni: { ar: 'جامعة الملك سعود', en: 'King Saud University' }, program: { ar: 'ماجستير إدارة الأعمال (مسائي)', en: 'MBA, evening' }, city: { ar: 'الرياض', en: 'Riyadh' }, region: 'central', link: 'https://business.ksu.edu.sa', fields: ['finance', 'consulting', 'government'] },
+  { uni: { ar: 'جامعة الملك فهد للبترول والمعادن', en: 'KFUPM' }, program: { ar: 'ماجستير تنفيذي في الطاقة والمالية والحاسب', en: 'Executive MSc in Energy, Finance, CS' }, city: { ar: 'الظهران', en: 'Dhahran' }, region: 'eastern', link: 'https://cim.kfupm.edu.sa', fields: ['energy', 'finance', 'tech', 'supply'] },
+  { uni: { ar: 'جامعة الأمير محمد بن فهد', en: 'PMU' }, program: { ar: 'ماجستير علم البيانات وإدارة الأعمال', en: 'MS Data Science and MBA' }, city: { ar: 'الخبر', en: 'Khobar' }, region: 'eastern', link: 'https://www.pmu.edu.sa', fields: ['tech', 'consulting', 'finance', 'supply'] },
+  { uni: { ar: 'جامعة الملك سعود', en: 'King Saud University' }, program: { ar: 'ماجستير إدارة الأعمال (مسائي)', en: 'MBA, evening' }, city: { ar: 'الرياض', en: 'Riyadh' }, region: 'central', link: 'https://business.ksu.edu.sa', fields: ['finance', 'consulting', 'government', 'supply'] },
   { uni: { ar: 'مدرسة كابسارك للسياسة العامة', en: 'KAPSARC School' }, program: { ar: 'السياسات العامة والطاقة', en: 'Public Policy and Energy' }, city: { ar: 'الرياض', en: 'Riyadh' }, region: 'central', link: 'https://www.kapsarc.org', fields: ['energy', 'government'] },
   { uni: { ar: 'كلية الأمير محمد بن سلمان', en: 'MBSC' }, program: { ar: 'ماجستير إدارة الأعمال وريادة الأعمال', en: 'MBA and Entrepreneurship' }, city: { ar: 'مدينة الملك عبدالله الاقتصادية', en: 'KAEC' }, region: 'western', link: 'https://www.mbsc.edu.sa', fields: ['consulting', 'finance', 'government'] },
 ];
@@ -721,6 +939,7 @@ export const saudiUniStrength: Record<Exclude<FieldTag, 'all'>, LS> = {
   consulting: { ar: 'كاوست وجامعة الفيصل الأبرز محليًا لإدارة الأعمال.', en: 'KAUST and Alfaisal lead locally for business & management.' },
   government: { ar: 'معهد الإدارة العامة هو المرجع المحلي للسياسات والإدارة.', en: 'IPA is the local reference for policy & administration.' },
   tech: { ar: 'كاوست وجامعة الملك فهد الأقوى محليًا في الحاسب والذكاء الاصطناعي.', en: 'KAUST and KFUPM are the strongest locally for computing & AI.' },
+  supply: { ar: 'جامعة الملك فهد للبترول والمعادن وجامعة الأمير محمد بن فهد من الأقوى محليًا في سلاسل الإمداد والعمليات.', en: 'KFUPM and Prince Mohammad Bin Fahd University are among the strongest locally for supply chain and operations.' },
 };
 
 // In-demand, future-ready skills that suit any pathway (general, not field-specific).
@@ -767,7 +986,7 @@ export function careersUrlFor(companyEn: string): string | undefined {
 // A curated directory of ~60 Saudi employers, grouped by industry and tagged by size
 // (big, medium, small). Links point to each company's official site (verify the live
 // careers page before applying). Later this is filtered by the customer's CV.
-export type CompanyIndustry = 'banking' | 'energy' | 'consulting' | 'tech' | 'giga' | 'consumer';
+export type CompanyIndustry = 'banking' | 'energy' | 'consulting' | 'tech' | 'giga' | 'consumer' | 'manufacturing' | 'logistics';
 export type CompanySize = 'big' | 'medium' | 'small';
 // Each industry maps to one HR-DB sector, so the directory is filtered to the
 // customer's CV-derived sectors (the same source that drives their HR contacts).
@@ -777,7 +996,9 @@ export const companyIndustries: { id: CompanyIndustry; label: LS; sector: string
   { id: 'consulting', label: { ar: 'الاستشارات والخدمات', en: 'Consulting and services' }, sector: 'consulting' },
   { id: 'tech', label: { ar: 'التقنية والاتصالات', en: 'Tech and telecom' }, sector: 'tech_startups' },
   { id: 'giga', label: { ar: 'المشاريع الكبرى والعقار', en: 'Gigaprojects and real estate' }, sector: 'gigaprojects_realestate' },
-  { id: 'consumer', label: { ar: 'الاستهلاك والصحة واللوجستيات', en: 'Consumer, health and logistics' }, sector: 'retail_fmcg' },
+  { id: 'consumer', label: { ar: 'الاستهلاك والصحة', en: 'Consumer and health' }, sector: 'retail_fmcg' },
+  { id: 'manufacturing', label: { ar: 'الصناعة والتصنيع', en: 'Manufacturing and industry' }, sector: 'manufacturing_mining' },
+  { id: 'logistics', label: { ar: 'النقل والخدمات اللوجستية', en: 'Transport and logistics' }, sector: 'transport_logistics' },
 ];
 export const companyPortals: { name: LS; url: string; industry: CompanyIndustry; size: CompanySize }[] = [
   { name: { ar: 'صندوق الاستثمارات العامة', en: 'PIF' }, url: 'https://www.pif.gov.sa', industry: 'banking', size: 'big' },
@@ -840,6 +1061,22 @@ export const companyPortals: { name: LS; url: string; industry: CompanyIndustry;
   { name: { ar: 'كالو', en: 'Calo' }, url: 'https://calo.app', industry: 'consumer', size: 'small' },
   { name: { ar: 'ساري', en: 'Sary' }, url: 'https://sary.com', industry: 'consumer', size: 'small' },
   { name: { ar: 'زد', en: 'Zid' }, url: 'https://zid.sa', industry: 'consumer', size: 'small' },
+  { name: { ar: 'بيكر هيوز', en: 'Baker Hughes' }, url: 'https://www.bakerhughes.com', industry: 'manufacturing', size: 'big' },
+  { name: { ar: 'شلمبرجير', en: 'SLB' }, url: 'https://www.slb.com', industry: 'manufacturing', size: 'big' },
+  { name: { ar: 'هاليبرتون', en: 'Halliburton' }, url: 'https://www.halliburton.com', industry: 'manufacturing', size: 'big' },
+  { name: { ar: 'سدارة للكيماويات', en: 'Sadara Chemical' }, url: 'https://www.sadara.com', industry: 'manufacturing', size: 'medium' },
+  { name: { ar: 'الزامل للصناعة', en: 'Zamil Industrial' }, url: 'https://www.zamilindustrial.com', industry: 'manufacturing', size: 'medium' },
+  { name: { ar: 'الفنار', en: 'Alfanar' }, url: 'https://www.alfanar.com', industry: 'manufacturing', size: 'medium' },
+  { name: { ar: 'التصنيع', en: 'Tasnee' }, url: 'https://www.tasnee.com', industry: 'manufacturing', size: 'small' },
+  { name: { ar: 'حديد', en: 'Hadeed' }, url: 'https://www.hadeed.com.sa', industry: 'manufacturing', size: 'small' },
+  { name: { ar: 'البحري', en: 'Bahri' }, url: 'https://www.bahri.sa', industry: 'logistics', size: 'big' },
+  { name: { ar: 'البريد السعودي (سبل)', en: 'Saudi Post (SPL)' }, url: 'https://splonline.com.sa', industry: 'logistics', size: 'big' },
+  { name: { ar: 'أرامكس', en: 'Aramex' }, url: 'https://www.aramex.com', industry: 'logistics', size: 'big' },
+  { name: { ar: 'الخطوط الحديدية (سار)', en: 'Saudi Railways (SAR)' }, url: 'https://www.sar.com.sa', industry: 'logistics', size: 'medium' },
+  { name: { ar: 'سمسا للشحن', en: 'SMSA Express' }, url: 'https://www.smsaexpress.com', industry: 'logistics', size: 'medium' },
+  { name: { ar: 'أجكس للوجستيات', en: 'AJEX Logistics' }, url: 'https://www.ajex.com', industry: 'logistics', size: 'medium' },
+  { name: { ar: 'محطة البحر الأحمر', en: 'Red Sea Gateway Terminal' }, url: 'https://www.rsgt.com', industry: 'logistics', size: 'small' },
+  { name: { ar: 'المجدوعي للوجستيات', en: 'Almajdouie Logistics' }, url: 'https://www.almajdouie.com', industry: 'logistics', size: 'small' },
 ];
 
 // Generic, founder-curated CV and interview guidance (the same for everyone).
