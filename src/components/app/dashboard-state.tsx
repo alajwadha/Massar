@@ -27,6 +27,7 @@ type ProgressCtx = {
   toggleCert: (nameEn: string) => void;
   cvFixed: Record<string, boolean>;
   toggleCvFix: (id: string) => void;
+  resetCvFix: () => void;
   activePathId: string | null;
   setActivePath: (id: string) => void;
   homeWidgets: Record<string, boolean>;
@@ -142,6 +143,7 @@ export function DashboardState({
       setStatus: (id, s) => setStatuses((prev) => ({ ...prev, [id]: s })),
       toggleCert: (n) => setCertsDone((prev) => ({ ...prev, [n]: !prev[n] })),
       toggleCvFix: (id) => setCvFixed((prev) => ({ ...prev, [id]: !prev[id] })),
+      resetCvFix: () => setCvFixed({}),
       setActivePath: (id) => setActivePathId(id),
       setWidget: (id, on) => setHomeWidgets((prev) => ({ ...prev, [id]: on })),
     }),

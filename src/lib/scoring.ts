@@ -111,12 +111,12 @@ export function scoreNote(i: ScoreInput, level: Level, locale: 'ar' | 'en'): str
 
   if (locale === 'ar') {
     const byLevel: Record<Level, string> = {
-      entry: 'جاهز لأدوار المبتدئين.',
-      mid: 'مؤهّل جيدًا للأدوار المتوسطة.',
-      senior: 'الوصول لمستوى الخبير يحتاج سنوات خبرة وقيادة أكثر.',
-      director: 'المستوى القيادي هدف بعيد المدى مع تراكم الخبرة.',
+      entry: 'جاهز لأدوار البداية.',
+      mid: 'وضعك ممتاز للأدوار المتوسطة.',
+      senior: 'لمستوى الخبير، تحتاج سنوات وقيادة أكثر.',
+      director: 'المستوى القيادي هدف على المدى الطويل، يجي مع الخبرة.',
     };
-    return `أقوى ما لديك: ${top[0]} و${top[1]}${tagExp}. ${byLevel[level]}`;
+    return `أقوى ما عندك: ${top[0]} و${top[1]}${tagExp}. ${byLevel[level]}`;
   }
   const byLevel: Record<Level, string> = {
     entry: 'Ready for entry roles.',

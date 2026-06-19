@@ -299,12 +299,27 @@ function CardGrid({ items, locale }: { items: { contact: Contact; kind?: PickKin
 // once every issue is marked Fixed (we never leave a resolved to-do hanging).
 function CvReviewCard({ locale }: { locale: Loc }) {
   const { cvReview } = usePlan();
-  const { cvFixed, toggleCvFix } = useProgress();
+  const { cvFixed, toggleCvFix, resetCvFix } = useProgress();
   const hasIssues = cvReview.issues.length > 0;
   const open = cvReview.issues.filter((i) => !cvFixed[i.id]);
-  // A clean CV (no issues authored) still shows strengths plus a positive note. A CV whose
-  // issues are all marked fixed unmounts, so no resolved to-do is left hanging.
-  if (hasIssues && open.length === 0) return null;
+  // A clean CV (no issues authored) still shows strengths plus a positive note. When every
+  // issue is marked fixed we show a compact "all polished" state with an Undo, rather than
+  // unmounting the card forever (the fixed flags persist in localStorage).
+  if (hasIssues && open.length === 0) {
+    return (
+      <Card className="p-5 sm:p-6">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <Eyebrow>{ui.cvBlock.eyebrow[locale]}</Eyebrow>
+          <button type="button" onClick={resetCvFix} className={cn('inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold transition-colors', GHOST)}>
+            {ui.cvBlock.undo[locale]}
+          </button>
+        </div>
+        <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-emerald-500/15 px-3 py-1.5 text-[12.5px] font-semibold text-emerald-700 dark:text-emerald-300">
+          <Check className="h-4 w-4 shrink-0" /> {ui.cvBlock.polished[locale]}
+        </div>
+      </Card>
+    );
+  }
 
   const total = cvReview.issues.length;
   const done = total - open.length;
