@@ -116,6 +116,17 @@ The bar is STRICT. A finding is not a soft note; any one of these fails the gate
 - Ground everything. Every item traces to the CV or a sourced research record.
 - House style: almost never use dashes in any copy, including the product UI. They read
   as machine written.
+- Voice (Arabic): write ALL Arabic copy in a warm, natural, conversational Saudi register,
+  not stiff MSA (per the Microsoft Arabic Saudi and Mozilla l10n guides). Use وش/ليش not
+  ما الذي/لماذا, هذي not هذه, خلّ not اجعل, تستاهل not تستحق, عشان, مثل ما; address the
+  customer directly and warmly (on their side, crisp). MATCH THE CUSTOMER'S GENDER: feminine
+  forms for a woman (see qamarPlan), masculine for a man. Known gap: the SHARED ui strings are
+  still masculine and need per-gender variants; a female customer's personal copy is feminine
+  but the surrounding UI chrome reads masculine until that is built.
+- Fields beyond the original six: the type system now also supports a `media` field
+  (FieldTag/icon/gradFields/gradPrograms/fieldMajors/saudiUniStrength/CompanyIndustry). When a
+  customer's field is new, ADD it across those unions/records (not reuse a wrong tag) and add
+  the field's companies to companyPortals, exactly as was done for Qamar (media/content/sport).
 - Examples the customer gives are illustrative of the concept or level, not literal
   content to paste. Derive the real items from their actual CV and verify each.
 
