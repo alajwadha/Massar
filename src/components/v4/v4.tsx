@@ -761,7 +761,7 @@ function CertTimeline({ path, locale }: { path: CareerPath; locale: Loc }) {
                   </div>
                 )}
                 <div className="mt-3 flex flex-wrap items-center gap-2">
-                  {cert.hadaf && <span className={cn('rounded-md px-2 py-1 text-[11px] font-semibold', SOFT)}>{ui.certs.hadaf[locale]}</span>}
+                  {cert.hadaf && <span title={ui.certs.hadafExplain[locale]} className={cn('cursor-help rounded-md px-2 py-1 text-[11px] font-semibold', SOFT)}>{ui.certs.hadaf[locale]}</span>}
                   <span className={cn('rounded-md px-2 py-1 text-[11px] font-semibold', SOFT)}>{cert.cost[locale]}</span>
                   <span className={cn('rounded-md px-2 py-1 text-[11px] font-semibold', SOFT)}>{cert.duration[locale]}</span>
                   <div className="ms-auto flex gap-2">
@@ -778,6 +778,9 @@ function CertTimeline({ path, locale }: { path: CareerPath; locale: Loc }) {
           );
         })}
       </div>
+      {path.certs.some((c) => c.hadaf) && (
+        <p className="mt-3 ps-9 text-[11px] leading-snug text-stone-400 dark:text-stone-500">{ui.certs.hadafExplain[locale]}</p>
+      )}
     </div>
   );
 }
