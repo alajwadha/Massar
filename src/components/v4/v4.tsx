@@ -1154,6 +1154,11 @@ function Study({ locale }: { locale: Loc }) {
   const saudiScore = (u: (typeof partTimeSaudi)[number]) =>
     u.fields.filter((f) => fields.includes(f)).length * 2 + (region && u.region === region ? 1 : 0);
   const partTime = [...partTimeSaudi].sort((a, b) => saudiScore(b) - saudiScore(a)).slice(0, 2);
+  // Per-customer majors (3, each 4 unis) override the generic field-based list when set,
+  // so each customer sees majors that actually fit their pathways.
+  const majorBlocks = plan.studyMajors
+    ? plan.studyMajors.map((m) => ({ key: m.major.en, label: `${dWord} ${m.major[locale]}`, programs: m.programs }))
+    : fields.map((f) => ({ key: f, label: `${dWord} ${fieldMajors[f][locale]}`, programs: gradPrograms[f] ?? [] }));
 
   const tierLabel = (t: GradProgram['tier']) =>
     (t === 'high' ? ui.study.tierHigh : t === 'respected' ? ui.study.tierRespected : t === 'solid' ? ui.study.tierSolid : ui.study.tierAccessible)[locale];
@@ -1209,13 +1214,13 @@ function Study({ locale }: { locale: Loc }) {
       {/* Full-time, BY MAJOR: each major gets four universities strong in that field */}
       <div className="space-y-6">
         <SectionTitle icon={Globe} title={ui.study.fullTimeTitle[locale]} sub={ui.study.fullTimeSub[locale]} />
-        {fields.map((f) => (
-          <div key={f}>
+        {majorBlocks.map((blk) => (
+          <div key={blk.key}>
             <h3 className="mb-2.5 flex items-center gap-2 text-[13px] font-bold text-stone-900 dark:text-stone-50">
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-500" /> {dWord} {fieldMajors[f][locale]}
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-500" /> {blk.label}
             </h3>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {(gradPrograms[f] ?? []).map((p, i) => (
+              {blk.programs.map((p, i) => (
                 <a key={i} href={p.link} target="_blank" rel="noopener noreferrer" className="group">
                   <Card className={cn('flex h-full flex-col p-4 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]', p.tier === 'high' && 'border-stone-900/20 dark:border-white/20')}>
                     <div className="flex items-center justify-between gap-2">

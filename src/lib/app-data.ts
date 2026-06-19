@@ -547,6 +547,7 @@ export type CustomerPlan = {
   hrContacts: Contact[]; // filled per request from the real DB by the page
   paths: CareerPath[];
   primaryPath: CareerPath;
+  studyMajors?: StudyMajor[]; // optional: 3 reasoned grad majors (4 unis each); overrides the field-based Study list
   templates: Template[];
   tracker: typeof tracker;
 };
@@ -1010,14 +1011,50 @@ const alhajjiPaths: CareerPath[] = [
     gradFields: ['energy', 'tech'],
     months: 16,
     ...withScore({ education: 58, experience: 50, skills: 64, impact: 68, trajectory: 24, employer: 'Saipem', university: 'Jubail Industrial College' }),
-    trail: { ar: 'REP → تصميم الطاقة الشمسية → CEM → PMP', en: 'REP → Solar PV Design → CEM → PMP' },
+    trail: { ar: 'REP → API 510 → CEM → PMP', en: 'REP → API 510 → CEM → PMP' },
     certs: [
       { name: { ar: 'محترف الطاقة المتجددة REP', en: 'Renewable Energy Professional (REP)' }, desc: { ar: 'شهادة AEE لمحترفي الطاقة المتجددة، تبني على مشروع تخرجك في مولّد الهيدروجين بالتحليل الكهربائي وتربطك بدفع السعودية نحو الهيدروجين الأخضر.', en: 'The AEE renewable energy professional credential. It builds on your hydrogen-electrolysis senior project and connects you to Saudi Arabia’s green hydrogen push.' }, gain: { ar: 'دخول مجال تحول الطاقة', en: 'Enter the energy transition field' }, opens: [{ ar: 'مهندس طاقة متجددة', en: 'Renewable Energy Engineer' }], scoreAdd: 8, official: 'https://www.aeecenter.org/certified-renewable-energy-professional/becoming-a-rep/', status: 'current', cost: { ar: '≈ 1,500 ر.س', en: '≈ 1,500 SAR' }, duration: { ar: '3 إلى 4 أيام', en: '3 to 4 days' }, why: { ar: 'أوضح خطوة تترجم مشروع تخرجك إلى مؤهّل في تحول الطاقة. ابدأ بها.', en: 'The clearest step that turns your senior project into an energy-transition credential. Start here.' } },
-      { name: { ar: 'تصميم الطاقة الشمسية', en: 'Solar PV Design' }, desc: { ar: 'شهادة تصميم الأنظمة الكهروضوئية من أكاديمية المياه، معترف بها عبر امتحان كاكير، تضيف مهارة متجددة عملية.', en: 'The Saudi Water Academy solar PV design certification, recognized via the K.A.CARE exam, adding a practical renewables skill.' }, gain: { ar: 'تصميم أنظمة الطاقة الشمسية', en: 'Design solar PV systems' }, scoreAdd: 7, official: 'https://www.watercademy.com/en/shop/solar-pv-design-899', status: 'future', cost: { ar: '≈ 2,000 إلى 2,400 ر.س', en: '≈ 2,000 to 2,400 SAR' }, duration: { ar: 'دورة قصيرة', en: 'short course' } },
+      { name: { ar: 'API 510 لفحص أوعية الضغط', en: 'API 510 Pressure Vessel Inspector' }, desc: { ar: 'شهادة API لفحص أوعية الضغط، وثيقة الصلة بأنظمة الهيدروجين عالية الضغط والتخزين، وتبني على خلفيتك الميكانيكية.', en: 'The API pressure vessel inspection credential, directly relevant to high-pressure hydrogen systems and storage, building on your mechanical background.' }, gain: { ar: 'سلامة أنظمة الضغط في مشاريع الهيدروجين', en: 'Pressure-system integrity for hydrogen projects' }, scoreAdd: 7, official: 'https://www.api.org/products-and-services/individual-certification-programs/certifications/api510', status: 'future', cost: { ar: '≈ 4,220 ر.س', en: '≈ 4,220 SAR' }, duration: { ar: 'يوم اختبار · 2 إلى 4 أشهر', en: 'exam day · 2 to 4 months' } },
       { name: { ar: 'مدير طاقة معتمد CEM', en: 'Certified Energy Manager (CEM)' }, desc: { ar: 'شهادة AEE لإدارة الطاقة وكفاءتها، مطلوبة في مشاريع الاستدامة والكفاءة في الجهات الكبرى.', en: 'The AEE energy management and efficiency credential, valued in sustainability and efficiency projects at major employers.' }, gain: { ar: 'خبرة معتمدة في كفاءة الطاقة', en: 'Certified energy-efficiency expertise' }, scoreAdd: 8, official: 'https://www.aeecenter.org/certified-energy-manager/becoming-a-cem/', status: 'future', cost: { ar: '≈ 1,900 ر.س', en: '≈ 1,900 SAR' }, duration: { ar: 'تدريب 5 أيام + اختبار', en: '5-day training + exam' } },
       { name: { ar: 'PMP', en: 'PMP' }, desc: { ar: 'شهادة PMP لقيادة مشاريع الطاقة المتجددة والهيدروجين نحو أدوار تطوير المشاريع.', en: 'PMP for leading renewables and hydrogen projects toward development roles.' }, gain: { ar: 'قيادة مشاريع المتجددة', en: 'Lead renewables projects' }, scoreAdd: 8, official: 'https://www.pmi.org/certifications/project-management-pmp', status: 'future', cost: { ar: '≈ 2,500 ر.س', en: '≈ 2,500 SAR' }, duration: { ar: '4 أشهر', en: '4 months' }, hadaf: true, hadafNote: { ar: 'يدعمها صندوق هدف', en: 'Hadaf supported' } },
     ],
     targetCompanies: ['NEOM', 'ACWA Power', 'Saudi Aramco', 'Air Products', 'SABIC'],
+  },
+];
+
+// Three graduate majors close to his pathways (mechanical / oil and gas / EPC), 4 unis
+// each, researched and reasoned for HIM. Overrides the generic field-based Study list so
+// he never sees an off-target major (no Energy Economics, no Computer Science).
+const alhajjiStudyMajors: StudyMajor[] = [
+  {
+    major: { ar: 'الهندسة الميكانيكية', en: 'Mechanical Engineering' },
+    why: { ar: 'يمتد مباشرة من بكالوريوسه ويثبّت مساري الميكانيكا والموثوقية وهندسة المشاريع', en: 'Extends his BSc and anchors the mechanical, reliability, and project engineering pathways' },
+    programs: [
+      { tier: 'high', top30: true, uni: { ar: 'جامعة دلفت للتقنية', en: 'TU Delft' }, program: { ar: 'ماجستير الهندسة الميكانيكية', en: 'MSc Mechanical Engineering' }, location: { ar: 'دلفت، هولندا', en: 'Delft, Netherlands' }, link: 'https://www.tudelft.nl/en/education/programmes/masters/me/msc-mechanical-engineering' },
+      { tier: 'respected', uni: { ar: 'بوليتكنيكو دي ميلانو', en: 'Politecnico di Milano' }, program: { ar: 'ماجستير الهندسة الميكانيكية', en: 'MSc Mechanical Engineering' }, location: { ar: 'ميلانو، إيطاليا', en: 'Milan, Italy' }, link: 'https://www.polimi.it/en/education/laurea-magistrale-programmes/programme-detail/mechanical-engineering-1' },
+      { tier: 'solid', uni: { ar: 'جامعة الملك فهد للبترول والمعادن', en: 'KFUPM' }, program: { ar: 'ماجستير الهندسة الميكانيكية', en: 'MSc Mechanical Engineering' }, location: { ar: 'الظهران، السعودية', en: 'Dhahran, Saudi Arabia' }, link: 'https://bulletin.kfupm.edu.sa/main/program?program_id=149&title=master-of-science-in-mechanical-engineering' },
+      { tier: 'accessible', uni: { ar: 'جامعة خليفة', en: 'Khalifa University' }, program: { ar: 'ماجستير الهندسة الميكانيكية', en: 'MSc Mechanical Engineering' }, location: { ar: 'أبوظبي، الإمارات', en: 'Abu Dhabi, UAE' }, link: 'https://www.ku.ac.ae/academics/graduate-programs/m-sc-in-mechanical-engineering' },
+    ],
+  },
+  {
+    major: { ar: 'هندسة ما تحت سطح البحر والبترول', en: 'Subsea and Petroleum Engineering' },
+    why: { ar: 'يطابق عمله في الهوك-أب البحري وEPC والأنابيب في سايبم وأرامكو', en: 'Maps to his offshore hook-up, EPC, and pipeline work at Saipem and Aramco' },
+    programs: [
+      { tier: 'high', uni: { ar: 'الجامعة النرويجية للعلوم والتقنية', en: 'NTNU' }, program: { ar: 'ماجستير تقنية ما تحت سطح البحر', en: 'MSc Subsea Technology' }, location: { ar: 'تروندهايم، النرويج', en: 'Trondheim, Norway' }, link: 'https://www.ntnu.edu/studies/mssubsea' },
+      { tier: 'respected', uni: { ar: 'جامعة أبردين', en: 'University of Aberdeen' }, program: { ar: 'ماجستير هندسة ما تحت سطح البحر', en: 'MSc Subsea Engineering' }, location: { ar: 'أبردين، المملكة المتحدة', en: 'Aberdeen, United Kingdom' }, link: 'https://www.abdn.ac.uk/study/postgraduate-taught/degree-programmes/317/subsea-engineering/' },
+      { tier: 'solid', uni: { ar: 'جامعة تكساس إيه آند إم', en: 'Texas A&M University' }, program: { ar: 'ماجستير الهندسة، تخصص ما تحت سطح البحر', en: 'MEng, Subsea Engineering' }, location: { ar: 'كوليج ستيشن، الولايات المتحدة', en: 'College Station, USA' }, link: 'https://engineering.tamu.edu/mtde/academics/degrees/graduate/mse-subsea/index.html' },
+      { tier: 'accessible', uni: { ar: 'جامعة خليفة', en: 'Khalifa University' }, program: { ar: 'ماجستير هندسة البترول', en: 'MSc Petroleum Engineering' }, location: { ar: 'أبوظبي، الإمارات', en: 'Abu Dhabi, UAE' }, link: 'https://www.ku.ac.ae/academics/graduate-programs/m-sc-in-petroleum-engineering' },
+    ],
+  },
+  {
+    major: { ar: 'هندسة المواد والتآكل', en: 'Materials and Corrosion Engineering' },
+    why: { ar: 'يبني على عمله في سلامة الأنابيب ومراقبة التآكل في أرامكو', en: 'Builds on his pipeline integrity and corrosion monitoring work at Aramco' },
+    programs: [
+      { tier: 'high', uni: { ar: 'بوليتكنيكو دي ميلانو', en: 'Politecnico di Milano' }, program: { ar: 'ماجستير هندسة المواد والنانوتقنية', en: 'MSc Materials Engineering and Nanotechnology' }, location: { ar: 'ميلانو، إيطاليا', en: 'Milan, Italy' }, link: 'https://www.polimi.it/en/education/laurea-magistrale-programmes/programme-detail/materials-engineering-and-nanotechnology' },
+      { tier: 'respected', uni: { ar: 'بوليتكنيكو دي تورينو', en: 'Politecnico di Torino' }, program: { ar: 'ماجستير هندسة الموارد والطاقة الأرضية', en: 'MSc Georesources and Geoenergy Engineering' }, location: { ar: 'تورينو، إيطاليا', en: 'Turin, Italy' }, link: 'https://www.polito.it/en/education/master-s-degree-programmes/georesources-and-geoenergy-engineering' },
+      { tier: 'solid', uni: { ar: 'جامعة الملك فهد للبترول والمعادن', en: 'KFUPM' }, program: { ar: 'ماجستير علوم وهندسة المواد', en: 'MSc Materials Science and Engineering' }, location: { ar: 'الظهران، السعودية', en: 'Dhahran, Saudi Arabia' }, link: 'https://bulletin.kfupm.edu.sa/main/program?program_id=159&title=master-of-science-in-materials-science-and-engineering' },
+      { tier: 'accessible', uni: { ar: 'جامعة خليفة', en: 'Khalifa University' }, program: { ar: 'ماجستير علوم وهندسة المواد', en: 'MSc Materials Science and Engineering' }, location: { ar: 'أبوظبي، الإمارات', en: 'Abu Dhabi, UAE' }, link: 'https://www.ku.ac.ae/academics/graduate-programs/m-sc-in-material-science-and-engineering' },
+    ],
   },
 ];
 
@@ -1035,6 +1072,7 @@ export const alhajjiPlan: CustomerPlan = {
   hrContacts: [],
   paths: alhajjiPaths,
   primaryPath: alhajjiPaths[0],
+  studyMajors: alhajjiStudyMajors,
   templates: alhajjiTemplates,
   tracker: alhajjiTracker,
 };
@@ -1088,6 +1126,12 @@ export type GradTier = 'high' | 'respected' | 'solid' | 'accessible';
 // top30 flags universities ranked in the world's top 30, which qualify for the
 // Saudi "Pioneers" scholarship (a guaranteed full scholarship once you hold an offer).
 export type GradProgram = { uni: LS; program: LS; location: LS; link: string; tier: GradTier; top30?: boolean };
+
+// Per-customer graduate majors: 3 majors close to the customer's pathways, each with 4
+// universities. Reasoned per person (see the playbook). When a plan sets studyMajors it
+// OVERRIDES the generic field-based list, so a mechanical engineer never sees, say, an
+// Energy Economics or Computer Science major just because a field tag happened to match.
+export type StudyMajor = { major: LS; why?: LS; programs: GradProgram[] };
 
 // Eight degree options per field, ordered hardest to easiest (two per tier: high,
 // respected, solid, accessible). These are researched real programs with working

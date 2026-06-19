@@ -45,30 +45,35 @@ After a customer sends their CV, before their link goes out:
 11. Version the customer record as a dated snapshot.
 12. Deliver the link. The customer uploads their LinkedIn CSV and works the plan.
 
-### The two agent validation gate (serial, each reviews everything)
+### The validation gate (THREE serial reviews; never lazy data)
 
-- The gate is TWO FULL reviews in series, NOT a split of the work. Each agent checks ALL
-  of it (technical, grounding, honesty, everything below), independently and from scratch.
-- Run agent one first. It must return PASS. ONLY if it passes does the work go to agent
-  two, a second independent full review. The second exists to catch what the first missed.
-- Both must PASS to deliver the link. If either fails, fix every finding and re run the
-  gate from agent one. Give each agent the customer's CV and point it at the code.
-- Run them with the Agent tool one after the other (agent two only after agent one passes),
-  or a Workflow that enforces the same order.
+- The gate is THREE FULL reviews in series. Run them in order; each must PASS before the
+  next runs. If any fails, fix every finding and restart from agent one.
+- AGENT ONE checks RELEVANCE and lazy data usage, first and above all. NEVER show a piece of
+  shared data because it exists; it must FIT THIS PERSON. Fail the gate for any item reused
+  but not relevant: a major, program, cert, company, or path that does not match the
+  customer's real field and pathways (for example a Computer Science or Energy Economics
+  master's for a mechanical oil-and-gas engineer, or a Solar PV cert for a non-solar
+  profile). Every major, university, cert, company, and path must be justified for THIS person.
+- AGENT TWO and AGENT THREE each do an independent FULL review of everything AND repeat the
+  relevance and anti-lazy check. Agent three exists to catch what two missed.
+- Give each agent the customer's CV and point it at the code. Run with the Agent tool one
+  after another (each only after the previous passes), or a Workflow that enforces the order.
 
 Every review covers, in full:
-- Technical: builds and renders; registered under the right slug with no collision; tier
-  and sectors valid; the right number of paths, each with a DERIVED score (`withScore`),
-  valid icon and gradFields, complete certs with well-formed official links; exactly one
-  primary that `primaryPath` matches.
-- Grounding: every strength, score factor, and number traces to a specific CV line;
-  nothing invented; the paths fit THIS person's real trajectory; certs are appropriate,
-  not padding; Arabic messages never spell the name in Latin letters and open with the greeting.
-- Honesty: no unverified external fact (cert cost, link, Hadaf eligibility, date) stated as
-  certain; Hadaf flagged only where verified; the score follows the rubric inputs.
+- Relevance and anti-lazy: every major, program, cert, company, and path fits THIS person's
+  field and pathways; nothing is shown merely because it exists in the shared data.
+- Technical: builds and renders; registered under the right slug with no collision; tier and
+  sectors valid; the right number of paths each with a DERIVED score (`withScore`), valid
+  icon and gradFields, complete certs with well-formed official links; one primary that
+  `primaryPath` matches; Study shows 3 majors close to the pathways, 4 universities each.
+- Grounding: every strength, score factor, and number traces to a CV line; nothing invented;
+  certs are appropriate not padding; Arabic messages never spell the name in Latin letters.
+- Honesty: no unverified external fact stated as certain; Hadaf flagged only where verified;
+  the score follows the rubric inputs.
 
-The bar is STRICT. A finding is not a soft note; any one of these fails the gate and must
-be fixed before deploy:
+The bar is STRICT. A finding is not a soft note; any one of these fails the gate:
+- Lazy or irrelevant data: an item shown because it exists, not because it fits the person.
 - A claim, score factor, or number that does not point to a specific line in the CV.
 - Generic, template like content that could describe any candidate in the field.
 - An unverified external fact stated as certain.
