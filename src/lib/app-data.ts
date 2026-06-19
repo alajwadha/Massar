@@ -645,16 +645,16 @@ const mahdiCvScore = {
 };
 
 const mahdiCvReview: CvReview = {
-  headline: { ar: 'ملف تشغيلي قوي مدعوم بالبيانات. الخطوة القادمة أن تتصدّر كل نقطة بأثر قابل للقياس.', en: 'A strong, data backed operations profile. The next step is to lead every bullet with measurable impact.' },
+  headline: { ar: 'ملف تشغيلي قوي تسنده البيانات. خطوتك التالية أن تبدأ كل نقطة بأثر ملموس وقابل للقياس.', en: 'A strong, data backed operations profile. The next step is to lead every bullet with measurable impact.' },
   strengths: [
-    { ar: 'خفض المخزون المتقادم تحت التشغيل بأكثر من 95% عبر التخطيط الاستباقي', en: 'Cut aging work in progress by over 95% through proactive planning' },
-    { ar: 'رفع استغلال الآلات 7% عبر التخطيط اليومي لأكثر من 30 آلة', en: 'Raised machine utilization 7% by daily planning across 30 plus machines' },
+    { ar: 'خفض المخزون المتقادم قيد التشغيل بأكثر من 95% عبر التخطيط الاستباقي', en: 'Cut aging work in progress by over 95% through proactive planning' },
+    { ar: 'رفع كفاءة تشغيل الآلات 7% عبر تخطيط يومي لأكثر من 30 آلة', en: 'Raised machine utilization 7% by daily planning across 30 plus machines' },
     { ar: 'إتقان أدوات التحليل: Power BI وPower Query وOracle SQL', en: 'Strong analytics tooling: Power BI, Power Query, and Oracle SQL' },
-    { ar: 'قيادة فرق متعددة الوظائف (الهندسة والعمليات والجودة والمستودع) في بيكر هيوز', en: 'Leads cross functional teams across Engineering, Operations, Quality, and Warehouse at Baker Hughes' },
+    { ar: 'قيادة فرق متعددة التخصصات (الهندسة والعمليات والجودة والمستودعات) في بيكر هيوز', en: 'Leads cross functional teams across Engineering, Operations, Quality, and Warehouse at Baker Hughes' },
   ],
   issues: [
     { id: 'impact', kind: 'bullet', text: { ar: 'بعض النقاط تصف المهام لا النتائج. أضف رقمًا أو أثرًا لكل نقطة مثلما فعلت مع الـ 95%.', en: 'Some bullets describe duties, not results. Add a number or impact to each, the way you did with the 95 percent.' }, severity: 'high' },
-    { id: 'summary', kind: 'summary', text: { ar: 'ابدأ الملخص بصفة «مخطط سلاسل إمداد» وأبرز إنجازك الأول، لا بهدف عام.', en: 'Lead the summary as a Supply Chain Planner with your headline result, not a generic objective.' }, severity: 'high' },
+    { id: 'summary', kind: 'summary', text: { ar: 'ابدأ الملخص بصفتك «مخطط سلاسل إمداد» وأبرز أهم إنجازاتك، بدل الهدف العام.', en: 'Lead the summary as a Supply Chain Planner with your headline result, not a generic objective.' }, severity: 'high' },
     { id: 'skills', kind: 'format', text: { ar: 'اجمع أدوات البيانات (Power BI وSQL وPower Query) في سطر تحليلات واضح ليبرز.', en: 'Group the data tools (Power BI, SQL, Power Query) into one clear analytics line so they stand out.' }, severity: 'med' },
     { id: 'length', kind: 'length', text: { ar: 'اختصر فقرة الملخص الطويلة إلى سطرين أو ثلاثة.', en: 'Tighten the long summary paragraph to two or three lines.' }, severity: 'low' },
   ],
@@ -663,21 +663,21 @@ const mahdiCvReview: CvReview = {
 const mahdiScoreFactors: ScoreFactor[] = [
   { label: { ar: 'التعليم', en: 'Education' }, detail: { ar: 'بكالوريوس إدارة سلاسل الإمداد واللوجستيات من الكلية الصناعية بالجبيل بمعدل 3.22', en: 'BSc Supply Chain and Logistics from Jubail Industrial College, GPA 3.22' }, strength: 'good' },
   { label: { ar: 'الخبرة', en: 'Experience' }, detail: { ar: 'سنتان في بيكر هيوز بنتائج ملموسة في التخطيط وتقليل الهدر', en: 'Two years at Baker Hughes with concrete planning and waste reduction results' }, strength: 'good' },
-  { label: { ar: 'المهارات والأدوات', en: 'Skills and tools' }, detail: { ar: 'تخطيط الإنتاج مع Power BI وSQL، وهي تطابق أدوار التخطيط والتحليل', en: 'Production planning with Power BI and SQL, a direct match for planning and analyst roles' }, strength: 'strong' },
+  { label: { ar: 'المهارات والأدوات', en: 'Skills and tools' }, detail: { ar: 'تخطيط الإنتاج مع Power BI وSQL، مزيج يناسب أدوار التخطيط والتحليل مباشرة', en: 'Production planning with Power BI and SQL, a direct match for planning and analyst roles' }, strength: 'strong' },
 ];
 
 const mahdiLevelGaps: Record<Level, LevelGap> = {
   entry: {},
-  mid: { experience: { ar: 'سنة إلى سنتين إضافيتين بامتلاك مجال تخطيط متكامل', en: '1 to 2 more years owning an end to end planning area' } },
+  mid: { experience: { ar: 'سنة إلى سنتين إضافيتين مع تولّي مسؤولية مجال تخطيط متكامل', en: '1 to 2 more years owning an end to end planning area' } },
   senior: {
     experience: { ar: '5+ سنوات مع مسؤولية أوسع', en: '5 plus years with broader ownership' },
-    other: [{ ar: 'قِدت مشروع تحسين كبيرًا', en: 'Led a major improvement project' }],
+    other: [{ ar: 'قيادة مشروع تحسين كبير', en: 'Led a major improvement project' }],
   },
   director: {
     experience: { ar: '10+ سنوات مع خبرة قيادية', en: '10 plus years with leadership experience' },
     other: [
       { ar: 'مسؤولية عن الميزانية أو الأرباح والخسائر', en: 'Budget or P&L ownership' },
-      { ar: 'بنيت أو قدت فريقًا', en: 'Built or led a team' },
+      { ar: 'بناء فريق أو قيادته', en: 'Built or led a team' },
     ],
   },
 };
