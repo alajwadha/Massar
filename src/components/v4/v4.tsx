@@ -300,8 +300,11 @@ function CardGrid({ items, locale }: { items: { contact: Contact; kind?: PickKin
 function CvReviewCard({ locale }: { locale: Loc }) {
   const { cvReview } = usePlan();
   const { cvFixed, toggleCvFix } = useProgress();
+  const hasIssues = cvReview.issues.length > 0;
   const open = cvReview.issues.filter((i) => !cvFixed[i.id]);
-  if (open.length === 0) return null;
+  // A clean CV (no issues authored) still shows strengths plus a positive note. A CV whose
+  // issues are all marked fixed unmounts, so no resolved to-do is left hanging.
+  if (hasIssues && open.length === 0) return null;
 
   const total = cvReview.issues.length;
   const done = total - open.length;
@@ -315,7 +318,7 @@ function CvReviewCard({ locale }: { locale: Loc }) {
       </div>
       <p className="mt-2 text-[15px] font-semibold leading-snug text-stone-900 dark:text-stone-50">{cvReview.headline[locale]}</p>
 
-      <div className="mt-4 grid gap-4 sm:grid-cols-2">
+      <div className={cn('mt-4 grid gap-4', hasIssues && 'sm:grid-cols-2')}>
         <div>
           <div className="text-[11px] font-bold uppercase tracking-wide text-stone-500 dark:text-stone-400">{ui.cvBlock.strengths[locale]}</div>
           <ul className="mt-2 space-y-1.5">
@@ -327,22 +330,28 @@ function CvReviewCard({ locale }: { locale: Loc }) {
             ))}
           </ul>
         </div>
-        <div>
-          <div className="text-[11px] font-bold uppercase tracking-wide text-stone-500 dark:text-stone-400">{ui.cvBlock.needsPolish[locale]}</div>
-          <ul className="mt-2 space-y-2">
-            <AnimatePresence initial={false}>
-              {open.map((iss) => (
-                <motion.li key={iss.id} layout initial={{ opacity: 1 }} exit={{ opacity: 0, height: 0, marginTop: 0 }} transition={{ duration: 0.25 }} className="flex items-start gap-2">
-                  <span className={cn('mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full', sevDot[iss.severity])} />
-                  <span className="min-w-0 flex-1 text-[13px] text-stone-600 dark:text-stone-300">{iss.text[locale]}</span>
-                  <button type="button" onClick={() => toggleCvFix(iss.id)} className={cn('inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold transition-colors', GHOST)}>
-                    <Check className="h-3 w-3" /> {ui.cvBlock.markFixed[locale]}
-                  </button>
-                </motion.li>
-              ))}
-            </AnimatePresence>
-          </ul>
-        </div>
+        {hasIssues ? (
+          <div>
+            <div className="text-[11px] font-bold uppercase tracking-wide text-stone-500 dark:text-stone-400">{ui.cvBlock.needsPolish[locale]}</div>
+            <ul className="mt-2 space-y-2">
+              <AnimatePresence initial={false}>
+                {open.map((iss) => (
+                  <motion.li key={iss.id} layout initial={{ opacity: 1 }} exit={{ opacity: 0, height: 0, marginTop: 0 }} transition={{ duration: 0.25 }} className="flex items-start gap-2">
+                    <span className={cn('mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full', sevDot[iss.severity])} />
+                    <span className="min-w-0 flex-1 text-[13px] text-stone-600 dark:text-stone-300">{iss.text[locale]}</span>
+                    <button type="button" onClick={() => toggleCvFix(iss.id)} className={cn('inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold transition-colors', GHOST)}>
+                      <Check className="h-3 w-3" /> {ui.cvBlock.markFixed[locale]}
+                    </button>
+                  </motion.li>
+                ))}
+              </AnimatePresence>
+            </ul>
+          </div>
+        ) : (
+          <div className="inline-flex items-center gap-2 self-start rounded-full bg-emerald-500/15 px-3 py-1.5 text-[12.5px] font-semibold text-emerald-700 dark:text-emerald-300">
+            <Check className="h-4 w-4 shrink-0" /> {ui.cvBlock.clean[locale]}
+          </div>
+        )}
       </div>
     </Card>
   );

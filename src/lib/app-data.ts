@@ -1719,6 +1719,7 @@ export const ui = {
     markFixed: { ar: 'تم الإصلاح', en: 'Mark fixed' },
     fixed: { ar: 'تم', en: 'Fixed' },
     polished: { ar: 'سيرتك مصقولة بالكامل', en: 'Your CV is fully polished' },
+    clean: { ar: 'سيرتك قوية، لا تحتاج إلى تعديلات.', en: 'Your CV is strong, nothing to fix.' },
     polishProgress: { ar: (a: number, b: number) => `أصلحت ${a} من ${b}`, en: (a: number, b: number) => `${a} of ${b} fixed` },
     gapsTitle: { ar: 'ما الذي ينقصك للمستوى المستهدف', en: 'What you need for your target level' },
     experience: { ar: 'الخبرة', en: 'Experience' },

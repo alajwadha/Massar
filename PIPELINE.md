@@ -68,7 +68,10 @@ Every review covers, in full:
   study-while-working options are a separate section and stay Saudi.
 - World class: at least ONE university per major must be in the QS World University Rankings
   top 30 (the OVERALL university ranking, NOT the subject/by-major ranking), flagged top30:true,
-  so every major has a genuine world-class, Pioneers-eligible reach option.
+  so every major has a genuine world-class, Pioneers-eligible reach option. The OTHER three are
+  chosen and tiered by their strength IN THE FIELD (the subject/by-major ranking), so a school
+  that is elite in the specific subject (for example Heriot-Watt for petroleum) is a strong pick
+  even when its overall rank is lower.
 - Technical: builds and renders; registered under the right slug with no collision; tier and
   sectors valid; the right number of paths each with a DERIVED score (`withScore`), valid
   icon and gradFields, complete certs with well-formed official links; one primary that
@@ -190,6 +193,9 @@ then renders `<PlanProvider plan={...}><V4 /></PlanProvider>`.
    keys that match their field; this drives both HR pulls and the company directory).
 3. Write `cvReview`: a `headline`, real `strengths[]`, and `issues[]` that are CV
    grounded and CV editable only. Each issue has `id`, `kind`, `text` (LS), `severity`.
+   Do NOT force fixes: if the CV has no real problems, say so (a positive headline and
+   strengths, `issues: []`); otherwise give at most one or two genuine points. Never
+   manufacture issues to fill a list. The card shows a clean state when `issues` is empty.
 4. Write `scoreFactors[]` (Education, Experience, Field fit, ... each with a `strength`
    of `strong | good | growing`) and `levelGaps` (what experience gap blocks each next
    level; certificate gaps are derived from the path, do not put them here).
