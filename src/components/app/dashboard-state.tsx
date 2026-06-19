@@ -5,7 +5,7 @@ import { parseUploadedConnections, type Contact, type ContactStatus, type Level 
 
 /* ------------------------------------------------------------ network -- */
 // The customer's uploaded LinkedIn network. Kept in sessionStorage (per link) so a
-// refresh keeps it, but it clears when the tab closes and never leaves the browser.
+// refresh keeps it (sessionStorage); a copy is also saved to the customer's profile on upload.
 
 type NetworkCtx = { network: Contact[] | null; setFromCsv: (text: string) => void; clear: () => void };
 const NetworkContext = createContext<NetworkCtx | null>(null);
@@ -65,6 +65,12 @@ export function DashboardState({
     const list = parseUploadedConnections(text);
     setNetwork(list);
     try { sessionStorage.setItem(`masaar:net:${slug}`, JSON.stringify(list)); } catch { /* ignore */ }
+    // Save a copy to the customer's profile (the upload copy states this).
+    try {
+      fetch('/api/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ slug, kind: 'connections', payload: { count: list.length, contacts: list } }) }).catch(() => {});
+    } catch {
+      /* ignore */
+    }
   };
   const clearNetwork = () => {
     setNetwork(null);

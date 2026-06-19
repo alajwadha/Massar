@@ -1286,8 +1286,8 @@ export const ui = {
   network: {
     title: { ar: 'اربط شبكتك في لينكدإن', en: 'Connect your LinkedIn network' },
     body: {
-      ar: 'ارفع ملف جهات اتصالك (Connections.csv) لنرتّب شبكتك ونُبرز أقرب الأشخاص إلى أهدافك للتواصل معهم أولًا. المقدمة الدافئة تتفوّق على الرسالة الباردة، والملف يبقى في متصفحك ولا نخزّنه.',
-      en: 'Upload your Connections.csv so we can rank your network and surface the people closest to your targets to reach out to first. A warm intro beats a cold message, and the file stays in your browser; we never store it.',
+      ar: 'ارفع ملف جهات اتصالك (Connections.csv) لنرتّب شبكتك ونُبرز أقرب الأشخاص إلى أهدافك للتواصل معهم أولًا. المقدمة الدافئة تتفوّق على الرسالة الباردة. يُحفظ الملف بأمان في ملفّك الشخصي لمطابقة شبكتك، ولا نشاركه، ويمكنك طلب حذفه في أي وقت.',
+      en: 'Upload your Connections.csv so we can rank your network and surface the people closest to your targets to reach out to first. A warm intro beats a cold message. Your file is saved securely to your profile to match your network, is never shared, and you can ask us to delete it anytime.',
     },
     note: { ar: 'يستغرق لينكدإن من 12 إلى 24 ساعة لإرسال الملف إلى بريدك.', en: 'LinkedIn takes 12 to 24 hours to email you the file.' },
     upload: { ar: 'ارفع Connections.csv', en: 'Upload Connections.csv' },

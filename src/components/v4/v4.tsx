@@ -1491,9 +1491,18 @@ function ReferralStrip({ locale }: { locale: Loc }) {
 /* ------------------------------------------------------------ feedback footer -- */
 
 function FeedbackFooter({ locale }: { locale: Loc }) {
+  const { slug } = usePlan();
   const [rating, setRating] = useState(0);
   const [text, setText] = useState('');
   const [sent, setSent] = useState(false);
+  const submitFeedback = () => {
+    setSent(true);
+    try {
+      fetch('/api/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ slug, kind: 'feedback', payload: { rating, text } }) }).catch(() => {});
+    } catch {
+      /* ignore */
+    }
+  };
 
   return (
     <footer className="mx-auto w-full max-w-5xl px-5 pb-12 sm:px-8">
@@ -1519,7 +1528,7 @@ function FeedbackFooter({ locale }: { locale: Loc }) {
             </div>
             <div className="mt-3 flex flex-col gap-2 sm:flex-row">
               <input value={text} onChange={(e) => setText(e.target.value)} placeholder={ui.feedback.placeholder[locale]} className={cn('min-w-0 flex-1 rounded-full px-4 py-2.5 text-sm text-stone-900 outline-none placeholder:text-stone-400 dark:text-stone-50 dark:placeholder:text-stone-500', INSET)} />
-              <button type="button" disabled={!text.trim() && rating === 0} onClick={() => setSent(true)} className={cn('inline-flex items-center justify-center gap-1.5 rounded-full px-5 py-2.5 text-sm font-bold transition-opacity disabled:opacity-40', PILL)}>
+              <button type="button" disabled={!text.trim() && rating === 0} onClick={submitFeedback} className={cn('inline-flex items-center justify-center gap-1.5 rounded-full px-5 py-2.5 text-sm font-bold transition-opacity disabled:opacity-40', PILL)}>
                 <Send className="h-4 w-4" /> {ui.feedback.send[locale]}
               </button>
             </div>
