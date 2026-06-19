@@ -81,7 +81,8 @@ Every review covers, in full:
 - Grounding: every strength, score factor, and number traces to a CV line; nothing invented;
   certs are appropriate not padding; Arabic messages never spell the name in Latin letters.
 - Honesty: no unverified external fact stated as certain; Hadaf flagged only where verified;
-  the score follows the rubric inputs.
+  the score follows the rubric inputs; salary ranges are researched from real Saudi sources
+  and saved to salary-benchmarks.json, not estimated.
 
 The bar is STRICT. A finding is not a soft note; any one of these fails the gate:
 - Lazy or irrelevant data: an item shown because it exists, not because it fits the person.
@@ -205,7 +206,12 @@ then renders `<PlanProvider plan={...}><V4 /></PlanProvider>`.
    each path set `scoreInput` via `...withScore({...})` (the five CV-grounded rubric
    inputs; it derives `scoreByLevel`, see section 6), `certs[]`, `targetCompanies[]` (real
    names, used to rank their network), `gradFields`, `roles`, `targets`, `months`. Mark
-   one `primary: true` and set `primaryPath` to it.
+   one `primary: true` and set `primaryPath` to it. Also give each path `pros[]`, `cons[]`,
+   and a `ladder[]` of four rungs (entry to director, each a role title plus a monthly Saudi
+   salary range). The salary ranges MUST be researched from real Saudi salary sources (Hays,
+   Cooper Fitch, Mercer, Bayt, Glassdoor), never estimated, and saved to
+   research/salary-benchmarks.json so they compound. Pros and cons are grounded in the field
+   and the person, not generic.
 6. Assemble the `CustomerPlan`. Set `connections: []` and `hrContacts: []` (both filled
    later, see section 7). Reuse `templates`, `tracker`, `journey` or customize them.
 7. Register it: add the plan to `plans` keyed by its `slug`.
