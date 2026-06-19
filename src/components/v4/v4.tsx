@@ -457,6 +457,11 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
 
   return (
     <div className="space-y-3 sm:space-y-4">
+      {/* Greeting with the first name, shown on phones where the header identity is hidden */}
+      <div className="lg:hidden">
+        <p className="text-[12px] text-stone-500 dark:text-stone-400">{ui.shell.greeting[locale]}</p>
+        <p className="text-xl font-bold tracking-tight text-stone-900 dark:text-stone-50">{plan.profile.name[locale].split(' ')[0]}</p>
+      </div>
       {/* role selector (a compact dropdown to pick the role the score is for) + customize */}
       <div className="flex items-center justify-between gap-2">
         <div className="relative min-w-0">
@@ -1486,9 +1491,7 @@ function ReferralStrip({ locale }: { locale: Loc }) {
                 {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />} {copied ? ui.referral.copied[locale] : ui.referral.copy[locale]}
               </button>
             </div>
-          </div>
-          <p className="mt-2 text-[11.5px] text-stone-500 dark:text-stone-400">{ui.referral.pending[locale]}</p>
-        </div>
+          </div>        </div>
       </Card>
     </div>
   );
