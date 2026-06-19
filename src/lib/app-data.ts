@@ -201,6 +201,10 @@ export type CareerPath = {
   // Real company names this area targets; used to rank the customer's uploaded
   // network into the 5 warm intros shown under the path.
   targetCompanies: string[];
+  // Optional richer per-path detail (authored for Mahdi; other customers omit it).
+  pros?: LS[];
+  cons?: LS[];
+  ladder?: { level: Level; title: LS; salary: LS }[]; // rungs entry to director, each with a monthly SAR range
 };
 
 // Build a path's derived score from its rubric inputs (see scoring.ts), keeping
@@ -732,6 +736,14 @@ const mahdiPaths: CareerPath[] = [
       { name: { ar: 'PMP', en: 'PMP' }, desc: { ar: 'شهادة إدارة المشاريع من PMI، المعيار العالمي لقيادة المشاريع متعددة الوظائف والانتقال إلى الإدارة.', en: 'The PMI project management standard, for leading cross functional projects and stepping into management.' }, gain: { ar: 'يؤهّلك للقيادة والإدارة', en: 'Qualifies you to lead and manage' }, opens: [{ ar: 'مدير سلاسل إمداد', en: 'Supply Chain Manager' }], scoreAdd: 9, official: 'https://www.pmi.org/certifications/project-management-pmp', status: 'future', cost: { ar: '≈ 2,500 ر.س', en: '≈ 2,500 SAR' }, duration: { ar: '4 أشهر', en: '4 months' }, hadaf: true },
     ],
     targetCompanies: ['SABIC', 'Almarai', 'NEOM', 'Nupco', 'Saudi Aramco', 'Maaden', 'Baker Hughes'],
+    pros: [{ ar: 'طلب مرتفع في كل قطاعات السعودية ضمن رؤية 2030', en: 'High demand across every Saudi sector under Vision 2030' }, { ar: 'مسار واضح من مخطط إلى إدارة سلاسل الإمداد', en: 'A clear path from planner to supply chain management' }, { ar: 'مهاراتك في Power BI والتخطيط تنتقل مباشرة', en: 'Your Power BI and planning skills transfer directly' }],
+    cons: [{ ar: 'ضغط مرتفع وقت اضطرابات الإمداد', en: 'Pressure spikes during supply disruptions' }, { ar: 'الأدوار الأولى تفصيلية وتشغيلية', en: 'Early roles are detail and operations heavy' }],
+    ladder: [
+      { level: 'entry', title: { ar: 'مخطط طلب وإمداد', en: 'Demand and Supply Planner' }, salary: { ar: '8,000 إلى 12,000 ر.س', en: 'SAR 8,000 to 12,000' } },
+      { level: 'mid', title: { ar: 'مخطط أول', en: 'Senior Planner' }, salary: { ar: '13,000 إلى 20,000 ر.س', en: 'SAR 13,000 to 20,000' } },
+      { level: 'senior', title: { ar: 'مدير سلاسل إمداد', en: 'Supply Chain Manager' }, salary: { ar: '22,000 إلى 35,000 ر.س', en: 'SAR 22,000 to 35,000' } },
+      { level: 'director', title: { ar: 'مدير عام سلاسل الإمداد', en: 'Director of Supply Chain' }, salary: { ar: '40,000 إلى 65,000 ر.س', en: 'SAR 40,000 to 65,000' } },
+    ],
   },
   {
     id: 'procurement',
@@ -751,6 +763,14 @@ const mahdiPaths: CareerPath[] = [
       { name: { ar: 'PMP', en: 'PMP' }, desc: { ar: 'شهادة PMP لقيادة مشاريع التوريد واستراتيجيات الفئات.', en: 'PMP for leading sourcing projects and category strategies.' }, gain: { ar: 'قيادة مشاريع التوريد', en: 'Lead sourcing projects' }, opens: [{ ar: 'مسؤول فئة', en: 'Category Lead' }, { ar: 'مدير مشتريات', en: 'Procurement Manager' }], scoreAdd: 9, official: 'https://www.pmi.org/certifications/project-management-pmp', status: 'future', cost: { ar: '≈ 2,500 ر.س', en: '≈ 2,500 SAR' }, duration: { ar: '4 أشهر', en: '4 months' }, hadaf: true },
     ],
     targetCompanies: ['Saudi Aramco', 'NEOM', 'Red Sea Global', 'Maaden', 'SABIC', 'Baker Hughes', 'Sadara'],
+    pros: [{ ar: 'محوري في خفض التكاليف، فيظهر أمام القيادة', en: 'Central to cost savings, so visible to leadership' }, { ar: 'طلب قوي في الطاقة والمشاريع الكبرى', en: 'Strong demand in energy and gigaprojects' }, { ar: 'شهادات CIPS تمنحك سلّمًا مهنيًا واضحًا', en: 'CIPS gives you a clear credential ladder' }],
+    cons: [{ ar: 'تفاوض وضغط مستمر مع المورّدين', en: 'Constant negotiation and supplier pressure' }, { ar: 'الامتثال والإجراءات قد تكون بيروقراطية', en: 'Compliance and process can be bureaucratic' }],
+    ladder: [
+      { level: 'entry', title: { ar: 'أخصائي مشتريات', en: 'Procurement Specialist' }, salary: { ar: '8,000 إلى 12,000 ر.س', en: 'SAR 8,000 to 12,000' } },
+      { level: 'mid', title: { ar: 'مسؤول فئة', en: 'Category Lead' }, salary: { ar: '14,000 إلى 22,000 ر.س', en: 'SAR 14,000 to 22,000' } },
+      { level: 'senior', title: { ar: 'مدير مشتريات', en: 'Procurement Manager' }, salary: { ar: '24,000 إلى 38,000 ر.س', en: 'SAR 24,000 to 38,000' } },
+      { level: 'director', title: { ar: 'مدير عام المشتريات', en: 'Procurement Director' }, salary: { ar: '45,000 إلى 70,000 ر.س', en: 'SAR 45,000 to 70,000' } },
+    ],
   },
   {
     id: 'operations',
@@ -770,6 +790,14 @@ const mahdiPaths: CareerPath[] = [
       { name: { ar: 'PMP', en: 'PMP' }, desc: { ar: 'شهادة PMP لقيادة مشاريع العمليات والمشاريع الرأسمالية نحو دور إدارة العمليات.', en: 'PMP for leading operations and capital projects toward an operations management role.' }, gain: { ar: 'الانتقال إلى إدارة العمليات', en: 'Step into operations management' }, opens: [{ ar: 'مدير عمليات', en: 'Operations Manager' }], scoreAdd: 9, official: 'https://www.pmi.org/certifications/project-management-pmp', status: 'future', cost: { ar: '≈ 2,500 ر.س', en: '≈ 2,500 SAR' }, duration: { ar: '4 أشهر', en: '4 months' }, hadaf: true },
     ],
     targetCompanies: ['Baker Hughes', 'SABIC', 'Sadara', 'Zamil Industrial', 'Tasnee', 'Saudi Aramco', 'Alfanar'],
+    pros: [{ ar: 'الأقرب لعملك الحالي في بيكر هيوز', en: 'Closest to your current Baker Hughes work' }, { ar: 'طريق مباشر إلى إدارة المصنع', en: 'A direct route to plant management' }, { ar: 'مهارات التحسين المستمر مطلوبة دائمًا', en: 'Continuous improvement skills are always in demand' }],
+    cons: [{ ar: 'غالبًا يتطلب حضورًا ميدانيًا ومناوبات', en: 'Often requires on-site presence and shifts' }, { ar: 'ضغط مؤشرات الأداء ووقت التشغيل', en: 'KPI and uptime pressure' }],
+    ladder: [
+      { level: 'entry', title: { ar: 'مخطط إنتاج', en: 'Production Planner' }, salary: { ar: '8,000 إلى 12,000 ر.س', en: 'SAR 8,000 to 12,000' } },
+      { level: 'mid', title: { ar: 'مشرف عمليات', en: 'Operations Supervisor' }, salary: { ar: '13,000 إلى 20,000 ر.س', en: 'SAR 13,000 to 20,000' } },
+      { level: 'senior', title: { ar: 'مدير عمليات', en: 'Operations Manager' }, salary: { ar: '22,000 إلى 36,000 ر.س', en: 'SAR 22,000 to 36,000' } },
+      { level: 'director', title: { ar: 'مدير عام العمليات', en: 'Operations Director' }, salary: { ar: '42,000 إلى 68,000 ر.س', en: 'SAR 42,000 to 68,000' } },
+    ],
   },
   {
     id: 'logistics',
@@ -789,6 +817,14 @@ const mahdiPaths: CareerPath[] = [
       { name: { ar: 'PMP', en: 'PMP' }, desc: { ar: 'شهادة PMP لقيادة مشاريع اللوجستيات وتغييرات الشبكة نحو دور مدير لوجستيات.', en: 'PMP for leading logistics projects and network changes toward a logistics manager role.' }, gain: { ar: 'قيادة مشاريع اللوجستيات', en: 'Lead logistics projects' }, opens: [{ ar: 'مدير لوجستيات', en: 'Logistics Manager' }], scoreAdd: 9, official: 'https://www.pmi.org/certifications/project-management-pmp', status: 'future', cost: { ar: '≈ 2,500 ر.س', en: '≈ 2,500 SAR' }, duration: { ar: '4 أشهر', en: '4 months' }, hadaf: true },
     ],
     targetCompanies: ['Bahri', 'Aramex', 'SMSA', 'Saudi Post', 'SAR', 'Red Sea Gateway Terminal', 'Almarai'],
+    pros: [{ ar: 'ينمو بسرعة مع طموح السعودية كمركز لوجستي', en: 'Booming with Saudi Arabia logistics-hub ambition' }, { ar: 'عمل ملموس وسريع الإيقاع', en: 'Tangible, fast-moving work' }, { ar: 'مداخل متعددة: مستودعات، نقل، توزيع', en: 'Many entry points: warehousing, transport, distribution' }],
+    cons: [{ ar: 'هوامش ضيقة وضغط تكلفة مستمر', en: 'Tight margins and constant cost pressure' }, { ar: 'قد يشمل ساعات عمل غير منتظمة', en: 'Can involve irregular hours' }],
+    ladder: [
+      { level: 'entry', title: { ar: 'منسق لوجستيات', en: 'Logistics Coordinator' }, salary: { ar: '7,000 إلى 11,000 ر.س', en: 'SAR 7,000 to 11,000' } },
+      { level: 'mid', title: { ar: 'مخطط توزيع', en: 'Distribution Planner' }, salary: { ar: '12,000 إلى 18,000 ر.س', en: 'SAR 12,000 to 18,000' } },
+      { level: 'senior', title: { ar: 'مدير لوجستيات', en: 'Logistics Manager' }, salary: { ar: '20,000 إلى 32,000 ر.س', en: 'SAR 20,000 to 32,000' } },
+      { level: 'director', title: { ar: 'مدير عام اللوجستيات', en: 'Logistics Director' }, salary: { ar: '38,000 إلى 60,000 ر.س', en: 'SAR 38,000 to 60,000' } },
+    ],
   },
   {
     id: 'data-analytics',
@@ -808,6 +844,14 @@ const mahdiPaths: CareerPath[] = [
       { name: { ar: 'ستة سيجما (الحزام الأخضر)', en: 'Lean Six Sigma Green Belt' }, desc: { ar: 'الحزام الأخضر يجمع التحليل بتحسين العمليات، مزيج قوي لأدوار تحليلات العمليات.', en: 'The Green Belt pairs analytics with process improvement, a strong combination for operations analytics roles.' }, gain: { ar: 'تحليل مع تحسين العمليات', en: 'Analytics plus process' }, scoreAdd: 6, official: 'https://asq.org/cert/six-sigma-green-belt', status: 'future', cost: { ar: '≈ 1,400 ر.س', en: '≈ 1,400 SAR' }, duration: { ar: 'شهران', en: '2 months' } },
     ],
     targetCompanies: ['SDAIA', 'Elm', 'SABIC', 'Almarai', 'Baker Hughes', 'Maaden'],
+    pros: [{ ar: 'يبني مباشرة على Power BI وSQL لديك', en: 'Builds directly on your Power BI and SQL' }, { ar: 'قابل للنقل عبر كل القطاعات', en: 'Highly transferable across every sector' }, { ar: 'من أسرع المسارات نموًا وأعلاها أجرًا', en: 'Among the fastest growing, best paid tracks' }],
+    cons: [{ ar: 'يتطلب تطويرًا مستمرًا فالأدوات تتغير بسرعة', en: 'Needs continuous upskilling, tools change fast' }, { ar: 'قد يبتعد عن سلاسل الإمداد نحو التقنية البحتة', en: 'Can drift from supply chain into pure tech' }],
+    ladder: [
+      { level: 'entry', title: { ar: 'محلل بيانات', en: 'Data Analyst' }, salary: { ar: '9,000 إلى 14,000 ر.س', en: 'SAR 9,000 to 14,000' } },
+      { level: 'mid', title: { ar: 'محلل أعمال', en: 'Business Analyst' }, salary: { ar: '15,000 إلى 23,000 ر.س', en: 'SAR 15,000 to 23,000' } },
+      { level: 'senior', title: { ar: 'مدير تحليلات', en: 'Analytics Manager' }, salary: { ar: '25,000 إلى 38,000 ر.س', en: 'SAR 25,000 to 38,000' } },
+      { level: 'director', title: { ar: 'رئيس التحليلات', en: 'Head of Analytics' }, salary: { ar: '42,000 إلى 65,000 ر.س', en: 'SAR 42,000 to 65,000' } },
+    ],
   },
 ];
 
@@ -1515,6 +1559,11 @@ export const ui = {
     forPromotions: { ar: 'لوظيفة جديدة أو ترقية', en: 'For a new role or a promotion' },
     setActive: { ar: 'اجعله مساري', en: 'Make this my path' },
     active: { ar: 'مسارك', en: 'Your path' },
+    prosConsTitle: { ar: 'مزايا وعيوب المسار', en: 'Pros and cons' },
+    pros: { ar: 'المزايا', en: 'Pros' },
+    cons: { ar: 'العيوب', en: 'Cons' },
+    ladderTitle: { ar: 'السلّم الوظيفي والرواتب', en: 'Career ladder and salary' },
+    salaryNote: { ar: 'نطاقات رواتب تقريبية شهرية في السوق السعودي.', en: 'Approximate monthly salary ranges in the Saudi market.' },
   },
   certs: {
     title: { ar: 'خارطة الشهادات', en: 'Certification roadmap' },

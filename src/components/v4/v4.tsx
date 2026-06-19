@@ -845,6 +845,55 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
         </div>
       </Card>
 
+      {(path.pros || path.ladder) && (
+        <div className="grid gap-5 lg:grid-cols-2">
+          {path.pros && path.cons && (
+            <Card className="p-5">
+              <h3 className="text-base font-semibold text-stone-900 dark:text-stone-50">{ui.paths.prosConsTitle[locale]}</h3>
+              <div className="mt-3 grid gap-4 sm:grid-cols-2">
+                <div>
+                  <div className="text-[11px] font-bold uppercase tracking-wide text-emerald-700 dark:text-emerald-300">{ui.paths.pros[locale]}</div>
+                  <ul className="mt-2 space-y-1.5">
+                    {path.pros.map((p, i) => (
+                      <li key={i} className="flex items-start gap-2 text-[13px] text-stone-600 dark:text-stone-300"><Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-600 dark:text-emerald-400" /><span>{p[locale]}</span></li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <div className="text-[11px] font-bold uppercase tracking-wide text-stone-500 dark:text-stone-400">{ui.paths.cons[locale]}</div>
+                  <ul className="mt-2 space-y-1.5">
+                    {path.cons.map((c, i) => (
+                      <li key={i} className="flex items-start gap-2 text-[13px] text-stone-600 dark:text-stone-300"><span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-stone-400" /><span>{c[locale]}</span></li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </Card>
+          )}
+          {path.ladder && (
+            <Card className="p-5">
+              <h3 className="text-base font-semibold text-stone-900 dark:text-stone-50">{ui.paths.ladderTitle[locale]}</h3>
+              <p className="mt-0.5 text-[12px] text-stone-500 dark:text-stone-400">{ui.paths.salaryNote[locale]}</p>
+              <ol className="mt-3 space-y-2">
+                {path.ladder.map((rung, i) => {
+                  const on = rung.level === level;
+                  return (
+                    <li key={i} className={cn('flex items-center gap-3 rounded-xl px-2.5 py-2', on && cn(SOFT, 'ring-1 ring-amber-500/30'))}>
+                      <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-stone-900 text-[11px] font-bold text-white dark:bg-stone-100 dark:text-stone-900">{i + 1}</span>
+                      <div className="min-w-0 flex-1">
+                        <div className="truncate text-[13.5px] font-semibold text-stone-900 dark:text-stone-50">{rung.title[locale]}</div>
+                        <div className="text-[11px] text-stone-500 dark:text-stone-400">{LEVELS.find((l) => l.id === rung.level)?.label[locale]}</div>
+                      </div>
+                      <span className="shrink-0 text-[12px] font-bold tabular-nums text-amber-700 dark:text-amber-300">{rung.salary[locale]}</span>
+                    </li>
+                  );
+                })}
+              </ol>
+            </Card>
+          )}
+        </div>
+      )}
+
       <div>
         <h3 className="text-lg font-semibold text-stone-900 dark:text-stone-50">{ui.certs.title[locale]}</h3>
         <p className="mt-0.5 text-sm text-stone-500 dark:text-stone-400">{ui.certs.sub[locale]}</p>
