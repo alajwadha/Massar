@@ -45,25 +45,35 @@ After a customer sends their CV, before their link goes out:
 11. Version the customer record as a dated snapshot.
 12. Deliver the link. The customer uploads their LinkedIn CSV and works the plan.
 
-### The two agent validation gate
+### The two agent validation gate (serial, each reviews everything)
 
-- Both agents are given the customer's CV.
-- Agent one checks it technically works: it builds and renders, links resolve, the data
-  is correct, the tier configuration is right.
-- Agent two checks it makes sense for this specific person: grounded in their CV, the
-  right field and level, nothing invented.
-- Both must pass to deliver the link. If either fails, fix it and re run until both pass.
-- Run them with the Agent tool (two reviewers), or a Workflow if orchestration is wanted.
+- The gate is TWO FULL reviews in series, NOT a split of the work. Each agent checks ALL
+  of it (technical, grounding, honesty, everything below), independently and from scratch.
+- Run agent one first. It must return PASS. ONLY if it passes does the work go to agent
+  two, a second independent full review. The second exists to catch what the first missed.
+- Both must PASS to deliver the link. If either fails, fix every finding and re run the
+  gate from agent one. Give each agent the customer's CV and point it at the code.
+- Run them with the Agent tool one after the other (agent two only after agent one passes),
+  or a Workflow that enforces the same order.
+
+Every review covers, in full:
+- Technical: builds and renders; registered under the right slug with no collision; tier
+  and sectors valid; the right number of paths, each with a DERIVED score (`withScore`),
+  valid icon and gradFields, complete certs with well-formed official links; exactly one
+  primary that `primaryPath` matches.
+- Grounding: every strength, score factor, and number traces to a specific CV line;
+  nothing invented; the paths fit THIS person's real trajectory; certs are appropriate,
+  not padding; Arabic messages never spell the name in Latin letters and open with the greeting.
+- Honesty: no unverified external fact (cert cost, link, Hadaf eligibility, date) stated as
+  certain; Hadaf flagged only where verified; the score follows the rubric inputs.
 
 The bar is STRICT. A finding is not a soft note; any one of these fails the gate and must
 be fixed before deploy:
-- Any strength, score factor, or number that does not point to a specific line in the CV.
-- Generic, template like content that could describe any candidate in the field. Each
-  path, cert, and claim must be justified for THIS person.
-- Unverified external facts (cert cost, official link, Hadaf eligibility, event date)
-  stated as certain. Flag or verify them.
-- A score that does not follow from the rubric inputs (scoring.ts), or rubric inputs that
-  are not grounded in the CV.
+- A claim, score factor, or number that does not point to a specific line in the CV.
+- Generic, template like content that could describe any candidate in the field.
+- An unverified external fact stated as certain.
+- A score that does not follow from the rubric inputs (scoring.ts), or inputs not grounded
+  in the CV.
 
 ---
 
