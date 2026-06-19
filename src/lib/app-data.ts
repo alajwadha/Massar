@@ -190,8 +190,8 @@ export type CareerPath = {
   targets: LS;
   roles: LS; // the positions this path leads to (for a new job OR a promotion)
   accent: AccentKey;
-  icon: 'finance' | 'energy' | 'consulting' | 'government' | 'tech' | 'supply';
-  gradFields: ('finance' | 'energy' | 'consulting' | 'government' | 'tech' | 'supply')[]; // relevant graduate majors (Study tab)
+  icon: 'finance' | 'energy' | 'consulting' | 'government' | 'tech' | 'supply' | 'media';
+  gradFields: ('finance' | 'energy' | 'consulting' | 'government' | 'tech' | 'supply' | 'media')[]; // relevant graduate majors (Study tab)
   months: number;
   scoreByLevel: Record<Level, number>; // CV competitiveness 0-100 per seniority (DERIVED from scoreInput)
   scoreInput: ScoreInput; // the CV-grounded rubric inputs the score is computed from
@@ -1121,10 +1121,293 @@ export const alhajjiPlan: CustomerPlan = {
   tracker: alhajjiTracker,
 };
 
+/* ---------------------------------------------------- customer: Qamar (#4) -- */
+// Sports media and content creator (first media-field customer; first woman, so her
+// personal copy is FEMININE Saudi). Authored from her CV; only derived text ships.
+const qamarProfile = {
+  name: { ar: 'قمر كاشف', en: 'Qamar Kashif' } satisfies LS,
+  headline: { ar: 'صانعة محتوى وإعلام رياضي · جدة', en: 'Content Creator and Sports Media · Jeddah' } satisfies LS,
+  location: { ar: 'جدة، المنطقة الغربية', en: 'Jeddah, Western Province' } satisfies LS,
+  region: 'western' as SaudiRegion,
+  degree: 'bachelor' as Degree,
+};
+
+const qamarCvScore = {
+  target: { ar: 'صناعة المحتوى والتسويق الرقمي', en: 'Content Creation and Digital Marketing' } satisfies LS,
+  improvements: [
+    { action: { ar: 'أضيفي أرقام لإنجازاتك (نسب تفاعل، مشاهدات، نمو متابعين)', en: 'Add metrics to your bullets (engagement, views, follower growth)' }, delta: 6, effort: { ar: '30 دقيقة', en: '30 min' } },
+    { action: { ar: 'خذي شهادة Meta للتسويق عبر السوشيال ميديا', en: 'Earn the Meta Social Media Marketing certificate' }, delta: 8, effort: { ar: 'شهرين', en: '2 months' } },
+    { action: { ar: 'كمّلي شهادة Adobe Premiere لإثبات مهارة المونتاج', en: 'Complete the Adobe Premiere Pro certification' }, delta: 7, effort: { ar: 'شهر', en: '1 month' } },
+  ] as { action: LS; delta: number; effort: LS }[],
+};
+
+const qamarCvReview: CvReview = {
+  headline: { ar: 'ملفك مليان طاقة وخبرة ميدانية وأنتِ لسّا طالبة. باقي تخلّين كل إنجاز رقم يتكلم عنك.', en: 'A high-energy profile with real field experience while you are still a student. The next step is to turn each result into a number.' },
+  strengths: [
+    { ar: 'خبرة إعلام ميداني في بطولات كبيرة (كأس آسيا تحت 17 وبطولة سنوكر ماسترز) وأنتِ في بداية مشوارك', en: 'On-the-ground media experience at major events (AFC U17 and the WST Snooker Masters) this early in your career' },
+    { ar: 'صناعة محتوى حرّة منذ 2021 لقطاعات الرياضة والأكل والصحة', en: 'Freelance content creation since 2021 across sports, food, and healthcare' },
+    { ar: 'تجيدين التصوير والمونتاج وكتابة السكربت وإدارة السوشيال ميديا', en: 'Skilled in photography, video editing, scriptwriting, and social media management' },
+    { ar: 'ثلاث لغات: العربية والإنجليزية والتركية، ميزة نادرة في الإعلام والاتصال', en: 'Trilingual (Arabic, English, Turkish), a rare edge in media and communications' },
+  ],
+  issues: [
+    { id: 'impact', kind: 'bullet', text: { ar: 'نقاطك تتكلم عن المهام بدل النتائج. أضيفي لكل دور رقم (نسبة تفاعل، مشاهدات، نمو حساب) عشان أثرك يبين.', en: 'Your bullets describe tasks, not results. Add a number to each role (engagement, views, account growth) so your impact shows.' }, severity: 'high' },
+    { id: 'summary', kind: 'summary', text: { ar: 'ابدئي ملخّصك بصفتك «صانعة محتوى وإعلام رياضي» مع أبرز إنجاز، وخلّي شهادة الأحياء كخلفية مو كعنوان.', en: 'Lead your summary as a Content Creator and Sports Media professional with your headline result, and keep the biology degree as background, not the headline.' }, severity: 'high' },
+    { id: 'format', kind: 'format', text: { ar: 'عندك أدوار فعاليات كثيرة وقصيرة، اجمعيها تحت «عمليات إعلامية في الفعاليات الرياضية» عشان الصورة تبين أوضح.', en: 'You have many short event roles; group them under one "sports event media operations" heading so the picture reads clearer.' }, severity: 'med' },
+  ],
+};
+
+const qamarScoreFactors: ScoreFactor[] = [
+  { label: { ar: 'التعليم', en: 'Education' }, detail: { ar: 'طالبة بكالوريوس أحياء في جامعة جدة (تتخرّجين 2027)، تخصص بعيد عن الإعلام، فخبرتك العملية هي ورقتك الأقوى', en: 'Biology bachelor student at the University of Jeddah (2027), a field far from media, so your hands-on experience is your strongest card' }, strength: 'growing' },
+  { label: { ar: 'الخبرة', en: 'Experience' }, detail: { ar: 'خبرة إعلام وصناعة محتوى متنوعة منذ 2021 مع أدوار قيادية في فعاليات رياضية كبيرة', en: 'Varied media and content experience since 2021 with lead roles at major sporting events' }, strength: 'good' },
+  { label: { ar: 'المهارات والأدوات', en: 'Skills and tools' }, detail: { ar: 'تصوير ومونتاج وسوشيال ميديا وثلاث لغات، حزمة قوية تناسب أدوار المحتوى مباشرة', en: 'Photography, editing, social media, and three languages, a strong kit that fits content roles directly' }, strength: 'strong' },
+];
+
+const qamarLevelGaps: Record<Level, LevelGap> = {
+  entry: {},
+  mid: { experience: { ar: 'سنة إلى سنتين وأنتِ تقودين حساب أو حملة من البداية للنهاية بأرقام واضحة', en: '1 to 2 years owning an account or a campaign end to end with clear numbers' } },
+  senior: {
+    experience: { ar: '5+ سنوات مع مسؤولية أوسع', en: '5 plus years with broader ownership' },
+    other: [{ ar: 'قدتِ فريق محتوى أو حملة كبيرة', en: 'Led a content team or a major campaign' }],
+  },
+  director: {
+    experience: { ar: '10+ سنوات وخبرة قيادية', en: '10 plus years with leadership experience' },
+    other: [
+      { ar: 'مسؤولة عن ميزانية أو نتائج فريق', en: 'Budget or team-results ownership' },
+      { ar: 'بنيتِ أو قدتِ فريق', en: 'Built or led a team' },
+    ],
+  },
+};
+
+const qamarTracker: typeof tracker = {
+  stats: { sent: 0, replied: 0, pending: 0, followup: 0 },
+  replyRate: 0,
+  weekly: [
+    { label: { ar: 'الأحد', en: 'Sun' }, value: 0 },
+    { label: { ar: 'الإثنين', en: 'Mon' }, value: 0 },
+    { label: { ar: 'الثلاثاء', en: 'Tue' }, value: 0 },
+    { label: { ar: 'الأربعاء', en: 'Wed' }, value: 0 },
+    { label: { ar: 'الخميس', en: 'Thu' }, value: 0 },
+    { label: { ar: 'الجمعة', en: 'Fri' }, value: 0 },
+    { label: { ar: 'السبت', en: 'Sat' }, value: 0 },
+  ],
+  activity: [],
+};
+
+const qamarTemplates: Template[] = [
+  { id: 'q1', title: { ar: 'تعريف مباشر', en: 'Direct Introduction' }, preview: {
+    ar: 'السلام عليكم، أنا قمر كاشف، صانعة محتوى وإعلام رياضي بخبرة في بطولات كبيرة مثل كأس آسيا تحت 17 وبطولة سنوكر ماسترز، وصناعة محتوى حرّة منذ 2021. يهمّني العمل في أدوار المحتوى والسوشيال ميديا لدى {الشركة}، وأكون ممتنّة لأي توجيه حول الفرص المتاحة. أرفقت سيرتي الذاتية للاطلاع.',
+    en: 'Hi {firstName}, I am Qamar Kashif, a content creator and sports media professional with experience at major events like the AFC U17 Asian Cup and the WST Snooker Masters, and freelance content work since 2021. I am very interested in content and social media roles at {company}, and would appreciate any guidance on opportunities. I have attached my resume for your reference.',
+  }, tone: { ar: 'رسمي', en: 'Formal' } },
+  { id: 'q2', title: { ar: 'ميزة المهارات', en: 'Skills Edge' }, preview: {
+    ar: 'السلام عليكم، أنا قمر كاشف، صانعة محتوى أجيد التصوير والمونتاج وإدارة السوشيال ميديا، وأتحدّث ثلاث لغات. يهمّني العمل في أدوار المحتوى والتسويق الرقمي لدى {الشركة}، وأقدّر أي توجيه حول الفرص.',
+    en: 'Hi {firstName}, I am Qamar Kashif, a content creator skilled in photography, editing, and social media management, and I speak three languages. I am interested in content and digital marketing roles at {company}, and would value any guidance on opportunities.',
+  }, tone: { ar: 'مباشر', en: 'Direct' } },
+  { id: 'q3', title: { ar: 'طلب تعريف', en: 'Referral Ask' }, preview: {
+    ar: 'السلام عليكم، أنا قمر كاشف، صانعة محتوى وإعلام رياضي. أبحث عن فرص في المحتوى والإعلام لدى {الشركة}، وأكون ممتنّة لو دللتني على الشخص المناسب أو أي فرص متاحة.',
+    en: 'Hi {firstName}, I am Qamar Kashif, a content creator and sports media professional. I am exploring content and media roles at {company}, and would be grateful if you could point me to the right person or any openings.',
+  }, tone: { ar: 'ودّي', en: 'Warm' } },
+  { id: 'q4', title: { ar: 'مختصرة', en: 'Short' }, preview: {
+    ar: 'السلام عليكم، أنا قمر كاشف، صانعة محتوى وإعلام رياضي بخبرة في الفعاليات الكبرى. أقدّر أي توجيه حول فرص المحتوى والسوشيال ميديا لدى {الشركة}.',
+    en: 'Hi {firstName}, I am Qamar Kashif, a content creator and sports media professional with major-event experience. I would appreciate any guidance on content and social media opportunities at {company}.',
+  }, tone: { ar: 'مختصر', en: 'Tight' } },
+];
+
+const qamarPaths: CareerPath[] = [
+  {
+    id: 'content-creation',
+    name: { ar: 'صناعة المحتوى والفيديو', en: 'Content Creation and Video' },
+    targets: { ar: 'SRMG · MBC · ثمانية · روتانا', en: 'SRMG · MBC · Thmanyah · Rotana' },
+    roles: { ar: 'صانعة محتوى ← صانعة محتوى أولى ← قائدة محتوى', en: 'Content Creator → Senior Creator → Content Lead' },
+    accent: 'brand',
+    icon: 'media',
+    gradFields: ['media'],
+    months: 8,
+    ...withScore({ education: 38, experience: 64, skills: 78, impact: 54, trajectory: 24 }),
+    primary: true,
+    trail: { ar: 'Meta سوشيال → Adobe Premiere → HubSpot → Google ماركتنق', en: 'Meta Social → Adobe Premiere → HubSpot → Google Marketing' },
+    certs: [
+      { name: { ar: 'شهادة Meta للتسويق عبر السوشيال ميديا', en: 'Meta Social Media Marketing' }, desc: { ar: 'شهادة احترافية من ميتا تغطّي صناعة المحتوى والإعلانات على إنستقرام وفيسبوك من الصفر للاحتراف. توثّق الشغل اللي تسوينه فعلًا وتعطيه اسم معروف عند أصحاب العمل.', en: 'Meta\'s professional certificate covering content and ads on Instagram and Facebook end to end. It formalizes the work you already do and puts a recognized name on it.' }, gain: { ar: 'توثّق مهارتك في المحتوى والسوشيال', en: 'Certifies your content and social skill' }, opens: [{ ar: 'صانعة محتوى', en: 'Content Creator' }, { ar: 'أخصائية سوشيال ميديا', en: 'Social Media Specialist' }], scoreAdd: 8, official: 'https://www.coursera.org/professional-certificates/facebook-social-media-marketing', status: 'current', cost: { ar: '≈ 185 ر.س شهريًا', en: '≈ 185 SAR/month' }, duration: { ar: '4 إلى 5 أشهر', en: '4 to 5 months' }, why: { ar: 'أسرع شهادة معروفة تثبّت صفتك كصانعة محتوى محترفة وتفتح لك أبواب الوكالات والعلامات. ابدئي فيها.', en: 'The fastest recognized credential that establishes you as a professional creator and opens agencies and brands. Start here.' } },
+      { name: { ar: 'Adobe Premiere Pro المعتمدة', en: 'Adobe Certified Professional, Premiere Pro' }, desc: { ar: 'شهادة Adobe الرسمية في مونتاج الفيديو، تحوّل مهارتك في المونتاج إلى إثبات معترف به عالميًا.', en: 'Adobe\'s official video-editing credential, turning your editing skill into globally recognized proof.' }, gain: { ar: 'إثبات احترافك في المونتاج', en: 'Proof of professional editing' }, scoreAdd: 7, official: 'https://certiport.pearsonvue.com/Certifications/Adobe/ACP/Overview', status: 'future', cost: { ar: '≈ 560 ر.س للاختبار', en: '≈ 560 SAR exam' }, duration: { ar: 'شهر', en: '1 month' } },
+      { name: { ar: 'HubSpot لتسويق المحتوى', en: 'HubSpot Content Marketing' }, desc: { ar: 'شهادة مجانية من HubSpot في استراتيجية المحتوى ورواية القصة وإعادة استخدام المحتوى، تنظّم طريقتك في الإنتاج.', en: 'A free HubSpot certificate in content strategy, storytelling, and repurposing that structures how you produce.' }, gain: { ar: 'استراتيجية محتوى أوضح', en: 'A clearer content strategy' }, scoreAdd: 5, official: 'https://academy.hubspot.com/courses/content-marketing', status: 'future', cost: { ar: 'مجانية', en: 'Free' }, duration: { ar: '7 إلى 9 ساعات', en: '7 to 9 hours' } },
+      { name: { ar: 'شهادة Google للتسويق الرقمي', en: 'Google Digital Marketing & E-commerce' }, desc: { ar: 'شهادة Google التأسيسية في التسويق الرقمي والتجارة الإلكترونية، توسّع شغلك من المحتوى إلى الحملات الكاملة.', en: 'Google\'s foundational digital marketing and e-commerce certificate, broadening you from content into full campaigns.' }, gain: { ar: 'توسّعك من المحتوى للحملات', en: 'Extends you into full campaigns' }, opens: [{ ar: 'أخصائية تسويق رقمي', en: 'Digital Marketing Specialist' }], scoreAdd: 6, official: 'https://www.coursera.org/professional-certificates/google-digital-marketing-ecommerce', status: 'future', cost: { ar: '≈ 185 ر.س شهريًا', en: '≈ 185 SAR/month' }, duration: { ar: '3 إلى 6 أشهر', en: '3 to 6 months' } },
+    ],
+    targetCompanies: ['SRMG', 'MBC Group', 'Thmanyah', 'Rotana', 'SELA', 'Saudi Pro League'],
+    pros: [{ ar: 'طلب عالٍ على المحتوى مع نمو الإعلام الرقمي في السعودية', en: 'High demand as Saudi digital media grows' }, { ar: 'يبني مباشرة على عملك الحر منذ 2021', en: 'Builds directly on your freelance work since 2021' }, { ar: 'يفتح لك العمل الحر والوظيفة الثابتة معًا', en: 'Opens both freelance and full-time paths' }],
+    cons: [{ ar: 'الدخل غير ثابت في البداية، خاصة بالعمل الحر', en: 'Income is uneven early on, especially freelancing' }, { ar: 'يتطلب إنتاجًا مستمرًا ومواكبة الترندات', en: 'Needs constant output and trend-watching' }],
+    ladder: [
+      { level: 'entry', title: { ar: 'صانعة محتوى', en: 'Content Creator' }, salary: { ar: '5,000 إلى 9,000 ر.س', en: 'SAR 5,000 to 9,000' } },
+      { level: 'mid', title: { ar: 'صانعة محتوى أولى', en: 'Senior Content Creator' }, salary: { ar: '9,000 إلى 16,000 ر.س', en: 'SAR 9,000 to 16,000' } },
+      { level: 'senior', title: { ar: 'قائدة محتوى', en: 'Content Lead' }, salary: { ar: '16,000 إلى 25,000 ر.س', en: 'SAR 16,000 to 25,000' } },
+      { level: 'director', title: { ar: 'رئيسة المحتوى', en: 'Head of Content' }, salary: { ar: '25,000 إلى 38,000 ر.س', en: 'SAR 25,000 to 38,000' } },
+    ],
+  },
+  {
+    id: 'social-digital',
+    name: { ar: 'السوشيال ميديا والتسويق الرقمي', en: 'Social Media and Digital Marketing' },
+    targets: { ar: 'وكالات الإعلان · stc · السعودية · العلامات', en: 'Ad agencies · stc · Saudia · brands' },
+    roles: { ar: 'أخصائية سوشيال ← مديرة سوشيال ← مديرة تسويق رقمي', en: 'Social Specialist → Social Manager → Digital Marketing Manager' },
+    accent: 'violet',
+    icon: 'media',
+    gradFields: ['media'],
+    months: 9,
+    ...withScore({ education: 38, experience: 60, skills: 74, impact: 52, trajectory: 22 }),
+    trail: { ar: 'Google ماركتنق → Meta سوشيال → GA4 → دروب', en: 'Google Marketing → Meta Social → GA4 → Doroob' },
+    certs: [
+      { name: { ar: 'شهادة Google للتسويق الرقمي', en: 'Google Digital Marketing & E-commerce' }, desc: { ar: 'شهادة Google التأسيسية في التسويق الرقمي: السيو، الإعلانات، البريد، والتجارة الإلكترونية. أساس واسع ينقلك من المحتوى إلى إدارة الحملات كاملة.', en: 'Google\'s foundational digital marketing certificate: SEO, ads, email, and e-commerce. A broad base that moves you from content to running full campaigns.' }, gain: { ar: 'أساس واسع في التسويق الرقمي', en: 'A broad digital marketing base' }, opens: [{ ar: 'أخصائية تسويق رقمي', en: 'Digital Marketing Specialist' }, { ar: 'أخصائية سوشيال ميديا', en: 'Social Media Specialist' }], scoreAdd: 8, official: 'https://www.coursera.org/professional-certificates/google-digital-marketing-ecommerce', status: 'current', cost: { ar: '≈ 185 ر.س شهريًا', en: '≈ 185 SAR/month' }, duration: { ar: '3 إلى 6 أشهر', en: '3 to 6 months' }, why: { ar: 'أوسع شهادة تفتح لك أدوار التسويق الرقمي والسوشيال بكل القطاعات. ابدئي فيها.', en: 'The broadest credential that opens digital marketing and social roles across every sector. Start here.' } },
+      { name: { ar: 'شهادة Meta للتسويق عبر السوشيال ميديا', en: 'Meta Social Media Marketing' }, desc: { ar: 'شهادة ميتا في إدارة وإعلانات إنستقرام وفيسبوك، تعمّق تخصصك في المنصات الأكثر استخدامًا.', en: 'Meta\'s certificate in managing and advertising on Instagram and Facebook, deepening you on the most-used platforms.' }, gain: { ar: 'تخصص أعمق في منصات ميتا', en: 'Deeper Meta-platform expertise' }, scoreAdd: 7, official: 'https://www.coursera.org/professional-certificates/facebook-social-media-marketing', status: 'future', cost: { ar: '≈ 185 ر.س شهريًا', en: '≈ 185 SAR/month' }, duration: { ar: '4 إلى 5 أشهر', en: '4 to 5 months' } },
+      { name: { ar: 'شهادة Google Analytics (GA4)', en: 'Google Analytics (GA4)' }, desc: { ar: 'شهادة مجانية تثبت قدرتك على قياس أداء الحملات والحسابات بالأرقام، وهي بالضبط ما ينقص ملفك.', en: 'A free certificate proving you can measure campaign and account performance with numbers, exactly what your profile needs.' }, gain: { ar: 'قياس الأداء بالأرقام', en: 'Measure performance with data' }, scoreAdd: 5, official: 'https://skillshop.exceedlms.com/student/path/507964-google-analytics-certification', status: 'future', cost: { ar: 'مجانية', en: 'Free' }, duration: { ar: '4 إلى 6 ساعات', en: '4 to 6 hours' } },
+      { name: { ar: 'منصة دروب (مسارات التسويق)', en: 'Doroob (marketing tracks)' }, desc: { ar: 'تدريب مجاني من صندوق هدف عبر منصة دروب في التسويق والمهارات الرقمية، خيار سعودي معتمد ومجاني بالكامل.', en: 'Free HRDF (Hadaf) training via the Doroob platform in marketing and digital skills, an accredited and fully free Saudi option.' }, gain: { ar: 'تدريب سعودي مجاني معتمد', en: 'Free accredited Saudi training' }, scoreAdd: 3, official: 'https://doroob.sa/', status: 'future', cost: { ar: 'مجانية', en: 'Free' }, duration: { ar: 'مرنة', en: 'Flexible' }, hadaf: true, hadafNote: { ar: 'برنامج صندوق هدف', en: 'A Hadaf program' } },
+    ],
+    targetCompanies: ['TBWA\\RAAD', 'Leo Burnett KSA', 'stc', 'Saudia', 'SRMG', 'MBC Group'],
+    pros: [{ ar: 'من أكثر المهارات طلبًا في كل القطاعات', en: 'Among the most in-demand skills across every sector' }, { ar: 'مسار واضح للترقّي وراتب أعلى', en: 'A clear path to promotion and higher pay' }, { ar: 'مهاراتك في السوشيال تنتقل مباشرة', en: 'Your social media skills transfer directly' }],
+    cons: [{ ar: 'الأدوات والخوارزميات تتغيّر بسرعة وتحتاج تعلّمًا مستمرًا', en: 'Tools and algorithms change fast and need constant learning' }, { ar: 'ضغط النتائج والأرقام الشهرية', en: 'Monthly results-and-numbers pressure' }],
+    ladder: [
+      { level: 'entry', title: { ar: 'أخصائية سوشيال ميديا', en: 'Social Media Specialist' }, salary: { ar: '5,000 إلى 9,000 ر.س', en: 'SAR 5,000 to 9,000' } },
+      { level: 'mid', title: { ar: 'مديرة سوشيال ميديا', en: 'Social Media Manager' }, salary: { ar: '13,000 إلى 22,000 ر.س', en: 'SAR 13,000 to 22,000' } },
+      { level: 'senior', title: { ar: 'مديرة تسويق رقمي', en: 'Digital Marketing Manager' }, salary: { ar: '24,000 إلى 38,000 ر.س', en: 'SAR 24,000 to 38,000' } },
+      { level: 'director', title: { ar: 'رئيسة التسويق الرقمي', en: 'Head of Digital Marketing' }, salary: { ar: '40,000 إلى 60,000 ر.س', en: 'SAR 40,000 to 60,000' } },
+    ],
+  },
+  {
+    id: 'sports-media',
+    name: { ar: 'الإعلام الرياضي وعمليات الفعاليات', en: 'Sports Media and Event Operations' },
+    targets: { ar: 'دوري روشن · SSC · سيلا · الأندية', en: 'Saudi Pro League · SSC · SELA · clubs' },
+    roles: { ar: 'منسقة إعلام رياضي ← مديرة عمليات إعلامية ← مديرة إعلام', en: 'Sports Media Coordinator → Media Operations Manager → Media Manager' },
+    accent: 'amber',
+    icon: 'media',
+    gradFields: ['media'],
+    months: 10,
+    ...withScore({ education: 38, experience: 66, skills: 70, impact: 55, trajectory: 24 }),
+    trail: { ar: 'علاقات عامة رياضية → Meta سوشيال → CAPM → HubSpot سوشيال', en: 'Sports PR → Meta Social → CAPM → HubSpot Social' },
+    certs: [
+      { name: { ar: 'العلاقات العامة في الرياضة', en: 'Public Relations in Sports' }, desc: { ar: 'دورة العلاقات العامة في الرياضة من معهد القادة، أساس عملك في تنظيم المؤتمرات الصحفية والمنطقة المختلطة في البطولات.', en: 'The Leaders institute sports PR course, the base for your press-conference and mixed-zone work at tournaments.' }, gain: { ar: 'أساس العلاقات العامة الرياضية', en: 'A sports PR foundation' }, scoreAdd: 4, official: 'https://ldi.gsa.gov.sa', status: 'done', cost: { ar: 'منجزة', en: 'Completed' }, duration: { ar: 'أنجزتها', en: 'Completed' } },
+      { name: { ar: 'شهادة Meta للتسويق عبر السوشيال ميديا', en: 'Meta Social Media Marketing' }, desc: { ar: 'شهادة ميتا تضيف للإعلام الرياضي جانب صناعة المحتوى والتغطية الرقمية للبطولات، وهو ما تطلبه الأندية والبطولات اليوم.', en: 'Meta\'s certificate adds digital content and tournament coverage to your sports media work, exactly what clubs and leagues want today.' }, gain: { ar: 'محتوى رقمي للبطولات والأندية', en: 'Digital content for leagues and clubs' }, opens: [{ ar: 'منسقة محتوى رياضي', en: 'Sports Content Coordinator' }], scoreAdd: 7, official: 'https://www.coursera.org/professional-certificates/facebook-social-media-marketing', status: 'current', cost: { ar: '≈ 185 ر.س شهريًا', en: '≈ 185 SAR/month' }, duration: { ar: '4 إلى 5 أشهر', en: '4 to 5 months' }, why: { ar: 'تضيف لخبرتك الميدانية في البطولات مهارة المحتوى الرقمي المطلوبة في كل نادٍ وبطولة. ابدئي فيها.', en: 'It adds the digital content skill every club and league now needs to your on-the-ground event experience. Start here.' } },
+      { name: { ar: 'شهادة CAPM لإدارة المشاريع', en: 'PMI CAPM' }, desc: { ar: 'الشهادة التأسيسية من PMI في إدارة المشاريع، تنظّم عملك في عمليات الإعلام والفعاليات وتؤهّلك لدور تنسيق أكبر.', en: 'PMI\'s foundational project management credential, structuring your media and event operations work and readying you for a bigger coordination role.' }, gain: { ar: 'تنظيم عمليات الفعاليات', en: 'Structure event operations' }, opens: [{ ar: 'مديرة عمليات إعلامية', en: 'Media Operations Manager' }], scoreAdd: 6, official: 'https://www.pmi.org/certifications/certified-associate-capm', status: 'future', cost: { ar: '≈ 1,100 ر.س', en: '≈ 1,100 SAR' }, duration: { ar: '2 إلى 3 أشهر', en: '2 to 3 months' } },
+      { name: { ar: 'HubSpot لإدارة السوشيال ميديا', en: 'HubSpot Social Media Marketing' }, desc: { ar: 'شهادة مجانية من HubSpot في استراتيجية السوشيال ميديا والاستماع الاجتماعي وتحويل التفاعل إلى نتائج، مفيدة لإدارة تغطية بطولة كاملة عبر الحسابات.', en: 'A free HubSpot certificate in social strategy, social listening, and turning engagement into results, useful for running a full tournament\'s coverage across accounts.' }, gain: { ar: 'إدارة تغطية اجتماعية كاملة', en: 'Run full social coverage' }, scoreAdd: 5, official: 'https://academy.hubspot.com/courses/social-media', status: 'future', cost: { ar: 'مجانية', en: 'Free' }, duration: { ar: '6 إلى 8 ساعات', en: '6 to 8 hours' } },
+    ],
+    targetCompanies: ['Saudi Pro League', 'Saudi Sports Company', 'SELA', 'Al Hilal SFC', 'Al Ittihad Club', 'Ministry of Sport', 'General Entertainment Authority'],
+    pros: [{ ar: 'قطاع الرياضة في طفرة مع رؤية 2030 والاستثمارات الكبرى', en: 'Sport is booming under Vision 2030 and major investment' }, { ar: 'خبرتك في البطولات الكبيرة ميزة نادرة', en: 'Your major-tournament experience is a rare edge' }, { ar: 'أجواء حماسية وفعاليات على أرض الواقع', en: 'High-energy, on-the-ground events' }],
+    cons: [{ ar: 'مواسم ضغط عالية وقت البطولات وساعات غير منتظمة', en: 'High-pressure tournament seasons and irregular hours' }, { ar: 'بعض الأدوار موسمية أو بعقود فعاليات', en: 'Some roles are seasonal or on event contracts' }],
+    ladder: [
+      { level: 'entry', title: { ar: 'منسقة إعلام رياضي', en: 'Sports Media Coordinator' }, salary: { ar: '6,000 إلى 10,000 ر.س', en: 'SAR 6,000 to 10,000' } },
+      { level: 'mid', title: { ar: 'مديرة عمليات إعلامية', en: 'Media Operations Manager' }, salary: { ar: '13,000 إلى 20,000 ر.س', en: 'SAR 13,000 to 20,000' } },
+      { level: 'senior', title: { ar: 'مديرة إعلام (نادٍ أو بطولة)', en: 'Media Manager (club or league)' }, salary: { ar: '22,000 إلى 35,000 ر.س', en: 'SAR 22,000 to 35,000' } },
+      { level: 'director', title: { ar: 'رئيسة الإعلام والاتصال', en: 'Head of Media and Communications' }, salary: { ar: '40,000 إلى 60,000 ر.س', en: 'SAR 40,000 to 60,000' } },
+    ],
+  },
+  {
+    id: 'pr-comms',
+    name: { ar: 'العلاقات العامة والاتصال', en: 'Public Relations and Communications' },
+    targets: { ar: 'SRMG · هيئة الترفيه · الجهات الحكومية', en: 'SRMG · GEA · government bodies' },
+    roles: { ar: 'أخصائية علاقات عامة ← مديرة علاقات عامة ← مديرة اتصال', en: 'PR Specialist → PR Manager → Communications Manager' },
+    accent: 'sky',
+    icon: 'media',
+    gradFields: ['media'],
+    months: 10,
+    ...withScore({ education: 38, experience: 56, skills: 64, impact: 50, trajectory: 22 }),
+    trail: { ar: 'علاقات عامة رياضية → CIPR → HubSpot → Google ماركتنق', en: 'Sports PR → CIPR → HubSpot → Google Marketing' },
+    certs: [
+      { name: { ar: 'العلاقات العامة في الرياضة', en: 'Public Relations in Sports' }, desc: { ar: 'دورة العلاقات العامة في الرياضة من معهد القادة، بدايتك العملية في إدارة المؤتمرات الصحفية والعلاقة مع الصحفيين.', en: 'The Leaders institute sports PR course, your practical start in press conferences and journalist relations.' }, gain: { ar: 'بداية عملية في العلاقات العامة', en: 'A practical PR start' }, scoreAdd: 4, official: 'https://ldi.gsa.gov.sa', status: 'done', cost: { ar: 'منجزة', en: 'Completed' }, duration: { ar: 'أنجزتها', en: 'Completed' } },
+      { name: { ar: 'شهادة CIPR التأسيسية في العلاقات العامة', en: 'CIPR Professional PR Certificate' }, desc: { ar: 'شهادة معهد CIPR البريطاني، المرجع المعترف به عالميًا في العلاقات العامة: العلاقات الإعلامية والتخطيط والأخلاقيات. تنقلك من العلاقات العامة الرياضية إلى الاتصال المؤسسي.', en: 'The UK CIPR credential, the globally recognized PR benchmark: media relations, planning, and ethics. It moves you from sports PR into corporate communications.' }, gain: { ar: 'المرجع المعترف به في العلاقات العامة', en: 'The recognized PR benchmark' }, opens: [{ ar: 'أخصائية علاقات عامة', en: 'PR Specialist' }, { ar: 'أخصائية اتصال', en: 'Communications Specialist' }], scoreAdd: 8, official: 'https://www.cipr.co.uk/CIPR/Learn_Develop/Qualifications/Professional_PR_Certificate.aspx', status: 'current', cost: { ar: 'تحقّقي من السعر', en: 'Check current price' }, duration: { ar: '10 إلى 12 شهرًا', en: '10 to 12 months' }, why: { ar: 'الشهادة المعترف بها التي تحوّل خبرتك في العلاقات العامة الرياضية إلى مؤهّل مؤسسي. ابدئي فيها.', en: 'The recognized credential that turns your sports PR experience into a corporate qualification. Start here.' } },
+      { name: { ar: 'HubSpot لتسويق المحتوى', en: 'HubSpot Content Marketing' }, desc: { ar: 'شهادة مجانية في استراتيجية المحتوى ورواية القصة، مهارة أساسية لصياغة الرسائل والبيانات الصحفية.', en: 'A free certificate in content strategy and storytelling, core to crafting messages and press releases.' }, gain: { ar: 'صياغة رسائل وبيانات أقوى', en: 'Sharper messaging and releases' }, scoreAdd: 4, official: 'https://academy.hubspot.com/courses/content-marketing', status: 'future', cost: { ar: 'مجانية', en: 'Free' }, duration: { ar: '7 إلى 9 ساعات', en: '7 to 9 hours' } },
+      { name: { ar: 'شهادة Google للتسويق الرقمي', en: 'Google Digital Marketing & E-commerce' }, desc: { ar: 'شهادة Google التأسيسية، تضيف للاتصال جانب القنوات الرقمية والقياس المطلوب في الاتصال الحديث.', en: 'Google\'s foundational certificate, adding the digital-channel and measurement side that modern communications needs.' }, gain: { ar: 'اتصال رقمي مدعوم بالأرقام', en: 'Data-backed digital comms' }, scoreAdd: 5, official: 'https://www.coursera.org/professional-certificates/google-digital-marketing-ecommerce', status: 'future', cost: { ar: '≈ 185 ر.س شهريًا', en: '≈ 185 SAR/month' }, duration: { ar: '3 إلى 6 أشهر', en: '3 to 6 months' } },
+    ],
+    targetCompanies: ['SRMG', 'General Entertainment Authority', 'TBWA\\RAAD', 'stc', 'Qiddiya', 'Ministry of Sport'],
+    pros: [{ ar: 'دور محوري قريب من القيادة وصوت الجهة', en: 'A central role close to leadership and the organization\'s voice' }, { ar: 'طلب قوي في الجهات الحكومية والشركات الكبرى', en: 'Strong demand in government and large firms' }, { ar: 'لغاتك الثلاث ميزة قوية في الاتصال', en: 'Your three languages are a strong communications edge' }],
+    cons: [{ ar: 'مسؤولية عالية وقت الأزمات والسمعة', en: 'High responsibility during crises and for reputation' }, { ar: 'يتطلب دقة وحذرًا في كل كلمة', en: 'Demands precision and care in every word' }],
+    ladder: [
+      { level: 'entry', title: { ar: 'أخصائية علاقات عامة', en: 'PR Specialist' }, salary: { ar: '6,000 إلى 10,000 ر.س', en: 'SAR 6,000 to 10,000' } },
+      { level: 'mid', title: { ar: 'أخصائية علاقات عامة أولى', en: 'Senior PR Specialist' }, salary: { ar: '13,000 إلى 20,000 ر.س', en: 'SAR 13,000 to 20,000' } },
+      { level: 'senior', title: { ar: 'مديرة علاقات عامة واتصال', en: 'PR and Communications Manager' }, salary: { ar: '28,000 إلى 42,000 ر.س', en: 'SAR 28,000 to 42,000' } },
+      { level: 'director', title: { ar: 'رئيسة الاتصال المؤسسي', en: 'Head of Corporate Communications' }, salary: { ar: '45,000 إلى 65,000 ر.س', en: 'SAR 45,000 to 65,000' } },
+    ],
+  },
+  {
+    id: 'design-visual',
+    name: { ar: 'التصميم والهوية البصرية', en: 'Graphic Design and Visual Content' },
+    targets: { ar: 'وكالات الإبداع · MBC · العلامات', en: 'Creative agencies · MBC · brands' },
+    roles: { ar: 'مصممة جرافيك ← مصممة أولى ← مديرة فنية', en: 'Graphic Designer → Senior Designer → Art Director' },
+    accent: 'rose',
+    icon: 'media',
+    gradFields: ['media'],
+    months: 10,
+    ...withScore({ education: 38, experience: 58, skills: 76, impact: 50, trajectory: 22 }),
+    trail: { ar: 'Canva → Photoshop → Illustrator → CalArts', en: 'Canva → Photoshop → Illustrator → CalArts' },
+    certs: [
+      { name: { ar: 'التسويق عبر Canva', en: 'Marketing with Canva' }, desc: { ar: 'دورة Canva في التصميم التسويقي، أساس عملك الحالي في تصميم المحتوى للسوشيال ميديا.', en: 'Canva\'s marketing-design course, the base of your current social media design work.' }, gain: { ar: 'أساس التصميم التسويقي', en: 'A marketing-design base' }, scoreAdd: 3, official: 'https://www.canva.com/designschool/', status: 'done', cost: { ar: 'منجزة', en: 'Completed' }, duration: { ar: 'أنجزتها', en: 'Completed' } },
+      { name: { ar: 'Adobe Photoshop المعتمدة', en: 'Adobe Certified Professional, Photoshop' }, desc: { ar: 'شهادة Adobe الرسمية في فوتوشوب، تنقلك من Canva إلى أدوات المحترفين وتفتح أدوار التصميم الجادة.', en: 'Adobe\'s official Photoshop credential, moving you from Canva to professional tools and opening serious design roles.' }, gain: { ar: 'الانتقال لأدوات المحترفين', en: 'Step up to pro tools' }, opens: [{ ar: 'مصممة جرافيك', en: 'Graphic Designer' }], scoreAdd: 7, official: 'https://certiport.pearsonvue.com/Certifications/Adobe/ACP/Overview', status: 'current', cost: { ar: '≈ 560 ر.س للاختبار', en: '≈ 560 SAR exam' }, duration: { ar: 'شهر', en: '1 month' }, why: { ar: 'أهم خطوة تنقلك من Canva إلى احتراف التصميم وتفتح أدوار المصممين. ابدئي فيها.', en: 'The key step from Canva to professional design that opens designer roles. Start here.' } },
+      { name: { ar: 'Adobe Illustrator المعتمدة', en: 'Adobe Certified Professional, Illustrator' }, desc: { ar: 'شهادة Adobe في إليستريتور لتصميم الشعارات والهوية البصرية، تضيف بُعد العلامة لأعمالك.', en: 'Adobe\'s Illustrator credential for logos and brand identity, adding the branding dimension to your work.' }, gain: { ar: 'تصميم الشعارات والهوية', en: 'Logo and brand-identity design' }, scoreAdd: 6, official: 'https://certiport.pearsonvue.com/Certifications/Adobe/ACP/Overview', status: 'future', cost: { ar: '≈ 560 ر.س للاختبار', en: '≈ 560 SAR exam' }, duration: { ar: 'شهر', en: '1 month' } },
+      { name: { ar: 'تخصص التصميم الجرافيكي (CalArts)', en: 'Graphic Design Specialization (CalArts)' }, desc: { ar: 'تخصص من معهد CalArts عبر Coursera في أساسيات التصميم: الطباعة والتكوين والعلامة، مع بناء معرض أعمال.', en: 'A CalArts specialization on Coursera in design fundamentals: typography, composition, and branding, while building a portfolio.' }, gain: { ar: 'أساس تصميم ومعرض أعمال', en: 'A design foundation and portfolio' }, scoreAdd: 5, official: 'https://www.coursera.org/specializations/graphic-design', status: 'future', cost: { ar: '≈ 185 ر.س شهريًا', en: '≈ 185 SAR/month' }, duration: { ar: '4 إلى 6 أشهر', en: '4 to 6 months' } },
+    ],
+    targetCompanies: ['TBWA\\RAAD', 'Leo Burnett KSA', 'SRMG', 'MBC Group', 'Rotana', 'SELA'],
+    pros: [{ ar: 'مهارة مطلوبة في كل فريق تسويق ومحتوى', en: 'A skill every marketing and content team needs' }, { ar: 'شغل ملموس ومعرض أعمال يتكلم عنك', en: 'Tangible work and a portfolio that speaks for you' }, { ar: 'تنتقلين بين القطاعات بسهولة', en: 'Moves easily across sectors' }],
+    cons: [{ ar: 'منافسة عالية مع كثرة المصممين', en: 'High competition with many designers' }, { ar: 'قد تطول ساعات العمل وقت التسليمات', en: 'Hours can stretch near deadlines' }],
+    ladder: [
+      { level: 'entry', title: { ar: 'مصممة جرافيك', en: 'Graphic Designer' }, salary: { ar: '4,500 إلى 8,000 ر.س', en: 'SAR 4,500 to 8,000' } },
+      { level: 'mid', title: { ar: 'مصممة أولى', en: 'Senior Designer' }, salary: { ar: '9,000 إلى 16,000 ر.س', en: 'SAR 9,000 to 16,000' } },
+      { level: 'senior', title: { ar: 'مديرة فنية', en: 'Art Director' }, salary: { ar: '18,000 إلى 28,000 ر.س', en: 'SAR 18,000 to 28,000' } },
+      { level: 'director', title: { ar: 'مديرة إبداع', en: 'Creative Director' }, salary: { ar: '30,000 إلى 50,000 ر.س', en: 'SAR 30,000 to 50,000' } },
+    ],
+  },
+];
+
+const qamarStudyMajors: StudyMajor[] = [
+  {
+    major: { ar: 'الإعلام والاتصال', en: 'Media and Communications' },
+    why: { ar: 'يمتد مباشرة من خبرتك في صناعة المحتوى والإعلام ويعطيك أساسًا أكاديميًا قويًا', en: 'Extends your content and media experience and gives it a strong academic base' },
+    programs: [
+      { tier: 'high', top30: true, uni: { ar: 'جامعة بنسلفانيا', en: 'University of Pennsylvania' }, program: { ar: 'ماجستير الإعلام والاتصال (أنينبرغ)', en: 'MA Communication and Media Industries (Annenberg)' }, location: { ar: 'بنسلفانيا، الولايات المتحدة', en: 'Pennsylvania, USA' }, link: 'https://www.asc.upenn.edu/graduate/master-communication-and-media-industries-mcmi' },
+      { tier: 'respected', uni: { ar: 'جامعة إدنبرة', en: 'University of Edinburgh' }, program: { ar: 'ماجستير الإعلام والاتصال', en: 'MSc Media and Communications' }, location: { ar: 'إدنبرة، المملكة المتحدة', en: 'Edinburgh, UK' }, link: 'https://www.ed.ac.uk/studying/postgraduate' },
+      { tier: 'solid', uni: { ar: 'كلية لندن للاقتصاد', en: 'LSE' }, program: { ar: 'ماجستير الإعلام والاتصال', en: 'MSc Media and Communications' }, location: { ar: 'لندن، المملكة المتحدة', en: 'London, UK' }, link: 'https://www.lse.ac.uk/study-at-lse/graduate/msc-media-and-communications' },
+      { tier: 'accessible', uni: { ar: 'جامعة كارديف', en: 'Cardiff University' }, program: { ar: 'ماجستير الصحافة والإعلام والاتصال', en: 'MA Journalism, Media and Communications' }, location: { ar: 'كارديف، المملكة المتحدة', en: 'Cardiff, UK' }, link: 'https://www.cardiff.ac.uk/study/postgraduate/taught/courses/course/journalism-media-and-communications-ma' },
+    ],
+  },
+  {
+    major: { ar: 'التسويق', en: 'Marketing' },
+    why: { ar: 'يقوّي جانب التسويق الرقمي والعلامة في مسارك ويفتح أدوارًا أعلى أجرًا', en: 'Strengthens the digital marketing and brand side of your path and opens better-paid roles' },
+    programs: [
+      { tier: 'high', top30: true, uni: { ar: 'إمبريال كوليدج لندن', en: 'Imperial College London' }, program: { ar: 'ماجستير التسويق الاستراتيجي', en: 'MSc Strategic Marketing' }, location: { ar: 'لندن، المملكة المتحدة', en: 'London, UK' }, link: 'https://www.imperial.ac.uk/business-school/masters/strategic-marketing/' },
+      { tier: 'respected', uni: { ar: 'جامعة مانشستر', en: 'University of Manchester' }, program: { ar: 'ماجستير التسويق الرقمي', en: 'MSc Digital Marketing' }, location: { ar: 'مانشستر، المملكة المتحدة', en: 'Manchester, UK' }, link: 'https://www.manchester.ac.uk/study/masters/courses/list/20294/msc-digital-marketing/' },
+      { tier: 'solid', uni: { ar: 'جامعة نيويورك', en: 'New York University' }, program: { ar: 'ماجستير التسويق المتكامل', en: 'MS Integrated Marketing' }, location: { ar: 'نيويورك، الولايات المتحدة', en: 'New York, USA' }, link: 'https://www.sps.nyu.edu/explore/degrees-and-programs/ms-in-integrated-marketing.html' },
+      { tier: 'accessible', uni: { ar: 'جامعة ليدز', en: 'University of Leeds' }, program: { ar: 'ماجستير التسويق', en: 'MSc Marketing' }, location: { ar: 'ليدز، المملكة المتحدة', en: 'Leeds, UK' }, link: 'https://www.leeds.ac.uk' },
+    ],
+  },
+  {
+    major: { ar: 'العلاقات العامة والاتصال الاستراتيجي', en: 'Public Relations and Strategic Communication' },
+    why: { ar: 'يبني على خبرتك في العلاقات العامة والإعلام الرياضي نحو الاتصال المؤسسي', en: 'Builds on your sports PR and media experience toward corporate communications' },
+    programs: [
+      { tier: 'high', top30: true, uni: { ar: 'جامعة كورنيل', en: 'Cornell University' }, program: { ar: 'ماجستير الاتصال المهني', en: 'MPS in Communication' }, location: { ar: 'نيويورك، الولايات المتحدة', en: 'New York, USA' }, link: 'https://communication.cals.cornell.edu' },
+      { tier: 'respected', uni: { ar: 'كينجز كوليدج لندن', en: "King's College London" }, program: { ar: 'ماجستير الاتصال السياسي والاستراتيجي', en: 'MA Political and Strategic Communication' }, location: { ar: 'لندن، المملكة المتحدة', en: 'London, UK' }, link: 'https://www.kcl.ac.uk/study/postgraduate-taught/courses/political-and-strategic-communication-ma' },
+      { tier: 'solid', uni: { ar: 'جامعة جنوب كاليفورنيا', en: 'University of Southern California' }, program: { ar: 'ماجستير العلاقات العامة والإعلان (أنينبرغ)', en: 'MA Public Relations and Advertising (Annenberg)' }, location: { ar: 'كاليفورنيا، الولايات المتحدة', en: 'California, USA' }, link: 'https://annenberg.usc.edu/academic-programs/strategic-public-relations-ma' },
+      { tier: 'accessible', uni: { ar: 'جامعة بوسطن', en: 'Boston University' }, program: { ar: 'ماجستير العلاقات العامة', en: 'MS in Public Relations' }, location: { ar: 'بوسطن، الولايات المتحدة', en: 'Boston, USA' }, link: 'https://www.bu.edu/com/academics/public-relations/ms-in-public-relations/' },
+    ],
+  },
+];
+
+export const qamarPlan: CustomerPlan = {
+  slug: 'qamar-kashif',
+  tier: 'pro',
+  sectors: ['tourism_entertainment', 'retail_fmcg', 'tech_startups'],
+  profile: qamarProfile,
+  cvScore: qamarCvScore,
+  cvReview: qamarCvReview,
+  scoreFactors: qamarScoreFactors,
+  levelGaps: qamarLevelGaps,
+  journey: { percent: 6, certsDone: 0, certsTotal: 4, messagesSent: 0, replies: 0 },
+  connections: [],
+  hrContacts: [],
+  paths: qamarPaths,
+  primaryPath: qamarPaths[0],
+  studyMajors: qamarStudyMajors,
+  templates: qamarTemplates,
+  tracker: qamarTracker,
+};
+
 export const plans: Record<string, CustomerPlan> = {
   [aliPlan.slug]: aliPlan,
   [mahdiPlan.slug]: mahdiPlan,
   [alhajjiPlan.slug]: alhajjiPlan,
+  [qamarPlan.slug]: qamarPlan,
 };
 
 export function getPlan(slug: string): CustomerPlan | undefined {
@@ -1137,7 +1420,7 @@ export function getPlan(slug: string): CustomerPlan | undefined {
 // the list each quarter. Field tags (finance/energy/consulting/government/tech)
 // let the tab surface what matches the customer's primary area first.
 
-export type FieldTag = 'finance' | 'energy' | 'consulting' | 'government' | 'tech' | 'supply' | 'all';
+export type FieldTag = 'finance' | 'energy' | 'consulting' | 'government' | 'tech' | 'supply' | 'media' | 'all';
 
 export const tamheer = {
   link: 'https://www.taqat.sa',
@@ -1183,6 +1466,12 @@ export type StudyMajor = { major: LS; why?: LS; programs: GradProgram[] };
 // the Saudi Pioneers full scholarship). Spread across many countries on purpose so the
 // same few schools do not repeat. The top tier is a genuine reach, not an impossible flagship.
 export const gradPrograms: Record<Exclude<FieldTag, 'all'>, GradProgram[]> = {
+  media: [
+    { tier: 'high', top30: true, uni: { ar: 'جامعة بنسلفانيا', en: 'University of Pennsylvania' }, program: { ar: 'ماجستير الإعلام والاتصال', en: 'MA Communication and Media Industries' }, location: { ar: 'بنسلفانيا، الولايات المتحدة', en: 'Pennsylvania, USA' }, link: 'https://www.asc.upenn.edu/graduate/master-communication-and-media-industries-mcmi' },
+    { tier: 'respected', uni: { ar: 'جامعة مانشستر', en: 'University of Manchester' }, program: { ar: 'ماجستير التسويق الرقمي', en: 'MSc Digital Marketing' }, location: { ar: 'مانشستر، المملكة المتحدة', en: 'Manchester, UK' }, link: 'https://www.manchester.ac.uk/study/masters/courses/list/20294/msc-digital-marketing/' },
+    { tier: 'solid', uni: { ar: 'كلية لندن للاقتصاد', en: 'LSE' }, program: { ar: 'ماجستير الإعلام والاتصال', en: 'MSc Media and Communications' }, location: { ar: 'لندن، المملكة المتحدة', en: 'London, UK' }, link: 'https://www.lse.ac.uk/study-at-lse/graduate/msc-media-and-communications' },
+    { tier: 'accessible', uni: { ar: 'جامعة كارديف', en: 'Cardiff University' }, program: { ar: 'ماجستير الصحافة والإعلام والاتصال', en: 'MA Journalism, Media and Communications' }, location: { ar: 'كارديف، المملكة المتحدة', en: 'Cardiff, UK' }, link: 'https://www.cardiff.ac.uk/study/postgraduate/taught/courses/course/journalism-media-and-communications-ma' },
+  ],
   finance: [
     { tier: 'high', top30: true, uni: { ar: 'جامعة كولومبيا', en: 'Columbia University' }, program: { ar: 'ماجستير الهندسة المالية', en: 'MSc in Financial Engineering' }, location: { ar: 'نيويورك، الولايات المتحدة', en: 'New York City, USA' }, link: 'https://ieor.columbia.edu/financial-engineering-msfe' },
     { tier: 'high', uni: { ar: 'كلية إتش إي سي باريس', en: 'HEC Paris' }, program: { ar: 'ماجستير التمويل الدولي', en: 'Master in International Finance' }, location: { ar: 'باريس، فرنسا', en: 'Paris, France' }, link: 'https://www.hec.edu/en/master-s-programs/master-international-finance' },
@@ -1247,6 +1536,7 @@ export const gradPrograms: Record<Exclude<FieldTag, 'all'>, GradProgram[]> = {
 
 // The graduate major that fits each field (shown as chips at the top of Study).
 export const fieldMajors: Record<Exclude<FieldTag, 'all'>, LS> = {
+  media: { ar: 'الإعلام والاتصال', en: 'Media and Communication' },
   finance: { ar: 'التمويل', en: 'Finance' },
   energy: { ar: 'اقتصاديات وهندسة الطاقة', en: 'Energy Economics and Engineering' },
   consulting: { ar: 'إدارة الأعمال', en: 'Business and Management' },
@@ -1268,6 +1558,7 @@ export const partTimeSaudi: PartTimeUni[] = [
 
 // Field-specific note on which Saudi university leads (shown in Study > In Saudi).
 export const saudiUniStrength: Record<Exclude<FieldTag, 'all'>, LS> = {
+  media: { ar: 'جامعة الملك عبدالعزيز وجامعة الملك سعود من الأقوى محليًا في الإعلام والاتصال والعلاقات العامة.', en: 'King Abdulaziz University and King Saud University are among the strongest locally for media, communications, and PR.' },
   finance: { ar: 'جامعة الملك سعود من الأقوى محليًا في الأعمال والمالية.', en: 'King Saud University is among the strongest locally for business & finance.' },
   energy: { ar: 'جامعة الملك فهد للبترول والمعادن هي الأقوى في السعودية للهندسة والطاقة.', en: 'KFUPM is the strongest university in Saudi for engineering & energy.' },
   consulting: { ar: 'كاوست وجامعة الفيصل الأبرز محليًا لإدارة الأعمال.', en: 'KAUST and Alfaisal lead locally for business & management.' },
@@ -1320,7 +1611,7 @@ export function careersUrlFor(companyEn: string): string | undefined {
 // A curated directory of ~60 Saudi employers, grouped by industry and tagged by size
 // (big, medium, small). Links point to each company's official site (verify the live
 // careers page before applying). Later this is filtered by the customer's CV.
-export type CompanyIndustry = 'banking' | 'energy' | 'consulting' | 'tech' | 'giga' | 'consumer' | 'manufacturing' | 'logistics';
+export type CompanyIndustry = 'banking' | 'energy' | 'consulting' | 'tech' | 'giga' | 'consumer' | 'manufacturing' | 'logistics' | 'media';
 export type CompanySize = 'big' | 'medium' | 'small';
 // Each industry maps to one HR-DB sector, so the directory is filtered to the
 // customer's CV-derived sectors (the same source that drives their HR contacts).
@@ -1333,8 +1624,21 @@ export const companyIndustries: { id: CompanyIndustry; label: LS; sector: string
   { id: 'consumer', label: { ar: 'الاستهلاك والصحة', en: 'Consumer and health' }, sector: 'retail_fmcg' },
   { id: 'manufacturing', label: { ar: 'الصناعة والتصنيع', en: 'Manufacturing and industry' }, sector: 'manufacturing_mining' },
   { id: 'logistics', label: { ar: 'النقل والخدمات اللوجستية', en: 'Transport and logistics' }, sector: 'transport_logistics' },
+  { id: 'media', label: { ar: 'الإعلام والتسويق والرياضة', en: 'Media, marketing and sport' }, sector: 'tourism_entertainment' },
 ];
 export const companyPortals: { name: LS; url: string; industry: CompanyIndustry; size: CompanySize }[] = [
+  { name: { ar: 'المجموعة السعودية للأبحاث والإعلام', en: 'SRMG' }, url: 'https://www.srmg.com', industry: 'media', size: 'big' },
+  { name: { ar: 'مجموعة MBC', en: 'MBC Group' }, url: 'https://www.mbcgroup.com', industry: 'media', size: 'big' },
+  { name: { ar: 'ثمانية', en: 'Thmanyah' }, url: 'https://thmanyah.com', industry: 'media', size: 'medium' },
+  { name: { ar: 'مجموعة روتانا', en: 'Rotana' }, url: 'https://www.rotana.net', industry: 'media', size: 'big' },
+  { name: { ar: 'دوري روشن السعودي', en: 'Saudi Pro League' }, url: 'https://www.saudi-pro-league.com', industry: 'media', size: 'big' },
+  { name: { ar: 'شركة الرياضة السعودية', en: 'Saudi Sports Company' }, url: 'https://ssc.tv', industry: 'media', size: 'medium' },
+  { name: { ar: 'شركة سيلا', en: 'SELA' }, url: 'https://www.sela.sa', industry: 'media', size: 'big' },
+  { name: { ar: 'القدية', en: 'Qiddiya' }, url: 'https://qiddiya.com', industry: 'media', size: 'big' },
+  { name: { ar: 'الهيئة العامة للترفيه', en: 'General Entertainment Authority' }, url: 'https://www.gea.gov.sa', industry: 'media', size: 'big' },
+  { name: { ar: 'TBWA\\راد', en: 'TBWA\\RAAD' }, url: 'https://tbwaraad.com', industry: 'media', size: 'big' },
+  { name: { ar: 'ليو بيرنت', en: 'Leo Burnett KSA' }, url: 'https://leoburnettmena.com', industry: 'media', size: 'big' },
+  { name: { ar: 'نادي الهلال', en: 'Al Hilal SFC' }, url: 'https://www.alhilal.com', industry: 'media', size: 'big' },
   { name: { ar: 'صندوق الاستثمارات العامة', en: 'PIF' }, url: 'https://www.pif.gov.sa', industry: 'banking', size: 'big' },
   { name: { ar: 'البنك الأهلي السعودي', en: 'Saudi National Bank' }, url: 'https://www.snb.com', industry: 'banking', size: 'big' },
   { name: { ar: 'مصرف الراجحي', en: 'Al Rajhi Bank' }, url: 'https://www.alrajhibank.com.sa', industry: 'banking', size: 'big' },

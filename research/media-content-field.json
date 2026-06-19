@@ -1,0 +1,58 @@
+{
+  "_note": "Research store for the media / content / marketing / sports-media field. Added for customer #4 (Qamar Kashif). Facts cross-checked against model knowledge; items flagged 'verify' should be confirmed before they are stated as certain. Reuse for the next media customer instead of re-researching.",
+  "updated": "2026-06",
+  "certifications": [
+    { "name": "Meta Social Media Marketing Professional Certificate", "provider": "Meta (Coursera)", "cost": "≈ 185 SAR/month", "url": "https://www.coursera.org/professional-certificates/facebook-social-media-marketing", "gain": "End-to-end social strategy, content, and ads on Facebook/Instagram", "level": "entry", "hadaf": false },
+    { "name": "Google Digital Marketing & E-commerce Certificate", "provider": "Google (Coursera)", "cost": "≈ 185 SAR/month", "url": "https://www.coursera.org/professional-certificates/google-digital-marketing-ecommerce", "gain": "Foundational digital marketing, SEO/SEM, email, e-commerce", "level": "entry", "hadaf": false },
+    { "name": "Google Analytics Certification (GA4)", "provider": "Google Skillshop", "cost": "Free", "url": "https://skillshop.exceedlms.com/student/path/507964-google-analytics-certification", "gain": "Set up GA4 and measure site/app and campaign performance", "level": "mid", "hadaf": false },
+    { "name": "HubSpot Content Marketing Certification", "provider": "HubSpot Academy", "cost": "Free", "url": "https://academy.hubspot.com/courses/content-marketing", "gain": "Content strategy, storytelling, repurposing", "level": "entry", "hadaf": false },
+    { "name": "HubSpot Social Media Marketing Certification", "provider": "HubSpot Academy", "cost": "Free", "url": "https://academy.hubspot.com/courses/social-media", "gain": "Social strategy, listening, turning engagement into ROI", "level": "entry", "hadaf": false },
+    { "name": "Hootsuite Social Marketing Certification", "provider": "Hootsuite Academy", "cost": "verify (~USD 199)", "url": "https://education.hootsuite.com/pages/social-marketing-certification", "gain": "Platform-agnostic social marketing badge", "level": "mid", "hadaf": false },
+    { "name": "Adobe Certified Professional, Premiere Pro", "provider": "Adobe / Certiport", "cost": "verify (~USD 150 exam)", "url": "https://certiport.pearsonvue.com/Certifications/Adobe/ACP/Overview", "gain": "Recognized proof of professional video-editing skill", "level": "entry", "hadaf": false },
+    { "name": "Adobe Certified Professional, Photoshop", "provider": "Adobe / Certiport", "cost": "verify (~USD 150 exam)", "url": "https://certiport.pearsonvue.com/Certifications/Adobe/ACP/Overview", "gain": "Validated photo-editing and visual-design competency", "level": "entry", "hadaf": false },
+    { "name": "Adobe Certified Professional, Illustrator", "provider": "Adobe / Certiport", "cost": "verify (~USD 150 exam)", "url": "https://certiport.pearsonvue.com/Certifications/Adobe/ACP/Overview", "gain": "Vector, logo, and brand-graphics skill", "level": "entry", "hadaf": false },
+    { "name": "Graphic Design Specialization (CalArts)", "provider": "CalArts (Coursera)", "cost": "≈ 185 SAR/month", "url": "https://www.coursera.org/specializations/graphic-design", "gain": "Typography, composition, branding; builds a portfolio", "level": "entry", "hadaf": false },
+    { "name": "Meta Marketing Analytics Professional Certificate", "provider": "Meta (Coursera)", "cost": "≈ 185 SAR/month", "url": "https://www.coursera.org/professional-certificates/facebook-marketing-analytics", "gain": "Analyze and optimize campaigns with data", "level": "mid", "hadaf": false },
+    { "name": "PCM Digital Marketing Certification", "provider": "American Marketing Association", "cost": "verify (~USD 349 exam)", "url": "https://www.ama.org/marketing-certification/", "gain": "Professional digital-marketing credential from a respected body", "level": "mid", "hadaf": false },
+    { "name": "CIPR Professional PR Certificate", "provider": "Chartered Institute of Public Relations", "cost": "verify (several hundred GBP)", "url": "https://www.cipr.co.uk", "gain": "Recognized PR grounding: media relations, planning, ethics", "level": "mid", "hadaf": false },
+    { "name": "Doroob National Training (digital/marketing tracks)", "provider": "HRDF / Hadaf (Doroob)", "cost": "Free", "url": "https://doroob.sa/", "gain": "Free Saudi government e-learning incl. marketing and job-readiness", "level": "entry", "hadaf": true }
+  ],
+  "companies": [
+    { "ar": "المجموعة السعودية للأبحاث والإعلام", "en": "SRMG", "url": "https://www.srmg.com", "sector": "media", "size": "big" },
+    { "ar": "مجموعة MBC", "en": "MBC Group", "url": "https://www.mbcgroup.com", "sector": "broadcast", "size": "big" },
+    { "ar": "مجموعة روتانا", "en": "Rotana Group", "url": "https://www.rotana.net", "sector": "media", "size": "big" },
+    { "ar": "ثمانية", "en": "Thmanyah", "url": "https://thmanyah.com", "sector": "media", "size": "medium" },
+    { "ar": "شركة الرياضة السعودية", "en": "Saudi Sports Company (SSC)", "url": "https://ssc.tv", "sector": "broadcast", "size": "medium" },
+    { "ar": "دوري روشن السعودي", "en": "Saudi Pro League", "url": "https://www.saudi-pro-league.com", "sector": "sports", "size": "big" },
+    { "ar": "شركة سيلا", "en": "SELA", "url": "https://www.sela.sa", "sector": "entertainment", "size": "big" },
+    { "ar": "القدية", "en": "Qiddiya", "url": "https://qiddiya.com", "sector": "entertainment", "size": "big" },
+    { "ar": "الهيئة العامة للترفيه", "en": "General Entertainment Authority", "url": "https://www.gea.gov.sa", "sector": "gov", "size": "big" },
+    { "ar": "وزارة الرياضة", "en": "Ministry of Sport", "url": "https://www.mos.gov.sa", "sector": "gov", "size": "big" },
+    { "ar": "نادي الهلال", "en": "Al Hilal SFC", "url": "https://www.alhilal.com", "sector": "sports", "size": "big" },
+    { "ar": "نادي الاتحاد", "en": "Al Ittihad Club", "url": "https://www.ittihad.com.sa", "sector": "sports", "size": "big" },
+    { "ar": "TBWA\\راد", "en": "TBWA\\RAAD", "url": "https://tbwaraad.com", "sector": "marketing_agency", "size": "big" },
+    { "ar": "ليو بيرنت", "en": "Leo Burnett KSA", "url": "https://leoburnettmena.com", "sector": "marketing_agency", "size": "big" },
+    { "ar": "إس تي سي", "en": "stc", "url": "https://www.stc.com.sa", "sector": "brand", "size": "big" },
+    { "ar": "الخطوط السعودية", "en": "Saudia", "url": "https://www.saudia.com", "sector": "brand", "size": "big" }
+  ],
+  "universities_us_uk": {
+    "media_communications": [
+      { "name": "University of Pennsylvania (Annenberg)", "country": "US", "qsWorldRank": 15, "tier": "high", "top30": true, "program": "MA Communication and Media Industries", "url": "https://www.asc.upenn.edu/graduate/master-communication-and-media-industries-mcmi" },
+      { "name": "University of Edinburgh", "country": "UK", "qsWorldRank": 34, "tier": "respected", "program": "MSc Media and Communications", "url": "verify" },
+      { "name": "LSE", "country": "UK", "qsWorldRank": 56, "tier": "solid", "program": "MSc Media and Communications", "url": "https://www.lse.ac.uk/study-at-lse/graduate/msc-media-and-communications" },
+      { "name": "Cardiff University", "country": "UK", "qsWorldRank": 181, "tier": "accessible", "program": "MA Journalism, Media and Communications", "url": "https://www.cardiff.ac.uk/study/postgraduate/taught/courses/course/journalism-media-and-communications-ma", "note": "top-10 in the world by subject for media/communications" }
+    ],
+    "marketing": [
+      { "name": "Imperial College London", "country": "UK", "qsWorldRank": 2, "tier": "high", "top30": true, "program": "MSc Strategic Marketing", "url": "https://www.imperial.ac.uk/business-school/masters/strategic-marketing/" },
+      { "name": "University of Manchester", "country": "UK", "qsWorldRank": 35, "tier": "respected", "program": "MSc Digital Marketing", "url": "https://www.manchester.ac.uk/study/masters/courses/list/20294/msc-digital-marketing/" },
+      { "name": "New York University (SPS)", "country": "US", "qsWorldRank": 55, "tier": "solid", "program": "MS Integrated Marketing", "url": "https://www.sps.nyu.edu/explore/degrees-and-programs/ms-in-integrated-marketing.html" },
+      { "name": "University of Leeds", "country": "UK", "qsWorldRank": 86, "tier": "accessible", "program": "MSc Marketing", "url": "https://www.leeds.ac.uk" }
+    ],
+    "public_relations": [
+      { "name": "Cornell University", "country": "US", "qsWorldRank": 16, "tier": "high", "top30": true, "program": "MPS in Communication", "url": "https://communication.cals.cornell.edu" },
+      { "name": "King's College London", "country": "UK", "qsWorldRank": 31, "tier": "respected", "program": "MA Political and Strategic Communication", "url": "https://www.kcl.ac.uk/study/postgraduate-taught/courses/political-and-strategic-communication-ma" },
+      { "name": "University of Southern California (Annenberg)", "country": "US", "qsWorldRank": 146, "tier": "solid", "program": "MA Public Relations and Advertising", "url": "https://annenberg.usc.edu/academic-programs/strategic-public-relations-ma", "note": "one of the strongest PR schools in the US (field nudge above overall rank)" },
+      { "name": "Boston University", "country": "US", "qsWorldRank": 88, "tier": "accessible", "program": "MS in Public Relations", "url": "https://www.bu.edu/com/academics/public-relations/ms-in-public-relations/" }
+    ]
+  }
+}

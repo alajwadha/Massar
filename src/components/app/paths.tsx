@@ -2,7 +2,7 @@
 
 import { type ReactNode } from 'react';
 import { motion } from 'framer-motion';
-import { TrendingUp, Zap, Briefcase, Landmark, Cpu, Route, ArrowLeft, Package } from 'lucide-react';
+import { TrendingUp, Zap, Briefcase, Landmark, Cpu, Route, ArrowLeft, Package, Megaphone } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { rankConnections, ui, type CareerPath, type Loc } from '@/lib/app-data';
 import { usePlan } from './plan-context';
@@ -20,6 +20,7 @@ const ICONS = {
   government: Landmark,
   tech: Cpu,
   supply: Package,
+  media: Megaphone,
 } as const;
 
 function Stat({ value, label }: { value: ReactNode; label: string }) {
