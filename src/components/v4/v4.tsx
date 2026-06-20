@@ -103,9 +103,9 @@ const CARD =
 const EDGE =
   'before:pointer-events-none before:absolute before:inset-x-5 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-900/10 before:to-transparent dark:before:via-white/20';
 const INSET = 'rounded-2xl border border-stone-200/70 bg-stone-50/70 dark:border-white/[0.07] dark:bg-white/[0.035]';
-const PILL = 'cursor-pointer bg-stone-900 text-white hover:bg-stone-800 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-white';
+const PILL = 'cursor-pointer bg-stone-900 text-white shadow-sm transition-all hover:bg-stone-800 active:scale-[0.97] dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-white';
 const GHOST =
-  'cursor-pointer border border-stone-300/80 bg-white/70 text-stone-600 hover:border-stone-400 hover:bg-white hover:text-stone-900 dark:border-white/15 dark:bg-white/[0.06] dark:text-stone-200 dark:hover:border-white/30 dark:hover:text-white';
+  'cursor-pointer border border-stone-300 bg-white text-stone-700 shadow-sm transition-all hover:border-stone-400 hover:bg-stone-50 hover:text-stone-900 active:scale-[0.97] dark:border-white/20 dark:bg-white/[0.08] dark:text-stone-200 dark:shadow-none dark:hover:border-white/35 dark:hover:bg-white/[0.14] dark:hover:text-white';
 const SOFT = 'bg-stone-900/[0.05] text-stone-600 dark:bg-white/[0.07] dark:text-stone-300';
 const ACCENT = 'text-amber-700 dark:text-amber-300';
 
@@ -442,7 +442,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
   const whyScore = scoreNote(activePath.scoreInput, level, locale);
   const upcoming = activePath.certs.filter((c) => !certsDone[c.name.en] && c.status !== 'done');
   // "What raises your score" is derived from the active path's remaining certs.
-  const imps = upcoming.slice(0, 3).map((c) => ({ name: c.name, d: scaledAdd(c.scoreAdd, level), effort: c.duration, current: c.status === 'current' }));
+  const imps = upcoming.slice(0, 2).map((c) => ({ name: c.name, d: scaledAdd(c.scoreAdd, level), effort: c.duration, current: c.status === 'current' }));
   const potential = Math.min(100, score + imps.reduce((s, i) => s + i.d, 0));
   const certsTotal = activePath.certs.length;
   const certsDoneCount = activePath.certs.filter((c) => certsDone[c.name.en]).length;
@@ -562,7 +562,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
                 {LEVELS.map((lv) => {
                   const on = level === lv.id;
                   return (
-                    <button key={lv.id} type="button" onClick={() => setLevel(lv.id)} className={cn('relative rounded-full px-2.5 py-1.5 text-[11px] font-bold transition-colors', on ? 'text-white dark:text-stone-900' : 'text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-white')}>
+                    <button key={lv.id} type="button" onClick={() => setLevel(lv.id)} className={cn('relative rounded-full px-2.5 py-1.5 text-[11px] font-bold transition-colors', on ? 'text-white dark:text-stone-900' : 'text-stone-500 hover:bg-stone-900/[0.05] hover:text-stone-900 dark:text-stone-400 dark:hover:bg-white/[0.06] dark:hover:text-white')}>
                       {on && <motion.span layoutId="v4-level" className="absolute inset-0 -z-10 rounded-full bg-stone-900 dark:bg-stone-100" transition={SPRING} />}
                       {lv.label[locale]}
                     </button>
@@ -575,8 +575,6 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
               <Eyebrow>{ui.overview.scoreLabel[locale]}</Eyebrow>
               <h1 className="mt-2 text-balance text-[22px] font-semibold leading-[1.12] tracking-tight text-stone-900 dark:text-stone-50 sm:text-[28px]">{activePath.name[locale]}</h1>
               <p className="mt-2 text-[12.5px] leading-snug text-stone-500 dark:text-stone-400">{whyScore}</p>
-
-              <LevelGaps locale={locale} />
 
               {imps.length > 0 && (
                 <div className="mt-5">
@@ -812,7 +810,7 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
 
   return (
     <div className="space-y-5">
-      <button type="button" onClick={onBack} className="inline-flex items-center gap-1.5 text-sm font-semibold text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-white">
+      <button type="button" onClick={onBack} className={cn('inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[13px] font-semibold', GHOST)}>
         <ArrowLeft className="h-4 w-4 ltr:rotate-180" />
         {ui.paths.back[locale]}
       </button>
@@ -1742,7 +1740,7 @@ function Shell() {
             {NAV.map((n) => {
               const on = tab === n.id;
               return (
-                <button key={n.id} type="button" onClick={() => go(n.id)} className={cn('relative flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[13px] font-semibold transition-colors sm:gap-2 sm:px-3.5 sm:py-2 sm:text-sm', on ? 'text-white dark:text-stone-900' : 'text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100')}>
+                <button key={n.id} type="button" onClick={() => go(n.id)} className={cn('relative flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[13px] font-semibold transition-colors sm:gap-2 sm:px-3.5 sm:py-2 sm:text-sm', on ? 'text-white dark:text-stone-900' : 'text-stone-500 hover:bg-stone-900/[0.05] hover:text-stone-900 dark:text-stone-400 dark:hover:bg-white/[0.06] dark:hover:text-stone-100')}>
                   {on && <motion.span layoutId="v4-nav" className="absolute inset-0 -z-10 rounded-full bg-stone-900 dark:bg-stone-100" transition={SPRING} />}
                   <n.Icon className="h-4 w-4 shrink-0" />
                   <span className="hidden md:inline">{ui.nav[n.id][locale]}</span>

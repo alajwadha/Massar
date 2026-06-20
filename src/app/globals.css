@@ -50,8 +50,10 @@
   /* Every interactive control shows the hand cursor, so buttons read as clickable. */
   button:not(:disabled),
   [role='button'],
+  a[href],
   label[for],
-  summary {
+  summary,
+  [tabindex]:not([tabindex='-1']) {
     cursor: pointer;
   }
 }
