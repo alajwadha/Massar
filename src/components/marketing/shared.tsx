@@ -178,9 +178,9 @@ const LVL = [
 /** The signature proof: the per role, per level CV competitiveness score. */
 export function ScoreCard({ locale, className }: { locale: Loc; className?: string }) {
   const raises = [
-    { ar: 'عيد صياغة إنجازاتك بلغة مالية', en: 'Reframe bullets for finance', d: '+6' },
-    { ar: 'كمّل شهادة FMVA', en: 'Complete FMVA', d: '+8' },
-    { ar: 'كمّل CFA المستوى الأول', en: 'Complete CFA Level 1', d: '+15' },
+    { ar: 'عيد صياغة إنجازاتك بأرقام', en: 'Reframe bullets with numbers', d: '+6' },
+    { ar: 'خذ شهادة Meta للسوشيال ميديا', en: 'Meta Social Media cert', d: '+8' },
+    { ar: 'خذ شهادة Google للتسويق الرقمي', en: 'Google Digital Marketing', d: '+10' },
   ];
   return (
     <div className={cn(CARD, EDGE, 'p-5', className)}>
@@ -188,7 +188,7 @@ export function ScoreCard({ locale, className }: { locale: Loc; className?: stri
       <div className="mt-3 flex items-center gap-4">
         <MiniRing value={96} />
         <div className="min-w-0">
-          <div className="text-sm text-stone-500 dark:text-stone-400">{locale === 'ar' ? 'محلل استثمار الطاقة' : 'Energy Investment Analyst'}</div>
+          <div className="text-sm text-stone-500 dark:text-stone-400">{locale === 'ar' ? 'أخصائي تسويق رقمي' : 'Digital Marketing Specialist'}</div>
           <div className={cn('mt-0.5 text-sm font-semibold', ACCENT)}>{locale === 'ar' ? 'جاهز لمستوى المبتدئ' : 'Ready for Entry level'}</div>
           <div className="mt-2 flex flex-wrap gap-1">
             {LVL.map((l) => (
@@ -219,10 +219,10 @@ export function ScoreCard({ locale, className }: { locale: Loc; className?: stri
 }
 
 const CERTS = [
-  { ar: 'إكسل وSQL للتحليل', en: 'Excel & SQL for analysis', s: '+5', st: 'done' as const },
-  { ar: 'تمويل المناخ · كابسارك', en: 'Climate Finance · KAPSARC', s: '+7', st: 'done' as const },
-  { ar: 'النمذجة المالية FMVA', en: 'Financial Modeling (FMVA)', s: '+8', st: 'current' as const, hadaf: true },
-  { ar: 'CFA المستوى الأول', en: 'CFA Level 1', s: '+15', st: 'future' as const },
+  { ar: 'إكسل وتحليل مالي', en: 'Excel & financial analysis', s: '+5', st: 'done' as const },
+  { ar: 'المعايير الدولية IFRS', en: 'IFRS standards', s: '+7', st: 'done' as const },
+  { ar: 'زمالة SOCPA', en: 'SOCPA fellowship', s: '+10', st: 'current' as const, hadaf: true },
+  { ar: 'CMA المحاسب الإداري', en: 'CMA', s: '+12', st: 'future' as const },
 ];
 
 /** A career path with its ordered certifications timeline and Hadaf flag. */
@@ -231,7 +231,7 @@ export function PathsCard({ locale, className }: { locale: Loc; className?: stri
     <div className={cn(CARD, EDGE, 'p-5', className)}>
       <Eyebrow>{locale === 'ar' ? 'مسارك المهني' : 'Your career path'}</Eyebrow>
       <div className="mt-1.5">
-        <Serif className="text-xl">{locale === 'ar' ? 'الاستثمار والاستراتيجية في الطاقة' : 'Energy Investment & Strategy'}</Serif>
+        <Serif className="text-xl">{locale === 'ar' ? 'المحاسبة والمالية' : 'Accounting & Finance'}</Serif>
       </div>
       <div className="mt-4 space-y-3">
         {CERTS.map((ct) => (
@@ -264,54 +264,47 @@ export function PathsCard({ locale, className }: { locale: Loc; className?: stri
   );
 }
 
-/** The two contact surfaces: the customer's own ranked network + our HR database. */
+/** The contacts surface: a ranked network contact with a direct link + a ready message. */
 export function ContactsCard({ locale, className }: { locale: Loc; className?: string }) {
-  const people = [
-    { init: { ar: 'ع', en: 'A' }, name: { ar: 'عبدالله المالكي', en: 'Abdullah Al-Malki' }, role: { ar: 'مدير محفظة · الصندوق', en: 'Portfolio Director · PIF' }, tag: { ar: 'تقدر توصله', en: 'In your network' }, warm: true, net: true },
-    { init: { ar: 'س', en: 'S' }, name: { ar: 'سارة القحطاني', en: 'Sara Al-Qahtani' }, role: { ar: 'أخصائية توظيف أولى · نيوم', en: 'Senior Recruiter · NEOM' }, tag: { ar: 'موارد بشرية', en: 'HR' }, warm: false, net: false },
-    { init: { ar: 'ف', en: 'F' }, name: { ar: 'فهد العتيبي', en: 'Fahad Al-Otaibi' }, role: { ar: 'مدير توظيف · أرامكو', en: 'Hiring Manager · Aramco' }, tag: { ar: 'جديد', en: 'New' }, warm: false, net: false },
-  ];
   return (
     <div className={cn(CARD, EDGE, 'flex flex-col p-5', className)}>
       <div className="flex items-center justify-between gap-2">
         <Eyebrow>{locale === 'ar' ? 'مع من تتواصل' : 'Who to reach'}</Eyebrow>
-        <span className={cn('rounded-full px-2 py-0.5 text-[10px] font-semibold', SOFT)}>{locale === 'ar' ? 'شبكتك + قاعدتنا' : 'Network + database'}</span>
+        <span className={cn('rounded-full px-2 py-0.5 text-[10px] font-semibold', SOFT)}>{locale === 'ar' ? 'من شبكتك' : 'From your network'}</span>
       </div>
-      <div className="mt-3 space-y-2">
-        {people.map((p) => (
-          <div key={p.name.en} className={cn(INSET, 'flex items-center gap-2.5 p-2')}>
-            <span
-              className={cn(
-                'grid h-8 w-8 shrink-0 place-items-center rounded-full text-[12px] font-bold',
-                p.warm ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : 'bg-stone-900/[0.06] text-stone-600 dark:bg-white/[0.08] dark:text-stone-300',
-              )}
-            >
-              {pick(p.init, locale)}
-            </span>
-            <div className="min-w-0 flex-1">
-              <div className="truncate text-[12.5px] font-semibold text-stone-800 dark:text-stone-100">{pick(p.name, locale)}</div>
-              <div className="truncate text-[11px] text-stone-500 dark:text-stone-400">{pick(p.role, locale)}</div>
-            </div>
-            {p.net ? <Linkedin className="h-3.5 w-3.5 shrink-0 text-stone-400" /> : null}
-            <span
-              className={cn(
-                'shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold',
-                p.warm ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : SOFT,
-              )}
-            >
-              {pick(p.tag, locale)}
-            </span>
-          </div>
-        ))}
+
+      {/* one ranked contact, with a direct LinkedIn link */}
+      <div className={cn(INSET, 'mt-3 flex items-center gap-2.5 p-2.5')}>
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-amber-500/15 text-[13px] font-bold text-amber-700 dark:text-amber-300">
+          {locale === 'ar' ? 'ف' : 'F'}
+        </span>
+        <div className="min-w-0 flex-1">
+          <div className="truncate text-[13px] font-semibold text-stone-800 dark:text-stone-100">{locale === 'ar' ? 'فهد الزهراني' : 'Fahad Al-Zahrani'}</div>
+          <div className="truncate text-[11px] text-stone-500 dark:text-stone-400">{locale === 'ar' ? 'مدير هندسة برمجيات · stc' : 'Software Eng. Manager · stc'}</div>
+        </div>
+        <span className="shrink-0 rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-semibold text-amber-700 dark:text-amber-300">{locale === 'ar' ? 'تقدر توصله' : 'In your network'}</span>
+        <Linkedin className="h-4 w-4 shrink-0 text-stone-400" />
       </div>
-      <div className={cn(INSET, 'mt-2.5 flex items-center gap-2 p-2.5')}>
-        <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-amber-500/15 text-amber-700 dark:text-amber-300">
-          <BadgeCheck className="h-4 w-4" />
-        </span>
-        <span className="min-w-0 flex-1 truncate text-[11.5px] text-stone-600 dark:text-stone-300">
-          {locale === 'ar' ? 'رسالة تعريف جاهزة بصوتك' : 'A ready intro message in your voice'}
-        </span>
-        <span className={cn('shrink-0 rounded-md px-2 py-0.5 text-[10px] font-semibold', PILL)}>{locale === 'ar' ? 'نسخ' : 'Copy'}</span>
+
+      {/* the ready message, copy and reword */}
+      <div className={cn(INSET, 'mt-2.5 p-2.5')}>
+        <div className="mb-1.5 flex items-center justify-between">
+          <span className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-stone-400">
+            <BadgeCheck className="h-3.5 w-3.5 text-amber-600 dark:text-amber-300" />
+            {locale === 'ar' ? 'رسالة جاهزة' : 'Ready message'}
+          </span>
+          <span className={cn('rounded-md px-2 py-0.5 text-[10px] font-semibold', PILL)}>{locale === 'ar' ? 'نسخ' : 'Copy'}</span>
+        </div>
+        <p dir={locale === 'ar' ? 'rtl' : 'ltr'} className="line-clamp-2 text-[11.5px] leading-relaxed text-stone-600 dark:text-stone-300">
+          {locale === 'ar'
+            ? 'السلام عليكم أستاذ فهد، أنا مهندس برمجيات مهتم بفرص الهندسة لديكم في stc وأسعد بأي توجيه منك.'
+            : 'Hi Fahad, I am a software engineer keen on engineering roles at stc and would value any guidance.'}
+        </p>
+      </div>
+
+      <div className="mt-2.5 flex items-center gap-1.5 text-[11px] leading-snug text-stone-500 dark:text-stone-400">
+        <Linkedin className="h-3 w-3 shrink-0" />
+        <span>{locale === 'ar' ? 'ارفع ملف جهات اتصالك ونرتب لك أقربهم لأهدافك' : 'Upload your connections and we rank the closest to your goals'}</span>
       </div>
     </div>
   );
@@ -327,7 +320,7 @@ export function StudyCard({ locale, className }: { locale: Loc; className?: stri
           <GraduationCap className="h-5 w-5" />
         </span>
         <div className="min-w-0">
-          <Serif className="text-lg">{locale === 'ar' ? 'ماجستير تمويل الطاقة' : 'MSc Energy Finance'}</Serif>
+          <Serif className="text-lg">{locale === 'ar' ? 'ماجستير الهندسة الإنشائية' : 'MSc Structural Engineering'}</Serif>
           <div className="text-[13px] text-stone-500 dark:text-stone-400">Imperial College London</div>
         </div>
       </div>
@@ -344,7 +337,7 @@ export function StudyCard({ locale, className }: { locale: Loc; className?: stri
 
 /** Where to apply: company career pages by sector + dated career days. */
 export function OpportunitiesCard({ locale, className }: { locale: Loc; className?: string }) {
-  const cos = ['PIF', 'KAPSARC', 'ACWA Power', 'Sanabil', 'NEOM'];
+  const cos = ['NEOM', 'Qiddiya', 'Red Sea Global', 'ROSHN', 'Bechtel'];
   return (
     <div className={cn(CARD, EDGE, 'p-5', className)}>
       <Eyebrow>{locale === 'ar' ? 'الفرص' : 'Opportunities'}</Eyebrow>
@@ -356,8 +349,8 @@ export function OpportunitiesCard({ locale, className }: { locale: Loc; classNam
       </div>
       <div className={cn(INSET, 'mt-3 flex items-center gap-2.5 p-2.5')}>
         <CalendarDays className="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-300" />
-        <span className="text-[13px] text-stone-700 dark:text-stone-200">24 Fintech</span>
-        <span className="text-[12px] text-stone-400">· {locale === 'ar' ? 'سبتمبر 2026 · الرياض' : 'September 2026 · Riyadh'}</span>
+        <span className="text-[13px] text-stone-700 dark:text-stone-200">Saudi Build</span>
+        <span className="text-[12px] text-stone-400">· {locale === 'ar' ? 'نوفمبر 2026 · الرياض' : 'November 2026 · Riyadh'}</span>
       </div>
     </div>
   );
@@ -423,10 +416,12 @@ export const PRICING: {
     blurb: { ar: 'تغطية أوسع وأهداف أكثر', en: 'Wider coverage, more targets' },
     popular: true,
     features: [
-      { ar: '5 مسارات مهنية', en: '5 career paths' },
-      { ar: '300 جهة اتصال + 300 من الموارد البشرية', en: '300 connections + 300 HR contacts' },
-      { ar: 'صفحتا الدراسة والفرص', en: 'The Study and Opportunities pages' },
-      { ar: 'كل ميزات الأساسية', en: 'Everything in Starter' },
+      { ar: 'كل مزايا الأساسية وأكثر', en: 'Everything in Starter and more' },
+      { ar: '5 مسارات مهنية كاملة', en: '5 full career paths' },
+      { ar: 'صفحتا الدراسة والمصادر', en: 'The Study and Resources pages' },
+      { ar: '300 جهة تواصل + 300 موارد بشرية', en: '300 connections + 300 HR contacts' },
+      { ar: 'خارطة شهادات هدف لكل مسار', en: 'A Hadaf certifications roadmap per path' },
+      { ar: 'رسائل جاهزة وروابط مباشرة للينكدإن', en: 'Ready messages and direct LinkedIn links' },
     ],
   },
 ];
