@@ -171,8 +171,8 @@ export function MiniRing({ value = 96, size = 104 }: { value?: number; size?: nu
 }
 
 const LVL = [
-  { ar: 'مبتدئ', en: 'Entry', on: false },
-  { ar: 'متوسط', en: 'Mid', on: true },
+  { ar: 'مبتدئ', en: 'Entry', on: true },
+  { ar: 'متوسط', en: 'Mid', on: false },
   { ar: 'خبير', en: 'Senior', on: false },
   { ar: 'قيادي', en: 'Director', on: false },
 ];
@@ -180,9 +180,9 @@ const LVL = [
 /** The signature proof: the per role, per level CV competitiveness score. */
 export function ScoreCard({ locale, className }: { locale: Loc; className?: string }) {
   const raises = [
-    { ar: 'شهادة Google للتسويق الرقمي', en: 'Google Digital Marketing', d: '+10' },
-    { ar: 'شهادة Meta للتسويق الرقمي', en: 'Meta Marketing cert', d: '+8' },
-    { ar: 'شهادة HubSpot للتسويق بالمحتوى', en: 'HubSpot Content Marketing', d: '+6' },
+    { ar: 'شهادة CFA المستوى الأول', en: 'CFA Level 1', d: '+12' },
+    { ar: 'النمذجة المالية FMVA', en: 'Financial Modeling (FMVA)', d: '+8' },
+    { ar: 'إكسل المالي المتقدم', en: 'Advanced financial Excel', d: '+5' },
   ];
   return (
     <div className={cn(CARD, EDGE, 'p-5', className)}>
@@ -196,8 +196,8 @@ export function ScoreCard({ locale, className }: { locale: Loc; className?: stri
       <div className="mt-3 flex items-center gap-4">
         <MiniRing value={94} />
         <div className="min-w-0">
-          <div className="text-sm text-stone-500 dark:text-stone-400">{locale === 'ar' ? 'أخصائي تسويق رقمي' : 'Digital Marketing Specialist'}</div>
-          <div className={cn('mt-0.5 text-sm font-semibold', ACCENT)}>{locale === 'ar' ? 'جاهز لمستوى المتوسط' : 'Ready for Mid level'}</div>
+          <div className="text-sm text-stone-500 dark:text-stone-400">{locale === 'ar' ? 'محلل مالي' : 'Financial Analyst'}</div>
+          <div className={cn('mt-0.5 text-sm font-semibold', ACCENT)}>{locale === 'ar' ? 'جاهز لمستوى المبتدئ' : 'Ready for Entry level'}</div>
           <div className="mt-2 flex flex-wrap gap-1">
             {LVL.map((l) => (
               <span
@@ -239,7 +239,7 @@ export function PathsCard({ locale, className }: { locale: Loc; className?: stri
     <div className={cn(CARD, EDGE, 'p-5', className)}>
       <Eyebrow>{locale === 'ar' ? 'مسارك المهني' : 'Your career path'}</Eyebrow>
       <div className="mt-1.5">
-        <Serif className="text-xl">{locale === 'ar' ? 'المحاسبة والمالية' : 'Accounting & Finance'}</Serif>
+        <Serif className="text-xl">{locale === 'ar' ? 'المحاسبة' : 'Accounting'}</Serif>
       </div>
       <div className="mt-4 space-y-3">
         {CERTS.map((ct) => (
@@ -420,7 +420,7 @@ export const PRICING: {
   {
     id: 'pro',
     name: { ar: 'الاحترافية', en: 'Pro' },
-    price: 350,
+    price: 349,
     blurb: { ar: 'تغطية أوسع وأهداف أكثر', en: 'Wider coverage, more targets' },
     popular: true,
     features: [

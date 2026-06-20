@@ -67,7 +67,7 @@ const T = {
     ar: 'نرتب لك جهات اتصالك من لينكدإن ونطلع أقرب الناس لأهدافك ومع كل واحد رابط مباشر لحسابه ورسالة جاهزة تنسخها. كل اللي نحتاجه ملف جهات اتصالك من لينكدإن ونوريك كيف تطلعه خطوة بخطوة ويجيك خلال 12 إلى 24 ساعة. ونوصلك كمان بمسؤولي التوظيف المناسبين لمجالك.',
     en: 'We rank your LinkedIn connections and surface the people closest to your goals, each with a direct link to their profile and a ready message you copy. All we need is your LinkedIn connections file, we show you step by step how to export it, and it reaches you within 12 to 24 hours. We also connect you to the right recruiters for your field.',
   },
-  q2note: { ar: 'رسائل مصممة لك وجاهزة تنسخها. بس خذ فكرتها والأفضل تكتبها بأسلوبك.', en: 'Messages are designed for you and ready to copy. But take the idea, and it is best to rewrite them in your own words.' },
+  q2note: { ar: 'رسائل مصممة لك وجاهزة تنسخها. خذ فكرتها والأفضل تكتبها بأسلوبك.', en: 'Messages are designed for you and ready to copy. Take the idea, and it is best to rewrite them in your own words.' },
 
   // Q3 online applications
   q3: { ar: 'هل التقديم أونلاين يفيد أصلًا؟', en: 'Does applying online even work?' },
@@ -101,8 +101,8 @@ const T = {
   // Q7 pricing
   q7: { ar: 'وكم بيكلفني هذا؟', en: 'And what will this cost me?' },
   q7body: {
-    ar: 'دفعة وحدة وبس بدون اشتراك. الأساسية 199 ريال والاحترافية 350 ريال. وبعدها نبدأ نجهز لك موقعك الخاص بأقرب وقت وتقدر تضيفه على شاشة جوالك وتفتحه بضغطة وحدة.',
-    en: 'One payment, no subscription. Starter is 199 SAR, Pro is 350 SAR. Then we start preparing your own private site right away, and you can add it to your phone home screen and open it with one tap.',
+    ar: 'دفعة وحدة وبس بدون اشتراك. الأساسية 199 ريال والاحترافية 349 ريال. وبعدها نبدأ نجهز لك موقعك الخاص بأقرب وقت وتقدر تضيفه على شاشة جوالك وتفتحه بضغطة وحدة.',
+    en: 'One payment, no subscription. Starter is 199 SAR, Pro is 349 SAR. Then we start preparing your own private site right away, and you can add it to your phone home screen and open it with one tap.',
   },
   oneTime: { ar: 'مرة وحدة', en: 'one time' },
   most: { ar: 'الأكثر اختيارًا', en: 'Most chosen' },
