@@ -2112,7 +2112,7 @@ export const ui = {
   },
   referral: {
     title: { ar: 'تعرف أحد يستاهل فرصة أحسن؟ اعطه خصم 30%!', en: 'Know someone who deserves a better shot? Give them 30% off!' },
-    body: { ar: 'رسّل له مسار، أول خطوة لوظيفته الجاية.', en: 'Send them Masaar, their first step to the next role.' },
+    body: { ar: 'شاركه مسار، أول خطوة لوظيفته الجاية.', en: 'Send them Masaar, their first step to the next role.' },
     yourLink: { ar: 'رابط دعوتك', en: 'Your invite link' },
     copy: { ar: 'انسخ الرابط', en: 'Copy link' },
     copied: { ar: 'تم النسخ', en: 'Copied' },
