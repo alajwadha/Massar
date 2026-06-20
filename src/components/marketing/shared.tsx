@@ -178,9 +178,9 @@ const LVL = [
 /** The signature proof: the per role, per level CV competitiveness score. */
 export function ScoreCard({ locale, className }: { locale: Loc; className?: string }) {
   const raises = [
-    { ar: 'أعد صياغة إنجازاتك بلغة مالية', en: 'Reframe bullets for finance', d: '+6' },
-    { ar: 'أكمل شهادة FMVA', en: 'Complete FMVA', d: '+8' },
-    { ar: 'أكمل CFA المستوى الأول', en: 'Complete CFA Level 1', d: '+15' },
+    { ar: 'عيد صياغة إنجازاتك بلغة مالية', en: 'Reframe bullets for finance', d: '+6' },
+    { ar: 'كمّل شهادة FMVA', en: 'Complete FMVA', d: '+8' },
+    { ar: 'كمّل CFA المستوى الأول', en: 'Complete CFA Level 1', d: '+15' },
   ];
   return (
     <div className={cn(CARD, EDGE, 'p-5', className)}>
@@ -206,7 +206,7 @@ export function ScoreCard({ locale, className }: { locale: Loc; className?: stri
         </div>
       </div>
       <div className="mt-4 space-y-1.5">
-        <div className="text-[11px] font-semibold uppercase tracking-wider text-stone-400">{locale === 'ar' ? 'ما الذي يرفعها' : 'What raises it'}</div>
+        <div className="text-[11px] font-semibold uppercase tracking-wider text-stone-400">{locale === 'ar' ? 'وش يرفعها' : 'What raises it'}</div>
         {raises.map((rr) => (
           <div key={rr.en} className={cn(INSET, 'flex items-center justify-between px-3 py-1.5 text-[13px]')}>
             <span className="truncate text-stone-600 dark:text-stone-300">{pick(rr, locale)}</span>
@@ -266,33 +266,52 @@ export function PathsCard({ locale, className }: { locale: Loc; className?: stri
 
 /** The two contact surfaces: the customer's own ranked network + our HR database. */
 export function ContactsCard({ locale, className }: { locale: Loc; className?: string }) {
+  const people = [
+    { init: { ar: 'ع', en: 'A' }, name: { ar: 'عبدالله المالكي', en: 'Abdullah Al-Malki' }, role: { ar: 'مدير محفظة · الصندوق', en: 'Portfolio Director · PIF' }, tag: { ar: 'مقدمة دافئة', en: 'Warm intro' }, warm: true, net: true },
+    { init: { ar: 'س', en: 'S' }, name: { ar: 'سارة القحطاني', en: 'Sara Al-Qahtani' }, role: { ar: 'أخصائية توظيف أولى · نيوم', en: 'Senior Recruiter · NEOM' }, tag: { ar: 'موارد بشرية', en: 'HR' }, warm: false, net: false },
+    { init: { ar: 'ف', en: 'F' }, name: { ar: 'فهد العتيبي', en: 'Fahad Al-Otaibi' }, role: { ar: 'مدير توظيف · أرامكو', en: 'Hiring Manager · Aramco' }, tag: { ar: 'جديد', en: 'New' }, warm: false, net: false },
+  ];
   return (
-    <div className={cn(CARD, EDGE, 'p-5', className)}>
-      <Eyebrow>{locale === 'ar' ? 'مع من تتواصل' : 'Who to reach'}</Eyebrow>
-      <div className="mt-1 text-sm text-stone-500 dark:text-stone-400">
-        {locale === 'ar' ? 'شبكتك + قاعدة الموارد البشرية' : 'Your network + our HR database'}
+    <div className={cn(CARD, EDGE, 'flex flex-col p-5', className)}>
+      <div className="flex items-center justify-between gap-2">
+        <Eyebrow>{locale === 'ar' ? 'مع من تتواصل' : 'Who to reach'}</Eyebrow>
+        <span className={cn('rounded-full px-2 py-0.5 text-[10px] font-semibold', SOFT)}>{locale === 'ar' ? 'شبكتك + قاعدتنا' : 'Network + database'}</span>
       </div>
-      <div className="mt-4 space-y-2">
-        <div className={cn(INSET, 'flex items-center gap-3 p-2.5')}>
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-amber-500/15 text-amber-700 dark:text-amber-300">
-            <TrendingUp className="h-4 w-4" />
-          </span>
-          <div className="min-w-0 flex-1">
-            <div className="truncate text-[13px] font-medium text-stone-800 dark:text-stone-100">{locale === 'ar' ? 'مدير محفظة · صندوق الاستثمارات' : 'Portfolio Director · PIF'}</div>
-            <div className={cn('text-[11px] font-semibold', ACCENT)}>{locale === 'ar' ? 'ضمن شبكتك' : 'In your network'}</div>
+      <div className="mt-3 space-y-2">
+        {people.map((p) => (
+          <div key={p.name.en} className={cn(INSET, 'flex items-center gap-2.5 p-2')}>
+            <span
+              className={cn(
+                'grid h-8 w-8 shrink-0 place-items-center rounded-full text-[12px] font-bold',
+                p.warm ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : 'bg-stone-900/[0.06] text-stone-600 dark:bg-white/[0.08] dark:text-stone-300',
+              )}
+            >
+              {pick(p.init, locale)}
+            </span>
+            <div className="min-w-0 flex-1">
+              <div className="truncate text-[12.5px] font-semibold text-stone-800 dark:text-stone-100">{pick(p.name, locale)}</div>
+              <div className="truncate text-[11px] text-stone-500 dark:text-stone-400">{pick(p.role, locale)}</div>
+            </div>
+            {p.net ? <Linkedin className="h-3.5 w-3.5 shrink-0 text-stone-400" /> : null}
+            <span
+              className={cn(
+                'shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold',
+                p.warm ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : SOFT,
+              )}
+            >
+              {pick(p.tag, locale)}
+            </span>
           </div>
-          <Linkedin className="h-4 w-4 shrink-0 text-stone-400" />
-        </div>
-        <div className={cn(INSET, 'flex items-center gap-3 p-2.5')}>
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-stone-900/[0.05] text-stone-500 dark:bg-white/[0.07] dark:text-stone-300">
-            <Building2 className="h-4 w-4" />
-          </span>
-          <div className="min-w-0 flex-1">
-            <div className="truncate text-[13px] font-medium text-stone-800 dark:text-stone-100">{locale === 'ar' ? 'أخصائي توظيف أول · نيوم' : 'Senior Recruiter · NEOM'}</div>
-            <div className="text-[11px] text-stone-500 dark:text-stone-400">{locale === 'ar' ? 'قاعدة الموارد البشرية' : 'From the HR database'}</div>
-          </div>
-          <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold', SOFT)}>{locale === 'ar' ? 'جديد' : 'New'}</span>
-        </div>
+        ))}
+      </div>
+      <div className={cn(INSET, 'mt-2.5 flex items-center gap-2 p-2.5')}>
+        <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-amber-500/15 text-amber-700 dark:text-amber-300">
+          <BadgeCheck className="h-4 w-4" />
+        </span>
+        <span className="min-w-0 flex-1 truncate text-[11.5px] text-stone-600 dark:text-stone-300">
+          {locale === 'ar' ? 'رسالة تعريف جاهزة بصوتك' : 'A ready intro message in your voice'}
+        </span>
+        <span className={cn('shrink-0 rounded-md px-2 py-0.5 text-[10px] font-semibold', PILL)}>{locale === 'ar' ? 'نسخ' : 'Copy'}</span>
       </div>
     </div>
   );
@@ -413,8 +432,8 @@ export const PRICING: {
 ];
 
 export const STATS: { n: string; label: { ar: string; en: string } }[] = [
-  { n: '250+', label: { ar: 'طلب دون رد حقيقي', en: 'applications with no real reply' } },
-  { n: '75%', label: { ar: 'من السير تُفلتر آليًا', en: 'of CVs auto filtered before a human looks' } },
+  { n: '250+', label: { ar: 'طلب بدون رد حقيقي', en: 'applications with no real reply' } },
+  { n: '75%', label: { ar: 'من السير تتفلتر آليًا قبل ما يشوفها بشر', en: 'of CVs auto filtered before a human looks' } },
   { n: '1,209', label: { ar: 'جهة موارد بشرية في قاعدتنا', en: 'HR contacts in our database' } },
 ];
 
