@@ -190,11 +190,11 @@ export function ScoreCard({ locale, className }: { locale: Loc; className?: stri
         <Eyebrow>{locale === 'ar' ? 'تنافسية السيرة' : 'CV competitiveness'}</Eyebrow>
         <span className="flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-[10.5px] font-bold text-amber-700 dark:text-amber-300">
           <TrendingUp className="h-3 w-3" />
-          {locale === 'ar' ? 'أقوى من 92%' : 'Top 8%'}
+          {locale === 'ar' ? 'أقوى من 70%' : 'Top 30%'}
         </span>
       </div>
       <div className="mt-3 flex items-center gap-4">
-        <MiniRing value={94} />
+        <MiniRing value={74} />
         <div className="min-w-0">
           <div className="text-sm text-stone-500 dark:text-stone-400">{locale === 'ar' ? 'محلل مالي' : 'Financial Analyst'}</div>
           <div className={cn('mt-0.5 text-sm font-semibold', ACCENT)}>{locale === 'ar' ? 'جاهز لمستوى المبتدئ' : 'Ready for Entry level'}</div>
