@@ -178,6 +178,13 @@ export default function MarketingH({ locale }: { locale: Loc }) {
     <div className={cn(PAGE, 'relative overflow-clip')}>
       <Grain />
 
+      {/* ambient liquid glass wash, gives the frosted cards something to refract */}
+      <div aria-hidden className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+        <div className="absolute -start-24 -top-24 h-[30rem] w-[30rem] rounded-full bg-amber-300/25 blur-[120px] dark:bg-amber-500/[0.12]" />
+        <div className="absolute -end-28 top-1/3 h-[32rem] w-[32rem] rounded-full bg-orange-200/25 blur-[130px] dark:bg-amber-600/[0.10]" />
+        <div className="absolute bottom-0 start-1/3 h-[28rem] w-[28rem] rounded-full bg-rose-200/20 blur-[130px] dark:bg-indigo-500/[0.10]" />
+      </div>
+
       {/* ---------------------------------------------------------- header -- */}
       <header className={cn('sticky top-0 z-40 border-b bg-[#f7f6f2]/80 backdrop-blur-md dark:bg-[#0a0a0b]/80', RULE)}>
         <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-3.5 sm:px-8">

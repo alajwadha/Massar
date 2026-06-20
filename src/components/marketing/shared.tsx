@@ -32,14 +32,16 @@ export const EASE = [0.16, 1, 0.3, 1] as const;
 
 export const PAGE = 'min-h-dvh bg-[#f7f6f2] text-stone-900 antialiased dark:bg-[#0a0a0b] dark:text-stone-100';
 
+// Liquid glass: a frosted, translucent panel with a top sheen, soft ring and deep
+// shadow. It reads as glass over the ambient color wash behind the page.
 export const CARD =
-  'relative overflow-hidden rounded-[22px] border border-stone-200/80 bg-white/85 shadow-[0_1px_2px_rgba(28,25,23,0.04),0_24px_60px_-34px_rgba(28,25,23,0.30)] backdrop-blur-sm dark:border-white/[0.09] dark:bg-[#161619] dark:shadow-[0_22px_55px_-32px_rgba(0,0,0,0.9)]';
+  'relative overflow-hidden rounded-[22px] border border-white/70 bg-white/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.75),0_2px_6px_rgba(28,25,23,0.05),0_28px_64px_-32px_rgba(28,25,23,0.40)] backdrop-blur-2xl ring-1 ring-stone-900/[0.04] dark:border-white/[0.12] dark:bg-white/[0.07] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_28px_60px_-32px_rgba(0,0,0,0.92)] dark:ring-white/[0.05]';
 export const EDGE =
-  'before:pointer-events-none before:absolute before:inset-x-5 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-900/10 before:to-transparent dark:before:via-white/20';
-export const INSET = 'rounded-2xl border border-stone-200/70 bg-stone-50/70 dark:border-white/[0.07] dark:bg-white/[0.035]';
+  'before:pointer-events-none before:absolute before:inset-x-5 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-white/70 before:to-transparent dark:before:via-white/25';
+export const INSET = 'rounded-2xl border border-white/60 bg-white/45 backdrop-blur-md dark:border-white/[0.08] dark:bg-white/[0.05]';
 export const PILL = 'bg-stone-900 text-white hover:bg-stone-800 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-white';
 export const GHOST =
-  'border border-stone-300/70 bg-white/60 text-stone-500 hover:border-stone-400 hover:text-stone-900 dark:border-white/10 dark:bg-white/[0.05] dark:text-stone-300 dark:hover:border-white/25 dark:hover:text-white';
+  'border border-stone-300/70 bg-white/60 backdrop-blur-md text-stone-500 hover:border-stone-400 hover:text-stone-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-stone-300 dark:hover:border-white/25 dark:hover:text-white';
 export const SOFT = 'bg-stone-900/[0.05] text-stone-600 dark:bg-white/[0.07] dark:text-stone-300';
 export const ACCENT = 'text-amber-700 dark:text-amber-300';
 
@@ -169,8 +171,8 @@ export function MiniRing({ value = 96, size = 104 }: { value?: number; size?: nu
 }
 
 const LVL = [
-  { ar: 'مبتدئ', en: 'Entry', on: true },
-  { ar: 'متوسط', en: 'Mid', on: false },
+  { ar: 'مبتدئ', en: 'Entry', on: false },
+  { ar: 'متوسط', en: 'Mid', on: true },
   { ar: 'خبير', en: 'Senior', on: false },
   { ar: 'قيادي', en: 'Director', on: false },
 ];
@@ -178,18 +180,24 @@ const LVL = [
 /** The signature proof: the per role, per level CV competitiveness score. */
 export function ScoreCard({ locale, className }: { locale: Loc; className?: string }) {
   const raises = [
-    { ar: 'عيد صياغة إنجازاتك بأرقام', en: 'Reframe bullets with numbers', d: '+6' },
-    { ar: 'خذ شهادة Meta للسوشيال ميديا', en: 'Meta Social Media cert', d: '+8' },
-    { ar: 'خذ شهادة Google للتسويق الرقمي', en: 'Google Digital Marketing', d: '+10' },
+    { ar: 'شهادة Google للتسويق الرقمي', en: 'Google Digital Marketing', d: '+10' },
+    { ar: 'شهادة Meta للتسويق الرقمي', en: 'Meta Marketing cert', d: '+8' },
+    { ar: 'شهادة HubSpot للتسويق بالمحتوى', en: 'HubSpot Content Marketing', d: '+6' },
   ];
   return (
     <div className={cn(CARD, EDGE, 'p-5', className)}>
-      <Eyebrow>{locale === 'ar' ? 'تنافسية السيرة' : 'CV competitiveness'}</Eyebrow>
+      <div className="flex items-center justify-between gap-2">
+        <Eyebrow>{locale === 'ar' ? 'تنافسية السيرة' : 'CV competitiveness'}</Eyebrow>
+        <span className="flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-[10.5px] font-bold text-amber-700 dark:text-amber-300">
+          <TrendingUp className="h-3 w-3" />
+          {locale === 'ar' ? 'أقوى من 92%' : 'Top 8%'}
+        </span>
+      </div>
       <div className="mt-3 flex items-center gap-4">
-        <MiniRing value={96} />
+        <MiniRing value={94} />
         <div className="min-w-0">
           <div className="text-sm text-stone-500 dark:text-stone-400">{locale === 'ar' ? 'أخصائي تسويق رقمي' : 'Digital Marketing Specialist'}</div>
-          <div className={cn('mt-0.5 text-sm font-semibold', ACCENT)}>{locale === 'ar' ? 'جاهز لمستوى المبتدئ' : 'Ready for Entry level'}</div>
+          <div className={cn('mt-0.5 text-sm font-semibold', ACCENT)}>{locale === 'ar' ? 'جاهز لمستوى المتوسط' : 'Ready for Mid level'}</div>
           <div className="mt-2 flex flex-wrap gap-1">
             {LVL.map((l) => (
               <span
@@ -219,10 +227,10 @@ export function ScoreCard({ locale, className }: { locale: Loc; className?: stri
 }
 
 const CERTS = [
-  { ar: 'إكسل وتحليل مالي', en: 'Excel & financial analysis', s: '+5', st: 'done' as const },
-  { ar: 'المعايير الدولية IFRS', en: 'IFRS standards', s: '+7', st: 'done' as const },
-  { ar: 'زمالة SOCPA', en: 'SOCPA fellowship', s: '+10', st: 'current' as const, hadaf: true },
-  { ar: 'CMA المحاسب الإداري', en: 'CMA', s: '+12', st: 'future' as const },
+  { ar: 'المعايير الدولية IFRS', en: 'IFRS standards', s: '+5', st: 'done' as const },
+  { ar: 'زمالة SOCPA السعودية', en: 'SOCPA fellowship', s: '+8', st: 'done' as const },
+  { ar: 'CMA المحاسب الإداري', en: 'CMA', s: '+10', st: 'current' as const, hadaf: true },
+  { ar: 'CPA الأمريكية', en: 'CPA (US)', s: '+12', st: 'future' as const },
 ];
 
 /** A career path with its ordered certifications timeline and Hadaf flag. */
@@ -387,7 +395,7 @@ export function DashboardPreview({ locale, className }: { locale: Loc; className
 
 /* -------------------------------------------------------------------- data -- */
 
-export const TARGET_COMPANIES = ['PIF', 'Aramco', 'NEOM', 'KAPSARC', 'SABIC', 'ACWA Power', 'stc', 'McKinsey', 'Sanabil', 'Ministry of Energy'];
+export const TARGET_COMPANIES = ['Aramco', 'stc', 'NEOM', 'PIF', 'SNB', 'noon', 'Qiddiya', 'Almarai', 'Saudia', 'Mobily'];
 
 export const PRICING: {
   id: 'starter' | 'pro';
