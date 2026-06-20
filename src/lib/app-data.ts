@@ -1770,7 +1770,7 @@ export const ui = {
     proLockTitle: { ar: 'هذي ميزة Pro', en: 'A Pro feature' },
     proLockBody: { ar: 'هذي الصفحة ضمن باقة Pro. رقّي باقتك وتنفتح لك الدراسات العليا والمصادر.', en: 'This page is part of the Pro plan. Upgrade to unlock graduate study and resources.' },
     plan: { ar: 'الباقة الاحترافية', en: 'Pro plan' },
-    journey: { ar: 'إنجاز خطتك المهنية', en: 'Your plan progress' },
+    journey: { ar: 'تقدّمك في خطتك', en: 'Your plan progress' },
     demoBadge: { ar: 'خطتك أنت', en: 'Your plan' },
   },
   overview: {
@@ -1822,8 +1822,8 @@ export const ui = {
     strengthGrowing: { ar: 'قيد البناء', en: 'Growing' },
     quickWin: { ar: 'أسرع مكسب', en: 'Quickest win' },
     reachable: { ar: 'درجتك لو كمّلت هذي الخطوات', en: 'Your reachable score' },
-    areasTitle: { ar: 'أعلى مساراتك', en: 'Your top areas' },
-    areasSub: { ar: 'مرتّبة حسب درجتك التنافسية فيها', en: 'Ranked by your competitiveness' },
+    areasTitle: { ar: 'أقوى مساراتك', en: 'Your top areas' },
+    areasSub: { ar: 'مرتّبة حسب قوتك في كل مسار', en: 'Ranked by your competitiveness' },
     tipTitle: { ar: 'أهمّ خطوة اليوم', en: "Today's top move" },
     tip: {
       ar: 'أسرع مكسب اليوم: عيد صياغة أبرز 3 إنجازات بأرقام وترفع درجتك +6 على طول.',
@@ -1884,7 +1884,7 @@ export const ui = {
     markDone: { ar: 'علّمها منجزة', en: 'Mark done' },
     markedDone: { ar: 'منجزة', en: 'Done' },
     bannerSub: { ar: 'تسترجع جزءًا من تكلفة الشهادات المعتمدة عبر هدف.', en: 'Reclaim part of the cost of approved certifications via Hadaf.' },
-    opens: { ar: 'يفتح أبواب', en: 'Opens doors to' },
+    opens: { ar: 'يفتح لك أبواب', en: 'Opens doors to' },
   },
   contacts: {
     eyebrow: { ar: 'التواصل', en: 'Outreach' },
@@ -1912,7 +1912,7 @@ export const ui = {
     linkedin: { ar: 'لينكدإن', en: 'LinkedIn' },
     statusHint: { ar: 'حدّث الحالة بعد كل خطوة', en: 'Update the status after each step' },
     inNetwork: { ar: 'في شبكتك', en: 'In your network' },
-    sameCompany: { ar: 'تعرف من في شركته', en: 'You know someone here' },
+    sameCompany: { ar: 'تعرف أحد في شركته', en: 'You know someone here' },
     sector: { ar: 'القطاع', en: 'Sector' },
     companySize: { ar: 'حجم الشركة', en: 'Company size' },
     allSectors: { ar: 'كل القطاعات', en: 'All sectors' },
@@ -1928,8 +1928,8 @@ export const ui = {
     notContacted: { ar: 'ما تواصلت معهم بعد', en: 'Not contacted yet' },
     empty: { ar: 'لا نتائج مطابقة.', en: 'No matching results.' },
     status_new: { ar: 'جديد', en: 'New' },
-    status_sent: { ar: 'مُرسل', en: 'Sent' },
-    status_replied: { ar: 'ردّ', en: 'Replied' },
+    status_sent: { ar: 'أرسلت', en: 'Sent' },
+    status_replied: { ar: 'ردّوا', en: 'Replied' },
     status_followup: { ar: 'متابعة', en: 'Follow-up' },
   },
   network: {

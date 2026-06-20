@@ -242,7 +242,7 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
           {STATUS_BTNS.map((b) => {
             const active = status === b.key;
             return (
-              <button key={b.key} type="button" onClick={() => setStatus(c.id, active ? 'new' : b.key)} className={cn('flex-1 rounded-full px-2 py-1.5 text-[11px] font-bold transition-colors', active ? b.on : 'bg-stone-900/[0.04] text-stone-500 hover:text-stone-900 dark:bg-white/[0.05] dark:text-stone-400 dark:hover:text-white')}>
+              <button key={b.key} type="button" onClick={() => setStatus(c.id, active ? 'new' : b.key)} className={cn('flex-1 cursor-pointer rounded-full px-2 py-1.5 text-[11px] font-bold transition-all active:scale-95', active ? b.on : 'border border-stone-300 bg-white text-stone-600 hover:border-stone-400 hover:bg-stone-50 hover:text-stone-900 dark:border-white/20 dark:bg-white/[0.07] dark:text-stone-300 dark:hover:bg-white/[0.12] dark:hover:text-white')}>
                 {ui.contacts[b.sk][locale]}
               </button>
             );
