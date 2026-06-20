@@ -2,17 +2,15 @@
 
 /* =============================================================================
    Landing version H, "Question led".
-   The page is built around the customer's real anxieties, each one set as a big
-   serif question, then answered with a short, reassuring block and, where it
-   fits, the matching product preview. Empathetic, direct, conversational. The
-   voice does the work; previews appear only where they make the answer concrete.
-   Light and dark, Arabic first, amber only, v4 "Atlas" tokens throughout.
+   The page is built around the customer's real questions, each set as a big serif
+   question, then answered with a short, warm, honest block and, where it fits, the
+   matching product preview. Saudi voice, empathetic and direct. Covers graduates,
+   career switchers, and people going for a promotion. Light and dark, Arabic first.
 ============================================================================= */
 
 import {
   PAGE,
   CARD,
-  INSET,
   PILL,
   GHOST,
   SOFT,
@@ -26,10 +24,10 @@ import {
   ScoreCard,
   PathsCard,
   ContactsCard,
+  StudyCard,
   OpportunitiesCard,
   TARGET_COMPANIES,
   PRICING,
-  STATS,
   pick,
   type Loc,
 } from '@/components/marketing/shared';
@@ -45,77 +43,82 @@ const T = {
   navPlan: { ar: 'الخطة', en: 'The plan' },
   navPricing: { ar: 'السعر', en: 'Pricing' },
   cta: { ar: 'ابدأ الآن', en: 'Get started' },
-  ctaPricing: { ar: 'شاهد السعر', en: 'See pricing' },
+  ctaPricing: { ar: 'شوف الأسعار', en: 'See pricing' },
 
-  kicker: { ar: 'مسار · سوق العمل السعودي', en: 'Masaar · the Saudi job market' },
-  heroTitle: { ar: 'لنطرح الأسئلة التي تؤرقك فعلًا.', en: 'Let us answer what is actually keeping you up.' },
+  kicker: { ar: 'مسار · مصمّم لسوق العمل السعودي', en: 'Masaar · built for the Saudi job market' },
+  heroTitle: { ar: 'خرّيج، تبي تغيّر مجالك، أو تستهدف ترقية؟', en: 'A graduate, switching fields, or going for a promotion?' },
   heroLede: {
-    ar: 'البحث عن وظيفة مرهق، ومليء بالشكوك. بدل وعود فارغة، نأخذ مخاوفك الحقيقية سؤالًا سؤالًا، ونجيب عن كلٍّ منها بصدق وبخطوة واضحة، لوظيفة جديدة أو لترقية عند صاحب عملك الحالي.',
-    en: 'The job hunt is exhausting, and full of doubt. Instead of empty promises, we take your real worries one question at a time, and answer each one honestly with a clear next step, for a new job or a promotion with your current employer.',
+    ar: 'خلّنا نجاوب على الأسئلة اللي تشغل بالك، ونساعدك تحقّق أهدافك.',
+    en: 'Let us answer the questions on your mind, and help you reach your goals.',
   },
 
   // Q1 competitive
-  q1: { ar: 'هل أنا منافس أصلًا؟', en: 'Am I even competitive?' },
+  q1: { ar: 'وش وضعي التنافسي بالضبط؟', en: 'Where do I actually stand?' },
   q1body: {
-    ar: 'نقرأ سيرتك ونعطيك درجة صريحة من ١٠٠ لكل دور ولكل مستوى، من المبتدئ إلى القيادي. الدرجة محافظة عمدًا حتى تثق بها، وتُظهر بالضبط ما الذي يرفعها وبكم. لا إطراء، بل صورة صادقة تبدأ منها.',
-    en: 'We read your CV and give you an honest score out of 100 for each role and each level, from Entry to Director. It is deliberately conservative so you can trust it, and it shows exactly what raises it and by how much. No flattery, just an honest picture to start from.',
+    ar: 'نقرأ سيرتك ونعطيك درجة صريحة من 100 لكل دور ولكل مستوى، من المبتدئ للقيادي. ما نبالغ فيها عشان تثق فيها، وتوريك بالضبط وش يرفعها وكم. ما فيه مجاملة، بس صورة صادقة تنطلق منها.',
+    en: 'We read your CV and give you an honest score out of 100 for each role and level, from Entry to Director. We never inflate it, so you can trust it, and it shows exactly what raises it and by how much. No flattery, just an honest starting point.',
   },
-  q1note: { ar: 'محافظة عمدًا، حتى تكون درجة تثق بها.', en: 'Conservative on purpose, so it is a number you can trust.' },
+  q1note: { ar: 'نوريك مكانك بصدق، عشان تبني على أساس صحيح.', en: 'We show you where you really stand, so you build on solid ground.' },
 
   // Q2 contact
-  q2: { ar: 'بمن أتواصل فعلًا؟', en: 'Who do I actually contact?' },
+  q2: { ar: 'مين أتواصل معهم؟ وكيف؟ وش أقول؟', en: 'Who do I reach, how, and what do I say?' },
   q2body: {
-    ar: 'سطحان للتواصل. الأول جهات اتصالك على لينكدإن، تُحلَّل بسرية تامة داخل متصفحك وحده وتُرتَّب إلى مقدّمات دافئة. والثاني قاعدتنا من ١٢٠٩ جهة من الموارد البشرية، يُفتح منها بحسب باقتك. نصوغ رسائل التواصل بصوتك أنت، وترسلها بنفسك.',
-    en: 'Two contact surfaces. The first is your own LinkedIn connections, parsed privately inside your browser alone and ranked into warm introductions. The second is our database of 1,209 HR contacts, opened by your tier. We draft your outreach in your own voice, and you send it yourself.',
+    ar: 'نرتّب لك جهات اتصالك في لينكدإن ونطلّع أقرب الناس لأهدافك، ومع كل واحد رابط مباشر لحسابه في لينكدإن ورسالة جاهزة تنسخها وترسلها بنفسك. ونوصّلك كمان بمسؤولي التوظيف المناسبين لمجالك.',
+    en: 'We rank your LinkedIn connections and surface the people closest to your goals, each with a direct link to their LinkedIn and a ready message you copy and send yourself. We also connect you to the right recruiters for your field.',
   },
-  q2note: { ar: 'كل رسالة بصوتك، تراجعها وترسلها بنفسك. لا إرسال نيابة عنك.', en: 'Every message is in your voice, reviewed and sent by you. Nothing sent on your behalf.' },
+  q2note: { ar: 'كل رسالة بصوتك، إنت تراجعها وترسلها. ما نرسل شي نيابة عنك.', en: 'Every message is in your voice, reviewed and sent by you. We never send anything on your behalf.' },
 
   // Q3 online applications
-  q3: { ar: 'هل التقديم أونلاين يجدي أصلًا؟', en: 'Does applying online even work?' },
+  q3: { ar: 'هل التقديم أونلاين يفيد أصلًا؟', en: 'Does applying online even work?' },
   q3body: {
-    ar: 'غالبًا لا. كثير من الوظائف الجيدة تُملأ عبر الترشيح والعلاقات قبل أن تُنشر، وما يُنشر تُفلتر سيره آليًا قبل أن يراها إنسان. لهذا نبنيها بالعكس: نوصلك بالأشخاص أولًا عبر قاعدتنا من جهات الموارد البشرية وشبكتك أنت، فتصبح اسمًا معروفًا، لا طلبًا في كومة.',
-    en: 'Often it does not. Many good jobs are filled through referrals and people before they are ever posted, and what is posted gets auto filtered before a human looks. So we build it in reverse: we connect you to people first, through our HR database and your own network, so you become a known name, not a form in a pile.',
+    ar: 'غالبًا لا. أغلب الوظائف تروح عن طريق المعارف والترشيح قبل لا تتنشر أصلًا، واللي يتنشر تتفلتر سيرته آليًا قبل لا توصل لإنسان. عشان كذا نقلبها بالعكس: نوصّلك بالناس أول، فتصير اسم معروف، مو مجرد سيرة وسط آلاف الطلبات.',
+    en: 'Usually not. Most jobs go through people and referrals before they are ever posted, and what is posted gets auto filtered before a human sees it. So we flip it: we connect you to people first, so you become a known name, not one CV among thousands.',
   },
 
   // Q4 plan
-  q4: { ar: 'ما هي خطتي بالضبط؟', en: 'What exactly is my plan?' },
+  q4: { ar: 'وش خطتي، وكيف أطوّر نفسي وأكون مرشّح أقوى أو أترقّى؟', en: 'What is my plan to grow into a stronger candidate, or a promotion?' },
   q4body: {
-    ar: 'من خلفيتك نرسم مسارات مهنية تناسبك، ولكل مسار خارطة شهادات مرتبة حسب الأثر. ونوضّح أيها يعيد صندوق هدف الحكومي نحو ٥٠٪ من كلفته، حتى تستثمر وقتك ومالك حيث يهمّ فعلًا. خطوات واضحة، لا تخمين.',
-    en: 'From your background we draw career paths that fit you, each with a certifications roadmap ordered by impact. We flag which ones the government fund Hadaf reimburses about 50 percent of, so you invest your time and money where it truly counts. Clear steps, no guessing.',
+    ar: 'من خلفيتك نرسم لك مسارات مهنية تناسبك، ولكل مسار خارطة شهادات مرتبة حسب الأثر، مع الوقت المتوقّع لكل شهادة ورابط مباشر لموقعها الرسمي. ونوضّح أي شهادة يعوّض صندوق هدف نحو 50% من تكلفتها، عشان تحط وقتك وفلوسك في اللي يفرق فعلًا.',
+    en: 'From your background we map career paths that fit you, each with a certifications roadmap ordered by impact, the expected time for each, and a direct link to its official site. We flag which ones the Hadaf fund reimburses about 50% of, so you invest your time and money where it counts.',
   },
-  q4note: { ar: 'هدف يعيد نحو ٥٠٪ من كلفة الشهادات المؤهَّلة.', en: 'Hadaf reimburses about 50 percent of eligible certificate costs.' },
+  q4note: { ar: 'علينا التخطيط، وعليك التنفيذ.', en: 'The planning is on us, the doing is on you.' },
 
-  // Q5 study and opportunities
-  q5: { ar: 'وماذا لو احتجت الدراسة أو فرصًا أكثر؟', en: 'What if I need study, or more openings?' },
-  q5studyTitle: { ar: 'الدراسة', en: 'Study' },
-  q5studyBody: {
-    ar: 'برامج الدراسات العليا حسب التخصص، أهليتك للمنح السعودية ومنها منحة رواد لأفضل ٣٠ جامعة، خيارات الدوام الجزئي في السعودية، والمواعيد النهائية.',
-    en: 'Graduate programs by field, your eligibility for Saudi scholarships including the Pioneers scholarship for the top 30 universities, part time options inside Saudi, and deadlines.',
-  },
-  q5oppTitle: { ar: 'الفرص', en: 'Opportunities' },
-  q5oppBody: {
-    ar: 'نحو ٦٠ صفحة توظيف لشركات سعودية مرتبة حسب القطاع، أيام مهنية بتواريخها، مهارات مطلوبة، وبرامج وطنية مثل تمهير.',
-    en: 'Around 60 Saudi company career pages grouped by sector, dated career days, in demand skills, and national programs like Tamheer.',
+  // Q5 study
+  q5: { ar: 'وإذا حبيت أكمل دراستي؟', en: 'What if I want to study further?' },
+  q5body: {
+    ar: 'برامج دراسات عليا حسب تخصصك، وأهليتك للابتعاث ومنه منحة رواد لأفضل 30 جامعة، وخيارات الدوام الجزئي داخل السعودية، والمواعيد النهائية وروابط البرامج مباشرة.',
+    en: 'Graduate programs by field, your eligibility for scholarships including Pioneers for the top 30 universities, part time options inside Saudi, deadlines, and direct links to the programs.',
   },
 
-  // Q6 pricing
-  q6: { ar: 'وكم يكلّفني هذا؟', en: 'And what will this cost me?' },
+  // Q6 resources
+  q6: { ar: 'وش غير يسهّل عليّ الطريق؟', en: 'What else makes this easier for me?' },
   q6body: {
-    ar: 'دفعة واحدة، بلا اشتراك. تدفع مرة عبر ميسر بمدى أو آبل باي أو البطاقات، وتفتح لوحة التحكم فورًا. الأساسية ١٩٩ ريال، والاحترافية ٤٩٩ ريال.',
-    en: 'One payment, no subscription. Pay once through Moyasar with mada, Apple Pay, or cards, and the dashboard unlocks instantly. Starter is 199 SAR, Pro is 499 SAR.',
+    ar: 'جهّزنا لك مصادر تختصر عليك الطريق: بوابات التوظيف وصفحات الشركات السعودية حسب القطاع، أيام مهنية بمواعيدها، مهارات مطلوبة تتعلّمها، أدلة لكتابة سيرتك واجتياز المقابلات، وبرامج وطنية مثل تمهير.',
+    en: 'We line up resources that shorten the road: Saudi job portals and company pages by sector, dated career days, in demand skills to learn, guides for your CV and interviews, and national programs like Tamheer.',
   },
-  oneTime: { ar: 'دفعة واحدة', en: 'one time' },
+
+  // Q7 pricing
+  q7: { ar: 'وكم بيكلّفني هذا؟', en: 'And what will this cost me?' },
+  q7body: {
+    ar: 'دفعة وحدة وبس، بدون اشتراك. الأساسية 199 ريال، والاحترافية 350 ريال. وبعدها نبدأ نجهّز لك موقعك الخاص بأقرب وقت.',
+    en: 'One payment, no subscription. Starter is 199 SAR, Pro is 350 SAR. Then we start preparing your own private site right away.',
+  },
+  oneTime: { ar: 'مرة وحدة', en: 'one time' },
   most: { ar: 'الأكثر اختيارًا', en: 'Most chosen' },
   choose: { ar: 'اختر', en: 'Choose' },
 
-  trustedBy: { ar: 'محترفون يستهدفون', en: 'Professionals targeting' },
+  trustedBy: { ar: 'ناس يطمحون لوظائف في', en: 'People aiming for roles at' },
 
-  closeTitle: { ar: 'فلنبدأ من سؤالك أنت.', en: 'Let us start with your question.' },
+  closeTitle: { ar: 'وش نحتاج عشان نصمّم لك كل هذا؟', en: 'What do we need to build all this for you?' },
   closeBody: {
-    ar: 'ابدأ بسيرتك كما هي اليوم، ودع كل سؤال يلقى جوابه الصريح وخطوته التالية. النتيجة وظيفة جديدة أو ترقية.',
-    en: 'Start with your CV exactly as it is today, and let every question meet its honest answer and next step. The result is a new job or a promotion.',
+    ar: 'ارفع سيرتك لنا، وخلّ باقي الشغل علينا، وأبشر بالخير.',
+    en: 'Upload your CV as it is today, leave the rest to us, and expect good things.',
   },
-  footMade: { ar: 'عربي أولًا، بالكامل ثنائي اللغة.', en: 'Arabic first, fully bilingual.' },
+  closeValues: {
+    ar: 'يهمّنا مستقبلك. علينا وعليك العمل بالأسباب، والتوفيق من الله.',
+    en: 'Your future matters to us. We each do our part, and success is from God.',
+  },
+  footMade: { ar: 'عربي أول، وثنائي اللغة بالكامل.', en: 'Arabic first, fully bilingual.' },
   footRights: { ar: 'مسار. جميع الحقوق محفوظة.', en: 'Masaar. All rights reserved.' },
 } as const;
 
@@ -181,7 +184,7 @@ export default function MarketingH({ locale }: { locale: Loc }) {
             <LangToggle locale={locale} />
             <Link
               href={{ pathname: '/checkout', query: { plan: 'pro' } }}
-              className={cn('hidden rounded-full px-4 py-2 text-[13px] font-semibold transition-colors sm:inline-flex', PILL)}
+              className={cn('inline-flex rounded-full px-3.5 py-2 text-[13px] font-semibold transition-colors', PILL)}
             >
               {t('cta')}
             </Link>
@@ -196,7 +199,7 @@ export default function MarketingH({ locale }: { locale: Loc }) {
           <Fade>
             <Eyebrow className="justify-center">{t('kicker')}</Eyebrow>
             <h1 className="mx-auto mt-6 max-w-3xl">
-              <Serif className="block text-4xl leading-[1.08] tracking-tight sm:text-6xl">{t('heroTitle')}</Serif>
+              <Serif className="block text-[2rem] leading-[1.12] tracking-tight sm:text-5xl md:text-6xl">{t('heroTitle')}</Serif>
             </h1>
             <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-stone-600 dark:text-stone-300">{t('heroLede')}</p>
             <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
@@ -205,7 +208,7 @@ export default function MarketingH({ locale }: { locale: Loc }) {
                 className={cn('inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-colors', PILL)}
               >
                 {t('cta')}
-                <ArrowUpRight className="h-4 w-4" />
+                <ArrowUpRight className="h-4 w-4 rtl:rotate-[-90deg]" />
               </Link>
               <a
                 href="#pricing"
@@ -217,13 +220,13 @@ export default function MarketingH({ locale }: { locale: Loc }) {
           </Fade>
         </section>
 
-        {/* ---------------------------------- Q1 am I competitive (ScoreCard) -- */}
+        {/* ---------------------------------- Q1 competitive (ScoreCard) -- */}
         <section id="how" className="scroll-mt-24 border-b py-16 sm:py-20">
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
             <Fade>
               <div className="flex items-center gap-3">
                 <Ask n="01" />
-                <Serif className="text-3xl leading-[1.1] tracking-tight sm:text-4xl">{t('q1')}</Serif>
+                <Serif className="text-2xl leading-[1.15] tracking-tight sm:text-4xl">{t('q1')}</Serif>
               </div>
               <p className="mt-6 text-lg leading-relaxed text-stone-600 dark:text-stone-300">{t('q1body')}</p>
               <Reassure>{t('q1note')}</Reassure>
@@ -243,7 +246,7 @@ export default function MarketingH({ locale }: { locale: Loc }) {
             <Fade className="lg:order-1">
               <div className="flex items-center gap-3">
                 <Ask n="02" />
-                <Serif className="text-3xl leading-[1.1] tracking-tight sm:text-4xl">{t('q2')}</Serif>
+                <Serif className="text-2xl leading-[1.15] tracking-tight sm:text-4xl">{t('q2')}</Serif>
               </div>
               <p className="mt-6 text-lg leading-relaxed text-stone-600 dark:text-stone-300">{t('q2body')}</p>
               <Reassure>{t('q2note')}</Reassure>
@@ -256,22 +259,10 @@ export default function MarketingH({ locale }: { locale: Loc }) {
           <Fade>
             <div className="flex items-center gap-3">
               <Ask n="03" />
-              <Serif className="text-3xl leading-[1.1] tracking-tight sm:text-4xl">{t('q3')}</Serif>
+              <Serif className="text-2xl leading-[1.15] tracking-tight sm:text-4xl">{t('q3')}</Serif>
             </div>
+            <p className="mt-7 max-w-3xl text-lg leading-relaxed text-stone-600 dark:text-stone-300">{t('q3body')}</p>
           </Fade>
-          <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_16rem] lg:gap-12">
-            <Fade>
-              <p className="max-w-2xl text-lg leading-relaxed text-stone-600 dark:text-stone-300">{t('q3body')}</p>
-            </Fade>
-            <Fade delay={0.1} className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:grid-cols-1">
-              {STATS.map((s) => (
-                <div key={s.n} className={cn('p-4', INSET)}>
-                  <Serif className="block text-4xl leading-none">{s.n}</Serif>
-                  <span className="mt-2 block text-[13px] leading-snug text-stone-500 dark:text-stone-400">{pick(s.label, locale)}</span>
-                </div>
-              ))}
-            </Fade>
-          </div>
         </section>
 
         {/* ----------------------------------------- Q4 my plan (PathsCard) -- */}
@@ -280,7 +271,7 @@ export default function MarketingH({ locale }: { locale: Loc }) {
             <Fade>
               <div className="flex items-center gap-3">
                 <Ask n="04" />
-                <Serif className="text-3xl leading-[1.1] tracking-tight sm:text-4xl">{t('q4')}</Serif>
+                <Serif className="text-2xl leading-[1.15] tracking-tight sm:text-4xl">{t('q4')}</Serif>
               </div>
               <p className="mt-6 text-lg leading-relaxed text-stone-600 dark:text-stone-300">{t('q4body')}</p>
               <Reassure>{t('q4note')}</Reassure>
@@ -291,24 +282,31 @@ export default function MarketingH({ locale }: { locale: Loc }) {
           </div>
         </section>
 
-        {/* ------------------------- Q5 study and opportunities (OpportunitiesCard) -- */}
+        {/* --------------------------------------- Q5 study (StudyCard) -- */}
         <section className="border-b py-16 sm:py-20">
-          <Fade>
-            <div className="flex items-center gap-3">
-              <Ask n="05" />
-              <Serif className="text-3xl leading-[1.1] tracking-tight sm:text-4xl">{t('q5')}</Serif>
-            </div>
-          </Fade>
-          <div className="mt-8 grid items-start gap-8 lg:grid-cols-2 lg:gap-12">
-            <Fade className="space-y-5">
-              <div>
-                <Eyebrow>{t('q5studyTitle')}</Eyebrow>
-                <p className="mt-2 text-[15px] leading-relaxed text-stone-600 dark:text-stone-300">{t('q5studyBody')}</p>
+          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
+            <Fade delay={0.1} className="lg:order-2">
+              <StudyCard locale={locale} />
+            </Fade>
+            <Fade className="lg:order-1">
+              <div className="flex items-center gap-3">
+                <Ask n="05" />
+                <Serif className="text-2xl leading-[1.15] tracking-tight sm:text-4xl">{t('q5')}</Serif>
               </div>
-              <div>
-                <Eyebrow>{t('q5oppTitle')}</Eyebrow>
-                <p className="mt-2 text-[15px] leading-relaxed text-stone-600 dark:text-stone-300">{t('q5oppBody')}</p>
+              <p className="mt-6 text-lg leading-relaxed text-stone-600 dark:text-stone-300">{t('q5body')}</p>
+            </Fade>
+          </div>
+        </section>
+
+        {/* --------------------------------- Q6 resources (OpportunitiesCard) -- */}
+        <section className="border-b py-16 sm:py-20">
+          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
+            <Fade>
+              <div className="flex items-center gap-3">
+                <Ask n="06" />
+                <Serif className="text-2xl leading-[1.15] tracking-tight sm:text-4xl">{t('q6')}</Serif>
               </div>
+              <p className="mt-6 text-lg leading-relaxed text-stone-600 dark:text-stone-300">{t('q6body')}</p>
             </Fade>
             <Fade delay={0.1}>
               <OpportunitiesCard locale={locale} />
@@ -316,14 +314,14 @@ export default function MarketingH({ locale }: { locale: Loc }) {
           </div>
         </section>
 
-        {/* ----------------------------------------------- Q6 pricing -- */}
+        {/* ----------------------------------------------- Q7 pricing -- */}
         <section id="pricing" className="scroll-mt-24 border-b py-16 sm:py-20">
           <Fade>
             <div className="flex items-center gap-3">
-              <Ask n="06" />
-              <Serif className="text-3xl leading-[1.1] tracking-tight sm:text-4xl">{t('q6')}</Serif>
+              <Ask n="07" />
+              <Serif className="text-2xl leading-[1.15] tracking-tight sm:text-4xl">{t('q7')}</Serif>
             </div>
-            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-stone-600 dark:text-stone-300">{t('q6body')}</p>
+            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-stone-600 dark:text-stone-300">{t('q7body')}</p>
           </Fade>
           <div className="mt-10 grid gap-6 md:grid-cols-2">
             {PRICING.map((tier, i) => (
@@ -359,7 +357,7 @@ export default function MarketingH({ locale }: { locale: Loc }) {
                     )}
                   >
                     {t('choose')} {pick(tier.name, locale)}
-                    <ArrowUpRight className="h-4 w-4" />
+                    <ArrowUpRight className="h-4 w-4 rtl:rotate-[-90deg]" />
                   </Link>
                 </div>
               </Fade>
@@ -376,17 +374,18 @@ export default function MarketingH({ locale }: { locale: Loc }) {
                 <span key={c} className={cn('rounded-full px-2.5 py-1 text-[12px] font-medium', SOFT)}>{c}</span>
               ))}
             </div>
-            <Serif className="mx-auto mt-10 block max-w-3xl text-4xl leading-[1.08] tracking-tight sm:text-6xl">
+            <Serif className="mx-auto mt-10 block max-w-3xl text-[2rem] leading-[1.12] tracking-tight sm:text-5xl md:text-6xl">
               {t('closeTitle')}
             </Serif>
             <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-stone-600 dark:text-stone-300">{t('closeBody')}</p>
+            <Serif className="mx-auto mt-5 block max-w-xl text-[17px] italic leading-relaxed text-amber-700 dark:text-amber-300">{t('closeValues')}</Serif>
             <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
               <Link
                 href={{ pathname: '/checkout', query: { plan: 'pro' } }}
                 className={cn('inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-semibold transition-colors', PILL)}
               >
                 {t('cta')}
-                <ArrowUpRight className="h-4 w-4" />
+                <ArrowUpRight className="h-4 w-4 rtl:rotate-[-90deg]" />
               </Link>
               <a
                 href="#pricing"

@@ -267,7 +267,7 @@ export function PathsCard({ locale, className }: { locale: Loc; className?: stri
 /** The two contact surfaces: the customer's own ranked network + our HR database. */
 export function ContactsCard({ locale, className }: { locale: Loc; className?: string }) {
   const people = [
-    { init: { ar: 'ع', en: 'A' }, name: { ar: 'عبدالله المالكي', en: 'Abdullah Al-Malki' }, role: { ar: 'مدير محفظة · الصندوق', en: 'Portfolio Director · PIF' }, tag: { ar: 'مقدمة دافئة', en: 'Warm intro' }, warm: true, net: true },
+    { init: { ar: 'ع', en: 'A' }, name: { ar: 'عبدالله المالكي', en: 'Abdullah Al-Malki' }, role: { ar: 'مدير محفظة · الصندوق', en: 'Portfolio Director · PIF' }, tag: { ar: 'تقدر توصله', en: 'In your network' }, warm: true, net: true },
     { init: { ar: 'س', en: 'S' }, name: { ar: 'سارة القحطاني', en: 'Sara Al-Qahtani' }, role: { ar: 'أخصائية توظيف أولى · نيوم', en: 'Senior Recruiter · NEOM' }, tag: { ar: 'موارد بشرية', en: 'HR' }, warm: false, net: false },
     { init: { ar: 'ف', en: 'F' }, name: { ar: 'فهد العتيبي', en: 'Fahad Al-Otaibi' }, role: { ar: 'مدير توظيف · أرامكو', en: 'Hiring Manager · Aramco' }, tag: { ar: 'جديد', en: 'New' }, warm: false, net: false },
   ];
@@ -419,7 +419,7 @@ export const PRICING: {
   {
     id: 'pro',
     name: { ar: 'الاحترافية', en: 'Pro' },
-    price: 499,
+    price: 350,
     blurb: { ar: 'تغطية أوسع وأهداف أكثر', en: 'Wider coverage, more targets' },
     popular: true,
     features: [
