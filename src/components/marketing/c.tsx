@@ -201,7 +201,7 @@ function Band({
   id?: string;
 }) {
   return (
-    <section id={id} className={cn('relative w-full px-5 py-20 sm:py-28', dark && 'bg-stone-950 text-stone-100', className)}>
+    <section id={id} className={cn('relative w-full px-5 py-14 sm:py-24 md:py-28', dark && 'bg-stone-950 text-stone-100', className)}>
       <div className="mx-auto flex w-full max-w-5xl flex-col items-center text-center">{children}</div>
     </section>
   );
@@ -254,7 +254,7 @@ export function CDesign({ locale, T, STEPS, BANNER }: { locale: Loc; T: CCopy; S
             <ThemeToggle />
             <Link
               href={checkoutPro}
-              className={cn('hidden h-9 items-center rounded-full px-4 text-sm font-semibold transition-colors sm:inline-flex', PILL)}
+              className={cn('inline-flex h-9 items-center rounded-full px-3.5 text-[13px] font-semibold transition-colors sm:px-4 sm:text-sm', PILL)}
             >
               {pick(T.cta, locale)}
             </Link>
@@ -269,7 +269,7 @@ export function CDesign({ locale, T, STEPS, BANNER }: { locale: Loc; T: CCopy; S
             <Sparkles className="h-3.5 w-3.5" />
             {pick(T.heroEyebrow, locale)}
           </span>
-          <Serif className="mt-6 max-w-3xl text-balance text-5xl leading-[1.02] sm:text-6xl md:text-7xl">
+          <Serif className="mt-6 max-w-3xl text-balance text-[2rem] leading-[1.12] sm:text-5xl md:text-7xl">
             {pick(T.heroTitle, locale)}
           </Serif>
           <p className="mt-6 max-w-2xl text-pretty text-lg text-stone-600 dark:text-stone-300">{pick(T.heroSub, locale)}</p>
@@ -489,7 +489,7 @@ export function CDesign({ locale, T, STEPS, BANNER }: { locale: Loc; T: CCopy; S
       {/* CALM LIGHT BAND: final huge CTA */}
       <Band>
         <Reveal className="flex flex-col items-center">
-          <Serif className="max-w-3xl text-balance text-5xl leading-[1.02] sm:text-6xl md:text-7xl">{pick(T.finalTitle, locale)}</Serif>
+          <Serif className="max-w-3xl text-balance text-[2rem] leading-[1.12] sm:text-5xl md:text-7xl">{pick(T.finalTitle, locale)}</Serif>
           <p className="mt-5 max-w-xl text-pretty text-lg text-stone-600 dark:text-stone-300">{pick(T.finalSub, locale)}</p>
           <Link
             href={checkoutPro}
