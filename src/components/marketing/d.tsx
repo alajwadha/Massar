@@ -1,321 +1,139 @@
 'use client';
 
 /* =============================================================================
-   Landing version D, "Split screen". A calm, premium, two column product site.
-   On desktop the LEFT half is sticky and full height: wordmark, a large serif
-   headline, a few tight value props, the primary CTA, and one quiet trust line.
-   The RIGHT half scrolls through a short captioned tour of the real product,
-   then a compact pricing block. On mobile it all stacks into a single column.
+   Landing version D. Same "Bold Pitch" design as version C (it reuses CDesign),
+   but with a warm, human Saudi voice (voice 2) instead of the confident, premium
+   voice (voice 1) on /m/c. Both share one design so we compare copy, not layout.
 ============================================================================= */
 
-import {
-  ArrowUpRight,
-  Check,
-  Gauge,
-  Users,
-  GraduationCap,
-  ShieldCheck,
-} from 'lucide-react';
-import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
-import { Link } from '@/i18n/routing';
-import {
-  PAGE,
-  CARD,
-  SOFT,
-  GHOST,
-  PILL,
-  ACCENT,
-  EASE,
-  Serif,
-  Eyebrow,
-  Grain,
-  ThemeToggle,
-  LangToggle,
-  ScoreCard,
-  ContactsCard,
-  StudyCard,
-  TARGET_COMPANIES,
-  PRICING,
-  pick,
-  type Loc,
-} from '@/components/marketing/shared';
+import { ScanLine, Route, Users, Sparkles, ShieldCheck, GraduationCap } from 'lucide-react';
+import { CDesign, type CCopy } from './c';
+import type { Loc } from '@/components/marketing/shared';
 
-/* ------------------------------------------------------------------- copy -- */
-
-const T = {
+// Voice 2: warm and human (natural Saudi, clean).
+const COPY_D: CCopy = {
   nav: {
-    tour: { ar: 'الجولة', en: 'Tour' },
+    how: { ar: 'كيف يعمل', en: 'How it works' },
     pricing: { ar: 'الأسعار', en: 'Pricing' },
+    product: { ar: 'المنتج', en: 'Product' },
   },
   cta: { ar: 'ابدأ الآن', en: 'Get started' },
-  seePricing: { ar: 'الأسعار', en: 'Pricing' },
+  heroEyebrow: { ar: 'لوظيفة جديدة أو ترقية', en: 'For a new job or a promotion' },
+  heroTitle: { ar: 'خلّ عنك التخمين، وابدأ بخطة.', en: 'Stop guessing. Start a plan.' },
+  heroSub: {
+    ar: 'سيرتك تصير خطة واضحة: درجة صادقة، وشهادات يدفع هدف نصّها، والأشخاص المناسبون للتواصل معهم، مع رسائل جاهزة بأسلوبك. دفعة وحدة، وتفتح لك لوحتك على طول.',
+    en: 'Your CV becomes a real plan: an honest score, certifications Hadaf covers half of, and the right people to reach, with messages ready in your voice. One payment, instant access.',
+  },
+  heroNote: { ar: 'بدون اشتراك. عربي أولًا، وثنائي اللغة بالكامل.', en: 'No subscription. Arabic first, fully bilingual.' },
+  trusted: { ar: 'مبني لوظائف في', en: 'Built for roles at' },
 
-  eyebrow: { ar: 'لوظيفة جديدة أو ترقية', en: 'For a new job or a promotion' },
-  title: { ar: 'سيرتك، وقد صارت خطة.', en: 'Your CV, turned into a plan.' },
-  lede: {
-    ar: 'مسار يقرأ سيرتك ويعطيك درجة صادقة لكل دور ومستوى، خطة شهادات يعوّض هدف نصفها، والأشخاص الصحيحين للتواصل معهم. عربي أولًا وثنائي اللغة، فاتح وداكن، ودفعة واحدة عبر ميسر.',
-    en: 'Masaar reads your CV and gives you an honest score for every role and level, a certifications plan Hadaf reimburses half of, and the right people to reach. Arabic first and bilingual, light and dark, one payment via Moyasar.',
-  },
-  trust: { ar: 'مبني للأدوار في', en: 'Built for roles at' },
-  note: { ar: 'بدون اشتراك. تفتح لوحتك فورًا.', en: 'No subscription. Your dashboard unlocks instantly.' },
+  scoreboardEyebrow: { ar: 'المشكلة بالأرقام', en: 'The problem in numbers' },
+  scoreboardTitle: { ar: 'التقديم بدون خطة ما يوصّلك.', en: 'Applying without a plan gets you nowhere.' },
+  scoreboardSub: { ar: 'كذا يصير البحث عن وظيفة بدون خطة.', en: 'This is what a job search with no plan looks like.' },
 
-  // right column captions, one tight line above each exhibit
-  tourEyebrow: { ar: 'جولة في المنتج', en: 'A tour of the product' },
-  capScore: {
-    ar: 'درجة تنافسية لكل مستوى من مبتدئ إلى قيادي، متحفظة عمدًا، مع ما الذي يرفعها بالضبط.',
-    en: 'A competitiveness score for every level from Entry to Director, deliberately conservative, with exactly what raises it.',
-  },
-  capContacts: {
-    ar: 'شبكتك على لينكدإن تُحلّل في متصفحك وحده وتُرتّب إلى مقدّمات دافئة، إضافة إلى 1,209 جهة موارد بشرية في قاعدتنا. الرسائل بصوتك، ترسلها أنت.',
-    en: 'Your LinkedIn connections parsed privately in your browser and ranked into warm introductions, plus 1,209 HR contacts in our database. Outreach in your voice, that you send yourself.',
-  },
-  capStudy: {
-    ar: 'وأبعد من الوظيفة: برامج الدراسات العليا حسب مجالك مع أهلية منحة رواد، وعشرات صفحات التوظيف السعودية بأيام مهنية مؤرخة وبرامج مثل تمهير.',
-    en: 'Beyond the next job: graduate programs by field with Pioneers scholarship eligibility, dozens of Saudi career pages with dated career days and programs like Tamheer.',
+  scoreEyebrow: { ar: 'درجتك الحقيقية', en: 'Your real score' },
+  scoreTitle: { ar: 'اعرف موقعك قبل ما تقدّم.', en: 'Know where you stand before you apply.' },
+  scoreSub: {
+    ar: 'درجة تنافسية لكل دور ولكل مستوى، من مبتدئ إلى قيادي، صادقة ومتحفظة، وتوريك بالضبط وش يرفعها.',
+    en: 'A competitiveness score for every role and level, from Entry to Director, honest and conservative, showing you exactly what raises it.',
   },
 
-  priceEyebrow: { ar: 'سعر واحد، مرة واحدة', en: 'One price, one time' },
-  priceTitle: { ar: 'ادفع مرة، خطتك للأبد.', en: 'Pay once, your plan is yours.' },
-  perOnce: { ar: 'ريال، مرة واحدة', en: 'SAR, one time' },
+  planEyebrow: { ar: 'خطتك', en: 'Your plan' },
+  planTitle: { ar: 'هدف يدفع لك نص الطريق.', en: 'Hadaf covers half the way.' },
+  planSub: {
+    ar: 'مسارات مهنية مبنية على خلفيتك، وخارطة شهادات مرتبة حسب الأثر، ونوضّح لك أي شهادة يعوّض هدف نص تكلفتها.',
+    en: 'Career paths built on your background, and a certifications roadmap ordered by impact, showing which ones Hadaf covers about half of.',
+  },
+
+  peopleEyebrow: { ar: 'الناس', en: 'The people' },
+  peopleTitle: { ar: 'الوظائف تجي من ناس.', en: 'Jobs come from people.' },
+  peopleSub: {
+    ar: 'نرتّب لك شبكتك على لينكدإن ونطلّع أقرب الناس لأهدافك، مع قاعدتنا اللي فيها 1,209 جهة موارد بشرية وتوظيف. رسائل جاهزة بأسلوبك، وإنت اللي ترسلها. نحفظ ملفك بأمان، وما نشاركه، وتقدر تحذفه وقت ما تبي.',
+    en: 'We rank your LinkedIn network into the people closest to your goals, plus our database of 1,209 HR and recruiter contacts. Messages ready in your voice, sent by you. Your file is stored securely, never shared, and you can delete it anytime.',
+  },
+
+  studyEyebrow: { ar: 'الدراسة والفرص', en: 'Study and opportunities' },
+  studyTitle: { ar: 'وأبعد من وظيفتك الجاية.', en: 'And beyond your next job.' },
+  studySub: {
+    ar: 'برامج دراسات عليا حسب مجالك مع أهلية منحة رواد، وعشرات صفحات التوظيف السعودية حسب القطاع، مع أيام مهنية بمواعيدها وبرامج مثل تمهير.',
+    en: 'Graduate programs by field with Pioneers eligibility, and dozens of Saudi career pages by sector, with dated career days and programs like Tamheer.',
+  },
+
+  scoreStat: { ar: 'لكل دور ومستوى', en: 'Per role and level' },
+  scoreStatSub: {
+    ar: 'من مبتدئ إلى قيادي، رقم واحد متحفظ يقول لك وين تقف بالضبط ووش يرفعه.',
+    en: 'From Entry to Director, one conservative number that shows exactly where you stand and what raises it.',
+  },
+  scoreLine: { ar: 'اعرف رقمك قبل أي أحد.', en: 'Know your number before anyone else.' },
+
+  planStat: { ar: '٥٠٪', en: '50%' },
+  planStatSub: {
+    ar: 'من تكلفة الشهادات المؤهلة يعوّضها هدف. نوضّح لك أيّها بالضبط، ونرتّبها حسب الأثر.',
+    en: 'of eligible certification costs covered by Hadaf. We show you exactly which, ordered by impact.',
+  },
+  planLine: { ar: 'مسار يدفع لك نص الطريق لوظيفتك الجاية.', en: 'A path that covers half the way to your next role.' },
+
+  peopleStat: { ar: '١٢٠٩', en: '1,209' },
+  peopleStatSub: {
+    ar: 'جهة موارد بشرية وتوظيف في قاعدتنا، مع شبكتك الخاصة. الوظائف تجي من ناس.',
+    en: 'HR and recruiter contacts in our database, plus your own network. Jobs come from people.',
+  },
+  peopleLine: { ar: 'رسائل جاهزة بأسلوبك، وإنت اللي ترسلها.', en: 'Messages ready in your voice, sent by you.' },
+
+  studyStatA: { ar: 'منحة رواد', en: 'Pioneers' },
+  studyStatASub: { ar: 'برامج دراسات عليا حسب مجالك مع أهلية المنحة.', en: 'Graduate programs by field with scholarship eligibility.' },
+  studyStatB: { ar: 'تمهير وأكثر', en: 'Tamheer and more' },
+  studyStatBSub: { ar: 'عشرات صفحات التوظيف السعودية بأيام مهنية بمواعيدها.', en: 'Dozens of Saudi career pages with dated career days.' },
+  studyLine: { ar: 'وأبعد من وظيفتك الجاية بكثير.', en: 'And far beyond your next job.' },
+
+  howEyebrow: { ar: 'كيف يعمل', en: 'How it works' },
+  howTitle: { ar: 'أربع خطوات وبس.', en: 'Four steps. That is it.' },
+  howSub: { ar: 'من سيرتك إلى خطة تبدأ فيها اليوم.', en: 'From a CV to a plan you can start today.' },
+
+  priceEyebrow: { ar: 'الأسعار', en: 'Pricing' },
+  priceTitle: { ar: 'ادفع مرة وحدة، وخطتك تبقى لك.', en: 'Pay once. Your plan stays yours.' },
+  priceSub: {
+    ar: 'دفعة وحدة عبر ميسر: مدى وآبل باي والبطاقات. بدون اشتراك، وتفتح لك لوحتك على طول.',
+    en: 'One payment via Moyasar: mada, Apple Pay and cards. No subscription, instant access.',
+  },
+  perOnce: { ar: 'ريال، مرة وحدة', en: 'SAR, one time' },
   popular: { ar: 'الأكثر اختيارًا', en: 'Most chosen' },
   choose: { ar: 'اختر', en: 'Choose' },
+
+  finalTitle: { ar: 'سيرتك تستاهل خطة.', en: 'Your CV deserves a plan.' },
+  finalSub: { ar: 'ابدأ الآن، وخذ درجتك ومسارك وناسك خلال دقائق.', en: 'Start now and get your score, your path and your people in minutes.' },
   rights: { ar: 'كل الحقوق محفوظة.', en: 'All rights reserved.' },
 };
 
-const VALUE: { icon: typeof Gauge; t: { ar: string; en: string } }[] = [
-  { icon: Gauge, t: { ar: 'درجة صادقة لكل دور ومستوى', en: 'An honest score for every role and level' } },
-  { icon: GraduationCap, t: { ar: 'خطة شهادات يعوّض هدف نحو 50٪ منها', en: 'A certifications plan Hadaf reimburses about 50 percent of' } },
-  { icon: Users, t: { ar: 'شبكتك وقاعدتنا، مقدّمات دافئة', en: 'Your network and our database, warm introductions' } },
-  { icon: ShieldCheck, t: { ar: 'خصوصية أولًا، سيرتك تبقى لك', en: 'Privacy first, your CV stays yours' } },
+const STEPS_D: { icon: typeof ScanLine; t: { ar: string; en: string }; d: { ar: string; en: string } }[] = [
+  {
+    icon: ScanLine,
+    t: { ar: 'ارفع سيرتك', en: 'Upload your CV' },
+    d: { ar: 'دقيقة وحدة، وتفتح لك لوحتك على طول.', en: 'One minute, and your dashboard unlocks instantly.' },
+  },
+  {
+    icon: Sparkles,
+    t: { ar: 'اعرف درجتك', en: 'See your score' },
+    d: { ar: 'لكل دور ومستوى، مع وش يرفعها.', en: 'Per role and level, with what raises it.' },
+  },
+  {
+    icon: Route,
+    t: { ar: 'اتبع خطتك', en: 'Follow your plan' },
+    d: { ar: 'مسارات وشهادات يدفع هدف نصّها.', en: 'Paths and certifications Hadaf covers half of.' },
+  },
+  {
+    icon: Users,
+    t: { ar: 'تواصل', en: 'Reach out' },
+    d: { ar: 'الأشخاص المناسبون، برسائل بأسلوبك.', en: 'The right people, in your own voice.' },
+  },
 ];
 
-const checkoutPro = { pathname: '/checkout', query: { plan: 'pro' } } as const;
-
-/* ------------------------------------------------------------- primitives -- */
-
-function Reveal({ children, delay = 0, className }: { children: React.ReactNode; delay?: number; className?: string }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.35 }}
-      transition={{ duration: 0.7, ease: EASE, delay }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-/** One right column exhibit: a tight caption above a real product card. */
-function Exhibit({
-  n,
-  caption,
-  locale,
-  children,
-}: {
-  n: string;
-  caption: { ar: string; en: string };
-  locale: Loc;
-  children: React.ReactNode;
-}) {
-  return (
-    <Reveal className="flex flex-col">
-      <div className="flex items-baseline gap-3">
-        <Serif className={cn('text-2xl leading-none', ACCENT)}>{n}</Serif>
-        <p className="max-w-md text-pretty text-sm leading-relaxed text-stone-600 dark:text-stone-300">{pick(caption, locale)}</p>
-      </div>
-      <div className="mt-4">{children}</div>
-    </Reveal>
-  );
-}
-
-/* ------------------------------------------------------------------- page -- */
+const BANNER_D: { icon: typeof ShieldCheck; t: { ar: string; en: string } }[] = [
+  { icon: ShieldCheck, t: { ar: 'خصوصية أولًا، ما نشارك بياناتك وتقدر تحذفها وقت ما تبي', en: 'Privacy first, we never share your data and you can delete it anytime' } },
+  { icon: GraduationCap, t: { ar: 'أهلية منحة رواد لأفضل 30 جامعة', en: 'Pioneers eligibility for the top 30 universities' } },
+  { icon: Users, t: { ar: '1,209 جهة موارد بشرية وتوظيف', en: '1,209 HR and recruiter contacts' } },
+];
 
 export default function MarketingD({ locale }: { locale: Loc }) {
-  const wordmark = locale === 'ar' ? 'مسار' : 'Masaar';
-
-  return (
-    <div className={cn(PAGE, 'relative overflow-clip')}>
-      <Grain />
-
-      {/* header */}
-      <header className="sticky top-0 z-40 border-b border-stone-200/60 bg-[#f7f6f2]/80 backdrop-blur-md dark:border-white/10 dark:bg-[#0a0a0b]/80">
-        <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-5 sm:px-8">
-          <Link href="/" className="flex items-center gap-2">
-            <Serif className="text-2xl">{wordmark}</Serif>
-          </Link>
-          <nav className="hidden items-center gap-7 text-sm text-stone-500 dark:text-stone-400 md:flex">
-            <a href="#tour" className="transition-colors hover:text-stone-900 dark:hover:text-white">{pick(T.nav.tour, locale)}</a>
-            <a href="#pricing" className="transition-colors hover:text-stone-900 dark:hover:text-white">{pick(T.nav.pricing, locale)}</a>
-          </nav>
-          <div className="flex items-center gap-2">
-            <LangToggle locale={locale} />
-            <ThemeToggle />
-            <Link
-              href={checkoutPro}
-              className={cn('hidden h-9 items-center rounded-full px-4 text-sm font-semibold transition-colors sm:inline-flex', PILL)}
-            >
-              {pick(T.cta, locale)}
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      {/* split body: left sticky, right scroll */}
-      <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-12 px-5 sm:px-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:gap-16">
-        {/* LEFT, sticky on desktop */}
-        <div className="lg:sticky lg:top-16 lg:flex lg:h-[calc(100dvh-4rem)] lg:flex-col lg:justify-center lg:py-12">
-          <div className="py-14 lg:py-0">
-            <span className={cn('inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium', SOFT)}>
-              <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
-              {pick(T.eyebrow, locale)}
-            </span>
-
-            <Serif className="mt-6 text-balance text-5xl leading-[1.04] sm:text-6xl">{pick(T.title, locale)}</Serif>
-
-            <p className="mt-5 max-w-lg text-pretty text-base leading-relaxed text-stone-600 dark:text-stone-300 sm:text-lg">
-              {pick(T.lede, locale)}
-            </p>
-
-            <ul className="mt-7 space-y-2.5">
-              {VALUE.map((v) => {
-                const Icon = v.icon;
-                return (
-                  <li key={v.t.en} className="flex items-start gap-3">
-                    <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-amber-500/15 text-amber-700 dark:text-amber-300">
-                      <Icon className="h-4 w-4" />
-                    </span>
-                    <span className="text-[15px] leading-relaxed text-stone-700 dark:text-stone-200">{pick(v.t, locale)}</span>
-                  </li>
-                );
-              })}
-            </ul>
-
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <Link
-                href={checkoutPro}
-                className={cn(
-                  'group inline-flex h-12 items-center justify-center gap-2 rounded-full px-7 text-base font-semibold transition-transform hover:scale-[1.02]',
-                  PILL,
-                )}
-              >
-                {pick(T.cta, locale)}
-                <ArrowUpRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 rtl:rotate-[-90deg]" />
-              </Link>
-              <a
-                href="#pricing"
-                className={cn('inline-flex h-12 items-center justify-center rounded-full px-6 text-base font-semibold transition-colors', GHOST)}
-              >
-                {pick(T.seePricing, locale)}
-              </a>
-            </div>
-
-            <p className="mt-4 text-sm text-stone-500 dark:text-stone-400">{pick(T.note, locale)}</p>
-
-            {/* quiet one line trust mention */}
-            <div className="mt-10 border-t border-stone-200/70 pt-6 dark:border-white/10">
-              <Eyebrow>{pick(T.trust, locale)}</Eyebrow>
-              <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-stone-400 dark:text-stone-500">
-                {TARGET_COMPANIES.slice(0, 6).map((c) => (
-                  <span key={c} className="text-sm font-semibold tracking-tight">{c}</span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* RIGHT, scrolling tour then pricing */}
-        <div id="tour" className="flex flex-col gap-12 pb-16 lg:py-16">
-          <Reveal>
-            <Eyebrow>{pick(T.tourEyebrow, locale)}</Eyebrow>
-          </Reveal>
-
-          <Exhibit n="01" caption={T.capScore} locale={locale}>
-            <ScoreCard locale={locale} />
-          </Exhibit>
-
-          <Exhibit n="02" caption={T.capContacts} locale={locale}>
-            <ContactsCard locale={locale} />
-          </Exhibit>
-
-          <Exhibit n="03" caption={T.capStudy} locale={locale}>
-            <StudyCard locale={locale} />
-          </Exhibit>
-
-          {/* compact pricing block */}
-          <Reveal className="scroll-mt-20">
-            <div id="pricing" className="scroll-mt-20">
-              <Eyebrow>{pick(T.priceEyebrow, locale)}</Eyebrow>
-              <Serif className="mt-2 text-balance text-3xl leading-[1.1] sm:text-4xl">{pick(T.priceTitle, locale)}</Serif>
-            </div>
-
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              {PRICING.map((tier) => (
-                <div
-                  key={tier.id}
-                  className={cn(
-                    CARD,
-                    'flex flex-col p-6',
-                    tier.popular && 'ring-1 ring-amber-500/30',
-                  )}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="text-xs font-semibold uppercase tracking-wider text-stone-500 dark:text-stone-400">
-                      {pick(tier.name, locale)}
-                    </div>
-                    {tier.popular ? (
-                      <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-300">
-                        {pick(T.popular, locale)}
-                      </span>
-                    ) : null}
-                  </div>
-
-                  <div className="mt-3 flex items-baseline gap-1.5">
-                    <Serif className="text-4xl leading-none">{tier.price}</Serif>
-                    <span className="text-xs text-stone-500 dark:text-stone-400">{pick(T.perOnce, locale)}</span>
-                  </div>
-                  <p className="mt-1.5 text-sm text-stone-500 dark:text-stone-400">{pick(tier.blurb, locale)}</p>
-
-                  <ul className="mt-4 flex-1 space-y-2">
-                    {tier.features.map((f) => (
-                      <li key={f.en} className="flex items-start gap-2 text-[13px] text-stone-700 dark:text-stone-200">
-                        <Check className={cn('mt-0.5 h-4 w-4 shrink-0', ACCENT)} />
-                        <span>{pick(f, locale)}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <Link
-                    href={{ pathname: '/checkout', query: { plan: tier.id } }}
-                    className={cn(
-                      'mt-5 inline-flex h-11 w-full items-center justify-center gap-2 rounded-full text-sm font-semibold transition-transform hover:scale-[1.02]',
-                      tier.popular ? PILL : GHOST,
-                    )}
-                  >
-                    {pick(T.choose, locale)} {pick(tier.name, locale)}
-                    <ArrowUpRight className="h-4 w-4 rtl:rotate-[-90deg]" />
-                  </Link>
-                </div>
-              ))}
-            </div>
-          </Reveal>
-        </div>
-      </div>
-
-      {/* footer */}
-      <footer className="border-t border-stone-200/60 px-5 py-10 dark:border-white/10 sm:px-8">
-        <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 text-center sm:flex-row sm:text-start">
-          <div className="flex items-center gap-2">
-            <Serif className="text-xl">{wordmark}</Serif>
-            <span className="text-sm text-stone-400">Masaar</span>
-          </div>
-          <p className="text-sm text-stone-500 dark:text-stone-400">
-            © {new Date().getFullYear()} {wordmark}. {pick(T.rights, locale)}
-          </p>
-        </div>
-      </footer>
-    </div>
-  );
+  return <CDesign locale={locale} T={COPY_D} STEPS={STEPS_D} BANNER={BANNER_D} />;
 }

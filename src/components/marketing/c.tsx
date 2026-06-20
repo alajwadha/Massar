@@ -43,126 +43,129 @@ import {
 
 /* ------------------------------------------------------------------ copy -- */
 
-const T = {
+export type CCopy = typeof COPY_C;
+
+// Voice 1: confident and premium.
+export const COPY_C = {
   nav: {
-    how: { ar: 'كيف يشتغل', en: 'How it works' },
+    how: { ar: 'كيف يعمل', en: 'How it works' },
     pricing: { ar: 'الأسعار', en: 'Pricing' },
     product: { ar: 'المنتج', en: 'Product' },
   },
-  cta: { ar: 'ابدأ الحين', en: 'Get started' },
+  cta: { ar: 'ابدأ الآن', en: 'Get started' },
   heroEyebrow: { ar: 'لوظيفة جديدة أو ترقية', en: 'For a new job or a promotion' },
-  heroTitle: { ar: 'كفى ترسل سيرتك للفراغ.', en: 'Stop applying into the void.' },
+  heroTitle: { ar: 'وظيفتك القادمة، بخطة حقيقية.', en: 'Your next role, with a real plan.' },
   heroSub: {
-    ar: 'مسار يحوّل سيرتك إلى خطة واضحة: درجة صادقة، شهادات يدفع هدف نصّها، والناس الصح اللي تتواصل معهم. دفعة وحدة وتفتح لك لوحتك على طول.',
-    en: 'Masaar turns your CV into a plan. An honest score, certifications Hadaf pays half of, and the right people to reach. One payment, your dashboard unlocks instantly.',
+    ar: 'مسار يحوّل سيرتك إلى خطة واضحة: درجة تنافسية صادقة، والشهادات التي يموّل هدف نصفها، والأشخاص المناسبون للتواصل معهم. دفعة واحدة، ووصول فوري للوحتك.',
+    en: 'Masaar turns your CV into a clear plan: an honest competitiveness score, the certifications Hadaf funds half of, and the exact people to reach. One payment, instant access to your dashboard.',
   },
-  heroNote: { ar: 'بدون اشتراك. عربي أول، وثنائي اللغة بالكامل.', en: 'No subscription. Arabic first, fully bilingual.' },
-  trusted: { ar: 'مبني لوظائف في', en: 'Built for roles at' },
+  heroNote: { ar: 'بدون اشتراك. عربي أولًا، وثنائي اللغة بالكامل.', en: 'No subscription. Arabic first, fully bilingual.' },
+  trusted: { ar: 'مصمّم لوظائف في', en: 'Built for roles at' },
 
   scoreboardEyebrow: { ar: 'المشكلة بالأرقام', en: 'The problem in numbers' },
-  scoreboardTitle: { ar: 'التقديم العشوائي ما ينفع.', en: 'Spray and pray does not work.' },
-  scoreboardSub: { ar: 'كذا يصير البحث عن وظيفة بدون خطة.', en: 'This is what a job search with no plan looks like.' },
+  scoreboardTitle: { ar: 'التقديم بلا خطة لا يوصلك.', en: 'Applying without a plan rarely works.' },
+  scoreboardSub: { ar: 'هكذا يبدو البحث عن وظيفة بلا اتجاه واضح.', en: 'This is what a job search with no direction looks like.' },
 
   scoreEyebrow: { ar: 'درجتك الحقيقية', en: 'Your real score' },
-  scoreTitle: { ar: 'اعرف رقمك قبل ما تقدّم.', en: 'Know your number before you apply.' },
+  scoreTitle: { ar: 'اعرف موقعك قبل أن تتقدّم.', en: 'Know where you stand before you apply.' },
   scoreSub: {
-    ar: 'درجة تنافسية لكل دور ولكل مستوى، من مبتدئ إلى قيادي، متحفظة عن قصد، وتوريك بالضبط وش يرفعها.',
-    en: 'A competitiveness score per role and per level, from Entry to Director, kept deliberately conservative, showing exactly what raises it.',
+    ar: 'درجة تنافسية لكل دور ولكل مستوى، من المبتدئ إلى القيادي، متحفظة عن قصد، وتوضّح لك بدقة ما الذي يرفعها.',
+    en: 'A competitiveness score for every role and level, from Entry to Director, deliberately conservative, showing you precisely what raises it.',
   },
 
   planEyebrow: { ar: 'خطتك', en: 'Your plan' },
-  planTitle: { ar: 'هدف يدفع لك نص الطريق.', en: 'Hadaf pays half the way.' },
+  planTitle: { ar: 'هدف يموّل نصف الطريق.', en: 'Hadaf funds half the way.' },
   planSub: {
-    ar: 'مسارات مهنية مبنية من خلفيتك، وخارطة شهادات مرتبة حسب الأثر، ونوضّح لك أي شهادة يعوّض هدف نحو 50٪ من تكلفتها.',
-    en: 'Career paths shaped from your background, and a certifications roadmap ordered by impact, flagging which ones Hadaf reimburses about 50 percent of.',
+    ar: 'مسارات مهنية مبنية على خلفيتك، وخارطة شهادات مرتبة حسب الأثر، مع توضيح الشهادات التي يعوّض صندوق هدف نحو 50٪ من تكلفتها.',
+    en: 'Career paths built on your background, and a certifications roadmap ordered by impact, showing which ones Hadaf reimburses about 50 percent of.',
   },
 
-  peopleEyebrow: { ar: 'الناس', en: 'The people' },
-  peopleTitle: { ar: 'الوظائف تجي من ناس.', en: 'Jobs come from people.' },
+  peopleEyebrow: { ar: 'الأشخاص', en: 'The people' },
+  peopleTitle: { ar: 'الوظائف تأتي من الأشخاص.', en: 'Jobs come from people.' },
   peopleSub: {
-    ar: 'نرتّب شبكتك في لينكدإن ونطلّع لك أقرب الناس لأهدافك، مع قاعدتنا اللي فيها 1,209 جهة موارد بشرية وتوظيف. رسائل جاهزة بصوتك، وإنت اللي ترسلها بنفسك. نحفظ ملفك بأمان ولا نشاركه، وتقدر تحذفه وقت ما تبي.',
-    en: 'We rank your LinkedIn network into the warmest introductions, plus our database of 1,209 HR and recruiter contacts. Outreach drafted in your voice, that you send yourself. Your file is stored securely, never shared, and you can delete it anytime.',
+    ar: 'نرتّب شبكتك على لينكدإن إلى أقرب الأشخاص لأهدافك، إلى جانب قاعدتنا التي تضم 1,209 جهة موارد بشرية وتوظيف. رسائل تواصل جاهزة بأسلوبك، ترسلها بنفسك. نحفظ ملفك بأمان، ولا نشاركه، ويمكنك حذفه متى شئت.',
+    en: 'We rank your LinkedIn network into the people closest to your goals, alongside our database of 1,209 HR and recruiter contacts. Outreach drafted in your voice, sent by you. Your file is stored securely, never shared, and you can delete it anytime.',
   },
 
   studyEyebrow: { ar: 'الدراسة والفرص', en: 'Study and opportunities' },
-  studyTitle: { ar: 'وأبعد من وظيفتك الجاية.', en: 'And beyond the next job.' },
+  studyTitle: { ar: 'وأبعد من وظيفتك القادمة.', en: 'And beyond your next role.' },
   studySub: {
     ar: 'برامج دراسات عليا حسب مجالك مع أهلية منحة رواد، وعشرات صفحات التوظيف السعودية مرتبة حسب القطاع، مع أيام مهنية بمواعيدها وبرامج مثل تمهير.',
-    en: 'Graduate programs by field with Pioneers scholarship eligibility, and dozens of Saudi career pages grouped by sector with dated career days and programs like Tamheer.',
+    en: 'Graduate programs by field with Pioneers scholarship eligibility, and dozens of Saudi career pages grouped by sector, with dated career days and programs like Tamheer.',
   },
 
   // big bold band statements and stats
   scoreStat: { ar: 'لكل دور ومستوى', en: 'Per role and level' },
   scoreStatSub: {
-    ar: 'من مبتدئ إلى قيادي، رقم واحد متحفظ يقول لك وين تقف بالضبط ووش يرفعه.',
-    en: 'From Entry to Director, one conservative number that tells you exactly where you stand and what raises it.',
+    ar: 'من المبتدئ إلى القيادي، رقم واحد متحفظ يوضّح أين تقف بالضبط وما الذي يرفعه.',
+    en: 'From Entry to Director, one conservative number that shows exactly where you stand and what raises it.',
   },
-  scoreLine: { ar: 'اعرف رقمك قبل أي أحد ثاني.', en: 'Know your number before anyone else reads it.' },
+  scoreLine: { ar: 'اعرف رقمك قبل أي أحد.', en: 'Know your number before anyone else.' },
 
   planStat: { ar: '٥٠٪', en: '50%' },
   planStatSub: {
     ar: 'من تكلفة الشهادات المؤهلة يعوّضها صندوق هدف. نوضّح لك أيّها بالضبط، ونرتّبها حسب الأثر.',
-    en: 'of eligible certification costs reimbursed by Hadaf. We flag exactly which ones, ordered by impact.',
+    en: 'of eligible certification costs reimbursed by Hadaf. We show you exactly which, ordered by impact.',
   },
-  planLine: { ar: 'مسار يدفع لك نص الطريق لوظيفتك الجاية.', en: 'A path that pays half the way to your next role.' },
+  planLine: { ar: 'مسار يموّل نصف الطريق إلى دورك القادم.', en: 'A path that funds half the way to your next role.' },
 
   peopleStat: { ar: '١٢٠٩', en: '1,209' },
   peopleStatSub: {
-    ar: 'جهة موارد بشرية وتوظيف في قاعدتنا، مع شبكتك الخاصة. الوظائف تجي من ناس.',
-    en: 'HR and recruiter contacts in our database, plus your own network. Jobs come from people.',
+    ar: 'جهة موارد بشرية وتوظيف في قاعدتنا، إلى جانب شبكتك الخاصة. الوظائف تأتي من الأشخاص.',
+    en: 'HR and recruiter contacts in our database, alongside your own network. Jobs come from people.',
   },
-  peopleLine: { ar: 'رسائل جاهزة بصوتك، وإنت ترسلها بنفسك.', en: 'Outreach drafted in your voice, that you send yourself.' },
+  peopleLine: { ar: 'رسائل تواصل جاهزة بأسلوبك، ترسلها بنفسك.', en: 'Outreach drafted in your voice, sent by you.' },
 
   studyStatA: { ar: 'منحة رواد', en: 'Pioneers' },
   studyStatASub: { ar: 'برامج دراسات عليا حسب مجالك مع أهلية المنحة.', en: 'Graduate programs by field with scholarship eligibility.' },
   studyStatB: { ar: 'تمهير وأكثر', en: 'Tamheer and more' },
   studyStatBSub: { ar: 'عشرات صفحات التوظيف السعودية بأيام مهنية بمواعيدها.', en: 'Dozens of Saudi career pages with dated career days.' },
-  studyLine: { ar: 'وأبعد من وظيفتك الجاية بكثير.', en: 'And far beyond the next job.' },
+  studyLine: { ar: 'وأبعد من وظيفتك القادمة بكثير.', en: 'And far beyond your next role.' },
 
-  howEyebrow: { ar: 'كيف يشتغل', en: 'How it works' },
-  howTitle: { ar: 'أربع خطوات وبس.', en: 'Four steps. That is it.' },
-  howSub: { ar: 'من سيرتك إلى خطة تتحرك فيها اليوم.', en: 'From a CV to a plan you can act on today.' },
+  howEyebrow: { ar: 'كيف يعمل', en: 'How it works' },
+  howTitle: { ar: 'أربع خطوات لا غير.', en: 'Four steps. That is all.' },
+  howSub: { ar: 'من سيرتك إلى خطة تبدأ بها اليوم.', en: 'From a CV to a plan you can start today.' },
 
   priceEyebrow: { ar: 'الأسعار', en: 'Pricing' },
-  priceTitle: { ar: 'ادفع مرة وحدة، وخطتك تبقى لك.', en: 'Pay once. Your plan is yours.' },
+  priceTitle: { ar: 'ادفع مرة واحدة، وخطتك تبقى لك.', en: 'Pay once. Your plan stays yours.' },
   priceSub: {
-    ar: 'دفعة وحدة عبر ميسر: مدى وآبل باي والبطاقات. بدون اشتراك، وتفتح لك لوحتك على طول.',
-    en: 'One payment via Moyasar, mada, Apple Pay and cards. No subscription, and your dashboard unlocks instantly.',
+    ar: 'دفعة واحدة عبر ميسر: مدى وآبل باي والبطاقات. بدون اشتراك، ووصول فوري للوحتك.',
+    en: 'One payment via Moyasar: mada, Apple Pay and cards. No subscription, instant access.',
   },
-  perOnce: { ar: 'ريال، مرة وحدة', en: 'SAR, one time' },
+  perOnce: { ar: 'ريال، مرة واحدة', en: 'SAR, one time' },
   popular: { ar: 'الأكثر اختيارًا', en: 'Most chosen' },
   choose: { ar: 'اختر', en: 'Choose' },
 
-  finalTitle: { ar: 'سيرتك تستاهل خطة.', en: 'Your CV is ready for a plan.' },
-  finalSub: { ar: 'ابدأ الحين وخذ درجتك ومسارك وناسك في دقائق.', en: 'Start now and get your score, your path and your people in minutes.' },
-  rights: { ar: 'كل الحقوق محفوظة.', en: 'All rights reserved.' },
+  finalTitle: { ar: 'سيرتك جاهزة لخطة.', en: 'Your CV is ready for a plan.' },
+  finalSub: { ar: 'ابدأ الآن، واحصل على درجتك ومسارك وأشخاصك خلال دقائق.', en: 'Start now and get your score, your path and your people in minutes.' },
+  rights: { ar: 'جميع الحقوق محفوظة.', en: 'All rights reserved.' },
 };
 
-const STEPS: { icon: typeof ScanLine; t: { ar: string; en: string }; d: { ar: string; en: string } }[] = [
+export const STEPS_C: { icon: typeof ScanLine; t: { ar: string; en: string }; d: { ar: string; en: string } }[] = [
   {
     icon: ScanLine,
     t: { ar: 'ارفع سيرتك', en: 'Upload your CV' },
-    d: { ar: 'دقيقة وحدة، وتفتح لك لوحتك على طول.', en: 'One minute, and your dashboard unlocks instantly.' },
+    d: { ar: 'دقيقة واحدة، ويفتح لك لوحتك فورًا.', en: 'One minute, and your dashboard unlocks instantly.' },
   },
   {
     icon: Sparkles,
     t: { ar: 'اعرف درجتك', en: 'See your score' },
-    d: { ar: 'لكل دور ومستوى، مع وش يرفعها.', en: 'Per role and level, with what raises it.' },
+    d: { ar: 'لكل دور ومستوى، مع ما الذي يرفعها.', en: 'Per role and level, with what raises it.' },
   },
   {
     icon: Route,
     t: { ar: 'اتبع خطتك', en: 'Follow your plan' },
-    d: { ar: 'مسارات وشهادات يدفع هدف نصّها.', en: 'Paths and certs Hadaf pays half of.' },
+    d: { ar: 'مسارات وشهادات يموّل هدف نصفها.', en: 'Paths and certifications Hadaf funds half of.' },
   },
   {
     icon: Users,
     t: { ar: 'تواصل', en: 'Reach out' },
-    d: { ar: 'الناس الصح، برسائل بصوتك.', en: 'The right people, in your own voice.' },
+    d: { ar: 'الأشخاص المناسبون، برسائل بأسلوبك.', en: 'The right people, in your own voice.' },
   },
 ];
 
-const BANNER: { icon: typeof ShieldCheck; t: { ar: string; en: string } }[] = [
-  { icon: ShieldCheck, t: { ar: 'خصوصية أولًا، ما نشارك بياناتك وتقدر تحذفها وقت ما تبي', en: 'Privacy first, we never share your data and you can delete it anytime' } },
+export const BANNER_C: { icon: typeof ShieldCheck; t: { ar: string; en: string } }[] = [
+  { icon: ShieldCheck, t: { ar: 'خصوصية أولًا، لا نشارك بياناتك ويمكنك حذفها متى شئت', en: 'Privacy first, we never share your data and you can delete it anytime' } },
   { icon: GraduationCap, t: { ar: 'أهلية منحة رواد لأفضل 30 جامعة', en: 'Pioneers eligibility for the top 30 universities' } },
   { icon: Users, t: { ar: '1,209 جهة موارد بشرية وتوظيف', en: '1,209 HR and recruiter contacts' } },
 ];
@@ -230,7 +233,7 @@ function BandHead({
 
 /* ------------------------------------------------------------------ page -- */
 
-export default function MarketingC({ locale }: { locale: Loc }) {
+export function CDesign({ locale, T, STEPS, BANNER }: { locale: Loc; T: CCopy; STEPS: typeof STEPS_C; BANNER: typeof BANNER_C }) {
   return (
     <div className={cn(PAGE, 'relative overflow-clip')}>
       <Grain />
@@ -515,4 +518,8 @@ export default function MarketingC({ locale }: { locale: Loc }) {
       </footer>
     </div>
   );
+}
+
+export default function MarketingC({ locale }: { locale: Loc }) {
+  return <CDesign locale={locale} T={COPY_C} STEPS={STEPS_C} BANNER={BANNER_C} />;
 }
