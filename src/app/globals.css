@@ -46,6 +46,14 @@
   html[lang='en'] body {
     font-family: var(--font-sans);
   }
+
+  /* Every interactive control shows the hand cursor, so buttons read as clickable. */
+  button:not(:disabled),
+  [role='button'],
+  label[for],
+  summary {
+    cursor: pointer;
+  }
 }
 
 @layer components {

@@ -103,9 +103,9 @@ const CARD =
 const EDGE =
   'before:pointer-events-none before:absolute before:inset-x-5 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-900/10 before:to-transparent dark:before:via-white/20';
 const INSET = 'rounded-2xl border border-stone-200/70 bg-stone-50/70 dark:border-white/[0.07] dark:bg-white/[0.035]';
-const PILL = 'bg-stone-900 text-white hover:bg-stone-800 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-white';
+const PILL = 'cursor-pointer bg-stone-900 text-white hover:bg-stone-800 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-white';
 const GHOST =
-  'border border-stone-300/70 bg-white/60 text-stone-500 hover:border-stone-400 hover:text-stone-900 dark:border-white/10 dark:bg-white/[0.05] dark:text-stone-300 dark:hover:border-white/25 dark:hover:text-white';
+  'cursor-pointer border border-stone-300/80 bg-white/70 text-stone-600 hover:border-stone-400 hover:bg-white hover:text-stone-900 dark:border-white/15 dark:bg-white/[0.06] dark:text-stone-200 dark:hover:border-white/30 dark:hover:text-white';
 const SOFT = 'bg-stone-900/[0.05] text-stone-600 dark:bg-white/[0.07] dark:text-stone-300';
 const ACCENT = 'text-amber-700 dark:text-amber-300';
 
@@ -419,7 +419,7 @@ const HOME_WIDGETS: { id: string; label: keyof typeof ui.overview }[] = [
   { id: 'currentCert', label: 'wCert' },
   { id: 'careerDay', label: 'wCareerDay' },
 ];
-const WIDGET_DEFAULT: Record<string, boolean> = { nextMove: false, network: false, cvReview: true, stats: true, picks: true, goal: false, snapshot: false, currentCert: false, careerDay: false };
+const WIDGET_DEFAULT: Record<string, boolean> = { nextMove: false, network: false, cvReview: true, stats: false, picks: true, goal: false, snapshot: false, currentCert: false, careerDay: false };
 const WEEKLY_GOAL = 5;
 
 function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; openPath: (id: string) => void }) {
@@ -574,22 +574,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
             <div className="min-w-0">
               <Eyebrow>{ui.overview.scoreLabel[locale]}</Eyebrow>
               <h1 className="mt-2 text-balance text-[22px] font-semibold leading-[1.12] tracking-tight text-stone-900 dark:text-stone-50 sm:text-[28px]">{activePath.name[locale]}</h1>
-              <p className="mt-1.5 text-sm text-stone-600 dark:text-stone-300">{ui.overview.levelHint[locale]}</p>
-              <p className="mt-1.5 text-[12.5px] leading-snug text-stone-500 dark:text-stone-400">{whyScore}</p>
-
-              {/* What's behind your score, condensed to chips (full detail on hover) */}
-              <div className="mt-3.5">
-                <div className="text-xs font-bold text-stone-700 dark:text-stone-200">{ui.overview.scoreFactorsTitle[locale]}</div>
-                <div className="mt-2 flex flex-wrap gap-1.5">
-                  {plan.scoreFactors.map((f, i) => {
-                    const tint = f.strength === 'strong' ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : f.strength === 'good' ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300' : SOFT;
-                    return (
-                      <span key={i} title={f.detail[locale]} className={cn('rounded-md px-2 py-0.5 text-[11px] font-semibold', tint)}>{f.label[locale]}</span>
-                    );
-                  })}
-                  <span className={cn('rounded-md px-2 py-0.5 text-[11px] font-semibold', certsDoneCount >= 3 ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300' : SOFT)}>{ui.overview.certsLabel[locale]} {certsDoneCount}/{certsTotal}</span>
-                </div>
-              </div>
+              <p className="mt-2 text-[12.5px] leading-snug text-stone-500 dark:text-stone-400">{whyScore}</p>
 
               <LevelGaps locale={locale} />
 
@@ -642,7 +627,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
                     <div className="mt-0.5 font-bold text-stone-900 dark:text-stone-50">{nm.title}</div>
                     <p className="mt-0.5 text-[12.5px] leading-relaxed text-stone-600 dark:text-stone-300">{nm.desc}</p>
                   </div>
-                  <ArrowUpRight className="h-5 w-5 shrink-0 text-stone-300 transition-colors group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
+                  <ArrowUpRight className="h-5 w-5 shrink-0 text-stone-400 transition-colors group-hover:text-stone-900 dark:text-stone-500 dark:group-hover:text-white" />
                 </Card>
               </button>
             )}
@@ -656,7 +641,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
                     <div className="text-[10.5px] font-semibold uppercase tracking-wider text-stone-500 dark:text-stone-400">{ui.overview.networkTitle[locale]}</div>
                     <div className="mt-0.5 text-[13px] font-semibold text-stone-700 dark:text-stone-200">{network ? ui.overview.networkCount[locale](network.length) : ui.overview.networkEmpty[locale]}</div>
                   </div>
-                  <ArrowUpRight className="h-5 w-5 shrink-0 text-stone-300 transition-colors group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
+                  <ArrowUpRight className="h-5 w-5 shrink-0 text-stone-400 transition-colors group-hover:text-stone-900 dark:text-stone-500 dark:group-hover:text-white" />
                 </Card>
               </button>
             )}
@@ -702,7 +687,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
                     <div className="text-[10.5px] font-semibold uppercase tracking-wider text-stone-500 dark:text-stone-400">{ui.overview.certPeekTitle[locale]}</div>
                     <div className="mt-0.5 truncate font-bold text-stone-900 dark:text-stone-50">{current.name[locale]}</div>
                   </div>
-                  <ArrowUpRight className="h-5 w-5 shrink-0 text-stone-300 transition-colors group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
+                  <ArrowUpRight className="h-5 w-5 shrink-0 text-stone-400 transition-colors group-hover:text-stone-900 dark:text-stone-500 dark:group-hover:text-white" />
                 </Card>
               </button>
             )}
@@ -715,7 +700,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
                     <div className="mt-0.5 truncate font-bold text-stone-900 dark:text-stone-50">{nextDay.title[locale]}</div>
                     <div className="text-[11.5px] text-stone-500 dark:text-stone-400">{nextDay.when[locale]}</div>
                   </div>
-                  <ArrowUpRight className="h-5 w-5 shrink-0 text-stone-300 transition-colors group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
+                  <ArrowUpRight className="h-5 w-5 shrink-0 text-stone-400 transition-colors group-hover:text-stone-900 dark:text-stone-500 dark:group-hover:text-white" />
                 </Card>
               </a>
             )}
@@ -744,7 +729,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
               <button type="button" onClick={() => setShuffle((s) => s + 1)} title={ui.contacts.shuffle[locale]} aria-label={ui.contacts.shuffle[locale]} className={cn('grid h-8 w-8 place-items-center rounded-full', GHOST)}>
                 <Shuffle className="h-3.5 w-3.5" />
               </button>
-              <button type="button" onClick={() => go('contacts')} className="inline-flex items-center gap-1 text-sm font-semibold text-stone-900 hover:text-stone-500 dark:text-stone-100 dark:hover:text-stone-400">
+              <button type="button" onClick={() => go('contacts')} className={cn('inline-flex items-center gap-1 rounded-full px-3.5 py-1.5 text-[13px] font-semibold', GHOST)}>
                 {ui.overview.openContacts[locale]} <ArrowLeft className="h-4 w-4 ltr:rotate-180" />
               </button>
             </div>
@@ -967,7 +952,7 @@ function Paths({ locale, selId, setSelId }: { locale: Loc; selId: string | null;
                   <span><span className="font-bold text-stone-600 dark:text-stone-300">{p.certs.length}</span> {ui.paths.statCerts[locale]}</span>
                   <span><span className="font-bold text-stone-600 dark:text-stone-300">{p.months}</span> {ui.paths.statMonths[locale]}</span>
                   <span><span className={cn('font-bold', ACCENT)}>+{totalScore}</span> {ui.paths.totalScore[locale]}</span>
-                  <ArrowUpRight className="ms-auto h-4 w-4 text-stone-300 transition-colors group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
+                  <ArrowUpRight className="ms-auto h-4 w-4 text-stone-400 transition-colors group-hover:text-stone-900 dark:text-stone-500 dark:group-hover:text-white" />
                 </div>
               </Card>
             </button>
@@ -1298,7 +1283,7 @@ function Study({ locale }: { locale: Loc }) {
                   <Card className={cn('flex h-full flex-col p-4 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]', p.tier === 'high' && 'border-stone-900/20 dark:border-white/20')}>
                     <div className="flex items-center justify-between gap-2">
                       <span className={cn('rounded-full px-2 py-0.5 text-[10px] font-bold', p.tier === 'high' ? 'bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900' : SOFT)}>{tierLabel(p.tier)}</span>
-                      <ArrowUpRight className="h-4 w-4 shrink-0 text-stone-300 transition-colors group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
+                      <ArrowUpRight className="h-4 w-4 shrink-0 text-stone-400 transition-colors group-hover:text-stone-900 dark:text-stone-500 dark:group-hover:text-white" />
                     </div>
                     <h4 className="mt-2 text-[14px] font-semibold text-stone-900 dark:text-stone-50">{p.uni[locale]}</h4>
                     <div className="mt-0.5 text-[12.5px] text-stone-600 dark:text-stone-300">{p.program[locale]}</div>
@@ -1440,7 +1425,7 @@ function Opportunities({ locale }: { locale: Loc }) {
                       <span>· {d.city[locale]}</span>
                     </div>
                   </div>
-                  <ArrowUpRight className="h-4 w-4 shrink-0 text-stone-300 transition-colors group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
+                  <ArrowUpRight className="h-4 w-4 shrink-0 text-stone-400 transition-colors group-hover:text-stone-900 dark:text-stone-500 dark:group-hover:text-white" />
                 </Card>
               </a>
             );
@@ -1511,7 +1496,7 @@ function Opportunities({ locale }: { locale: Loc }) {
                       <Card className="flex items-center gap-2 p-3.5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]">
                         <span className="min-w-0 flex-1 truncate text-[13.5px] font-semibold text-stone-900 dark:text-stone-50">{c.name[locale]}</span>
                         <span className={cn('shrink-0 rounded-full px-1.5 py-0.5 text-[9.5px] font-bold', c.size === 'big' ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : SOFT)}>{sizeLabel(c.size)}</span>
-                        <ArrowUpRight className="h-3.5 w-3.5 shrink-0 text-stone-300 transition-colors group-hover:text-stone-900 dark:text-stone-600 dark:group-hover:text-white" />
+                        <ArrowUpRight className="h-3.5 w-3.5 shrink-0 text-stone-400 transition-colors group-hover:text-stone-900 dark:text-stone-500 dark:group-hover:text-white" />
                       </Card>
                     </a>
                   ))}
