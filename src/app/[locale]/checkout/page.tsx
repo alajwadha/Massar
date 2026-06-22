@@ -3,8 +3,11 @@ import { Link } from '@/i18n/routing';
 import { Check } from 'lucide-react';
 import { getPlan } from '@/lib/plans';
 import { CheckoutForm } from '@/components/checkout/checkout-form';
-import { PAGE, CARD, EDGE, SOFT, ACCENT, Serif, Eyebrow, Grain, PRICING, pick, type Loc } from '@/components/marketing/shared';
+import { PAGE, CARD, EDGE, SOFT, ACCENT, NOISE, PRICING, pick } from '@/lib/marketing-data';
 import { cn } from '@/lib/utils';
+
+const SERIF = 'font-serif font-normal';
+type Loc = 'ar' | 'en';
 
 export default async function CheckoutPage({
   params: { locale },
@@ -27,9 +30,8 @@ export default async function CheckoutPage({
 
   return (
     <div className={cn(PAGE, 'relative overflow-clip')}>
-      <Grain />
-
-      {/* ambient liquid glass wash, same warm palette as the landing */}
+      {/* film grain + ambient liquid glass wash, same warm palette as the landing */}
+      <div aria-hidden className="pointer-events-none fixed inset-0 z-0 opacity-[0.035] mix-blend-multiply dark:opacity-[0.06] dark:mix-blend-screen" style={{ backgroundImage: NOISE }} />
       <div aria-hidden className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
         <div className="absolute -start-24 -top-24 h-[30rem] w-[30rem] rounded-full bg-amber-300/25 blur-[120px] dark:bg-amber-500/[0.12]" />
         <div className="absolute -end-28 top-1/3 h-[32rem] w-[32rem] rounded-full bg-orange-200/25 blur-[130px] dark:bg-amber-600/[0.10]" />
@@ -38,7 +40,7 @@ export default async function CheckoutPage({
       <header className="relative z-10 border-b border-stone-200/70 dark:border-white/10">
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-5 sm:px-8">
           <Link href="/" className="flex items-baseline gap-2">
-            <Serif className="text-2xl tracking-tight">{locale === 'ar' ? 'مسار' : 'Masaar'}</Serif>
+            <span className={cn(SERIF, 'text-2xl tracking-tight')}>{locale === 'ar' ? 'مسار' : 'Masaar'}</span>
           </Link>
           <Link href="/#pricing" className="text-sm text-stone-500 transition-colors hover:text-stone-900 dark:text-stone-400 dark:hover:text-white">
             {t('back')}
@@ -50,11 +52,11 @@ export default async function CheckoutPage({
         {/* Order summary */}
         <div className="lg:order-2">
           <div className={cn(CARD, EDGE, 'p-7')}>
-            <Eyebrow>{t('summary')}</Eyebrow>
+            <div className="text-[10.5px] font-semibold uppercase tracking-[0.24em] text-stone-500 dark:text-stone-400">{t('summary')}</div>
             <div className="mt-4 flex items-baseline justify-between gap-3">
-              <Serif className="text-2xl">{planName}</Serif>
+              <span className={cn(SERIF, 'text-2xl')}>{planName}</span>
               <div className="flex items-baseline gap-1.5">
-                <Serif className="text-4xl leading-none">{plan.priceSar}</Serif>
+                <span className={cn(SERIF, 'text-4xl leading-none')}>{plan.priceSar}</span>
                 <span className="text-sm font-medium text-stone-500 dark:text-stone-400">{locale === 'ar' ? 'ريال' : 'SAR'}</span>
               </div>
             </div>
@@ -74,7 +76,7 @@ export default async function CheckoutPage({
 
         {/* Payment */}
         <div className="lg:order-1">
-          <Serif className="block text-3xl tracking-tight sm:text-4xl">{t('title')}</Serif>
+          <span className={cn(SERIF, 'block text-3xl tracking-tight sm:text-4xl')}>{t('title')}</span>
           <p className="mt-3 text-lg leading-relaxed text-stone-600 dark:text-stone-300">{t('subtitle')}</p>
           <div className="mt-7">
             <CheckoutForm

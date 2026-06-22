@@ -137,9 +137,9 @@
   "checkout": {
     "back": "Back to pricing",
     "title": "Complete your purchase",
-    "subtitle": "One secure payment via mada or card. Your dashboard unlocks instantly after payment.",
+    "subtitle": "One secure payment via mada or card. Then we start preparing your own private site right away.",
     "summary": "Order summary",
-    "oneTime": "One-time — no subscription",
+    "oneTime": "One time, no subscription",
     "secure": "Secure, encrypted payment via Moyasar",
     "notConfigured": "Payment gateway not enabled yet",
     "notConfiguredHint": "Add your Moyasar API keys to the environment to enable live payments (requires a Saudi merchant account).",
