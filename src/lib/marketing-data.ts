@@ -78,7 +78,7 @@ export const PRICING: {
   },
 ];
 
-export const PROMO = { ar: 'عرض الإطلاق لأول 50 عميل', en: 'Launch offer, first 50 customers' };
+export const PROMO = { ar: 'عرض الإطلاق لأول 50 عميل فقط', en: 'Launch offer, first 50 customers only' };
 
 export const STATS: { n: string; label: { ar: string; en: string } }[] = [
   { n: '250+', label: { ar: 'طلب بدون رد حقيقي', en: 'applications with no real reply' } },

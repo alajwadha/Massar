@@ -174,6 +174,7 @@ function Reassure({ children }: { children: React.ReactNode }) {
 
 export default function MarketingH({ locale }: { locale: Loc }) {
   const t = (k: keyof typeof T) => pick(T[k], locale);
+  const maxOff = Math.max(0, ...PRICING.map((p) => (p.oldPrice ? Math.round((1 - p.price / p.oldPrice) * 100) : 0)));
 
   return (
     <div className={cn(PAGE, 'relative overflow-clip')}>
@@ -184,6 +185,12 @@ export default function MarketingH({ locale }: { locale: Loc }) {
         <div className="absolute -start-24 -top-24 h-[30rem] w-[30rem] rounded-full bg-amber-300/25 blur-[120px] dark:bg-amber-500/[0.12]" />
         <div className="absolute -end-28 top-1/3 h-[32rem] w-[32rem] rounded-full bg-orange-200/25 blur-[130px] dark:bg-amber-600/[0.10]" />
         <div className="absolute bottom-0 start-1/3 h-[28rem] w-[28rem] rounded-full bg-rose-200/20 blur-[130px] dark:bg-indigo-500/[0.10]" />
+      </div>
+
+      {/* limited-time launch offer bar, top of the page */}
+      <div className="relative z-40 flex items-center justify-center gap-2 bg-amber-600 px-4 py-2 text-center text-[13px] font-bold text-white dark:bg-amber-500 dark:text-stone-900">
+        <Tag className="h-3.5 w-3.5 shrink-0" />
+        <span>{pick(PROMO, locale)}{maxOff ? ` · ${locale === 'ar' ? `خصم حتى ${maxOff}%` : `up to ${maxOff}% off`}` : ''}</span>
       </div>
 
       {/* ---------------------------------------------------------- header -- */}
