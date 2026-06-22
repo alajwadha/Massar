@@ -102,8 +102,8 @@ const T = {
   // Q7 pricing
   q7: { ar: 'وكم بيكلفني هذا؟', en: 'And what will this cost me?' },
   q7body: {
-    ar: 'دفعة وحدة وبس بدون اشتراك. وحالياً عرض الإطلاق لأول 50 عميل بسعر أقل. وبعدها نبدأ نجهز لك موقعك الخاص بأقرب وقت وتقدر تضيفه على شاشة جوالك وتفتحه بضغطة وحدة.',
-    en: 'One payment, no subscription. Right now there is a launch offer for the first 50 customers at a lower price. Then we start preparing your own private site right away, and you can add it to your phone home screen and open it with one tap.',
+    ar: 'حالياً عرض الإطلاق لأول 50 عميل بسعر أقل وبدون اشتراك. وبعدها نبدأ نجهز لك موقعك الخاص بأقرب وقت وتقدر تضيفه على شاشة جوالك وتفتحه بضغطة وحدة.',
+    en: 'Right now there is a launch offer for the first 50 customers at a lower price, no subscription. Then we start preparing your own private site right away, and you can add it to your phone home screen and open it with one tap.',
   },
   oneTime: { ar: 'مرة وحدة', en: 'one time' },
   most: { ar: 'الأكثر اختيارًا', en: 'Most chosen' },
@@ -376,7 +376,6 @@ export default function MarketingH({ locale }: { locale: Loc }) {
                         {locale === 'ar' ? `خصم ${Math.round((1 - tier.price / tier.oldPrice) * 100)}%` : `${Math.round((1 - tier.price / tier.oldPrice) * 100)}% off`}
                       </span>
                     ) : null}
-                    <span className={cn('ms-1 rounded-full px-2 py-0.5 text-[11px] font-medium', SOFT)}>{t('oneTime')}</span>
                   </div>
                   <ul className="mt-7 flex-1 space-y-3">
                     {tier.features.map((f) => (

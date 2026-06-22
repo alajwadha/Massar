@@ -3,7 +3,7 @@ import { Link } from '@/i18n/routing';
 import { Check } from 'lucide-react';
 import { getPlan } from '@/lib/plans';
 import { CheckoutForm } from '@/components/checkout/checkout-form';
-import { PAGE, CARD, EDGE, SOFT, ACCENT, NOISE, PRICING, PROMO, pick } from '@/lib/marketing-data';
+import { PAGE, CARD, EDGE, ACCENT, NOISE, PRICING, PROMO, pick } from '@/lib/marketing-data';
 import { cn } from '@/lib/utils';
 
 const SERIF = 'font-serif font-normal';
@@ -52,7 +52,10 @@ export default async function CheckoutPage({
         {/* Order summary */}
         <div className="lg:order-2">
           <div className={cn(CARD, EDGE, 'p-7')}>
-            <div className="text-[11px] font-bold text-stone-500 dark:text-stone-400">{t('summary')}</div>
+            <div className="flex items-center justify-between gap-2">
+              <div className="text-[11px] font-bold text-stone-500 dark:text-stone-400">{t('summary')}</div>
+              {tier.oldPrice ? <span className="rounded-full bg-amber-500/15 px-2.5 py-0.5 text-[11px] font-bold text-amber-700 dark:text-amber-300">{pick(PROMO, loc)}</span> : null}
+            </div>
             <div className="mt-4 flex items-baseline justify-between gap-3">
               <span className={cn(SERIF, 'text-2xl')}>{planName}</span>
               <div className="flex flex-wrap items-baseline gap-1.5">
@@ -61,10 +64,6 @@ export default async function CheckoutPage({
                 <span className="text-sm font-medium text-stone-500 dark:text-stone-400">{locale === 'ar' ? 'ريال' : 'SAR'}</span>
                 {tier.oldPrice ? <span className="ms-1 rounded-full bg-amber-600 px-2 py-0.5 text-[11px] font-bold text-white dark:bg-amber-500 dark:text-stone-900">{locale === 'ar' ? `خصم ${Math.round((1 - tier.price / tier.oldPrice) * 100)}%` : `${Math.round((1 - tier.price / tier.oldPrice) * 100)}% off`}</span> : null}
               </div>
-            </div>
-            <div className="mt-2 flex flex-wrap items-center gap-2">
-              <span className={cn('rounded-full px-2.5 py-0.5 text-[12px] font-medium', SOFT)}>{t('oneTime')}</span>
-              {tier.oldPrice ? <span className="rounded-full bg-amber-500/15 px-2.5 py-0.5 text-[12px] font-bold text-amber-700 dark:text-amber-300">{pick(PROMO, loc)}</span> : null}
             </div>
             <ul className="mt-6 space-y-3 border-t border-stone-200/70 pt-6 dark:border-white/10">
               {features.map((f) => (
