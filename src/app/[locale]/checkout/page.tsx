@@ -55,10 +55,11 @@ export default async function CheckoutPage({
             <div className="text-[11px] font-bold text-stone-500 dark:text-stone-400">{t('summary')}</div>
             <div className="mt-4 flex items-baseline justify-between gap-3">
               <span className={cn(SERIF, 'text-2xl')}>{planName}</span>
-              <div className="flex items-baseline gap-1.5">
+              <div className="flex flex-wrap items-baseline gap-1.5">
                 {tier.oldPrice ? <span className="text-xl font-medium text-stone-400 line-through">{tier.oldPrice}</span> : null}
                 <span className={cn(SERIF, 'text-4xl leading-none')}>{plan.priceSar}</span>
                 <span className="text-sm font-medium text-stone-500 dark:text-stone-400">{locale === 'ar' ? 'ريال' : 'SAR'}</span>
+                {tier.oldPrice ? <span className="ms-1 rounded-full bg-amber-600 px-2 py-0.5 text-[11px] font-bold text-white dark:bg-amber-500 dark:text-stone-900">{locale === 'ar' ? `خصم ${Math.round((1 - tier.price / tier.oldPrice) * 100)}%` : `${Math.round((1 - tier.price / tier.oldPrice) * 100)}% off`}</span> : null}
               </div>
             </div>
             <div className="mt-2 flex flex-wrap items-center gap-2">
