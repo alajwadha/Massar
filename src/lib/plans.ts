@@ -10,7 +10,7 @@ export type Plan = {
 
 export const PLANS: Record<PlanId, Plan> = {
   starter: { id: 'starter', priceSar: 199, amountHalalas: 19900 },
-  pro: { id: 'pro', priceSar: 499, amountHalalas: 49900, popular: true },
+  pro: { id: 'pro', priceSar: 349, amountHalalas: 34900, popular: true },
 };
 
 export function getPlan(id: string | undefined): Plan {

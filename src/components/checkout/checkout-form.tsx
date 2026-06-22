@@ -67,12 +67,12 @@ export function CheckoutForm({
 
   if (!publishableKey) {
     return (
-      <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
-        <div className="flex items-center gap-2 font-semibold text-amber-800">
+      <div className="rounded-2xl border border-amber-300/70 bg-amber-50/80 p-5 backdrop-blur dark:border-amber-400/25 dark:bg-amber-400/10">
+        <div className="flex items-center gap-2 font-semibold text-amber-800 dark:text-amber-200">
           <AlertTriangle className="h-5 w-5" />
           {labels.notConfigured}
         </div>
-        <p className="mt-2 text-sm text-amber-800/80">{labels.notConfiguredHint}</p>
+        <p className="mt-2 text-sm text-amber-800/80 dark:text-amber-200/80">{labels.notConfiguredHint}</p>
       </div>
     );
   }
@@ -81,9 +81,9 @@ export function CheckoutForm({
     <div>
       <div className="mysr-form" />
       {!ready && (
-        <div className="h-40 animate-pulse rounded-2xl bg-line/60" aria-hidden />
+        <div className="h-40 animate-pulse rounded-2xl bg-stone-200/70 dark:bg-white/10" aria-hidden />
       )}
-      <p className="mt-4 flex items-center justify-center gap-1.5 text-xs text-ink-muted">
+      <p className="mt-4 flex items-center justify-center gap-1.5 text-xs text-stone-500 dark:text-stone-400">
         <Lock className="h-3.5 w-3.5" /> {labels.secure}
       </p>
     </div>
