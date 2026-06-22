@@ -39,6 +39,7 @@ export const PRICING: {
   id: 'starter' | 'pro';
   name: { ar: string; en: string };
   price: number;
+  oldPrice?: number;
   blurb: { ar: string; en: string };
   popular?: boolean;
   features: { ar: string; en: string }[];
@@ -46,7 +47,8 @@ export const PRICING: {
   {
     id: 'starter',
     name: { ar: 'الأساسية', en: 'Starter' },
-    price: 199,
+    price: 99,
+    oldPrice: 199,
     blurb: { ar: 'بداية قوية', en: 'A strong start' },
     features: [
       { ar: '3 مسارات مهنية تناسب خلفيتك', en: '3 career paths matched to your background' },
@@ -59,7 +61,8 @@ export const PRICING: {
   {
     id: 'pro',
     name: { ar: 'الاحترافية', en: 'Pro' },
-    price: 349,
+    price: 149,
+    oldPrice: 349,
     blurb: { ar: 'تغطية أوسع وأبواب أكثر', en: 'Wider coverage, more doors' },
     popular: true,
     features: [
@@ -74,6 +77,8 @@ export const PRICING: {
     ],
   },
 ];
+
+export const PROMO = { ar: 'عرض الإطلاق لأول 50 عميل', en: 'Launch offer, first 50 customers' };
 
 export const STATS: { n: string; label: { ar: string; en: string } }[] = [
   { n: '250+', label: { ar: 'طلب بدون رد حقيقي', en: 'applications with no real reply' } },

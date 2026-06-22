@@ -31,7 +31,7 @@ export type { Loc };
 // Tokens, the pick() helper and the marketing data now live in a non-client module
 // (src/lib/marketing-data.ts) so Server Components (the checkout pages) can import
 // them too. Re-exported here so the marketing components keep their import surface.
-export { SPRING, EASE, PAGE, CARD, EDGE, INSET, PILL, GHOST, SOFT, ACCENT, NOISE, pick, TARGET_COMPANIES, PRICING, STATS } from '@/lib/marketing-data';
+export { SPRING, EASE, PAGE, CARD, EDGE, INSET, PILL, GHOST, SOFT, ACCENT, NOISE, pick, TARGET_COMPANIES, PRICING, STATS, PROMO } from '@/lib/marketing-data';
 
 /* -------------------------------------------------------------- primitives -- */
 

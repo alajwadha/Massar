@@ -3,7 +3,7 @@ import { Link } from '@/i18n/routing';
 import { Check } from 'lucide-react';
 import { getPlan } from '@/lib/plans';
 import { CheckoutForm } from '@/components/checkout/checkout-form';
-import { PAGE, CARD, EDGE, SOFT, ACCENT, NOISE, PRICING, pick } from '@/lib/marketing-data';
+import { PAGE, CARD, EDGE, SOFT, ACCENT, NOISE, PRICING, PROMO, pick } from '@/lib/marketing-data';
 import { cn } from '@/lib/utils';
 
 const SERIF = 'font-serif font-normal';
@@ -56,12 +56,14 @@ export default async function CheckoutPage({
             <div className="mt-4 flex items-baseline justify-between gap-3">
               <span className={cn(SERIF, 'text-2xl')}>{planName}</span>
               <div className="flex items-baseline gap-1.5">
+                {tier.oldPrice ? <span className="text-xl font-medium text-stone-400 line-through">{tier.oldPrice}</span> : null}
                 <span className={cn(SERIF, 'text-4xl leading-none')}>{plan.priceSar}</span>
                 <span className="text-sm font-medium text-stone-500 dark:text-stone-400">{locale === 'ar' ? 'ريال' : 'SAR'}</span>
               </div>
             </div>
-            <div className="mt-2">
+            <div className="mt-2 flex flex-wrap items-center gap-2">
               <span className={cn('rounded-full px-2.5 py-0.5 text-[12px] font-medium', SOFT)}>{t('oneTime')}</span>
+              {tier.oldPrice ? <span className="rounded-full bg-amber-500/15 px-2.5 py-0.5 text-[12px] font-bold text-amber-700 dark:text-amber-300">{pick(PROMO, loc)}</span> : null}
             </div>
             <ul className="mt-6 space-y-3 border-t border-stone-200/70 pt-6 dark:border-white/10">
               {features.map((f) => (

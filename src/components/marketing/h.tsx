@@ -29,12 +29,13 @@ import {
   OpportunitiesCard,
   TARGET_COMPANIES,
   PRICING,
+  PROMO,
   pick,
   type Loc,
 } from '@/components/marketing/shared';
 import { cn } from '@/lib/utils';
 import { Link } from '@/i18n/routing';
-import { ArrowUpRight, Check, ShieldCheck } from 'lucide-react';
+import { ArrowUpRight, Check, ShieldCheck, Tag } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 /* ------------------------------------------------------------------- copy -- */
@@ -101,8 +102,8 @@ const T = {
   // Q7 pricing
   q7: { ar: 'وكم بيكلفني هذا؟', en: 'And what will this cost me?' },
   q7body: {
-    ar: 'دفعة وحدة وبس بدون اشتراك. الأساسية 199 ريال والاحترافية 349 ريال. وبعدها نبدأ نجهز لك موقعك الخاص بأقرب وقت وتقدر تضيفه على شاشة جوالك وتفتحه بضغطة وحدة.',
-    en: 'One payment, no subscription. Starter is 199 SAR, Pro is 349 SAR. Then we start preparing your own private site right away, and you can add it to your phone home screen and open it with one tap.',
+    ar: 'دفعة وحدة وبس بدون اشتراك. وحالياً عرض الإطلاق لأول 50 عميل بسعر أقل. وبعدها نبدأ نجهز لك موقعك الخاص بأقرب وقت وتقدر تضيفه على شاشة جوالك وتفتحه بضغطة وحدة.',
+    en: 'One payment, no subscription. Right now there is a launch offer for the first 50 customers at a lower price. Then we start preparing your own private site right away, and you can add it to your phone home screen and open it with one tap.',
   },
   oneTime: { ar: 'مرة وحدة', en: 'one time' },
   most: { ar: 'الأكثر اختيارًا', en: 'Most chosen' },
@@ -341,6 +342,10 @@ export default function MarketingH({ locale }: { locale: Loc }) {
               <Serif className="text-2xl leading-[1.15] tracking-tight sm:text-4xl">{t('q7')}</Serif>
             </div>
             <p className="mt-6 max-w-2xl text-lg leading-relaxed text-stone-600 dark:text-stone-300">{t('q7body')}</p>
+            <div className="mt-5 inline-flex items-center gap-2 rounded-full bg-amber-500/15 px-4 py-2 text-sm font-bold text-amber-700 dark:text-amber-300">
+              <Tag className="h-4 w-4" />
+              {pick(PROMO, locale)}
+            </div>
           </Fade>
           <div className="mt-10 grid gap-6 md:grid-cols-2">
             {PRICING.map((tier, i) => (
@@ -356,6 +361,7 @@ export default function MarketingH({ locale }: { locale: Loc }) {
                   </div>
                   <p className="mt-1.5 text-sm text-stone-500 dark:text-stone-400">{pick(tier.blurb, locale)}</p>
                   <div className="mt-6 flex items-baseline gap-2">
+                    {tier.oldPrice ? <span className="text-2xl font-medium text-stone-400 line-through">{tier.oldPrice}</span> : null}
                     <Serif className="text-5xl leading-none">{tier.price}</Serif>
                     <span className="text-sm font-medium text-stone-500 dark:text-stone-400">{locale === 'ar' ? 'ريال' : 'SAR'}</span>
                     <span className={cn('ms-1 rounded-full px-2 py-0.5 text-[11px] font-medium', SOFT)}>{t('oneTime')}</span>
