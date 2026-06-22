@@ -63,12 +63,13 @@ export const PRICING: {
     blurb: { ar: 'تغطية أوسع وأبواب أكثر', en: 'Wider coverage, more doors' },
     popular: true,
     features: [
-      { ar: 'كل شي في الأساسية وزيادة', en: 'Everything in Starter, and more' },
       { ar: '5 مسارات مهنية كاملة', en: '5 full career paths' },
+      { ar: 'درجة تنافسية صريحة لكل مستوى', en: 'An honest competitiveness score per level' },
+      { ar: 'خارطة شهادات هدف بترتيب الأثر', en: 'A Hadaf certifications roadmap, ordered by impact' },
       { ar: '300 جهة من شبكتك + 300 من مسؤولي التوظيف', en: '300 from your network + 300 recruiters' },
+      { ar: 'رسائل جاهزة وروابط مباشرة لحساباتهم', en: 'Ready messages and direct links to their profiles' },
       { ar: 'صفحة الدراسات العليا وأهلية الابتعاث', en: 'A graduate study page with scholarship eligibility' },
       { ar: 'صفحة المصادر: بوابات وشركات وأيام مهنية', en: 'A resources page: portals, companies and career days' },
-      { ar: 'رسائل جاهزة وروابط مباشرة لحساباتهم', en: 'Ready messages and direct links to their profiles' },
     ],
   },
 ];
