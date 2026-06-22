@@ -68,8 +68,11 @@ export const PRICING: {
       { ar: 'خارطة شهادات هدف بترتيب الأثر', en: 'A Hadaf certifications roadmap, ordered by impact' },
       { ar: '300 جهة من شبكتك + 300 من مسؤولي التوظيف', en: '300 from your network + 300 recruiters' },
       { ar: 'رسائل جاهزة وروابط مباشرة لحساباتهم', en: 'Ready messages and direct links to their profiles' },
-      { ar: 'صفحة الدراسات العليا وأهلية الابتعاث', en: 'A graduate study page with scholarship eligibility' },
-      { ar: 'صفحة المصادر: بوابات وشركات وأيام مهنية', en: 'A resources page: portals, companies and career days' },
+      { ar: 'برامج دراسات عليا لتخصصك، عالمية وداخل السعودية بدوام جزئي', en: 'Graduate programs for your field, global and part time inside Saudi' },
+      { ar: 'أهلية الابتعاث ومنحة رواد لأفضل 30 جامعة مع المواعيد وروابط التقديم', en: 'Scholarship eligibility and Pioneers for the top 30, with deadlines and application links' },
+      { ar: 'بوابات التوظيف الوطنية ودليل شركات سعودية حسب القطاع', en: 'National job portals and a directory of Saudi companies by sector' },
+      { ar: 'أيام مهنية بمواعيدها وبرامج وطنية مثل تمهير', en: 'Dated career days and national programs like Tamheer' },
+      { ar: 'مهارات مطلوبة تتعلمها وأدلة للسيرة والمقابلات', en: 'In-demand skills to learn, plus CV and interview guides' },
     ],
   },
 ];
