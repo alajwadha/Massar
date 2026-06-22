@@ -153,7 +153,7 @@ function Ask({ n }: { n: string }) {
 /** A small Pro tag for features that live in the Pro plan. */
 function Pro() {
   return (
-    <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wider text-amber-700 dark:text-amber-300">
+    <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[10.5px] font-bold text-amber-700 dark:text-amber-300">
       Pro
     </span>
   );
@@ -214,7 +214,7 @@ export default function MarketingH({ locale }: { locale: Loc }) {
         {/* -------------------------------------------------------- hero -- */}
         <section className="border-b py-16 text-center sm:py-24">
           <Fade>
-            <Eyebrow className="justify-center">{t('kicker')}</Eyebrow>
+            <div className="text-center text-xl font-extrabold tracking-tight text-amber-700 dark:text-amber-300 sm:text-2xl">{t('kicker')}</div>
             <h1 className="mx-auto mt-6 max-w-3xl">
               <Serif className="block text-[2rem] leading-[1.12] tracking-tight sm:text-5xl md:text-6xl">{t('heroTitle')}</Serif>
             </h1>
@@ -349,7 +349,7 @@ export default function MarketingH({ locale }: { locale: Loc }) {
                   <div className="flex items-baseline justify-between">
                     <Serif className="text-2xl">{pick(tier.name, locale)}</Serif>
                     {tier.popular ? (
-                      <span className="rounded-full bg-amber-500/15 px-2.5 py-1 text-[10.5px] font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-300">
+                      <span className="rounded-full bg-amber-500/15 px-2.5 py-1 text-[10.5px] font-semibold text-amber-700 dark:text-amber-300">
                         {t('most')}
                       </span>
                     ) : null}

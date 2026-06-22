@@ -52,7 +52,7 @@ export default async function CheckoutPage({
         {/* Order summary */}
         <div className="lg:order-2">
           <div className={cn(CARD, EDGE, 'p-7')}>
-            <div className="text-[10.5px] font-semibold uppercase tracking-[0.24em] text-stone-500 dark:text-stone-400">{t('summary')}</div>
+            <div className="text-[11px] font-bold text-stone-500 dark:text-stone-400">{t('summary')}</div>
             <div className="mt-4 flex items-baseline justify-between gap-3">
               <span className={cn(SERIF, 'text-2xl')}>{planName}</span>
               <div className="flex items-baseline gap-1.5">

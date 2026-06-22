@@ -41,7 +41,7 @@ export function Serif({ className, children }: { className?: string; children: R
 
 export function Eyebrow({ className, children }: { className?: string; children: React.ReactNode }) {
   return (
-    <div className={cn('text-[10.5px] font-semibold uppercase tracking-[0.24em] text-stone-500 dark:text-stone-400', className)}>
+    <div className={cn('text-[11px] font-bold text-stone-500 dark:text-stone-400', className)}>
       {children}
     </div>
   );
@@ -197,7 +197,7 @@ export function ScoreCard({ locale, className }: { locale: Loc; className?: stri
         </div>
       </div>
       <div className="mt-4 space-y-1.5">
-        <div className="text-[11px] font-semibold uppercase tracking-wider text-stone-400">{locale === 'ar' ? 'وش يرفعها' : 'What raises it'}</div>
+        <div className="text-[11px] font-semibold text-stone-400">{locale === 'ar' ? 'وش يرفعها' : 'What raises it'}</div>
         {raises.map((rr) => (
           <div key={rr.en} className={cn(INSET, 'flex items-center justify-between px-3 py-1.5 text-[13px]')}>
             <span className="truncate text-stone-600 dark:text-stone-300">{pick(rr, locale)}</span>
@@ -280,7 +280,7 @@ export function ContactsCard({ locale, className }: { locale: Loc; className?: s
       {/* the ready message, copy and reword */}
       <div className={cn(INSET, 'mt-2.5 p-2.5')}>
         <div className="mb-1.5 flex items-center justify-between">
-          <span className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-stone-400">
+          <span className="flex items-center gap-1.5 text-[10px] font-bold text-stone-400">
             <BadgeCheck className="h-3.5 w-3.5 text-amber-600 dark:text-amber-300" />
             {locale === 'ar' ? 'رسالة جاهزة' : 'Ready message'}
           </span>
@@ -332,7 +332,7 @@ export function OpportunitiesCard({ locale, className }: { locale: Loc; classNam
   return (
     <div className={cn(CARD, EDGE, 'p-5', className)}>
       <Eyebrow>{locale === 'ar' ? 'الفرص' : 'Opportunities'}</Eyebrow>
-      <div className="mt-3 text-[11px] font-semibold uppercase tracking-wider text-stone-400">{locale === 'ar' ? 'صفحات التوظيف' : 'Company career pages'}</div>
+      <div className="mt-3 text-[11px] font-semibold text-stone-400">{locale === 'ar' ? 'صفحات التوظيف' : 'Company career pages'}</div>
       <div className="mt-1.5 flex flex-wrap gap-1.5">
         {cos.map((c) => (
           <span key={c} className={cn('rounded-full px-2.5 py-1 text-[12px] font-medium', SOFT)}>{c}</span>
