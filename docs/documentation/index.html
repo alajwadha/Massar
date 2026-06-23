@@ -4,75 +4,75 @@
 <meta charset="utf-8" />
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
+  @page { size: A4; margin: 0; }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root { --ink:#1c1917; --soft:#57534e; --mut:#a8a29e; --amber:#b45309; --amber2:#d97706; --cream:#f7f6f2; --line:#e7e5e4; }
   html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  body { font-family:'Tajawal', 'Segoe UI', Tahoma, sans-serif; color:var(--ink); background:#fff; }
-  .page { position:relative; width:794px; min-height:1123px; padding:60px 64px; background:#fff; page-break-after:always; overflow:hidden; }
+  body { font-family:'Tajawal','Segoe UI',Tahoma,sans-serif; color:var(--ink); background:#fff; }
+  /* fixed A4 page, slightly under 297mm to avoid rounding spill; overflow clipped */
+  .page { position:relative; width:210mm; height:296mm; padding:14mm 15mm; background:#fff; page-break-after:always; overflow:hidden; }
   .page:last-child { page-break-after:auto; }
-  .amberbar { position:absolute; top:0; right:0; left:0; height:8px; background:linear-gradient(90deg,var(--amber),var(--amber2)); }
+  .amberbar { position:absolute; top:0; right:0; left:0; height:7px; background:linear-gradient(90deg,var(--amber),var(--amber2)); }
   h1,h2,h3 { font-weight:800; line-height:1.2; }
   .muted { color:var(--soft); }
   .mut2 { color:var(--mut); }
-  .sec-tag { display:inline-flex; align-items:center; gap:8px; font-weight:800; font-size:13px; color:var(--amber); background:rgba(217,119,6,.12); padding:7px 14px; border-radius:999px; }
-  .sec-title { font-size:30px; margin-top:18px; }
-  .lead { font-size:15px; color:var(--soft); line-height:1.9; margin-top:10px; }
-  .chip { display:inline-block; font-size:12.5px; font-weight:500; color:var(--soft); background:#f5f5f4; border:1px solid var(--line); padding:6px 12px; border-radius:999px; margin:0 0 8px 8px; }
-  .card { border:1px solid var(--line); border-radius:18px; padding:22px; background:#fff; box-shadow:0 10px 30px -22px rgba(28,25,23,.4); }
-  figure { margin-top:18px; }
-  figure img { width:100%; display:block; border:1px solid var(--line); border-radius:14px; box-shadow:0 18px 50px -28px rgba(28,25,23,.55); background:#faf7f1; }
-  figcaption { font-size:13px; color:var(--soft); margin-top:10px; font-weight:500; }
-  .grid2 { display:flex; gap:16px; }
-  .grid2 > * { flex:1; }
-  table { width:100%; border-collapse:collapse; margin-top:8px; }
-  td { padding:11px 4px; border-bottom:1px solid var(--line); font-size:14px; }
-  td.k { color:var(--soft); width:42%; }
+  .sec-tag { display:inline-flex; align-items:center; gap:8px; font-weight:800; font-size:12px; color:var(--amber); background:rgba(217,119,6,.12); padding:6px 13px; border-radius:999px; }
+  .sec-title { font-size:27px; margin-top:14px; }
+  .lead { font-size:14px; color:var(--soft); line-height:1.8; margin-top:9px; }
+  .chip { display:inline-block; font-size:12px; font-weight:500; color:var(--soft); background:#f5f5f4; border:1px solid var(--line); padding:5px 11px; border-radius:999px; margin:0 0 7px 7px; }
+  .card { border:1px solid var(--line); border-radius:16px; padding:18px; background:#fff; box-shadow:0 10px 30px -22px rgba(28,25,23,.4); }
+  figure { margin:0; text-align:center; }
+  figure img { display:block; max-width:100%; max-height:90mm; width:auto; height:auto; margin:0 auto; border:1px solid var(--line); border-radius:12px; box-shadow:0 14px 40px -26px rgba(28,25,23,.55); background:#faf7f1; }
+  figure.mobile img { max-height:112mm; }
+  figcaption { font-size:12px; color:var(--soft); margin-top:7px; font-weight:500; }
+  .gap { height:14px; }
+  .grid2 { display:flex; gap:14px; align-items:flex-start; }
+  table { width:100%; border-collapse:collapse; margin-top:6px; }
+  td { padding:10px 4px; border-bottom:1px solid var(--line); font-size:13.5px; }
+  td.k { color:var(--soft); width:46%; }
   td.v { font-weight:700; direction:ltr; text-align:left; }
-  .stat { text-align:center; border:1px solid var(--line); border-radius:16px; padding:18px 10px; }
-  .stat .n { font-size:30px; font-weight:800; color:var(--amber); line-height:1; }
-  .stat .l { font-size:12.5px; color:var(--soft); margin-top:8px; }
-  .statrow { display:flex; gap:12px; margin-top:18px; }
+  .stat { text-align:center; border:1px solid var(--line); border-radius:14px; padding:14px 8px; }
+  .stat .n { font-size:26px; font-weight:800; color:var(--amber); line-height:1; }
+  .stat .l { font-size:11.5px; color:var(--soft); margin-top:6px; }
+  .statrow { display:flex; gap:10px; margin-top:16px; }
   .statrow > * { flex:1; }
-  code, pre { font-family:'SF Mono','Consolas','Courier New',monospace; }
-  pre.code { direction:ltr; text-align:left; background:#0c0c0f; color:#e7e5e4; border-radius:14px; padding:18px 20px; font-size:11px; line-height:1.7; overflow:hidden; white-space:pre-wrap; word-break:break-word; }
-  pre.code .c { color:#a8a29e; } pre.code .k { color:#fbbf24; } pre.code .s { color:#86efac; }
-  .commit { font-size:12.5px; padding:8px 0; border-bottom:1px solid var(--line); display:flex; gap:10px; }
-  .commit .d { color:var(--mut); direction:ltr; min-width:78px; }
-  .commit .m { color:var(--ink); }
-  .urlbig { direction:ltr; text-align:center; font-weight:800; font-size:22px; color:var(--amber); background:var(--cream); border:1px solid var(--line); border-radius:14px; padding:18px; margin-top:16px; letter-spacing:.2px; }
-  .foot { position:absolute; bottom:28px; right:64px; left:64px; display:flex; justify-content:space-between; font-size:11px; color:var(--mut); border-top:1px solid var(--line); padding-top:12px; }
+  pre.code { direction:ltr; text-align:left; background:#0c0c0f; color:#e7e5e4; border-radius:12px; padding:14px 16px; font-family:'Consolas','Courier New',monospace; font-size:10px; line-height:1.65; white-space:pre-wrap; word-break:break-word; }
+  pre.code .c{color:#a8a29e;} pre.code .k{color:#fbbf24;} pre.code .s{color:#86efac;}
+  .commit { font-size:12px; padding:7px 0; border-bottom:1px solid var(--line); display:flex; gap:9px; }
+  .commit .d { color:var(--mut); direction:ltr; min-width:74px; }
+  .urlbig { direction:ltr; text-align:center; font-weight:800; font-size:20px; color:var(--amber); background:var(--cream); border:1px solid var(--line); border-radius:12px; padding:15px; margin-top:14px; }
+  .foot { position:absolute; bottom:9mm; right:15mm; left:15mm; display:flex; justify-content:space-between; font-size:10.5px; color:var(--mut); border-top:1px solid var(--line); padding-top:9px; }
   .wm { font-weight:800; }
 </style>
 </head>
 <body>
 
-<!-- ============ COVER ============ -->
-<div class="page" style="display:flex; flex-direction:column; justify-content:center; background:linear-gradient(160deg,#fff 0%, #faf7f1 60%, #f6efe2 100%);">
+<!-- COVER -->
+<div class="page" style="display:flex; flex-direction:column; justify-content:center; background:linear-gradient(160deg,#fff 0%,#faf7f1 60%,#f6efe2 100%);">
   <div class="amberbar"></div>
-  <div style="position:absolute; top:-120px; left:-120px; width:420px; height:420px; border-radius:50%; background:rgba(217,119,6,.10); filter:blur(40px);"></div>
+  <div style="position:absolute; top:-120px; left:-120px; width:420px; height:420px; border-radius:50%; background:rgba(217,119,6,.10);"></div>
   <div class="sec-tag">توثيق المشروع وإثبات الملكية</div>
-  <div style="font-size:80px; font-weight:800; letter-spacing:-1px; margin-top:26px;">مسار</div>
-  <div style="font-size:24px; font-weight:700; color:var(--soft); direction:ltr; text-align:right; margin-top:-6px;">Masaar</div>
-  <h1 style="font-size:34px; margin-top:30px; max-width:560px; line-height:1.35;">منصة سعودية لبناء المسار المهني وإثبات الملكية البرمجية</h1>
-  <p class="lead" style="max-width:600px;">منصة تحلّل سيرة المستخدم وتعطيه درجة تنافسية صريحة لكل مستوى، وترسم له خطة مهنية مع خارطة شهادات، وتوصله مباشرة بصنّاع القرار في سوق العمل السعودي. مصمّمة عربيًا أولًا، تعمل على الجوال والحاسب، وبالوضعين الفاتح والداكن.</p>
-  <div class="urlbig">massar-sigma.vercel.app</div>
-  <div style="margin-top:30px; display:flex; gap:30px; font-size:14px;">
-    <div><div class="mut2" style="font-size:12px;">المالك</div><div style="font-weight:700; margin-top:4px;">علي الأجود</div></div>
-    <div><div class="mut2" style="font-size:12px;">التاريخ</div><div style="font-weight:700; margin-top:4px;">23 يونيو 2026</div></div>
-    <div><div class="mut2" style="font-size:12px;">الحالة</div><div style="font-weight:700; margin-top:4px; color:var(--amber);">منشورة ومباشرة</div></div>
+  <div style="font-size:74px; font-weight:800; letter-spacing:-1px; margin-top:24px;">مسار</div>
+  <div style="font-size:22px; font-weight:700; color:var(--soft); direction:ltr; text-align:right; margin-top:-4px;">Masaar</div>
+  <h1 style="font-size:30px; margin-top:26px; max-width:540px; line-height:1.4;">منصة سعودية لبناء المسار المهني وإثبات الملكية البرمجية</h1>
+  <p class="lead" style="max-width:560px; font-size:14.5px;">منصة تحلّل سيرة المستخدم وتعطيه درجة تنافسية صريحة لكل مستوى، وترسم له خطة مهنية مع خارطة شهادات، وتوصله مباشرة بصنّاع القرار في سوق العمل السعودي. مصمّمة عربيًا أولًا، تعمل على الجوال والحاسب، وبالوضعين الفاتح والداكن.</p>
+  <div class="urlbig" style="max-width:460px;">massar-sigma.vercel.app</div>
+  <div style="margin-top:26px; display:flex; gap:28px; font-size:14px;">
+    <div><div class="mut2" style="font-size:11.5px;">المالك</div><div style="font-weight:700; margin-top:3px;">علي الأجود</div></div>
+    <div><div class="mut2" style="font-size:11.5px;">التاريخ</div><div style="font-weight:700; margin-top:3px;">23 يونيو 2026</div></div>
+    <div><div class="mut2" style="font-size:11.5px;">الحالة</div><div style="font-weight:700; margin-top:3px; color:var(--amber);">منشورة ومباشرة</div></div>
   </div>
 </div>
 
-<!-- ============ 1. LINK ============ -->
+<!-- 1. LINK -->
 <div class="page">
   <div class="amberbar"></div>
   <div class="sec-tag">القسم الأول</div>
   <h2 class="sec-title">1 · رابط الموقع</h2>
   <p class="lead">الموقع منشور ومرفوع على الإنترنت برابط مباشر يعمل على مدار الساعة عبر منصة Vercel، بشهادة SSL وبنطاقين للغة العربية والإنجليزية.</p>
   <div class="urlbig">https://massar-sigma.vercel.app</div>
-
-  <div class="card" style="margin-top:24px;">
-    <div style="font-weight:800; font-size:15px; margin-bottom:6px;">الصفحات الرئيسية والفرعية</div>
+  <div class="card" style="margin-top:20px;">
+    <div style="font-weight:800; font-size:14.5px; margin-bottom:4px;">الصفحات الرئيسية والفرعية</div>
     <table>
       <tr><td class="k">الصفحة الرئيسية (عربي)</td><td class="v">/ar</td></tr>
       <tr><td class="k">النسخة الإنجليزية</td><td class="v">/en</td></tr>
@@ -81,93 +81,81 @@
       <tr><td class="k">لوحة العميل (المنتج بعد الاشتراك)</td><td class="v">/ar/c/&lt;name&gt;</td></tr>
     </table>
   </div>
-
-  <div style="margin-top:26px;">
-    <div style="font-weight:800; font-size:15px; margin-bottom:12px;">التقنيات المستخدمة في البناء</div>
-    <span class="chip">Next.js 14</span><span class="chip">TypeScript</span><span class="chip">React</span><span class="chip">Tailwind CSS</span><span class="chip">next-intl (عربي / إنجليزي)</span><span class="chip">Framer Motion</span><span class="chip">Vercel</span><span class="chip">Moyasar (الدفع)</span><span class="chip">تصميم عربي أولًا · RTL</span><span class="chip">وضع فاتح وداكن</span>
+  <div style="margin-top:22px;">
+    <div style="font-weight:800; font-size:14.5px; margin-bottom:11px;">التقنيات المستخدمة في البناء</div>
+    <span class="chip">Next.js 14</span><span class="chip">TypeScript</span><span class="chip">React</span><span class="chip">Tailwind CSS</span><span class="chip">next-intl (عربي / إنجليزي)</span><span class="chip">Framer Motion</span><span class="chip">Vercel</span><span class="chip">Moyasar (الدفع)</span><span class="chip">عربي أولًا · RTL</span><span class="chip">وضع فاتح وداكن</span>
   </div>
   <div class="foot"><span class="wm">مسار · Masaar</span><span>توثيق المشروع · 1</span></div>
 </div>
 
-<!-- ============ 2. SCREENSHOTS A ============ -->
+<!-- 2A SCREENSHOTS -->
 <div class="page">
   <div class="amberbar"></div>
   <div class="sec-tag">القسم الثاني</div>
   <h2 class="sec-title">2 · لقطات الشاشة</h2>
-  <p class="lead">لقطات من الموقع المباشر توثّق شكل الصفحات ووظائفها.</p>
+  <p class="lead" style="margin-bottom:14px;">لقطات من الموقع المباشر توثّق شكل الصفحات ووظائفها.</p>
   <figure><img src="shots/01-landing-hero.jpg" /><figcaption>الصفحة الرئيسية — شريط عرض الإطلاق، العنوان، ومعاينة درجة تنافسية السيرة.</figcaption></figure>
+  <div class="gap"></div>
   <figure><img src="shots/02-landing-pricing.jpg" /><figcaption>قسم الأسعار — الباقتان مع خصم الإطلاق، السعر السابق مشطوب، ونسبة الخصم.</figcaption></figure>
   <div class="foot"><span class="wm">مسار · Masaar</span><span>توثيق المشروع · 2</span></div>
 </div>
 
-<!-- ============ 2. SCREENSHOTS B ============ -->
+<!-- 2B SCREENSHOTS -->
 <div class="page">
   <div class="amberbar"></div>
   <figure style="margin-top:6px;"><img src="shots/03-checkout-pro.jpg" /><figcaption>صفحة الدفع — ملخص الطلب وبوابة الدفع (مدى والبطاقات) عبر Moyasar.</figcaption></figure>
+  <div class="gap"></div>
   <figure><img src="shots/04-dashboard.jpg" /><figcaption>لوحة العميل (المنتج) — درجة تنافسية، مسار مهني، مراجعة السيرة، وقائمة تواصل مباشر.</figcaption></figure>
   <div class="foot"><span class="wm">مسار · Masaar</span><span>توثيق المشروع · 3</span></div>
 </div>
 
-<!-- ============ 2. SCREENSHOTS C ============ -->
+<!-- 2C SCREENSHOTS -->
 <div class="page">
   <div class="amberbar"></div>
-  <div class="grid2" style="margin-top:6px; align-items:flex-start;">
-    <figure style="margin-top:0; flex:0 0 300px;"><img src="shots/05-mobile-landing.jpg" /><figcaption>نسخة الجوال — مصمّمة للجوال أولًا (iPhone Safari).</figcaption></figure>
-    <div style="flex:1;">
-      <figure style="margin-top:0;"><img src="shots/07-landing-dark.jpg" /><figcaption>الوضع الداكن.</figcaption></figure>
-      <figure><img src="shots/06-en-hero.jpg" /><figcaption>النسخة الإنجليزية (ثنائية اللغة بالكامل).</figcaption></figure>
-    </div>
+  <figure style="margin-top:6px;"><img src="shots/07-landing-dark.jpg" /><figcaption>الوضع الداكن.</figcaption></figure>
+  <div class="gap"></div>
+  <div class="grid2">
+    <figure class="mobile" style="flex:0 0 56mm;"><img src="shots/05-mobile-landing.jpg" /><figcaption>نسخة الجوال (مصمّمة للجوال أولًا).</figcaption></figure>
+    <figure style="flex:1;"><img src="shots/06-en-hero.jpg" /><figcaption>النسخة الإنجليزية (ثنائية اللغة بالكامل).</figcaption></figure>
   </div>
   <div class="foot"><span class="wm">مسار · Masaar</span><span>توثيق المشروع · 4</span></div>
 </div>
 
-<!-- ============ 3. OWNERSHIP ============ -->
+<!-- 3 OWNERSHIP -->
 <div class="page">
   <div class="amberbar"></div>
   <div class="sec-tag">القسم الثالث</div>
   <h2 class="sec-title">3 · إثبات الملكية البرمجية</h2>
   <p class="lead">الكود مرفوع بالكامل على مستودع خاص باسم المالك، مع سجلّ إيداعات (commits) يوثّق بناء المشروع يومًا بيوم.</p>
-  <div class="urlbig" style="font-size:18px;">github.com/alajwadha/Massar</div>
-
+  <div class="urlbig" style="font-size:17px;">github.com/alajwadha/Massar</div>
   <div class="statrow">
     <div class="stat"><div class="n">153</div><div class="l">إيداع (commit)</div></div>
     <div class="stat"><div class="n">67</div><div class="l">ملف مصدري</div></div>
     <div class="stat"><div class="n">~16,000</div><div class="l">سطر برمجي</div></div>
     <div class="stat"><div class="n">10</div><div class="l">أيام تطوير</div></div>
   </div>
-
-  <div class="grid2" style="margin-top:22px; align-items:flex-start;">
+  <div class="grid2" style="margin-top:16px;">
     <div class="card" style="flex:1.05;">
-      <div style="font-weight:800; font-size:14px; margin-bottom:8px;">آخر الإيداعات</div>
-      <div class="commit"><span class="d">06-23</span><span class="m">post-payment CV intake on the success page</span></div>
-      <div class="commit"><span class="d">06-23</span><span class="m">separate old price onto its own line</span></div>
-      <div class="commit"><span class="d">06-22</span><span class="m">launch discount: first 50 customers</span></div>
-      <div class="commit"><span class="d">06-22</span><span class="m">fix checkout: move data to a non-client module</span></div>
-      <div class="commit"><span class="d">06-21</span><span class="m">make H the main landing</span></div>
-      <div class="commit" style="border-bottom:none;"><span class="d">06-14</span><span class="m">initial platform build</span></div>
+      <div style="font-weight:800; font-size:13.5px; margin-bottom:6px;">آخر الإيداعات</div>
+      <div class="commit"><span class="d">06-23</span><span>post-payment CV intake</span></div>
+      <div class="commit"><span class="d">06-22</span><span>launch discount: first 50</span></div>
+      <div class="commit"><span class="d">06-22</span><span>fix checkout data module</span></div>
+      <div class="commit"><span class="d">06-21</span><span>make H the main landing</span></div>
+      <div class="commit" style="border-bottom:none;"><span class="d">06-14</span><span>initial platform build</span></div>
     </div>
     <div class="card" style="flex:.95;">
-      <div style="font-weight:800; font-size:14px; margin-bottom:8px;">بنية الكود</div>
-      <div style="direction:ltr; text-align:left; font-family:'SF Mono','Consolas',monospace; font-size:11.5px; line-height:1.85; color:var(--soft);">
-        src/<br>
-        &nbsp;&nbsp;app/[locale]/ <span style="color:var(--mut);">routes</span><br>
-        &nbsp;&nbsp;app/api/ <span style="color:var(--mut);">payments, save</span><br>
-        &nbsp;&nbsp;components/marketing/<br>
-        &nbsp;&nbsp;components/v4/ <span style="color:var(--mut);">dashboard</span><br>
-        &nbsp;&nbsp;components/checkout/<br>
-        &nbsp;&nbsp;lib/ <span style="color:var(--mut);">scoring, data</span><br>
-        &nbsp;&nbsp;i18n/ · messages/
+      <div style="font-weight:800; font-size:13.5px; margin-bottom:6px;">بنية الكود</div>
+      <div style="direction:ltr; text-align:left; font-family:'Consolas',monospace; font-size:11px; line-height:1.8; color:var(--soft);">
+        src/<br>&nbsp;&nbsp;app/[locale]/<br>&nbsp;&nbsp;app/api/ <span class="mut2">payments</span><br>&nbsp;&nbsp;components/marketing/<br>&nbsp;&nbsp;components/v4/ <span class="mut2">dashboard</span><br>&nbsp;&nbsp;lib/ · i18n/ · messages/
       </div>
     </div>
   </div>
-
-  <div style="margin-top:22px;">
-    <div style="font-weight:800; font-size:14px; margin-bottom:8px;">مثال من الكود · التحقق من الدفع عبر Moyasar من الخادم</div>
+  <div style="margin-top:16px;">
+    <div style="font-weight:800; font-size:13.5px; margin-bottom:6px;">مثال من الكود · التحقق من الدفع عبر Moyasar من الخادم</div>
     <pre class="code"><span class="c">// src/app/api/payments/verify/route.ts</span>
-<span class="k">export async function</span> GET(req: NextRequest) {
+<span class="k">export async function</span> GET(req) {
   <span class="k">const</span> id = req.nextUrl.searchParams.get(<span class="s">'id'</span>);
   <span class="k">const</span> secret = process.env.MOYASAR_SECRET_KEY;
-  <span class="k">if</span> (!id) <span class="k">return</span> NextResponse.json({ ok: false }, { status: 400 });
   <span class="k">const</span> res = <span class="k">await</span> fetch(<span class="s">`https://api.moyasar.com/v1/payments/${id}`</span>, {
     headers: { Authorization: <span class="s">`Basic ${btoa(secret + ':')}`</span> },
   });
@@ -175,7 +163,7 @@
   <span class="k">return</span> NextResponse.json({ ok: p.status === <span class="s">'paid'</span> });
 }</pre>
   </div>
-  <p class="lead" style="font-size:13px; margin-top:16px;">المستودع تحت حساب المالك (alajwadha)، وسجلّ الإيداعات وبيئة التطوير المحلية تؤكّد أن المالك هو من برمج المنصة وصمّمها.</p>
+  <p class="lead" style="font-size:12.5px; margin-top:13px;">المستودع تحت حساب المالك (alajwadha)، وسجلّ الإيداعات وبيئة التطوير المحلية تؤكّد أن المالك هو من برمج المنصة وصمّمها.</p>
   <div class="foot"><span class="wm">مسار · Masaar</span><span>توثيق المشروع · 5</span></div>
 </div>
 
