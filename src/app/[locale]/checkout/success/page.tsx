@@ -1,7 +1,8 @@
 import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
 import { PaymentResult } from '@/components/checkout/payment-result';
-import { PAGE, NOISE } from '@/lib/marketing-data';
+import { PAGE, NOISE, PRICING, pick } from '@/lib/marketing-data';
+import { CONTACT } from '@/lib/contact';
 import { cn } from '@/lib/utils';
 
 const SERIF = 'font-serif font-normal';
@@ -11,10 +12,13 @@ export default async function CheckoutSuccessPage({
   searchParams,
 }: {
   params: { locale: string };
-  searchParams: { id?: string };
+  searchParams: { id?: string; plan?: string };
 }) {
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: 'checkout' });
+  const loc = locale as 'ar' | 'en';
+  const tier = PRICING.find((p) => p.id === searchParams.plan) ?? PRICING[PRICING.length - 1];
+  const planLabel = pick(tier.name, loc);
 
   return (
     <div className={cn(PAGE, 'relative overflow-clip')}>
@@ -35,14 +39,20 @@ export default async function CheckoutSuccessPage({
       <main className="relative z-10 mx-auto grid max-w-5xl place-items-center px-5 py-20 sm:px-8">
         <PaymentResult
           paymentId={searchParams.id}
+          planLabel={planLabel}
+          locale={loc}
+          contact={CONTACT}
           labels={{
             verifying: t('verifying'),
             paidTitle: t('paidTitle'),
             paidBody: t('paidBody'),
             failedTitle: t('failedTitle'),
             failedBody: t('failedBody'),
-            startNow: t('startNow'),
             retry: t('retry'),
+            refLabel: t('refLabel'),
+            sendWhatsapp: t('sendWhatsapp'),
+            sendEmail: t('sendEmail'),
+            intakeHint: t('intakeHint'),
           }}
         />
       </main>
