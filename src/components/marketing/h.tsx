@@ -368,15 +368,20 @@ export default function MarketingH({ locale }: { locale: Loc }) {
                   </div>
                   <p className="mt-1.5 text-sm text-stone-500 dark:text-stone-400">{pick(tier.blurb, locale)}</p>
                   <div className="mt-6 flex flex-wrap items-baseline gap-2">
-                    {tier.oldPrice ? <span className="text-2xl font-medium text-stone-400 line-through">{tier.oldPrice}</span> : null}
                     <Serif className="text-5xl leading-none">{tier.price}</Serif>
                     <span className="text-sm font-medium text-stone-500 dark:text-stone-400">{locale === 'ar' ? 'ريال' : 'SAR'}</span>
                     {tier.oldPrice ? (
-                      <span className="ms-1 rounded-full bg-amber-600 px-2 py-0.5 text-[11px] font-bold text-white dark:bg-amber-500 dark:text-stone-900">
+                      <span className="rounded-full bg-amber-600 px-2 py-0.5 text-[11px] font-bold text-white dark:bg-amber-500 dark:text-stone-900">
                         {locale === 'ar' ? `خصم ${Math.round((1 - tier.price / tier.oldPrice) * 100)}%` : `${Math.round((1 - tier.price / tier.oldPrice) * 100)}% off`}
                       </span>
                     ) : null}
                   </div>
+                  {tier.oldPrice ? (
+                    <div className="mt-1.5 text-sm text-stone-400 dark:text-stone-500">
+                      {locale === 'ar' ? 'بدلاً من ' : 'instead of '}
+                      <span className="line-through">{tier.oldPrice} {locale === 'ar' ? 'ريال' : 'SAR'}</span>
+                    </div>
+                  ) : null}
                   <ul className="mt-7 flex-1 space-y-3">
                     {tier.features.map((f) => (
                       <li key={f.en} className="flex items-start gap-2.5 text-[14px] text-stone-700 dark:text-stone-200">

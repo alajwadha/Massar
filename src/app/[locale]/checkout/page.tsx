@@ -56,13 +56,15 @@ export default async function CheckoutPage({
               <div className="text-[11px] font-bold text-stone-500 dark:text-stone-400">{t('summary')}</div>
               {tier.oldPrice ? <span className="rounded-full bg-amber-500/15 px-2.5 py-0.5 text-[11px] font-bold text-amber-700 dark:text-amber-300">{pick(PROMO, loc)}</span> : null}
             </div>
-            <div className="mt-4 flex items-baseline justify-between gap-3">
+            <div className="mt-4 flex items-start justify-between gap-3">
               <span className={cn(SERIF, 'text-2xl')}>{planName}</span>
-              <div className="flex flex-wrap items-baseline gap-1.5">
-                {tier.oldPrice ? <span className="text-xl font-medium text-stone-400 line-through">{tier.oldPrice}</span> : null}
-                <span className={cn(SERIF, 'text-4xl leading-none')}>{plan.priceSar}</span>
-                <span className="text-sm font-medium text-stone-500 dark:text-stone-400">{locale === 'ar' ? 'ريال' : 'SAR'}</span>
-                {tier.oldPrice ? <span className="ms-1 rounded-full bg-amber-600 px-2 py-0.5 text-[11px] font-bold text-white dark:bg-amber-500 dark:text-stone-900">{locale === 'ar' ? `خصم ${Math.round((1 - tier.price / tier.oldPrice) * 100)}%` : `${Math.round((1 - tier.price / tier.oldPrice) * 100)}% off`}</span> : null}
+              <div className="text-end">
+                <div className="flex flex-wrap items-baseline justify-end gap-x-2 gap-y-1">
+                  <span className={cn(SERIF, 'text-4xl leading-none')}>{plan.priceSar}</span>
+                  <span className="text-sm font-medium text-stone-500 dark:text-stone-400">{locale === 'ar' ? 'ريال' : 'SAR'}</span>
+                  {tier.oldPrice ? <span className="rounded-full bg-amber-600 px-2 py-0.5 text-[11px] font-bold text-white dark:bg-amber-500 dark:text-stone-900">{locale === 'ar' ? `خصم ${Math.round((1 - tier.price / tier.oldPrice) * 100)}%` : `${Math.round((1 - tier.price / tier.oldPrice) * 100)}% off`}</span> : null}
+                </div>
+                {tier.oldPrice ? <div className="mt-1.5 text-sm text-stone-400 dark:text-stone-500">{locale === 'ar' ? 'بدلاً من ' : 'instead of '}<span className="line-through">{tier.oldPrice} {locale === 'ar' ? 'ريال' : 'SAR'}</span></div> : null}
               </div>
             </div>
             <ul className="mt-6 space-y-3 border-t border-stone-200/70 pt-6 dark:border-white/10">
