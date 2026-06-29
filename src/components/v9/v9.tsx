@@ -1834,11 +1834,13 @@ function Shell() {
   }, [cmdOpen]);
 
   return (
-    <div className="relative min-h-dvh bg-[#f7f6f2] text-stone-900 dark:bg-[#0a0a0b] dark:text-stone-100" style={{ WebkitTapHighlightColor: 'transparent', WebkitTextSizeAdjust: '100%', paddingBottom: 'env(safe-area-inset-bottom)', paddingLeft: 'env(safe-area-inset-left)', paddingRight: 'env(safe-area-inset-right)' }}>
+    <div className="relative min-h-dvh bg-gradient-to-b from-[#faf8f3] to-[#f1ece2] text-stone-900 dark:from-[#0c0c0f] dark:to-[#070708] dark:text-stone-100" style={{ WebkitTapHighlightColor: 'transparent', WebkitTextSizeAdjust: '100%', paddingBottom: 'env(safe-area-inset-bottom)', paddingLeft: 'env(safe-area-inset-left)', paddingRight: 'env(safe-area-inset-right)' }}>
       <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute inset-0 dark:hidden" style={{ backgroundImage: 'linear-gradient(to right, rgba(28,25,23,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(28,25,23,0.05) 1px, transparent 1px)', backgroundSize: '54px 54px', maskImage: 'radial-gradient(ellipse 75% 55% at 50% 0%, #000 35%, transparent 78%)', WebkitMaskImage: 'radial-gradient(ellipse 75% 55% at 50% 0%, #000 35%, transparent 78%)' }} />
         <div className="absolute inset-0 hidden dark:block" style={{ backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '54px 54px', maskImage: 'radial-gradient(ellipse 75% 55% at 50% 0%, #000 35%, transparent 78%)', WebkitMaskImage: 'radial-gradient(ellipse 75% 55% at 50% 0%, #000 35%, transparent 78%)' }} />
-        <div className="absolute -top-40 left-1/2 h-[34rem] w-[56rem] -translate-x-1/2 rounded-full bg-amber-300/25 blur-[150px] dark:bg-amber-500/[0.12]" />
+        <div className="absolute -top-40 left-1/2 h-[34rem] w-[56rem] -translate-x-1/2 rounded-full bg-amber-300/30 blur-[150px] dark:bg-amber-500/[0.14]" />
+        <div className="absolute top-1/4 -right-40 h-[38rem] w-[38rem] rounded-full bg-orange-300/20 blur-[160px] dark:bg-orange-500/[0.10]" />
+        <div className="absolute bottom-0 -left-40 h-[34rem] w-[34rem] rounded-full bg-amber-200/25 blur-[150px] dark:bg-amber-600/[0.08]" />
         <div className="absolute inset-0 opacity-[0.04] mix-blend-overlay dark:opacity-[0.06]" style={{ backgroundImage: NOISE }} />
       </div>
 
