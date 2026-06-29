@@ -13,9 +13,11 @@ type State = 'loading' | 'paid' | 'failed';
 
 export function PaymentResult({
   paymentId,
+  plan,
   labels,
 }: {
   paymentId: string | undefined;
+  plan: string | undefined;
   labels: {
     verifying: string;
     paidTitle: string;
@@ -33,11 +35,13 @@ export function PaymentResult({
       setState('failed');
       return;
     }
-    fetch(`/api/payments/verify?id=${encodeURIComponent(paymentId)}`)
+    const q = new URLSearchParams({ id: paymentId });
+    if (plan) q.set('plan', plan);
+    fetch(`/api/payments/verify?${q.toString()}`)
       .then((r) => r.json())
       .then((d) => setState(d.ok ? 'paid' : 'failed'))
       .catch(() => setState('failed'));
-  }, [paymentId]);
+  }, [paymentId, plan]);
 
   if (state === 'loading') {
     return (
