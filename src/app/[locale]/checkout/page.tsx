@@ -94,6 +94,13 @@ export default async function CheckoutPage({
                 secure: t('secure'),
                 notConfigured: t('notConfigured'),
                 notConfiguredHint: t('notConfiguredHint'),
+                contactTitle: t('contactTitle'),
+                contactHint: t('contactHint'),
+                nameLabel: t('nameLabel'),
+                emailLabel: t('emailLabel'),
+                phoneLabel: t('phoneLabel'),
+                continue: t('continue'),
+                fillAll: t('fillAll'),
               }}
             />
           </div>
