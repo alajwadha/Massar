@@ -491,6 +491,8 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
   const [customizing, setCustomizing] = useState(false);
   const [roleOpen, setRoleOpen] = useState(false);
   const [shuffle, setShuffle] = useState(0);
+  const [nextDismissed, setNextDismissed] = useState(false);
+  useEffect(() => { try { if (localStorage.getItem(`masaar:nx:v9:${plan.slug}`) === '1') setNextDismissed(true); } catch {} }, [plan.slug]);
 
   // Lock body scroll while the path dropdown is open (iOS-correct, mirrors the command palette)
   useEffect(() => {
@@ -615,20 +617,27 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
         </Card>
       )}
 
-      {/* Always-on next step: the single most important action, never hidden */}
-      <button type="button" onClick={() => go(nm.go)} className="group mb-3 block w-full text-start sm:mb-4">
-        <Card className="flex items-center gap-4 p-4 ring-1 ring-amber-500/25 sm:p-5">
-          <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-amber-500/15">
-            <Sparkles className={cn('h-5 w-5', ACCENT)} />
-          </div>
-          <div className="min-w-0 flex-1">
-            <div className="text-[10.5px] font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-300">{ui.overview.nextMove.eyebrow[locale]}</div>
-            <div className="mt-0.5 truncate font-bold text-stone-900 dark:text-stone-50">{nm.title}</div>
-            <p className="mt-0.5 line-clamp-1 text-[12.5px] leading-relaxed text-stone-600 dark:text-stone-300">{nm.desc}</p>
-          </div>
-          <ArrowUpRight className="h-5 w-5 shrink-0 text-stone-400 transition-colors group-hover:text-amber-600 dark:text-stone-500" />
-        </Card>
-      </button>
+      {/* Always-on next step, now dismissible */}
+      {!nextDismissed && (
+        <div className="relative mb-3 sm:mb-4">
+          <button type="button" onClick={() => go(nm.go)} className="group block w-full text-start">
+            <Card className="flex items-center gap-4 p-4 pe-11 ring-1 ring-amber-500/25 sm:p-5 sm:pe-12">
+              <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-amber-500/15">
+                <Sparkles className={cn('h-5 w-5', ACCENT)} />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="text-[10.5px] font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-300">{ui.overview.nextMove.eyebrow[locale]}</div>
+                <div className="mt-0.5 truncate font-bold text-stone-900 dark:text-stone-50">{nm.title}</div>
+                <p className="mt-0.5 line-clamp-1 text-[12.5px] leading-relaxed text-stone-600 dark:text-stone-300">{nm.desc}</p>
+              </div>
+              <ArrowUpRight className="h-5 w-5 shrink-0 text-stone-400 transition-colors group-hover:text-amber-600 dark:text-stone-500" />
+            </Card>
+          </button>
+          <button type="button" onClick={() => { setNextDismissed(true); try { localStorage.setItem(`masaar:nx:v9:${plan.slug}`, '1'); } catch {} }} aria-label={locale === 'ar' ? 'إغلاق' : 'Dismiss'} className="absolute end-2.5 top-2.5 z-10 grid h-7 w-7 place-items-center rounded-full text-stone-400 transition-colors hover:bg-stone-900/[0.06] hover:text-stone-700 dark:hover:bg-white/10 dark:hover:text-stone-200">
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
 
       <div className="grid grid-cols-12 gap-3 sm:gap-4">
         <Card className={cn('col-span-12 p-5 sm:p-6', railOn.length ? 'lg:col-span-8' : 'lg:col-span-12')}>
@@ -1838,7 +1847,7 @@ function Shell() {
           </div>
 
           {/* Primary nav, on the same line as the controls (labels collapse to icons on phone) */}
-          <nav className={cn('mx-auto hidden gap-0.5 rounded-full p-1 md:flex', CARD)}>
+          <nav className={cn('mx-auto flex gap-0.5 rounded-full p-1', CARD)}>
             {NAV.map((n) => {
               const on = tab === n.id;
               return (
@@ -1853,7 +1862,7 @@ function Shell() {
             })}
           </nav>
 
-          <div className="ms-auto flex shrink-0 items-center gap-2 md:ms-0">
+          <div className="flex shrink-0 items-center gap-2">
             <ThemeToggle />
             <Link href={pathname} locale={locale === 'ar' ? 'en' : 'ar'} className={cn('grid h-9 w-9 place-items-center rounded-full text-xs font-bold', GHOST)}>
               {locale === 'ar' ? 'EN' : 'ع'}
@@ -1887,26 +1896,10 @@ function Shell() {
       <ReferralStrip locale={locale} />
       <FeedbackFooter locale={locale} />
 
-      <div className="mx-auto w-full max-w-5xl px-4 pb-28 text-center text-[12.5px] leading-relaxed text-stone-500 dark:text-stone-400 sm:px-8 md:pb-10">
+      <div className="mx-auto w-full max-w-5xl px-4 pb-10 text-center text-[12.5px] leading-relaxed text-stone-500 dark:text-stone-400 sm:px-8">
         <p className="text-[12px] leading-relaxed">{ui.shell.disclaimer[locale]}</p>
         <p className="mt-1 text-[13px] font-bold text-stone-700 dark:text-stone-200">{ui.shell.disclaimerWarm[locale]}</p>
       </div>
-
-      {/* Mobile thumb-zone tab bar: navigation reachable at the bottom of a long scroll */}
-      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-stone-200/70 bg-[#f7f6f2]/90 backdrop-blur-lg dark:border-white/[0.08] dark:bg-[#0a0a0b]/90 md:hidden" style={{ paddingBottom: 'env(safe-area-inset-bottom)', WebkitBackdropFilter: 'blur(16px)' }}>
-        <div className="mx-auto flex max-w-md items-stretch justify-around px-2">
-          {NAV.map((n) => {
-            const on = tab === n.id;
-            return (
-              <button key={n.id} type="button" onClick={() => go(n.id)} aria-label={ui.nav[n.id][locale]} aria-current={on ? 'page' : undefined} className={cn('relative flex min-h-[58px] flex-1 flex-col items-center justify-center gap-1 px-1 py-2 text-[10px] font-semibold transition-colors active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-amber-500', on ? 'text-stone-900 dark:text-white' : 'text-stone-500 dark:text-stone-400')}>
-                {on && <span className="absolute top-0 h-0.5 w-8 rounded-full bg-amber-500 dark:bg-amber-400" />}
-                <n.Icon className={cn('h-[22px] w-[22px] shrink-0', on && ACCENT)} />
-                <span className="leading-none">{ui.nav[n.id][locale]}</span>
-              </button>
-            );
-          })}
-        </div>
-      </nav>
 
       <CommandPalette open={cmdOpen} setOpen={setCmdOpen} locale={locale} go={go} openPath={openPath} />
     </div>
