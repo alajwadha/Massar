@@ -1669,7 +1669,7 @@ function CommandPalette({ open, setOpen, locale, go, openPath }: { open: boolean
     <AnimatePresence>
       {open && (
         <motion.div className="fixed inset-0 z-[100] flex items-start justify-center p-4 pt-[12dvh]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-          <div className="absolute inset-0 bg-stone-900/30 backdrop-blur-sm dark:bg-black/60" onClick={() => setOpen(false)} />
+          <div className="absolute inset-0 bg-stone-900/30 backdrop-blur-sm dark:bg-black/60" style={{ WebkitBackdropFilter: 'blur(4px)' }} onClick={() => setOpen(false)} />
           <motion.div initial={{ opacity: 0, y: -12, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -8, scale: 0.98 }} transition={SPRING} className={cn('relative w-full max-w-lg overflow-hidden p-2', CARD)}>
             <div className="flex items-center gap-2.5 px-3 py-2">
               <Search className="h-4 w-4 text-stone-400" />
@@ -1736,6 +1736,15 @@ function Shell() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
+  // Lock body scroll while the command palette is open (iOS-correct: position-fix, not overflow)
+  useEffect(() => {
+    if (!cmdOpen) return;
+    const y = window.scrollY;
+    const b = document.body.style;
+    b.position = 'fixed'; b.top = `-${y}px`; b.left = '0'; b.right = '0'; b.width = '100%';
+    return () => { b.position = ''; b.top = ''; b.left = ''; b.right = ''; b.width = ''; window.scrollTo(0, y); };
+  }, [cmdOpen]);
+
   return (
     <div className="relative min-h-dvh bg-[#f7f6f2] text-stone-900 dark:bg-[#0a0a0b] dark:text-stone-100" style={{ WebkitTapHighlightColor: 'transparent', WebkitTextSizeAdjust: '100%', paddingBottom: 'env(safe-area-inset-bottom)', paddingLeft: 'env(safe-area-inset-left)', paddingRight: 'env(safe-area-inset-right)' }}>
       <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
@@ -1745,7 +1754,7 @@ function Shell() {
         <div className="absolute inset-0 opacity-[0.04] mix-blend-overlay dark:opacity-[0.06]" style={{ backgroundImage: NOISE }} />
       </div>
 
-      <header style={{ paddingTop: 'env(safe-area-inset-top)' }} className="sticky top-0 z-50 border-b border-stone-200/70 bg-[#f7f6f2]/80 backdrop-blur-lg dark:border-white/[0.07] dark:bg-[#0a0a0b]/80">
+      <header style={{ paddingTop: 'env(safe-area-inset-top)', WebkitBackdropFilter: 'blur(16px)' }} className="sticky top-0 z-50 border-b border-stone-200/70 bg-[#f7f6f2]/80 backdrop-blur-lg dark:border-white/[0.07] dark:bg-[#0a0a0b]/80">
         <div className="mx-auto flex h-16 w-full max-w-5xl items-center gap-2 px-4 sm:gap-3 sm:px-8">
           <div className="flex shrink-0 items-center gap-2.5">
             <span className="grid h-8 w-8 place-items-center rounded-xl bg-stone-900 font-extrabold text-white dark:bg-stone-100 dark:text-stone-900">م</span>
@@ -1757,7 +1766,7 @@ function Shell() {
             {NAV.map((n) => {
               const on = tab === n.id;
               return (
-                <button key={n.id} type="button" onClick={() => go(n.id)} className={cn('relative flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[13px] font-semibold transition-colors sm:gap-2 sm:px-3.5 sm:py-2 sm:text-sm', on ? 'text-white dark:text-stone-900' : 'text-stone-500 hover:bg-stone-900/[0.05] hover:text-stone-900 dark:text-stone-400 dark:hover:bg-white/[0.06] dark:hover:text-stone-100')}>
+                <button key={n.id} type="button" onClick={() => go(n.id)} aria-current={on ? 'page' : undefined} className={cn('relative flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[13px] font-semibold transition-colors sm:gap-2 sm:px-3.5 sm:py-2 sm:text-sm', on ? 'text-white dark:text-stone-900' : 'text-stone-500 hover:bg-stone-900/[0.05] hover:text-stone-900 dark:text-stone-400 dark:hover:bg-white/[0.06] dark:hover:text-stone-100')}>
                   {on && <motion.span layoutId="v4-nav" className="absolute inset-0 -z-10 rounded-full bg-stone-900 dark:bg-stone-100" transition={SPRING} />}
                   <n.Icon className="h-4 w-4 shrink-0" />
                   <span className="hidden md:inline">{ui.nav[n.id][locale]}</span>
@@ -1808,12 +1817,12 @@ function Shell() {
       </div>
 
       {/* Mobile thumb-zone tab bar: navigation reachable at the bottom of a long scroll */}
-      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-stone-200/70 bg-[#f7f6f2]/90 backdrop-blur-lg dark:border-white/[0.08] dark:bg-[#0a0a0b]/90 md:hidden" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
+      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-stone-200/70 bg-[#f7f6f2]/90 backdrop-blur-lg dark:border-white/[0.08] dark:bg-[#0a0a0b]/90 md:hidden" style={{ paddingBottom: 'env(safe-area-inset-bottom)', WebkitBackdropFilter: 'blur(16px)' }}>
         <div className="mx-auto flex max-w-md items-stretch justify-around px-2">
           {NAV.map((n) => {
             const on = tab === n.id;
             return (
-              <button key={n.id} type="button" onClick={() => go(n.id)} aria-label={ui.nav[n.id][locale]} className={cn('relative flex min-h-[58px] flex-1 flex-col items-center justify-center gap-1 px-1 py-2 text-[10px] font-semibold transition-colors active:scale-95', on ? 'text-stone-900 dark:text-white' : 'text-stone-400 dark:text-stone-500')}>
+              <button key={n.id} type="button" onClick={() => go(n.id)} aria-label={ui.nav[n.id][locale]} aria-current={on ? 'page' : undefined} className={cn('relative flex min-h-[58px] flex-1 flex-col items-center justify-center gap-1 px-1 py-2 text-[10px] font-semibold transition-colors active:scale-95', on ? 'text-stone-900 dark:text-white' : 'text-stone-500 dark:text-stone-400')}>
                 {on && <span className="absolute top-0 h-0.5 w-8 rounded-full bg-amber-500 dark:bg-amber-400" />}
                 <n.Icon className={cn('h-[22px] w-[22px] shrink-0', on && ACCENT)} />
                 <span className="leading-none">{ui.nav[n.id][locale]}</span>
