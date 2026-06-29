@@ -219,7 +219,7 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
       </div>
 
       {isRecruiter && (c.sector || c.companyTier) && (
-        <p className="mt-1.5 truncate text-[11px] text-stone-400 dark:text-stone-500">
+        <p className="mt-1.5 truncate text-[11px] text-stone-500 dark:text-stone-400">
           {[c.sector && SECTOR_LABELS[c.sector]?.[locale], c.companyTier && TIER_LABELS[c.companyTier]?.[locale]].filter(Boolean).join('  ·  ')}
         </p>
       )}
@@ -259,7 +259,7 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
             </button>
           </div>
           <p dir={msgLang === 'ar' ? 'rtl' : 'ltr'} className="line-clamp-3 text-[12.5px] leading-relaxed text-stone-600 dark:text-stone-300">{message}</p>
-          <p className="mt-2 flex items-center gap-1 text-[10.5px] text-stone-400 dark:text-stone-500">
+          <p className="mt-2 flex items-center gap-1 text-[10.5px] text-stone-500 dark:text-stone-400">
             <PenLine className="h-3 w-3 shrink-0" />
             {ui.contacts.handwrite[locale]}
           </p>
@@ -584,7 +584,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
                   );
                 })}
               </div>
-              <span className="text-center text-[10.5px] leading-tight text-stone-400 dark:text-stone-500">{locale === 'ar' ? 'درجتك تتغيّر حسب المستوى المستهدف' : 'Score adjusts to your target level'}</span>
+              <span className="text-center text-[10.5px] leading-tight text-stone-500 dark:text-stone-400">{locale === 'ar' ? 'درجتك تتغيّر حسب المستوى المستهدف' : 'Score adjusts to your target level'}</span>
             </div>
 
             <div className="min-w-0">
@@ -807,7 +807,7 @@ function CertTimeline({ path, locale }: { path: CareerPath; locale: Loc }) {
         })}
       </div>
       {path.certs.some((c) => c.hadaf) && (
-        <p className="mt-3 ps-9 text-[11px] leading-snug text-stone-400 dark:text-stone-500">{ui.certs.hadafExplain[locale]}</p>
+        <p className="mt-3 ps-9 text-[11px] leading-snug text-stone-500 dark:text-stone-400">{ui.certs.hadafExplain[locale]}</p>
       )}
     </div>
   );
