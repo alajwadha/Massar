@@ -310,10 +310,10 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
       </div>
 
       <div className="mt-2.5 flex gap-2">
-        <button type="button" onClick={copy} className={cn('flex flex-1 items-center justify-center gap-1.5 rounded-full px-3 py-2.5 text-[13px] font-bold transition-colors', copied ? 'bg-stone-900/[0.06] text-stone-700 dark:bg-white/10 dark:text-stone-200' : PILL)}>
-          {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+        <motion.button type="button" onClick={copy} whileTap={{ scale: 0.96 }} className={cn('flex flex-1 items-center justify-center gap-1.5 rounded-full px-3 py-2.5 text-[13px] font-bold transition-colors', copied ? 'bg-stone-900/[0.06] text-stone-700 dark:bg-white/10 dark:text-stone-200' : PILL)}>
+          {copied ? <motion.span initial={{ scale: 0.3 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 520, damping: 17 }}><Check className="h-4 w-4" /></motion.span> : <Copy className="h-4 w-4" />}
           {copied ? ui.contacts.copied[locale] : ui.contacts.copy[locale]}
-        </button>
+        </motion.button>
         <button type="button" onClick={() => setTpl((i) => i + 1)} title={ui.contacts.shuffle[locale]} className={cn('grid w-11 shrink-0 place-items-center rounded-full', GHOST)}>
           <Shuffle className="h-4 w-4" />
         </button>
@@ -622,6 +622,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
           <div className="grid items-start gap-5 sm:grid-cols-[auto_1fr] sm:gap-7">
             <div className="mx-auto flex flex-col items-center gap-3 sm:mx-0">
               <div className="relative grid place-items-center" style={{ width: 132, height: 132 }}>
+                <div aria-hidden className="pointer-events-none absolute inset-5 rounded-full blur-2xl" style={{ background: score >= 80 ? 'radial-gradient(circle, rgba(16,185,129,0.20), transparent 72%)' : score >= 62 ? 'radial-gradient(circle, rgba(245,158,11,0.20), transparent 72%)' : 'radial-gradient(circle, rgba(168,162,158,0.16), transparent 72%)' }} />
                 <ScoreRing value={score} size={132} />
                 <div className="absolute inset-0 grid place-items-center text-center leading-none">
                   <div>
