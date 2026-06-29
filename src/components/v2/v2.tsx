@@ -1120,7 +1120,7 @@ function Contacts({ locale }: { locale: Loc }) {
       {part === 'connections' && <NetworkPanel locale={locale} count={network ? ranked.length : null} onFile={onFile} onClear={clear} />}
 
       {(part === 'hr' || network) && (
-        <Card className="mt-3 flex items-center gap-2.5 px-4 py-3">
+        <Card className="mt-3 flex items-center gap-2.5 px-4 py-3 focus-within:ring-2 focus-within:ring-amber-500">
           <Search className="h-4 w-4 shrink-0 text-stone-500 dark:text-stone-400" />
           <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={ui.contacts.search[locale]} className="w-full bg-transparent text-base text-stone-900 outline-none placeholder:text-stone-400 dark:text-stone-50 dark:placeholder:text-stone-500" />
         </Card>
@@ -1613,7 +1613,7 @@ function FeedbackFooter({ locale }: { locale: Loc }) {
               </div>
             </div>
             <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-              <input value={text} onChange={(e) => setText(e.target.value)} placeholder={ui.feedback.placeholder[locale]} className={cn('min-w-0 flex-1 rounded-full px-4 py-2.5 text-base text-stone-900 outline-none placeholder:text-stone-400 dark:text-stone-50 dark:placeholder:text-stone-500', INSET)} />
+              <input value={text} onChange={(e) => setText(e.target.value)} placeholder={ui.feedback.placeholder[locale]} className={cn('min-w-0 flex-1 rounded-full px-4 py-2.5 text-base text-stone-900 outline-none focus:ring-2 focus:ring-amber-500 placeholder:text-stone-400 dark:text-stone-50 dark:placeholder:text-stone-500', INSET)} />
               <button type="button" disabled={!text.trim() && rating === 0} onClick={submitFeedback} className={cn('inline-flex items-center justify-center gap-1.5 rounded-full px-5 py-2.5 text-sm font-bold transition-opacity disabled:opacity-40', PILL)}>
                 <Send className="h-4 w-4" /> {ui.feedback.send[locale]}
               </button>
@@ -1670,7 +1670,7 @@ function CommandPalette({ open, setOpen, locale, go, openPath }: { open: boolean
         <motion.div className="fixed inset-0 z-[100] flex items-start justify-center p-4 pt-[12dvh]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
           <div className="absolute inset-0 bg-stone-900/30 backdrop-blur-sm dark:bg-black/60" style={{ WebkitBackdropFilter: 'blur(4px)' }} onClick={() => setOpen(false)} />
           <motion.div initial={{ opacity: 0, y: -12, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -8, scale: 0.98 }} transition={SPRING} className={cn('relative w-full max-w-lg overflow-hidden p-2', CARD)}>
-            <div className="flex items-center gap-2.5 px-3 py-2">
+            <div className="flex items-center gap-2.5 rounded-xl px-3 py-2 focus-within:ring-2 focus-within:ring-amber-500">
               <Search className="h-4 w-4 text-stone-400" />
               <input ref={inputRef} value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={onKey} inputMode="search" enterKeyHint="go" placeholder={ui.cmd.placeholder[locale]} className="w-full bg-transparent text-base text-stone-900 outline-none placeholder:text-stone-400 dark:text-stone-50 dark:placeholder:text-stone-500" />
               <kbd className={cn('rounded-md px-1.5 py-0.5 text-[10px] font-bold', SOFT)}>ESC</kbd>
