@@ -261,7 +261,7 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
   };
 
   return (
-    <Card className="flex h-full flex-col p-4 transition-shadow duration-300 hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.45)]">
+    <Card className="flex h-full flex-col p-4 transition hover:-translate-y-0.5 duration-300 hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.45)]">
       <div className="flex items-start gap-3">
         <Avatar initials={c.name[locale].charAt(0)} companyKey={c.companyKey} seed={c.company.en} />
         <div className="min-w-0 flex-1">
@@ -709,7 +709,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
           <div className="col-span-12 grid gap-3 sm:grid-cols-2 sm:gap-4 lg:col-span-4 lg:grid-cols-1">
             {W('nextMove') && (
               <button type="button" onClick={() => go(nm.go)} className="group text-start">
-                <Card className="flex h-full items-start gap-3 p-5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.45)]">
+                <Card className="flex h-full items-start gap-3 p-5 transition hover:-translate-y-0.5 hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.45)]">
                   <div className={cn('grid h-10 w-10 shrink-0 place-items-center rounded-xl', SOFT)}>
                     <Sparkles className={cn('h-5 w-5', ACCENT)} />
                   </div>
@@ -724,7 +724,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
             )}
             {W('network') && (
               <button type="button" onClick={() => go('contacts')} className="group text-start">
-                <Card className="flex h-full items-center gap-3 p-5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.45)]">
+                <Card className="flex h-full items-center gap-3 p-5 transition hover:-translate-y-0.5 hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.45)]">
                   <div className={cn('grid h-10 w-10 shrink-0 place-items-center rounded-xl', SOFT)}>
                     <Network className="h-5 w-5 text-stone-700 dark:text-stone-200" />
                   </div>
@@ -772,7 +772,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
             )}
             {W('currentCert') && current && (
               <button type="button" onClick={() => go('paths')} className="group text-start">
-                <Card className="flex h-full items-center gap-3 p-5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.45)]">
+                <Card className="flex h-full items-center gap-3 p-5 transition hover:-translate-y-0.5 hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.45)]">
                   <div className={cn('grid h-10 w-10 shrink-0 place-items-center rounded-xl', SOFT)}><BadgeCheck className="h-5 w-5 text-stone-700 dark:text-stone-200" /></div>
                   <div className="min-w-0 flex-1">
                     <div className="text-[10.5px] font-semibold uppercase tracking-wider text-stone-500 dark:text-stone-400">{ui.overview.certPeekTitle[locale]}</div>
@@ -784,7 +784,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
             )}
             {W('careerDay') && nextDay && (
               <a href={nextDay.link} target="_blank" rel="noopener noreferrer" className="group">
-                <Card className="flex h-full items-center gap-3 p-5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.45)]">
+                <Card className="flex h-full items-center gap-3 p-5 transition hover:-translate-y-0.5 hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.45)]">
                   <div className={cn('grid h-10 w-10 shrink-0 place-items-center rounded-xl', SOFT)}><CalendarDays className="h-5 w-5 text-stone-700 dark:text-stone-200" /></div>
                   <div className="min-w-0 flex-1">
                     <div className="text-[10.5px] font-semibold uppercase tracking-wider text-stone-500 dark:text-stone-400">{ui.overview.careerDayTitle[locale]}</div>
@@ -1025,7 +1025,7 @@ function Paths({ locale, selId, setSelId }: { locale: Loc; selId: string | null;
           const totalScore = p.certs.reduce((s, c) => s + scaledAdd(c.scoreAdd, level), 0);
           return (
             <button key={p.id} type="button" onClick={() => setSelId(p.id)} className={cn('group text-start', p.id === activeId && 'sm:col-span-2')}>
-              <Card className={cn('h-full p-5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.45)]', p.id === activeId && 'border-amber-500/30 dark:border-amber-400/20')}>
+              <Card className={cn('h-full p-5 transition hover:-translate-y-0.5 hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.45)]', p.id === activeId && 'border-amber-500/30 dark:border-amber-400/20')}>
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
@@ -1179,7 +1179,7 @@ function Contacts({ locale }: { locale: Loc }) {
           const on = part === t.id;
           return (
             <button key={t.id} type="button" onClick={() => setPart(t.id)} className="text-start">
-              <Card className={cn('flex items-center gap-3 p-4 transition-shadow', on ? 'border-stone-900/30 dark:border-white/25' : 'hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]')}>
+              <Card className={cn('flex items-center gap-3 p-4 transition hover:-translate-y-0.5', on ? 'border-stone-900/30 dark:border-white/25' : 'hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]')}>
                 <t.Icon className={cn('h-5 w-5 shrink-0', on ? 'text-stone-900 dark:text-stone-50' : 'text-stone-500 dark:text-stone-400')} />
                 <span className="min-w-0 flex-1">
                   <span className="flex items-center gap-1.5">
@@ -1371,7 +1371,7 @@ function Study({ locale }: { locale: Loc }) {
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {blk.programs.map((p, i) => (
                 <a key={i} href={p.link} target="_blank" rel="noopener noreferrer" className="group">
-                  <Card className={cn('flex h-full flex-col p-4 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]', p.tier === 'high' && 'border-stone-900/20 dark:border-white/20')}>
+                  <Card className={cn('flex h-full flex-col p-4 transition hover:-translate-y-0.5 hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]', p.tier === 'high' && 'border-stone-900/20 dark:border-white/20')}>
                     <div className="flex items-center justify-between gap-2">
                       <span className={cn('rounded-full px-2 py-0.5 text-[10px] font-bold', p.tier === 'high' ? 'bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900' : SOFT)}>{tierLabel(p.tier)}</span>
                       <ArrowUpRight className="h-4 w-4 shrink-0 text-stone-400 transition-colors group-hover:text-stone-900 dark:text-stone-500 dark:group-hover:text-white" />
@@ -1403,7 +1403,7 @@ function Study({ locale }: { locale: Loc }) {
             const majors = uniMajors.length ? uniMajors : u.fields;
             return (
               <a key={i} href={u.link} target="_blank" rel="noopener noreferrer" className="group">
-                <Card className="flex h-full flex-col p-4 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]">
+                <Card className="flex h-full flex-col p-4 transition hover:-translate-y-0.5 hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]">
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex flex-wrap items-center gap-1.5">
                       <h3 className="text-[14px] font-semibold text-stone-900 dark:text-stone-50">{u.uni[locale]}</h3>
@@ -1504,7 +1504,7 @@ function Opportunities({ locale }: { locale: Loc }) {
             const relevant = d.fields.includes(field) || d.fields.includes('all');
             return (
               <a key={i} href={d.link} target="_blank" rel="noopener noreferrer" className="group">
-                <Card className="flex h-full items-start gap-3 p-4 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]">
+                <Card className="flex h-full items-start gap-3 p-4 transition hover:-translate-y-0.5 hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]">
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
                       <h3 className="truncate text-[14px] font-semibold text-stone-900 dark:text-stone-50">{d.title[locale]}</h3>
@@ -1530,7 +1530,7 @@ function Opportunities({ locale }: { locale: Loc }) {
         <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
           {skills.map((sk, i) => (
             <a key={i} href={sk.link} target="_blank" rel="noopener noreferrer" className="group">
-              <Card className="flex items-center justify-between gap-2 p-3.5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]">
+              <Card className="flex items-center justify-between gap-2 p-3.5 transition hover:-translate-y-0.5 hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]">
                 <span className="min-w-0 truncate text-[13px] font-semibold text-stone-800 dark:text-stone-100">{sk.name[locale]}</span>
                 <span className={cn('inline-flex shrink-0 items-center gap-1 text-[11px] font-bold', ACCENT)}>{ui.opp.learn[locale]} <ArrowUpRight className="h-3 w-3" /></span>
               </Card>
@@ -1562,7 +1562,7 @@ function Opportunities({ locale }: { locale: Loc }) {
         <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
           {nationalPortals.map((p, i) => (
             <a key={i} href={p.url} target="_blank" rel="noopener noreferrer" className="group">
-              <Card className="flex items-center gap-3 p-3.5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]">
+              <Card className="flex items-center gap-3 p-3.5 transition hover:-translate-y-0.5 hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]">
                 <div className="min-w-0 flex-1">
                   <div className="text-[13.5px] font-semibold text-stone-900 dark:text-stone-50">{p.name[locale]}</div>
                   <div className="truncate text-[11.5px] text-stone-500 dark:text-stone-400">{p.desc[locale]}</div>
@@ -1584,7 +1584,7 @@ function Opportunities({ locale }: { locale: Loc }) {
                 <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
                   {list.map((c, i) => (
                     <a key={i} href={c.url} target="_blank" rel="noopener noreferrer" className="group">
-                      <Card className="flex items-center gap-2 p-3.5 transition-shadow hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]">
+                      <Card className="flex items-center gap-2 p-3.5 transition hover:-translate-y-0.5 hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.4)]">
                         <span className="min-w-0 flex-1 truncate text-[13.5px] font-semibold text-stone-900 dark:text-stone-50">{c.name[locale]}</span>
                         <span className={cn('shrink-0 rounded-full px-1.5 py-0.5 text-[9.5px] font-bold', c.size === 'big' ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : SOFT)}>{sizeLabel(c.size)}</span>
                         <ArrowUpRight className="h-3.5 w-3.5 shrink-0 text-stone-400 transition-colors group-hover:text-stone-900 dark:text-stone-500 dark:group-hover:text-white" />
