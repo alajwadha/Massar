@@ -103,9 +103,9 @@ const CARD =
 const EDGE =
   'before:pointer-events-none before:absolute before:inset-x-5 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-900/10 before:to-transparent dark:before:via-white/20';
 const INSET = 'rounded-2xl border border-stone-200/70 bg-stone-50/70 dark:border-white/[0.07] dark:bg-white/[0.035]';
-const PILL = 'cursor-pointer bg-stone-900 text-white shadow-sm transition-all hover:bg-stone-800 active:scale-[0.97] dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-white';
+const PILL = 'cursor-pointer bg-stone-900 text-white shadow-sm transition-all hover:bg-stone-800 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f7f6f2] dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-white dark:focus-visible:ring-offset-[#0a0a0b]';
 const GHOST =
-  'cursor-pointer border border-stone-300 bg-white text-stone-700 shadow-sm transition-all hover:border-stone-400 hover:bg-stone-50 hover:text-stone-900 active:scale-[0.97] dark:border-white/20 dark:bg-white/[0.08] dark:text-stone-200 dark:shadow-none dark:hover:border-white/35 dark:hover:bg-white/[0.14] dark:hover:text-white';
+  'cursor-pointer border border-stone-300 bg-white text-stone-700 shadow-sm transition-all hover:border-stone-400 hover:bg-stone-50 hover:text-stone-900 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f7f6f2] dark:border-white/20 dark:bg-white/[0.08] dark:text-stone-200 dark:shadow-none dark:hover:border-white/35 dark:hover:bg-white/[0.14] dark:hover:text-white dark:focus-visible:ring-offset-[#0a0a0b]';
 const SOFT = 'bg-stone-900/[0.05] text-stone-600 dark:bg-white/[0.07] dark:text-stone-300';
 const ACCENT = 'text-amber-700 dark:text-amber-300';
 
@@ -1766,7 +1766,7 @@ function Shell() {
             {NAV.map((n) => {
               const on = tab === n.id;
               return (
-                <button key={n.id} type="button" onClick={() => go(n.id)} aria-current={on ? 'page' : undefined} className={cn('relative flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[13px] font-semibold transition-colors sm:gap-2 sm:px-3.5 sm:py-2 sm:text-sm', on ? 'text-white dark:text-stone-900' : 'text-stone-500 hover:bg-stone-900/[0.05] hover:text-stone-900 dark:text-stone-400 dark:hover:bg-white/[0.06] dark:hover:text-stone-100')}>
+                <button key={n.id} type="button" onClick={() => go(n.id)} aria-current={on ? 'page' : undefined} className={cn('relative flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[13px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f7f6f2] dark:focus-visible:ring-offset-[#0a0a0b] sm:gap-2 sm:px-3.5 sm:py-2 sm:text-sm', on ? 'text-white dark:text-stone-900' : 'text-stone-500 hover:bg-stone-900/[0.05] hover:text-stone-900 dark:text-stone-400 dark:hover:bg-white/[0.06] dark:hover:text-stone-100')}>
                   {on && <motion.span layoutId="v4-nav" className="absolute inset-0 -z-10 rounded-full bg-stone-900 dark:bg-stone-100" transition={SPRING} />}
                   <n.Icon className="h-4 w-4 shrink-0" />
                   <span className="hidden md:inline">{ui.nav[n.id][locale]}</span>
@@ -1822,7 +1822,7 @@ function Shell() {
           {NAV.map((n) => {
             const on = tab === n.id;
             return (
-              <button key={n.id} type="button" onClick={() => go(n.id)} aria-label={ui.nav[n.id][locale]} aria-current={on ? 'page' : undefined} className={cn('relative flex min-h-[58px] flex-1 flex-col items-center justify-center gap-1 px-1 py-2 text-[10px] font-semibold transition-colors active:scale-95', on ? 'text-stone-900 dark:text-white' : 'text-stone-500 dark:text-stone-400')}>
+              <button key={n.id} type="button" onClick={() => go(n.id)} aria-label={ui.nav[n.id][locale]} aria-current={on ? 'page' : undefined} className={cn('relative flex min-h-[58px] flex-1 flex-col items-center justify-center gap-1 px-1 py-2 text-[10px] font-semibold transition-colors active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-amber-500', on ? 'text-stone-900 dark:text-white' : 'text-stone-500 dark:text-stone-400')}>
                 {on && <span className="absolute top-0 h-0.5 w-8 rounded-full bg-amber-500 dark:bg-amber-400" />}
                 <n.Icon className={cn('h-[22px] w-[22px] shrink-0', on && ACCENT)} />
                 <span className="leading-none">{ui.nav[n.id][locale]}</span>
