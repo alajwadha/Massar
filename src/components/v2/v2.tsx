@@ -428,6 +428,15 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
   const [customizing, setCustomizing] = useState(false);
   const [roleOpen, setRoleOpen] = useState(false);
   const [shuffle, setShuffle] = useState(0);
+
+  // Lock body scroll while the path dropdown is open (iOS-correct, mirrors the command palette)
+  useEffect(() => {
+    if (!roleOpen) return;
+    const y = window.scrollY;
+    const b = document.body.style;
+    b.position = 'fixed'; b.top = `-${y}px`; b.left = '0'; b.right = '0'; b.width = '100%';
+    return () => { b.position = ''; b.top = ''; b.left = ''; b.right = ''; b.width = ''; window.scrollTo(0, y); };
+  }, [roleOpen]);
   // Day-of-epoch for the daily rotation; starts at 0 so SSR and the first client
   // render match (no hydration mismatch), then advances to today after mount.
   const [day, setDay] = useState(0);
@@ -572,7 +581,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
                   </div>
                 </ProgressRing>
               </div>
-              <span className={cn('rounded-full px-3 py-1 text-[12px] font-bold', score >= 80 ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300' : score >= 62 ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : 'bg-stone-500/10 text-stone-600 dark:text-stone-300')}>{score >= 80 ? (locale === 'ar' ? 'جاهز للتقديم' : 'Ready to apply') : score >= 62 ? (locale === 'ar' ? 'قريب جدًا' : 'Almost there') : (locale === 'ar' ? 'تحت التطوير' : 'Building up')}</span>
+              <span className={cn('rounded-full px-3 py-1 text-[12px] font-bold', score >= 80 ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300' : score >= 62 ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : 'bg-stone-500/10 text-stone-600 dark:text-stone-300')}>{score >= 80 ? (locale === 'ar' ? 'جاهز للتقديم' : 'Ready to apply') : score >= 62 ? (locale === 'ar' ? 'قريب جدًا' : 'Almost there') : (locale === 'ar' ? 'في الطريق' : 'Building up')}</span>
               <div className="inline-flex rounded-full border border-stone-200/80 bg-stone-50/80 p-0.5 dark:border-white/10 dark:bg-white/[0.05]">
                 {LEVELS.map((lv) => {
                   const on = level === lv.id;
@@ -981,7 +990,7 @@ function Paths({ locale, selId, setSelId }: { locale: Loc; selId: string | null;
 
 function Chips<T extends string>({ label, options, value, onChange }: { label: string; options: { id: T; label: string }[]; value: T; onChange: (v: T) => void }) {
   return (
-    <div className="flex items-center gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <div className="flex items-center gap-2 overflow-x-auto overscroll-x-contain pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       <span className="shrink-0 text-xs font-semibold text-stone-500 dark:text-stone-400">{label}:</span>
       {options.map((o) => (
         <button key={o.id} type="button" onClick={() => onChange(o.id)} className={cn('shrink-0 rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors', value === o.id ? 'border-stone-900 bg-stone-900 text-white dark:border-stone-100 dark:bg-stone-100 dark:text-stone-900' : GHOST)}>
@@ -1644,7 +1653,7 @@ function CommandPalette({ open, setOpen, locale, go, openPath }: { open: boolean
   useEffect(() => {
     if (open) {
       setQ('');
-      const id = setTimeout(() => inputRef.current?.focus(), 40);
+      const id = setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 40);
       return () => clearTimeout(id);
     }
   }, [open]);
