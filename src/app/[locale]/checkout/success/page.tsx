@@ -7,7 +7,7 @@ export default async function CheckoutSuccessPage({
   searchParams,
 }: {
   params: { locale: string };
-  searchParams: { id?: string; plan?: string };
+  searchParams: { id?: string };
 }) {
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: 'checkout' });
@@ -25,7 +25,6 @@ export default async function CheckoutSuccessPage({
       <main className="container-page grid place-items-center py-20">
         <PaymentResult
           paymentId={searchParams.id}
-          plan={searchParams.plan}
           labels={{
             verifying: t('verifying'),
             paidTitle: t('paidTitle'),

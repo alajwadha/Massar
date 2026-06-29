@@ -12,8 +12,7 @@
     "hr:validate": "node scripts/validate-hr.mjs",
     "hr:import": "node scripts/import-hr.mjs",
     "dashboard:html": "node scripts/build-dashboard-html.mjs",
-    "hr:enrich": "node scripts/enrich-followers.mjs",
-    "moyasar:test": "node scripts/test-moyasar.mjs"
+    "hr:enrich": "node scripts/enrich-followers.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
