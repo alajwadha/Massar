@@ -29,3 +29,6 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# v2 design-loop dev screenshot script
+.v2shot.mjs
