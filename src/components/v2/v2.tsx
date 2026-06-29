@@ -99,7 +99,7 @@ type Tab = 'home' | 'paths' | 'contacts' | 'tracker' | 'opportunities';
 // Shared class tokens keep light + dark in lockstep. Dark uses SOLID elevated
 // surfaces (#161619 on a #0a0a0b canvas) so cards actually read as panels.
 const CARD =
-  'relative overflow-hidden rounded-[22px] border border-stone-200/80 bg-white/85 shadow-[0_1px_2px_rgba(28,25,23,0.04),0_24px_60px_-34px_rgba(28,25,23,0.30)] backdrop-blur-sm dark:border-white/[0.09] dark:bg-[#161619] dark:shadow-[0_22px_55px_-32px_rgba(0,0,0,0.9)]';
+  'relative overflow-hidden rounded-[22px] border border-stone-200/80 bg-white/92 shadow-[0_1px_2px_rgba(28,25,23,0.04),0_24px_60px_-34px_rgba(28,25,23,0.30)] dark:border-white/[0.10] dark:bg-[#1b1b1f] dark:shadow-[0_22px_55px_-32px_rgba(0,0,0,0.9)]';
 const EDGE =
   'before:pointer-events-none before:absolute before:inset-x-5 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-900/10 before:to-transparent dark:before:via-white/20';
 const INSET = 'rounded-2xl border border-stone-200/70 bg-stone-50/70 dark:border-white/[0.07] dark:bg-white/[0.035]';
@@ -242,7 +242,7 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
           {STATUS_BTNS.map((b) => {
             const active = status === b.key;
             return (
-              <button key={b.key} type="button" onClick={() => setStatus(c.id, active ? 'new' : b.key)} className={cn('flex-1 cursor-pointer rounded-full px-2 py-1.5 text-[11px] font-bold transition-all active:scale-95', active ? b.on : 'border border-stone-300 bg-white text-stone-600 hover:border-stone-400 hover:bg-stone-50 hover:text-stone-900 dark:border-white/20 dark:bg-white/[0.07] dark:text-stone-300 dark:hover:bg-white/[0.12] dark:hover:text-white')}>
+              <button key={b.key} type="button" onClick={() => setStatus(c.id, active ? 'new' : b.key)} className={cn('flex-1 inline-flex min-h-[40px] cursor-pointer items-center justify-center rounded-full px-2 py-2 text-[11px] font-bold transition-all active:scale-95', active ? b.on : 'border border-stone-300 bg-white text-stone-600 hover:border-stone-400 hover:bg-stone-50 hover:text-stone-900 dark:border-white/20 dark:bg-white/[0.07] dark:text-stone-300 dark:hover:bg-white/[0.12] dark:hover:text-white')}>
                 {ui.contacts[b.sk][locale]}
               </button>
             );
@@ -496,7 +496,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
           {roleOpen && (
             <>
               <button type="button" aria-hidden tabIndex={-1} className="fixed inset-0 z-20 cursor-default" onClick={() => setRoleOpen(false)} />
-              <div className="absolute start-0 z-30 mt-1.5 max-h-80 w-72 max-w-[80vw] overflow-auto rounded-2xl border border-stone-200/80 bg-white p-1 shadow-[0_20px_60px_-25px_rgba(28,25,23,0.45)] dark:border-white/10 dark:bg-[#161619]">
+              <div className="absolute start-0 z-30 mt-1.5 max-h-80 w-72 max-w-[80vw] overflow-auto overscroll-contain rounded-2xl border border-stone-200/80 bg-white p-1 shadow-[0_20px_60px_-25px_rgba(28,25,23,0.45)] dark:border-white/10 dark:bg-[#1b1b1f]">
                 {paths.map((p) => {
                   const on = p.id === activePath.id;
                   return (
@@ -562,7 +562,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
                 {LEVELS.map((lv) => {
                   const on = level === lv.id;
                   return (
-                    <button key={lv.id} type="button" onClick={() => setLevel(lv.id)} className={cn('relative rounded-full px-2.5 py-1.5 text-[11px] font-bold transition-colors', on ? 'text-white dark:text-stone-900' : 'text-stone-500 hover:bg-stone-900/[0.05] hover:text-stone-900 dark:text-stone-400 dark:hover:bg-white/[0.06] dark:hover:text-white')}>
+                    <button key={lv.id} type="button" onClick={() => setLevel(lv.id)} className={cn('relative rounded-full px-3 py-2 text-[12px] font-bold transition-colors', on ? 'text-white dark:text-stone-900' : 'text-stone-500 hover:bg-stone-900/[0.05] hover:text-stone-900 dark:text-stone-400 dark:hover:bg-white/[0.06] dark:hover:text-white')}>
                       {on && <motion.span layoutId="v4-level" className="absolute inset-0 -z-10 rounded-full bg-stone-900 dark:bg-stone-100" transition={SPRING} />}
                       {lv.label[locale]}
                     </button>
@@ -1590,7 +1590,7 @@ function FeedbackFooter({ locale }: { locale: Loc }) {
               </div>
               <div className="flex items-center gap-1">
                 {[1, 2, 3, 4, 5].map((n) => (
-                  <button key={n} type="button" onClick={() => setRating(n)} aria-label={`${ui.feedback.rate[locale]} ${n}`} className="p-0.5">
+                  <button key={n} type="button" onClick={() => setRating(n)} aria-label={`${ui.feedback.rate[locale]} ${n}`} className="p-2">
                     <Star className={cn('h-5 w-5 transition-colors', n <= rating ? 'fill-amber-400 text-amber-400' : 'text-stone-300 dark:text-stone-600')} />
                   </button>
                 ))}
@@ -1651,15 +1651,15 @@ function CommandPalette({ open, setOpen, locale, go, openPath }: { open: boolean
   return (
     <AnimatePresence>
       {open && (
-        <motion.div className="fixed inset-0 z-[100] flex items-start justify-center p-4 pt-[12vh]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+        <motion.div className="fixed inset-0 z-[100] flex items-start justify-center p-4 pt-[12dvh]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
           <div className="absolute inset-0 bg-stone-900/30 backdrop-blur-sm dark:bg-black/60" onClick={() => setOpen(false)} />
           <motion.div initial={{ opacity: 0, y: -12, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -8, scale: 0.98 }} transition={SPRING} className={cn('relative w-full max-w-lg overflow-hidden p-2', CARD)}>
             <div className="flex items-center gap-2.5 px-3 py-2">
               <Search className="h-4 w-4 text-stone-400" />
-              <input ref={inputRef} value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={onKey} placeholder={ui.cmd.placeholder[locale]} className="w-full bg-transparent text-base text-stone-900 outline-none placeholder:text-stone-400 dark:text-stone-50 dark:placeholder:text-stone-500" />
+              <input ref={inputRef} value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={onKey} inputMode="search" enterKeyHint="go" placeholder={ui.cmd.placeholder[locale]} className="w-full bg-transparent text-base text-stone-900 outline-none placeholder:text-stone-400 dark:text-stone-50 dark:placeholder:text-stone-500" />
               <kbd className={cn('rounded-md px-1.5 py-0.5 text-[10px] font-bold', SOFT)}>ESC</kbd>
             </div>
-            <div className="mt-1 max-h-[46vh] overflow-y-auto px-1 pb-1">
+            <div className="mt-1 max-h-[46dvh] overflow-y-auto overscroll-contain px-1 pb-1">
               {filtered.length === 0 ? (
                 <p className="px-3 py-6 text-center text-sm text-stone-400">{ui.contacts.empty[locale]}</p>
               ) : (
@@ -1786,7 +1786,7 @@ function Shell() {
       <FeedbackFooter locale={locale} />
 
       <div className="mx-auto w-full max-w-5xl px-4 pb-10 text-center text-[12.5px] leading-relaxed text-stone-500 dark:text-stone-400 sm:px-8">
-        <p className="whitespace-nowrap text-[clamp(8px,2.5vw,12.5px)]">{ui.shell.disclaimer[locale]}</p>
+        <p className="text-[12px] leading-relaxed">{ui.shell.disclaimer[locale]}</p>
         <p className="mt-1 text-[13px] font-bold text-stone-700 dark:text-stone-200">{ui.shell.disclaimerWarm[locale]}</p>
       </div>
 
