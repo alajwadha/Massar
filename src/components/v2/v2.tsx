@@ -301,6 +301,7 @@ function CvReviewCard({ locale }: { locale: Loc }) {
   const { cvFixed, toggleCvFix, resetCvFix } = useProgress();
   const hasIssues = cvReview.issues.length > 0;
   const open = cvReview.issues.filter((i) => !cvFixed[i.id]);
+  const [expanded, setExpanded] = useState(false);
   // A clean CV (no issues authored) still shows strengths plus a positive note. When every
   // issue is marked fixed we show a compact "all polished" state with an Undo, rather than
   // unmounting the card forever (the fixed flags persist in localStorage).
@@ -336,7 +337,7 @@ function CvReviewCard({ locale }: { locale: Loc }) {
         <div>
           <div className="text-[11px] font-bold uppercase tracking-wide text-stone-500 dark:text-stone-400">{ui.cvBlock.strengths[locale]}</div>
           <ul className="mt-2 space-y-1.5">
-            {cvReview.strengths.map((s, i) => (
+            {(expanded ? cvReview.strengths : cvReview.strengths.slice(0, 2)).map((s, i) => (
               <li key={i} className="flex items-start gap-2 text-[13px] text-stone-600 dark:text-stone-300">
                 <Check className={cn('mt-0.5 h-3.5 w-3.5 shrink-0', ACCENT)} />
                 <span>{s[locale]}</span>
@@ -349,7 +350,7 @@ function CvReviewCard({ locale }: { locale: Loc }) {
             <div className="text-[11px] font-bold uppercase tracking-wide text-stone-500 dark:text-stone-400">{ui.cvBlock.needsPolish[locale]}</div>
             <ul className="mt-2 space-y-2">
               <AnimatePresence initial={false}>
-                {open.map((iss) => (
+                {(expanded ? open : open.slice(0, 2)).map((iss) => (
                   <motion.li key={iss.id} layout initial={{ opacity: 1 }} exit={{ opacity: 0, height: 0, marginTop: 0 }} transition={{ duration: 0.25 }} className="flex items-start gap-2">
                     <span className={cn('mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full', sevDot[iss.severity])} />
                     <span className="min-w-0 flex-1 text-[13px] text-stone-600 dark:text-stone-300">{iss.text[locale]}</span>
@@ -367,6 +368,12 @@ function CvReviewCard({ locale }: { locale: Loc }) {
           </div>
         )}
       </div>
+      {(cvReview.strengths.length > 2 || open.length > 2) && (
+        <button type="button" onClick={() => setExpanded((v) => !v)} className={cn('mt-3 inline-flex items-center gap-1 rounded-full px-3 py-1 text-[12px] font-bold', GHOST)}>
+          {expanded ? (locale === 'ar' ? 'عرض أقل' : 'Show less') : (locale === 'ar' ? 'اعرض الكل' : 'Show all')}
+          <ChevronDown className={cn('h-3.5 w-3.5 transition-transform', expanded && 'rotate-180')} />
+        </button>
+      )}
     </Card>
   );
 }
