@@ -632,7 +632,10 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
 
       <div className="grid grid-cols-12 gap-3 sm:gap-4">
         <Card className={cn('col-span-12 p-5 sm:p-6', railOn.length ? 'lg:col-span-8' : 'lg:col-span-12')}>
-          <div className="grid items-start gap-5 sm:grid-cols-[auto_1fr] sm:gap-7">
+          <div aria-hidden className="pointer-events-none absolute -top-10 -start-4 select-none">
+            <Serif className="text-[150px] leading-none text-stone-900/[0.04] dark:text-white/[0.05]">{activePath.name[locale].charAt(0)}</Serif>
+          </div>
+          <div className="relative z-10 grid items-start gap-5 sm:grid-cols-[auto_1fr] sm:gap-7">
             <div className="mx-auto flex flex-col items-center gap-3 sm:mx-0">
               <div className="relative grid place-items-center" style={{ width: 132, height: 132 }}>
                 <div aria-hidden className="pointer-events-none absolute inset-5 rounded-full blur-2xl" style={{ background: score >= 80 ? 'radial-gradient(circle, rgba(16,185,129,0.20), transparent 72%)' : score >= 62 ? 'radial-gradient(circle, rgba(245,158,11,0.20), transparent 72%)' : 'radial-gradient(circle, rgba(168,162,158,0.16), transparent 72%)' }} />
