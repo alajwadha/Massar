@@ -1738,7 +1738,7 @@ function Shell() {
           </div>
 
           {/* Primary nav, on the same line as the controls (labels collapse to icons on phone) */}
-          <nav className={cn('mx-auto flex gap-0.5 rounded-full p-1', CARD)}>
+          <nav className={cn('mx-auto hidden gap-0.5 rounded-full p-1 md:flex', CARD)}>
             {NAV.map((n) => {
               const on = tab === n.id;
               return (
@@ -1753,7 +1753,7 @@ function Shell() {
             })}
           </nav>
 
-          <div className="flex shrink-0 items-center gap-2">
+          <div className="ms-auto flex shrink-0 items-center gap-2 md:ms-0">
             <ThemeToggle />
             <Link href={pathname} locale={locale === 'ar' ? 'en' : 'ar'} className={cn('grid h-9 w-9 place-items-center rounded-full text-xs font-bold', GHOST)}>
               {locale === 'ar' ? 'EN' : 'ع'}
@@ -1787,10 +1787,26 @@ function Shell() {
       <ReferralStrip locale={locale} />
       <FeedbackFooter locale={locale} />
 
-      <div className="mx-auto w-full max-w-5xl px-4 pb-10 text-center text-[12.5px] leading-relaxed text-stone-500 dark:text-stone-400 sm:px-8">
+      <div className="mx-auto w-full max-w-5xl px-4 pb-28 text-center text-[12.5px] leading-relaxed text-stone-500 dark:text-stone-400 sm:px-8 md:pb-10">
         <p className="text-[12px] leading-relaxed">{ui.shell.disclaimer[locale]}</p>
         <p className="mt-1 text-[13px] font-bold text-stone-700 dark:text-stone-200">{ui.shell.disclaimerWarm[locale]}</p>
       </div>
+
+      {/* Mobile thumb-zone tab bar: navigation reachable at the bottom of a long scroll */}
+      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-stone-200/70 bg-[#f7f6f2]/90 backdrop-blur-lg dark:border-white/[0.08] dark:bg-[#0a0a0b]/90 md:hidden" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
+        <div className="mx-auto flex max-w-md items-stretch justify-around px-2">
+          {NAV.map((n) => {
+            const on = tab === n.id;
+            return (
+              <button key={n.id} type="button" onClick={() => go(n.id)} aria-label={ui.nav[n.id][locale]} className={cn('relative flex min-h-[58px] flex-1 flex-col items-center justify-center gap-1 px-1 py-2 text-[10px] font-semibold transition-colors active:scale-95', on ? 'text-stone-900 dark:text-white' : 'text-stone-400 dark:text-stone-500')}>
+                {on && <span className="absolute top-0 h-0.5 w-8 rounded-full bg-amber-500 dark:bg-amber-400" />}
+                <n.Icon className={cn('h-[22px] w-[22px] shrink-0', on && ACCENT)} />
+                <span className="leading-none">{ui.nav[n.id][locale]}</span>
+              </button>
+            );
+          })}
+        </div>
+      </nav>
 
       <CommandPalette open={cmdOpen} setOpen={setCmdOpen} locale={locale} go={go} openPath={openPath} />
     </div>
