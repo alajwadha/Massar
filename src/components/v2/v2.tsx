@@ -219,10 +219,9 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
       </div>
 
       {isRecruiter && (c.sector || c.companyTier) && (
-        <div className="mt-2.5 flex flex-wrap gap-1.5">
-          {c.sector && SECTOR_LABELS[c.sector] && <span className={cn('rounded-md px-2 py-0.5 text-[10.5px] font-semibold', SOFT)}>{SECTOR_LABELS[c.sector][locale]}</span>}
-          {c.companyTier && <span className={cn('rounded-md px-2 py-0.5 text-[10.5px] font-semibold', SOFT)}>{TIER_LABELS[c.companyTier][locale]}</span>}
-        </div>
+        <p className="mt-1.5 truncate text-[11px] text-stone-400 dark:text-stone-500">
+          {[c.sector && SECTOR_LABELS[c.sector]?.[locale], c.companyTier && TIER_LABELS[c.companyTier]?.[locale]].filter(Boolean).join('  ·  ')}
+        </p>
       )}
 
       {kind && reason && (
@@ -251,10 +250,6 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
       </div>
 
       <div className="mt-3 flex-1">
-        <div className="mb-1.5 flex items-start gap-1.5 rounded-xl bg-amber-400/[0.14] px-2.5 py-1.5 text-[11px] leading-relaxed text-amber-700 dark:text-amber-300">
-          <PenLine className="mt-0.5 h-3 w-3 shrink-0" />
-          <span>{ui.contacts.handwrite[locale]}</span>
-        </div>
         <div className={cn('p-3', INSET)}>
           <div className="mb-1.5 flex items-center justify-between gap-2">
             <span className="truncate text-[11px] font-semibold text-stone-500 dark:text-stone-400">{ui.contacts.messagePreview[locale]} · {template.title[locale]}</span>
@@ -264,6 +259,10 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
             </button>
           </div>
           <p dir={msgLang === 'ar' ? 'rtl' : 'ltr'} className="line-clamp-3 text-[12.5px] leading-relaxed text-stone-600 dark:text-stone-300">{message}</p>
+          <p className="mt-2 flex items-center gap-1 text-[10.5px] text-stone-400 dark:text-stone-500">
+            <PenLine className="h-3 w-3 shrink-0" />
+            {ui.contacts.handwrite[locale]}
+          </p>
         </div>
       </div>
 
