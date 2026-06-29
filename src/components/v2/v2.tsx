@@ -1106,7 +1106,7 @@ function Contacts({ locale }: { locale: Loc }) {
       {(part === 'hr' || network) && (
         <Card className="mt-3 flex items-center gap-2.5 px-4 py-3">
           <Search className="h-4 w-4 shrink-0 text-stone-500 dark:text-stone-400" />
-          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={ui.contacts.search[locale]} className="w-full bg-transparent text-sm text-stone-900 outline-none placeholder:text-stone-400 dark:text-stone-50 dark:placeholder:text-stone-500" />
+          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={ui.contacts.search[locale]} className="w-full bg-transparent text-base text-stone-900 outline-none placeholder:text-stone-400 dark:text-stone-50 dark:placeholder:text-stone-500" />
         </Card>
       )}
 
@@ -1597,7 +1597,7 @@ function FeedbackFooter({ locale }: { locale: Loc }) {
               </div>
             </div>
             <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-              <input value={text} onChange={(e) => setText(e.target.value)} placeholder={ui.feedback.placeholder[locale]} className={cn('min-w-0 flex-1 rounded-full px-4 py-2.5 text-sm text-stone-900 outline-none placeholder:text-stone-400 dark:text-stone-50 dark:placeholder:text-stone-500', INSET)} />
+              <input value={text} onChange={(e) => setText(e.target.value)} placeholder={ui.feedback.placeholder[locale]} className={cn('min-w-0 flex-1 rounded-full px-4 py-2.5 text-base text-stone-900 outline-none placeholder:text-stone-400 dark:text-stone-50 dark:placeholder:text-stone-500', INSET)} />
               <button type="button" disabled={!text.trim() && rating === 0} onClick={submitFeedback} className={cn('inline-flex items-center justify-center gap-1.5 rounded-full px-5 py-2.5 text-sm font-bold transition-opacity disabled:opacity-40', PILL)}>
                 <Send className="h-4 w-4" /> {ui.feedback.send[locale]}
               </button>
@@ -1656,7 +1656,7 @@ function CommandPalette({ open, setOpen, locale, go, openPath }: { open: boolean
           <motion.div initial={{ opacity: 0, y: -12, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -8, scale: 0.98 }} transition={SPRING} className={cn('relative w-full max-w-lg overflow-hidden p-2', CARD)}>
             <div className="flex items-center gap-2.5 px-3 py-2">
               <Search className="h-4 w-4 text-stone-400" />
-              <input ref={inputRef} value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={onKey} placeholder={ui.cmd.placeholder[locale]} className="w-full bg-transparent text-[15px] text-stone-900 outline-none placeholder:text-stone-400 dark:text-stone-50 dark:placeholder:text-stone-500" />
+              <input ref={inputRef} value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={onKey} placeholder={ui.cmd.placeholder[locale]} className="w-full bg-transparent text-base text-stone-900 outline-none placeholder:text-stone-400 dark:text-stone-50 dark:placeholder:text-stone-500" />
               <kbd className={cn('rounded-md px-1.5 py-0.5 text-[10px] font-bold', SOFT)}>ESC</kbd>
             </div>
             <div className="mt-1 max-h-[46vh] overflow-y-auto px-1 pb-1">
@@ -1720,7 +1720,7 @@ function Shell() {
   }, []);
 
   return (
-    <div className="relative min-h-dvh bg-[#f7f6f2] text-stone-900 dark:bg-[#0a0a0b] dark:text-stone-100">
+    <div className="relative min-h-dvh bg-[#f7f6f2] text-stone-900 dark:bg-[#0a0a0b] dark:text-stone-100" style={{ WebkitTapHighlightColor: 'transparent', WebkitTextSizeAdjust: '100%', paddingBottom: 'env(safe-area-inset-bottom)' }}>
       <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute inset-0 dark:hidden" style={{ backgroundImage: 'linear-gradient(to right, rgba(28,25,23,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(28,25,23,0.05) 1px, transparent 1px)', backgroundSize: '54px 54px', maskImage: 'radial-gradient(ellipse 75% 55% at 50% 0%, #000 35%, transparent 78%)', WebkitMaskImage: 'radial-gradient(ellipse 75% 55% at 50% 0%, #000 35%, transparent 78%)' }} />
         <div className="absolute inset-0 hidden dark:block" style={{ backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '54px 54px', maskImage: 'radial-gradient(ellipse 75% 55% at 50% 0%, #000 35%, transparent 78%)', WebkitMaskImage: 'radial-gradient(ellipse 75% 55% at 50% 0%, #000 35%, transparent 78%)' }} />
