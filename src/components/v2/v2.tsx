@@ -117,7 +117,7 @@ function Card({ className, children }: { className?: string; children: React.Rea
 }
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
-  return <div className="text-[10.5px] font-semibold uppercase tracking-[0.24em] text-stone-500 dark:text-stone-400">{children}</div>;
+  return <div className="text-[11px] font-bold uppercase tracking-normal text-stone-500 dark:text-stone-400">{children}</div>;
 }
 
 function Serif({ className, children }: { className?: string; children: React.ReactNode }) {
@@ -330,7 +330,7 @@ function CvReviewCard({ locale }: { locale: Loc }) {
         <Eyebrow>{ui.cvBlock.eyebrow[locale]}</Eyebrow>
         {done > 0 && <span className={cn('rounded-full px-2 py-0.5 text-[10.5px] font-bold tabular-nums', SOFT)}>{ui.cvBlock.polishProgress[locale](done, total)}</span>}
       </div>
-      <p className="mt-2 text-[15px] font-semibold leading-snug text-stone-900 dark:text-stone-50">{cvReview.headline[locale]}</p>
+      <p className="mt-2 text-[17px] font-bold leading-snug text-stone-900 dark:text-stone-50">{cvReview.headline[locale]}</p>
 
       <div className={cn('mt-4 grid gap-4', hasIssues && 'sm:grid-cols-2')}>
         <div>
@@ -872,7 +872,7 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
         <div className="grid gap-5 lg:grid-cols-2">
           {path.pros && path.cons && (
             <Card className="p-5">
-              <h3 className="text-base font-semibold text-stone-900 dark:text-stone-50">{ui.paths.prosConsTitle[locale]}</h3>
+              <h3 className="text-lg font-semibold text-stone-900 dark:text-stone-50">{ui.paths.prosConsTitle[locale]}</h3>
               <div className="mt-3 grid gap-4 sm:grid-cols-2">
                 <div>
                   <div className="text-[11px] font-bold uppercase tracking-wide text-emerald-700 dark:text-emerald-300">{ui.paths.pros[locale]}</div>
@@ -895,7 +895,7 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
           )}
           {path.ladder && (
             <Card className="p-5">
-              <h3 className="text-base font-semibold text-stone-900 dark:text-stone-50">{ui.paths.ladderTitle[locale]}</h3>
+              <h3 className="text-lg font-semibold text-stone-900 dark:text-stone-50">{ui.paths.ladderTitle[locale]}</h3>
               <p className="mt-0.5 text-[12px] text-stone-500 dark:text-stone-400">{ui.paths.salaryNote[locale]}</p>
               <ol className="mt-3 space-y-2">
                 {path.ladder.map((rung, i) => {
@@ -1026,7 +1026,7 @@ function NetworkPanel({ locale, count, onFile, onClear }: { locale: Loc; count: 
       <div className="flex items-start gap-3">
         <div className={cn('grid h-11 w-11 shrink-0 place-items-center rounded-xl', SOFT)}><Network className="h-5 w-5" /></div>
         <div>
-          <h3 className="text-base font-semibold text-stone-900 dark:text-stone-50">{ui.network.title[locale]}</h3>
+          <h3 className="text-lg font-semibold text-stone-900 dark:text-stone-50">{ui.network.title[locale]}</h3>
           <p className="mt-1 text-[13px] leading-relaxed text-stone-600 dark:text-stone-300">{ui.network.body[locale]}</p>
         </div>
       </div>
@@ -1272,7 +1272,7 @@ function Study({ locale }: { locale: Loc }) {
 
       {/* The essentials, briefly, all under ONE title: requirements, timeline, funding */}
       <Card className="p-5">
-        <h2 className="mb-4 text-base font-semibold text-stone-900 dark:text-stone-50">{ui.study.essentialsTitle[locale]}</h2>
+        <h2 className="mb-4 text-lg font-semibold text-stone-900 dark:text-stone-50">{ui.study.essentialsTitle[locale]}</h2>
         <div className="grid gap-5 sm:grid-cols-3">
           {essentials.map((e, idx) => (
             <div key={e.title} className={cn(idx > 0 && 'sm:border-s sm:border-stone-200/70 sm:ps-5 dark:sm:border-white/10')}>
@@ -1368,7 +1368,7 @@ function SectionTitle({ icon: Icon, title, sub }: { icon: typeof GraduationCap; 
     <div className="mb-3 flex items-start gap-2.5">
       <div className={cn('grid h-9 w-9 shrink-0 place-items-center rounded-xl', SOFT)}><Icon className={cn('h-5 w-5', ACCENT)} /></div>
       <div>
-        <h2 className="text-base font-semibold text-stone-900 dark:text-stone-50">{title}</h2>
+        <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-50">{title}</h2>
         {sub && <p className="text-[12.5px] text-stone-500 dark:text-stone-400">{sub}</p>}
       </div>
     </div>
@@ -1557,7 +1557,7 @@ function ReferralStrip({ locale }: { locale: Loc }) {
         <div className="flex items-start gap-3">
           <div className={cn('grid h-10 w-10 shrink-0 place-items-center rounded-xl', SOFT)}><Gift className={cn('h-5 w-5', ACCENT)} /></div>
           <div className="min-w-0">
-            <h2 className="text-base font-semibold text-stone-900 dark:text-stone-50">
+            <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-50">
               {ui.referral.title[locale].split('30%').map((part, i, arr) => (
                 <span key={i}>
                   {part}
@@ -1610,7 +1610,7 @@ function FeedbackFooter({ locale }: { locale: Loc }) {
           <>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <h2 className="text-base font-semibold text-stone-900 dark:text-stone-50">{ui.feedback.title[locale]}</h2>
+                <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-50">{ui.feedback.title[locale]}</h2>
                 <p className="text-[12.5px] text-stone-500 dark:text-stone-400">{ui.feedback.sub[locale]}</p>
               </div>
               <div className="flex items-center gap-1">
