@@ -558,6 +558,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
                   </div>
                 </ProgressRing>
               </div>
+              <span className={cn('rounded-full px-3 py-1 text-[12px] font-bold', score >= 80 ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300' : score >= 62 ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : 'bg-stone-500/10 text-stone-600 dark:text-stone-300')}>{score >= 80 ? (locale === 'ar' ? 'جاهز للتقديم' : 'Ready to apply') : score >= 62 ? (locale === 'ar' ? 'قريب جدًا' : 'Almost there') : (locale === 'ar' ? 'تحت التطوير' : 'Building up')}</span>
               <div className="inline-flex rounded-full border border-stone-200/80 bg-stone-50/80 p-0.5 dark:border-white/10 dark:bg-white/[0.05]">
                 {LEVELS.map((lv) => {
                   const on = level === lv.id;
@@ -569,6 +570,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
                   );
                 })}
               </div>
+              <span className="text-center text-[10.5px] leading-tight text-stone-400 dark:text-stone-500">{locale === 'ar' ? 'درجتك تتغيّر حسب المستوى المستهدف' : 'Score adjusts to your target level'}</span>
             </div>
 
             <div className="min-w-0">
