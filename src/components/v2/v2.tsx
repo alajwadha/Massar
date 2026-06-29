@@ -544,6 +544,21 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
         </Card>
       )}
 
+      {/* Always-on next step: the single most important action, never hidden */}
+      <button type="button" onClick={() => go(nm.go)} className="group mb-3 block w-full text-start sm:mb-4">
+        <Card className="flex items-center gap-4 p-4 ring-1 ring-amber-500/25 sm:p-5">
+          <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-amber-500/15">
+            <Sparkles className={cn('h-5 w-5', ACCENT)} />
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="text-[10.5px] font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-300">{ui.overview.nextMove.eyebrow[locale]}</div>
+            <div className="mt-0.5 truncate font-bold text-stone-900 dark:text-stone-50">{nm.title}</div>
+            <p className="mt-0.5 line-clamp-1 text-[12.5px] leading-relaxed text-stone-600 dark:text-stone-300">{nm.desc}</p>
+          </div>
+          <ArrowUpRight className="h-5 w-5 shrink-0 text-stone-400 transition-colors group-hover:text-amber-600 dark:text-stone-500" />
+        </Card>
+      </button>
+
       <div className="grid grid-cols-12 gap-3 sm:gap-4">
         <Card className={cn('col-span-12 p-5 sm:p-6', railOn.length ? 'lg:col-span-8' : 'lg:col-span-12')}>
           <div className="grid items-start gap-5 sm:grid-cols-[auto_1fr] sm:gap-7">
