@@ -45,7 +45,7 @@ import { cn } from '@/lib/utils';
 import { Link, usePathname } from '@/i18n/routing';
 import { usePlan } from '@/components/app/plan-context';
 import { DashboardState, useNetwork, useProgress } from '@/components/app/dashboard-state';
-import { ProgressRing, Counter, Avatar } from '@/components/app/ui';
+import { Counter, Avatar } from '@/components/app/ui';
 import { scoreNote } from '@/lib/scoring';
 import {
   rankConnections,
@@ -118,6 +118,49 @@ function Card({ className, children }: { className?: string; children: React.Rea
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return <div className="text-[11px] font-bold uppercase tracking-normal text-stone-500 dark:text-stone-400">{children}</div>;
+}
+
+// v2-local segmented score ring: a ticked gauge (not a plain donut), with a "ready"
+// threshold marker, verdict-band color, and a draw-on sweep gated by reduced-motion.
+function ScoreRing({ value, size = 132 }: { value: number; size?: number }) {
+  const reduce = useReducedMotion();
+  const [lit, setLit] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setLit(true), 60);
+    return () => clearTimeout(t);
+  }, []);
+  const TICKS = 44;
+  const c = size / 2;
+  const rOuter = c - 4;
+  const rInner = c - 13;
+  const filled = Math.round((value / 100) * TICKS);
+  const readyIdx = Math.round(0.8 * TICKS);
+  const band = value >= 80 ? '#10b981' : value >= 62 ? '#f59e0b' : '#a8a29e';
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={`${value} / 100`} style={{ transform: 'rotate(-90deg)' }}>
+      {Array.from({ length: TICKS }).map((_, i) => {
+        const a = (i / TICKS) * 2 * Math.PI;
+        const cos = Math.cos(a);
+        const sin = Math.sin(a);
+        const on = i < filled;
+        const isThresh = i === readyIdx;
+        const ri = isThresh ? rInner - 3 : rInner;
+        const ro = isThresh ? rOuter + 1 : rOuter;
+        return (
+          <line
+            key={i}
+            x1={c + ri * cos} y1={c + ri * sin}
+            x2={c + ro * cos} y2={c + ro * sin}
+            strokeWidth={isThresh ? 3 : 2.5}
+            strokeLinecap="round"
+            stroke={isThresh ? 'currentColor' : on ? band : undefined}
+            className={isThresh ? 'text-stone-400 dark:text-stone-500' : on ? undefined : 'stroke-stone-200 dark:stroke-stone-700'}
+            style={on && !isThresh ? { opacity: reduce || lit ? 1 : 0, transition: 'opacity 360ms ease', transitionDelay: reduce ? '0ms' : `${i * 16}ms` } : undefined}
+          />
+        );
+      })}
+    </svg>
+  );
 }
 
 function Serif({ className, children }: { className?: string; children: React.ReactNode }) {
@@ -578,15 +621,16 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
         <Card className={cn('col-span-12 p-5 sm:p-6', railOn.length ? 'lg:col-span-8' : 'lg:col-span-12')}>
           <div className="grid items-start gap-5 sm:grid-cols-[auto_1fr] sm:gap-7">
             <div className="mx-auto flex flex-col items-center gap-3 sm:mx-0">
-              <div className="text-amber-600 dark:text-amber-400">
-                <ProgressRing value={score} size={118} stroke={6} color="currentColor" track="rgba(120,113,108,0.18)">
-                  <div className="leading-none">
+              <div className="relative grid place-items-center" style={{ width: 132, height: 132 }}>
+                <ScoreRing value={score} size={132} />
+                <div className="absolute inset-0 grid place-items-center text-center leading-none">
+                  <div>
                     <Serif className="block text-5xl tracking-tight text-stone-900 dark:text-stone-50">
                       <Counter to={score} />
                     </Serif>
                     <div className="mt-0.5 text-[10px] font-medium text-stone-500 dark:text-stone-400">/ 100</div>
                   </div>
-                </ProgressRing>
+                </div>
               </div>
               <span className={cn('rounded-full px-3 py-1 text-[12px] font-bold', score >= 80 ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300' : score >= 62 ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : 'bg-stone-500/10 text-stone-600 dark:text-stone-300')}>{score >= 80 ? (locale === 'ar' ? 'جاهز للتقديم' : 'Ready to apply') : score >= 62 ? (locale === 'ar' ? 'قريب جدًا' : 'Almost there') : (locale === 'ar' ? 'في الطريق' : 'Building up')}</span>
               <div className="inline-flex rounded-full border border-stone-200/80 bg-stone-50/80 p-0.5 dark:border-white/10 dark:bg-white/[0.05]">
