@@ -641,6 +641,8 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
 
       <div className="grid grid-cols-12 gap-3 sm:gap-4">
         <Card className={cn('col-span-12 p-5 sm:p-6', railOn.length ? 'lg:col-span-8' : 'lg:col-span-12')}>
+          <div aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-br from-amber-50/70 via-white/0 to-white/0 dark:from-amber-500/[0.07] dark:via-transparent dark:to-transparent" />
+          <div aria-hidden className="pointer-events-none absolute -top-16 end-[-4rem] h-72 w-72 rounded-full blur-2xl" style={{ background: 'radial-gradient(circle, rgba(251,146,60,0.18), transparent 70%)' }} />
           <div aria-hidden className="pointer-events-none absolute -top-10 -start-4 select-none">
             <Serif className="text-[150px] leading-none text-stone-900/[0.04] dark:text-white/[0.05]">{activePath.name[locale].charAt(0)}</Serif>
           </div>
@@ -651,14 +653,14 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
                 <ScoreRing value={score} size={132} />
                 <div className="absolute inset-0 grid place-items-center text-center leading-none">
                   <div>
-                    <Serif className="block text-5xl tracking-tight text-stone-900 dark:text-stone-50">
+                    <Serif className={cn('block text-5xl tracking-tight', score >= 80 ? 'bg-gradient-to-br from-emerald-400 to-emerald-600 bg-clip-text text-transparent' : score >= 62 ? 'bg-gradient-to-br from-amber-500 to-orange-600 bg-clip-text text-transparent' : 'text-stone-900 dark:text-stone-50')}>
                       <Counter to={score} />
                     </Serif>
                     <div className="mt-0.5 text-[10px] font-medium text-stone-500 dark:text-stone-400">/ 100</div>
                   </div>
                 </div>
               </div>
-              <span className={cn('rounded-full px-3 py-1 text-[12px] font-bold', score >= 80 ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300' : score >= 62 ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : 'bg-stone-500/10 text-stone-600 dark:text-stone-300')}>{score >= 80 ? (locale === 'ar' ? 'جاهز للتقديم' : 'Ready to apply') : score >= 62 ? (locale === 'ar' ? 'قريب جدًا' : 'Almost there') : (locale === 'ar' ? 'في الطريق' : 'Building up')}</span>
+              <span className={cn('rounded-full px-3 py-1 text-[12px] font-bold ring-1', score >= 80 ? 'bg-emerald-500/15 text-emerald-700 ring-emerald-500/30 shadow-[0_0_18px_-6px_rgba(16,185,129,0.6)] dark:text-emerald-300' : score >= 62 ? 'bg-amber-500/15 text-amber-700 ring-amber-500/30 shadow-[0_0_18px_-6px_rgba(245,158,11,0.6)] dark:text-amber-300' : 'bg-stone-500/10 text-stone-600 ring-stone-400/20 dark:text-stone-300')}>{score >= 80 ? (locale === 'ar' ? 'جاهز للتقديم' : 'Ready to apply') : score >= 62 ? (locale === 'ar' ? 'قريب جدًا' : 'Almost there') : (locale === 'ar' ? 'في الطريق' : 'Building up')}</span>
               <div className="inline-flex rounded-full border border-stone-200/80 bg-stone-50/80 p-0.5 dark:border-white/10 dark:bg-white/[0.05]">
                 {LEVELS.map((lv) => {
                   const on = level === lv.id;
@@ -675,8 +677,9 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
 
             <div className="min-w-0">
               <Eyebrow>{ui.overview.scoreLabel[locale]}</Eyebrow>
-              <h1 className="mt-2 text-balance text-[22px] font-semibold leading-[1.12] tracking-tight text-stone-900 dark:text-stone-50 sm:text-[28px]">{activePath.name[locale]}</h1>
-              <p className="mt-2 text-[12.5px] leading-snug text-stone-500 dark:text-stone-400">{whyScore}</p>
+              <h1 className="mt-1.5 text-balance text-[clamp(1.9rem,6vw,3.25rem)] font-extrabold leading-[1.03] tracking-tight text-stone-900 dark:text-stone-50">{activePath.name[locale]}</h1>
+              <div className="mt-2.5 h-1 w-16 rounded-full bg-gradient-to-r from-amber-400 to-orange-500" />
+              <p className="mt-3 text-[12.5px] leading-snug text-stone-500 dark:text-stone-400">{whyScore}</p>
 
               {imps.length > 0 && (
                 <div className="mt-5">
