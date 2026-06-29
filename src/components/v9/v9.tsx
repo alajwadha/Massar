@@ -826,8 +826,11 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
 
       {W('picks') && (
         <div className="pt-1">
-          <div className="mb-1 flex items-end justify-between gap-3">
-            <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-50">{ui.overview.actionsTitle[locale]}</h2>
+          <div className="mb-2 flex items-end justify-between gap-3">
+            <div>
+              <h2 className="text-balance text-[clamp(1.35rem,3.8vw,1.9rem)] font-extrabold leading-[1.05] tracking-tight text-stone-900 dark:text-stone-50">{ui.overview.actionsTitle[locale]}</h2>
+              <div className="mt-2 h-1 w-12 rounded-full bg-gradient-to-r from-amber-400 to-orange-500" />
+            </div>
             <div className="flex shrink-0 items-center gap-2">
               <button type="button" onClick={() => setShuffle((s) => s + 1)} title={ui.contacts.shuffle[locale]} aria-label={ui.contacts.shuffle[locale]} className={cn('grid h-8 w-8 place-items-center rounded-full', GHOST)}>
                 <Shuffle className="h-3.5 w-3.5" />
@@ -1445,12 +1448,13 @@ function Study({ locale }: { locale: Loc }) {
 
 function SectionTitle({ icon: Icon, title, sub }: { icon: typeof GraduationCap; title: string; sub?: string }) {
   return (
-    <div className="mb-3 flex items-start gap-2.5">
-      <div className={cn('grid h-9 w-9 shrink-0 place-items-center rounded-xl', SOFT)}><Icon className={cn('h-5 w-5', ACCENT)} /></div>
-      <div>
-        <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-50">{title}</h2>
-        {sub && <p className="text-[12.5px] text-stone-500 dark:text-stone-400">{sub}</p>}
+    <div className="mb-4">
+      <div className="flex items-center gap-2.5">
+        <div className={cn('grid h-9 w-9 shrink-0 place-items-center rounded-xl', SOFT)}><Icon className={cn('h-5 w-5', ACCENT)} /></div>
+        <h2 className="text-balance text-[clamp(1.35rem,3.4vw,1.9rem)] font-extrabold leading-[1.05] tracking-tight text-stone-900 dark:text-stone-50">{title}</h2>
       </div>
+      <div className="mt-2.5 h-1 w-12 rounded-full bg-gradient-to-r from-amber-400 to-orange-500" />
+      {sub && <p className="mt-2 text-[12.5px] text-stone-500 dark:text-stone-400">{sub}</p>}
     </div>
   );
 }
