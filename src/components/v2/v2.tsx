@@ -136,6 +136,12 @@ function ScoreRing({ value, size = 132 }: { value: number; size?: number }) {
   const filled = Math.round((value / 100) * TICKS);
   const readyIdx = Math.round(0.8 * TICKS);
   const band = value >= 80 ? '#10b981' : value >= 62 ? '#f59e0b' : '#a8a29e';
+  const sparkSoft = value >= 80 ? 'rgba(16,185,129,0.40)' : value >= 62 ? 'rgba(245,158,11,0.40)' : 'rgba(168,162,158,0.30)';
+  const sparkGlow = value >= 80 ? 'rgba(16,185,129,0.85)' : value >= 62 ? 'rgba(245,158,11,0.85)' : 'rgba(168,162,158,0.65)';
+  const sparkA = (value / 100) * 2 * Math.PI;
+  const rMid = (rInner + rOuter) / 2;
+  const sx = c + rMid * Math.cos(sparkA);
+  const sy = c + rMid * Math.sin(sparkA);
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={`${value} / 100`} style={{ transform: 'rotate(-90deg)' }}>
       {Array.from({ length: TICKS }).map((_, i) => {
@@ -159,6 +165,13 @@ function ScoreRing({ value, size = 132 }: { value: number; size?: number }) {
           />
         );
       })}
+      {!reduce && (
+        <>
+          <motion.circle cx={sx} cy={sy} r={6.5} fill={sparkSoft} initial={{ opacity: 0 }} animate={{ opacity: [0.25, 0.6, 0.25] }} transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut', delay: (filled * 16) / 1000 + 0.3 }} />
+          <motion.circle cx={sx} cy={sy} r={3.2} fill={band} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: (filled * 16) / 1000, duration: 0.4 }} style={{ filter: `drop-shadow(0 0 5px ${sparkGlow})` }} />
+        </>
+      )}
+      {reduce && <circle cx={sx} cy={sy} r={3.2} fill={band} style={{ filter: `drop-shadow(0 0 4px ${sparkGlow})` }} />}
     </svg>
   );
 }
