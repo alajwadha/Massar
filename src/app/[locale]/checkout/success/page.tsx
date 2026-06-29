@@ -39,6 +39,7 @@ export default async function CheckoutSuccessPage({
       <main className="relative z-10 mx-auto grid max-w-5xl place-items-center px-5 py-20 sm:px-8">
         <PaymentResult
           paymentId={searchParams.id}
+          planId={tier.id}
           planLabel={planLabel}
           locale={loc}
           contact={CONTACT}

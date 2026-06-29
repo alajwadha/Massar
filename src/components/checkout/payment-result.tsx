@@ -13,12 +13,14 @@ type State = 'loading' | 'paid' | 'failed';
 
 export function PaymentResult({
   paymentId,
+  planId,
   planLabel,
   locale,
   contact,
   labels,
 }: {
   paymentId: string | undefined;
+  planId: string;
   planLabel: string;
   locale: 'ar' | 'en';
   contact: { email: string; whatsapp: string };
@@ -42,11 +44,11 @@ export function PaymentResult({
       setState('failed');
       return;
     }
-    fetch(`/api/payments/verify?id=${encodeURIComponent(paymentId)}`)
+    fetch(`/api/payments/verify?id=${encodeURIComponent(paymentId)}&plan=${encodeURIComponent(planId)}`)
       .then((r) => r.json())
       .then((d) => setState(d.ok ? 'paid' : 'failed'))
       .catch(() => setState('failed'));
-  }, [paymentId]);
+  }, [paymentId, planId]);
 
   if (state === 'loading') {
     return (
