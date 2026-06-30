@@ -1926,7 +1926,9 @@ function Shell() {
       <ReferralStrip locale={locale} />
       <FeedbackFooter locale={locale} />
 
-      <div className="mx-auto w-full max-w-5xl px-4 pb-10 text-center text-[12.5px] leading-relaxed text-stone-500 dark:text-stone-400 sm:px-8">
+      <div className="mx-auto mt-4 w-full max-w-5xl px-4 pb-12 pt-8 text-center text-[12.5px] leading-relaxed text-stone-500 dark:text-stone-400 sm:px-8">
+        <div aria-hidden className="mx-auto mb-5 h-px w-24 bg-gradient-to-r from-transparent via-stone-300 to-transparent dark:via-white/15" />
+        <div className="mb-3 text-lg font-extrabold tracking-tight text-stone-700 dark:text-stone-200">{locale === 'ar' ? 'مسار' : 'Masaar'}</div>
         <p className="text-[12px] leading-relaxed">{ui.shell.disclaimer[locale]}</p>
         <p className="mt-1 text-[13px] font-bold text-stone-700 dark:text-stone-200">{ui.shell.disclaimerWarm[locale]}</p>
       </div>
