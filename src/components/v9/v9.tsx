@@ -244,6 +244,7 @@ function ContactCard({ contact: c, locale, kind, reason, featured }: { contact: 
   const [tpl, setTpl] = useState(0);
   const [copied, setCopied] = useState(false);
   const [msgLang, setMsgLang] = useState<Loc>(locale);
+  const reduce = useReducedMotion();
 
   const status = statuses[c.id] ?? c.status;
   const template = templates[tpl % templates.length];
@@ -262,7 +263,21 @@ function ContactCard({ contact: c, locale, kind, reason, featured }: { contact: 
 
   return (
     <Card className={cn('relative flex h-full flex-col p-4 ps-5 transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.45)]', featured && 'ring-1 ring-amber-500/35 shadow-[0_24px_60px_-30px_rgba(245,158,11,0.35)]')}>
-      <div aria-hidden className="absolute inset-y-2 start-0 w-1 rounded-full bg-gradient-to-b from-amber-400 to-orange-500" />
+      <div aria-hidden className="absolute inset-y-2 start-0 w-1 overflow-hidden rounded-full bg-gradient-to-b from-amber-400 to-orange-500">
+        {!reduce &&
+          Array.from({ length: featured ? 3 : 2 }).map((_, i) => {
+            const dur = featured ? 3.4 : 4.6;
+            return (
+              <motion.span
+                key={i}
+                className="absolute inset-x-0 h-2 rounded-full bg-amber-50"
+                initial={{ top: '-12%', opacity: 0 }}
+                animate={{ top: ['-12%', '112%'], opacity: [0, 0.7, 0.7, 0] }}
+                transition={{ duration: dur, repeat: Infinity, ease: [0.4, 0, 0.2, 1], delay: (i * dur) / (featured ? 3 : 2), times: [0, 0.14, 0.86, 1] }}
+              />
+            );
+          })}
+      </div>
       <div className="flex items-start gap-3">
         <Avatar initials={c.name[locale].charAt(0)} companyKey={c.companyKey} seed={c.company.en} />
         <div className="min-w-0 flex-1">
