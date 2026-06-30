@@ -238,7 +238,7 @@ const STATUS_BTNS: { key: ContactStatus; sk: 'status_sent' | 'status_replied' | 
 
 /* ------------------------------------------------------------- contact card -- */
 
-function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; locale: Loc; kind?: PickKind; reason?: string }) {
+function ContactCard({ contact: c, locale, kind, reason, featured }: { contact: Contact; locale: Loc; kind?: PickKind; reason?: string; featured?: boolean }) {
   const { templates } = usePlan();
   const { statuses, setStatus } = useProgress();
   const [tpl, setTpl] = useState(0);
@@ -261,7 +261,7 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
   };
 
   return (
-    <Card className="relative flex h-full flex-col p-4 ps-5 transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.45)]">
+    <Card className={cn('relative flex h-full flex-col p-4 ps-5 transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.45)]', featured && 'ring-1 ring-amber-500/35 shadow-[0_24px_60px_-30px_rgba(245,158,11,0.35)]')}>
       <div aria-hidden className="absolute inset-y-2 start-0 w-1 rounded-full bg-gradient-to-b from-amber-400 to-orange-500" />
       <div className="flex items-start gap-3">
         <Avatar initials={c.name[locale].charAt(0)} companyKey={c.companyKey} seed={c.company.en} />
@@ -342,8 +342,10 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
 function CardGrid({ items, locale }: { items: { contact: Contact; kind?: PickKind; reason?: string }[]; locale: Loc }) {
   return (
     <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      {items.map((it) => (
-        <ContactCard key={it.contact.id} contact={it.contact} locale={locale} kind={it.kind} reason={it.reason} />
+      {items.map((it, i) => (
+        <div key={it.contact.id} className={cn(i === 0 && 'sm:col-span-2 lg:col-span-2')}>
+          <ContactCard contact={it.contact} locale={locale} kind={it.kind} reason={it.reason} featured={i === 0} />
+        </div>
       ))}
     </div>
   );
