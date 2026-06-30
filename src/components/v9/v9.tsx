@@ -99,14 +99,14 @@ type Tab = 'home' | 'paths' | 'contacts' | 'tracker' | 'opportunities';
 // Shared class tokens keep light + dark in lockstep. Dark uses SOLID elevated
 // surfaces (#161619 on a #0a0a0b canvas) so cards actually read as panels.
 const CARD =
-  'relative overflow-hidden rounded-[22px] border border-stone-200/80 bg-white/92 shadow-[0_1px_2px_rgba(28,25,23,0.04),0_24px_60px_-34px_rgba(28,25,23,0.30)] dark:border-white/[0.10] dark:bg-[#1b1b1f] dark:shadow-[0_22px_55px_-32px_rgba(0,0,0,0.9)]';
+  'relative overflow-hidden rounded-[22px] border border-stone-200/80 bg-white/92 shadow-[0_1px_2px_rgba(28,25,23,0.04),0_24px_60px_-34px_rgba(28,25,23,0.30)] dark:border-amber-100/[0.08] dark:bg-[#1c1813] dark:shadow-[inset_0_1px_0_rgba(255,237,213,0.06),0_22px_55px_-30px_rgba(0,0,0,0.85)]';
 const EDGE =
-  'before:pointer-events-none before:absolute before:inset-x-5 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-900/10 before:to-transparent dark:before:via-white/20';
-const INSET = 'rounded-2xl border border-stone-200/70 bg-stone-50/70 dark:border-white/[0.07] dark:bg-white/[0.035]';
+  'before:pointer-events-none before:absolute before:inset-x-5 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-900/10 before:to-transparent dark:before:via-amber-100/25';
+const INSET = 'rounded-2xl border border-stone-200/70 bg-stone-50/70 dark:border-amber-100/[0.06] dark:bg-black/20';
 const PILL = 'cursor-pointer bg-stone-900 text-white shadow-sm transition-all hover:bg-stone-800 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f7f6f2] dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-white dark:focus-visible:ring-offset-[#0a0a0b]';
 const GHOST =
   'cursor-pointer border border-stone-300 bg-white text-stone-700 shadow-sm transition-all hover:border-stone-400 hover:bg-stone-50 hover:text-stone-900 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f7f6f2] dark:border-white/20 dark:bg-white/[0.08] dark:text-stone-200 dark:shadow-none dark:hover:border-white/35 dark:hover:bg-white/[0.14] dark:hover:text-white dark:focus-visible:ring-offset-[#0a0a0b]';
-const SOFT = 'bg-stone-900/[0.05] text-stone-600 dark:bg-white/[0.07] dark:text-stone-300';
+const SOFT = 'bg-stone-900/[0.05] text-stone-600 dark:bg-amber-50/[0.05] dark:text-stone-300';
 const ACCENT = 'text-amber-700 dark:text-amber-300';
 
 const NOISE =
@@ -1845,13 +1845,13 @@ function Shell() {
   }, [cmdOpen]);
 
   return (
-    <div className="relative min-h-dvh bg-gradient-to-b from-[#faf8f3] to-[#f1ece2] text-stone-900 dark:from-[#0c0c0f] dark:to-[#070708] dark:text-stone-100" style={{ WebkitTapHighlightColor: 'transparent', WebkitTextSizeAdjust: '100%', paddingBottom: 'env(safe-area-inset-bottom)', paddingLeft: 'env(safe-area-inset-left)', paddingRight: 'env(safe-area-inset-right)' }}>
+    <div className="relative min-h-dvh bg-gradient-to-b from-[#faf8f3] to-[#f1ece2] text-stone-900 dark:from-[#14110d] dark:to-[#0b0908] dark:text-stone-100" style={{ WebkitTapHighlightColor: 'transparent', WebkitTextSizeAdjust: '100%', paddingBottom: 'env(safe-area-inset-bottom)', paddingLeft: 'env(safe-area-inset-left)', paddingRight: 'env(safe-area-inset-right)' }}>
       <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute inset-0 dark:hidden" style={{ backgroundImage: 'linear-gradient(to right, rgba(28,25,23,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(28,25,23,0.05) 1px, transparent 1px)', backgroundSize: '54px 54px', maskImage: 'radial-gradient(ellipse 75% 55% at 50% 0%, #000 35%, transparent 78%)', WebkitMaskImage: 'radial-gradient(ellipse 75% 55% at 50% 0%, #000 35%, transparent 78%)' }} />
         <div className="absolute inset-0 hidden dark:block" style={{ backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '54px 54px', maskImage: 'radial-gradient(ellipse 75% 55% at 50% 0%, #000 35%, transparent 78%)', WebkitMaskImage: 'radial-gradient(ellipse 75% 55% at 50% 0%, #000 35%, transparent 78%)' }} />
-        <div className="absolute -top-40 left-1/2 h-[34rem] w-[56rem] -translate-x-1/2 rounded-full bg-amber-300/30 blur-[100px] dark:bg-amber-500/[0.14]" />
-        <div className="absolute top-1/4 -right-40 h-[38rem] w-[38rem] rounded-full bg-orange-300/20 blur-[100px] dark:bg-orange-500/[0.10]" />
-        <div className="absolute bottom-0 -left-40 h-[34rem] w-[34rem] rounded-full bg-amber-200/25 blur-[100px] dark:bg-amber-600/[0.08]" />
+        <div className="absolute -top-40 left-1/2 h-[34rem] w-[56rem] -translate-x-1/2 rounded-full bg-amber-300/30 blur-[100px] dark:bg-amber-500/[0.22]" />
+        <div className="absolute top-1/4 -right-40 h-[38rem] w-[38rem] rounded-full bg-orange-300/20 blur-[100px] dark:bg-orange-500/[0.16]" />
+        <div className="absolute bottom-0 -left-40 h-[34rem] w-[34rem] rounded-full bg-amber-200/25 blur-[100px] dark:bg-orange-700/[0.14]" />
         <div className="absolute inset-0 opacity-[0.04] mix-blend-overlay dark:opacity-[0.06]" style={{ backgroundImage: NOISE }} />
       </div>
 
