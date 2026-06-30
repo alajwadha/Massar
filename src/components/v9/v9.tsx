@@ -622,16 +622,16 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
       {!nextDismissed && (
         <div className="relative mb-3 sm:mb-4">
           <button type="button" onClick={() => go(nm.go)} className="group block w-full text-start">
-            <Card className="flex items-center gap-4 p-4 pe-11 ring-1 ring-amber-500/25 sm:p-5 sm:pe-12">
-              <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-amber-500/15">
-                <Sparkles className={cn('h-5 w-5', ACCENT)} />
+            <Card className="flex items-center gap-4 border-transparent bg-gradient-to-br from-amber-400 to-orange-500 p-4 pe-11 shadow-[0_22px_55px_-22px_rgba(245,158,11,0.7)] sm:p-5 sm:pe-12 dark:from-amber-500 dark:to-orange-600">
+              <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white/25 text-stone-900">
+                <Sparkles className="h-5 w-5" />
               </div>
               <div className="min-w-0 flex-1">
-                <div className="text-[10.5px] font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-300">{ui.overview.nextMove.eyebrow[locale]}</div>
-                <div className="mt-0.5 truncate font-bold text-stone-900 dark:text-stone-50">{nm.title}</div>
-                <p className="mt-0.5 line-clamp-1 text-[12.5px] leading-relaxed text-stone-600 dark:text-stone-300">{nm.desc}</p>
+                <div className="text-[10.5px] font-bold uppercase tracking-wider text-stone-900/70">{ui.overview.nextMove.eyebrow[locale]}</div>
+                <div className="mt-0.5 truncate text-[15px] font-extrabold text-stone-900">{nm.title}</div>
+                <p className="mt-0.5 line-clamp-1 text-[12.5px] font-medium leading-relaxed text-stone-900/75">{nm.desc}</p>
               </div>
-              <ArrowUpRight className="h-5 w-5 shrink-0 text-stone-400 transition-colors group-hover:text-amber-600 dark:text-stone-500" />
+              <ArrowUpRight className="h-5 w-5 shrink-0 text-stone-900/80 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </Card>
           </button>
           <button type="button" onClick={() => { setNextDismissed(true); try { localStorage.setItem(`masaar:nx:v9:${plan.slug}`, '1'); } catch {} }} aria-label={locale === 'ar' ? 'إغلاق' : 'Dismiss'} className="absolute end-2.5 top-2.5 z-10 grid h-7 w-7 place-items-center rounded-full text-stone-400 transition-colors hover:bg-stone-900/[0.06] hover:text-stone-700 dark:hover:bg-white/10 dark:hover:text-stone-200">
