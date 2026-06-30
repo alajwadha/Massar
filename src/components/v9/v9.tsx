@@ -654,7 +654,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
                 <ScoreRing value={score} size={132} />
                 <div className="absolute inset-0 grid place-items-center text-center leading-none">
                   <div>
-                    <Serif className={cn('block text-5xl tracking-tight', score >= 80 ? 'bg-gradient-to-br from-emerald-400 to-emerald-600 bg-clip-text text-transparent' : score >= 62 ? 'bg-gradient-to-br from-amber-500 to-orange-600 bg-clip-text text-transparent' : 'text-stone-900 dark:text-stone-50')}>
+                    <Serif className={cn('block text-[3.25rem] font-medium leading-none tracking-tight', score >= 80 ? 'text-emerald-600 dark:text-emerald-400' : score >= 62 ? 'text-amber-600 dark:text-amber-400' : 'text-stone-900 dark:text-stone-50')}>
                       <Counter to={score} />
                     </Serif>
                     <div className="mt-0.5 text-[10px] font-medium text-stone-500 dark:text-stone-400">/ 100</div>
@@ -1843,9 +1843,9 @@ function Shell() {
       <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute inset-0 dark:hidden" style={{ backgroundImage: 'linear-gradient(to right, rgba(28,25,23,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(28,25,23,0.05) 1px, transparent 1px)', backgroundSize: '54px 54px', maskImage: 'radial-gradient(ellipse 75% 55% at 50% 0%, #000 35%, transparent 78%)', WebkitMaskImage: 'radial-gradient(ellipse 75% 55% at 50% 0%, #000 35%, transparent 78%)' }} />
         <div className="absolute inset-0 hidden dark:block" style={{ backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '54px 54px', maskImage: 'radial-gradient(ellipse 75% 55% at 50% 0%, #000 35%, transparent 78%)', WebkitMaskImage: 'radial-gradient(ellipse 75% 55% at 50% 0%, #000 35%, transparent 78%)' }} />
-        <div className="absolute -top-40 left-1/2 h-[34rem] w-[56rem] -translate-x-1/2 rounded-full bg-amber-300/30 blur-[150px] dark:bg-amber-500/[0.14]" />
-        <div className="absolute top-1/4 -right-40 h-[38rem] w-[38rem] rounded-full bg-orange-300/20 blur-[160px] dark:bg-orange-500/[0.10]" />
-        <div className="absolute bottom-0 -left-40 h-[34rem] w-[34rem] rounded-full bg-amber-200/25 blur-[150px] dark:bg-amber-600/[0.08]" />
+        <div className="absolute -top-40 left-1/2 h-[34rem] w-[56rem] -translate-x-1/2 rounded-full bg-amber-300/30 blur-[100px] dark:bg-amber-500/[0.14]" />
+        <div className="absolute top-1/4 -right-40 h-[38rem] w-[38rem] rounded-full bg-orange-300/20 blur-[100px] dark:bg-orange-500/[0.10]" />
+        <div className="absolute bottom-0 -left-40 h-[34rem] w-[34rem] rounded-full bg-amber-200/25 blur-[100px] dark:bg-amber-600/[0.08]" />
         <div className="absolute inset-0 opacity-[0.04] mix-blend-overlay dark:opacity-[0.06]" style={{ backgroundImage: NOISE }} />
       </div>
 
