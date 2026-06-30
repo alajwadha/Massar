@@ -853,25 +853,29 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
 
 function CertTimeline({ path, locale }: { path: CareerPath; locale: Loc }) {
   const { certsDone, toggleCert, level } = useProgress();
+  const reduce = useReducedMotion();
+  const doneCount = path.certs.filter((c) => certsDone[c.name.en]).length;
+  const fillPct = path.certs.length > 1 ? Math.min(100, (doneCount / (path.certs.length - 1)) * 100) : 0;
   return (
     <div className="relative">
-      <div className="absolute bottom-4 top-4 w-px bg-stone-200 ltr:left-[11px] rtl:right-[11px] dark:bg-white/10" />
+      <div className="absolute bottom-5 top-5 w-[2px] rounded-full bg-stone-200 ltr:left-[15px] rtl:right-[15px] dark:bg-white/10" />
+      <motion.div aria-hidden initial={{ scaleY: reduce ? 1 : 0 }} animate={{ scaleY: 1 }} transition={{ duration: 0.9, ease: EASE }} style={{ height: `${fillPct}%`, transformOrigin: 'top' }} className="absolute top-5 w-[2px] origin-top rounded-full bg-gradient-to-b from-amber-400 to-orange-500 ltr:left-[15px] rtl:right-[15px]" />
       <div className="space-y-3">
         {path.certs.map((cert) => {
           const isDone = certsDone[cert.name.en];
           const isCurrent = !isDone && cert.status === 'current';
           return (
-            <div key={cert.name.en} className="relative ps-9">
-              <span className={cn('absolute top-4 grid h-6 w-6 place-items-center rounded-full border text-[10px] ltr:left-0 rtl:right-0', isDone ? 'border-transparent bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900' : isCurrent ? 'border-amber-500 bg-amber-500/15 text-amber-700 dark:text-amber-300' : 'border-stone-300 bg-white text-stone-300 dark:border-white/15 dark:bg-[#161619] dark:text-stone-600')}>
-                {isDone ? <Check className="h-3.5 w-3.5" /> : <span className="h-1.5 w-1.5 rounded-full bg-current" />}
+            <div key={cert.name.en} className="relative ps-12">
+              <span className={cn('absolute top-3.5 z-10 grid place-items-center rounded-full border-2 transition-all ltr:left-0 rtl:right-0', isCurrent ? 'h-8 w-8' : 'h-7 w-7', isDone ? 'border-transparent bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-[0_4px_12px_-2px_rgba(245,158,11,0.5)]' : isCurrent ? 'border-amber-500 bg-amber-50 text-amber-700 shadow-[0_0_22px_-4px_rgba(245,158,11,0.7)] dark:bg-amber-500/15 dark:text-amber-300' : 'border-stone-300 bg-white text-stone-300 dark:border-white/15 dark:bg-[#1b1b1f] dark:text-stone-600')}>
+                {isDone ? <Check className="h-4 w-4" /> : isCurrent ? <span className={cn('h-2 w-2 rounded-full bg-current', !reduce && 'animate-pulse')} /> : <span className="h-1.5 w-1.5 rounded-full bg-current" />}
               </span>
-              <Card className={cn('p-4', isDone && 'opacity-75')}>
+              <Card className={cn('p-4 transition-all', isDone && 'opacity-70', isCurrent && 'ring-1 ring-amber-500/30 shadow-[0_24px_60px_-30px_rgba(245,158,11,0.4)]')}>
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <h4 className="font-semibold text-stone-900 dark:text-stone-50">{cert.name[locale]}</h4>
+                    <h4 className="font-bold text-stone-900 dark:text-stone-50">{cert.name[locale]}</h4>
                     <p className="mt-1 text-[13px] leading-relaxed text-stone-600 dark:text-stone-300">{cert.desc[locale]}</p>
                   </div>
-                  <span className="shrink-0 rounded-xl bg-amber-500/[0.12] px-2 py-1 text-sm font-bold tabular-nums text-amber-700 dark:text-amber-300">+{scaledAdd(cert.scoreAdd, level)}</span>
+                  <span className="shrink-0 rounded-2xl bg-amber-500/[0.12] px-3 py-1.5 text-amber-700 dark:text-amber-300"><Serif className="text-xl tabular-nums">+{scaledAdd(cert.scoreAdd, level)}</Serif></span>
                 </div>
                 {cert.opens && cert.opens.length > 0 && (
                   <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
