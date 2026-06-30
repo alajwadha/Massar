@@ -261,12 +261,13 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
   };
 
   return (
-    <Card className="flex h-full flex-col p-4 transition hover:-translate-y-0.5 duration-300 hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.45)]">
+    <Card className="relative flex h-full flex-col p-4 ps-5 transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_30px_70px_-34px_rgba(28,25,23,0.45)]">
+      <div aria-hidden className="absolute inset-y-2 start-0 w-1 rounded-full bg-gradient-to-b from-amber-400 to-orange-500" />
       <div className="flex items-start gap-3">
         <Avatar initials={c.name[locale].charAt(0)} companyKey={c.companyKey} seed={c.company.en} />
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
-            <h3 className="truncate text-[15px] font-semibold text-stone-900 dark:text-stone-50">{c.name[locale]}</h3>
+            <h3 className="truncate text-[17px] font-bold tracking-tight text-stone-900 dark:text-stone-50">{c.name[locale]}</h3>
             {isRecruiter && <span className="shrink-0 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-300">{ui.contacts.recruiter[locale]}</span>}
           </div>
           <p className="mt-0.5 truncate text-[13px] text-stone-600 dark:text-stone-300">{c.role[locale]}</p>
