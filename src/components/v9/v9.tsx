@@ -444,7 +444,7 @@ function CvReviewCard({ locale }: { locale: Loc }) {
       </div>
       {(cvReview.strengths.length > 2 || open.length > 2) && (
         <button type="button" onClick={() => setExpanded((v) => !v)} className={cn('mt-3 inline-flex items-center gap-1 rounded-full px-3 py-1 text-[12px] font-bold', GHOST)}>
-          {expanded ? (locale === 'ar' ? 'عرض أقل' : 'Show less') : (locale === 'ar' ? 'اعرض الكل' : 'Show all')}
+          {expanded ? (locale === 'ar' ? 'اعرض أقل' : 'Show less') : (locale === 'ar' ? 'اعرض الكل' : 'Show all')}
           <ChevronDown className={cn('h-3.5 w-3.5 transition-transform', expanded && 'rotate-180')} />
         </button>
       )}
@@ -667,17 +667,15 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
           <div className="relative z-10 grid items-start gap-5 sm:grid-cols-[auto_1fr] sm:gap-7">
             <div className="mx-auto flex w-full flex-col items-center gap-3 sm:mx-0 sm:items-start">
               <Eyebrow>{ui.overview.scoreLabel[locale]}</Eyebrow>
-              <div className="flex items-center gap-3.5">
-                <div className="flex items-baseline gap-1.5" dir="ltr">
-                  <Serif className={cn('font-medium leading-[0.78] tracking-[-0.045em] text-[clamp(4.5rem,17vw,7rem)]', score >= 80 ? 'text-emerald-600 dark:text-emerald-400' : score >= 62 ? 'text-amber-600 dark:text-amber-400' : 'text-stone-900 dark:text-stone-50')}>
-                    <Counter to={score} />
-                  </Serif>
-                  <span className="text-lg font-medium text-stone-400 dark:text-stone-500">/100</span>
+              <div className="relative flex items-end gap-2.5" dir="ltr">
+                <div aria-hidden className="pointer-events-none absolute -start-5 -top-5 opacity-40">
+                  <div className="absolute inset-6 rounded-full blur-xl" style={{ background: score >= 80 ? 'radial-gradient(circle, rgba(16,185,129,0.22), transparent 72%)' : score >= 62 ? 'radial-gradient(circle, rgba(245,158,11,0.22), transparent 72%)' : 'radial-gradient(circle, rgba(168,162,158,0.16), transparent 72%)' }} />
+                  <ScoreRing value={score} size={124} />
                 </div>
-                <div className="relative grid shrink-0 place-items-center" style={{ width: 58, height: 58 }}>
-                  <div aria-hidden className="pointer-events-none absolute inset-2 rounded-full blur-lg" style={{ background: score >= 80 ? 'radial-gradient(circle, rgba(16,185,129,0.25), transparent 72%)' : score >= 62 ? 'radial-gradient(circle, rgba(245,158,11,0.25), transparent 72%)' : 'radial-gradient(circle, rgba(168,162,158,0.18), transparent 72%)' }} />
-                  <ScoreRing value={score} size={58} />
-                </div>
+                <Serif className={cn('relative tabular-nums leading-[0.74] tracking-[-0.05em] text-[clamp(5rem,19vw,8rem)]', score >= 80 ? 'text-emerald-600 dark:text-emerald-400' : score >= 62 ? 'text-amber-600 dark:text-amber-400' : 'text-stone-900 dark:text-stone-50')}>
+                  <Counter to={score} />
+                </Serif>
+                <span className="relative mb-3 text-base font-medium text-stone-400 dark:text-stone-500">/100</span>
               </div>
               <span className={cn('rounded-full px-3.5 py-1.5 text-[13px] font-extrabold ring-1', score >= 80 ? 'bg-emerald-500/15 text-emerald-700 ring-emerald-500/30 shadow-[0_0_20px_-6px_rgba(16,185,129,0.65)] dark:text-emerald-300' : score >= 62 ? 'bg-amber-500/15 text-amber-700 ring-amber-500/30 shadow-[0_0_20px_-6px_rgba(245,158,11,0.65)] dark:text-amber-300' : 'bg-stone-500/10 text-stone-600 ring-stone-400/20 dark:text-stone-300')}>{score >= 80 ? (locale === 'ar' ? 'جاهز للتقديم' : 'Ready to apply') : score >= 62 ? (locale === 'ar' ? 'قريب جدًا' : 'Almost there') : (locale === 'ar' ? 'في الطريق' : 'Building up')}</span>
               <div className="inline-flex rounded-full border border-stone-200/80 bg-stone-50/80 p-0.5 dark:border-white/10 dark:bg-white/[0.05]">
