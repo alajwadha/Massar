@@ -199,7 +199,7 @@ function ThemeToggle() {
     }
   };
   return (
-    <button type="button" onClick={toggle} aria-label="Toggle dark mode" className={cn('grid h-9 w-9 place-items-center rounded-full transition-colors', GHOST)}>
+    <button type="button" onClick={toggle} aria-label="Toggle dark mode" className={cn("relative grid h-9 w-9 place-items-center rounded-full transition-colors before:absolute before:-inset-1 before:content-['']", GHOST)}>
       <AnimatePresence mode="wait" initial={false}>
         <motion.span key={dark ? 'sun' : 'moon'} initial={{ rotate: -40, opacity: 0, scale: 0.6 }} animate={{ rotate: 0, opacity: 1, scale: 1 }} exit={{ rotate: 40, opacity: 0, scale: 0.6 }} transition={{ duration: 0.2 }}>
           {dark ? <Sun /> : <Moon />}
@@ -651,7 +651,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
               <ArrowUpRight className="h-5 w-5 shrink-0 text-stone-900/80 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </Card>
           </button>
-          <button type="button" onClick={() => { setNextDismissed(true); try { localStorage.setItem(`masaar:nx:v9:${plan.slug}`, '1'); } catch {} }} aria-label={locale === 'ar' ? 'إغلاق' : 'Dismiss'} className="absolute end-2.5 top-2.5 z-10 grid h-7 w-7 place-items-center rounded-full text-stone-400 transition-colors hover:bg-stone-900/[0.06] hover:text-stone-700 dark:hover:bg-white/10 dark:hover:text-stone-200">
+          <button type="button" onClick={() => { setNextDismissed(true); try { localStorage.setItem(`masaar:nx:v9:${plan.slug}`, '1'); } catch {} }} aria-label={locale === 'ar' ? 'إغلاق' : 'Dismiss'} className="absolute end-2.5 top-2.5 z-10 grid h-7 w-7 place-items-center rounded-full text-stone-400 transition-colors before:absolute before:-inset-2 before:content-[''] hover:bg-stone-900/[0.06] hover:text-stone-700 dark:hover:bg-white/10 dark:hover:text-stone-200">
             <X className="h-4 w-4" />
           </button>
         </div>
@@ -709,7 +709,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
                   <ul className="mt-2.5 space-y-2">
                     {imps.map((imp, i) => (
                       <li key={i} className="flex items-center gap-2.5 text-[13px]">
-                        <span className={cn('shrink-0 rounded-md px-1.5 py-0.5 text-[11px] font-bold tabular-nums', imp.current ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300' : SOFT)}>+{imp.d}</span>
+                        <span className={cn('shrink-0 rounded-md px-1.5 py-0.5 text-[11px] font-bold tabular-nums', SOFT)}>+{imp.d}</span>
                         <span className="min-w-0 flex-1 text-stone-600 dark:text-stone-300">
                           {imp.name[locale]}
                           {imp.current && <span className="ms-2 whitespace-nowrap rounded bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-300">{ui.overview.quickWin[locale]}</span>}
@@ -1896,7 +1896,7 @@ function Shell() {
 
           <div className="flex shrink-0 items-center gap-2">
             <ThemeToggle />
-            <Link href={pathname} locale={locale === 'ar' ? 'en' : 'ar'} className={cn('grid h-9 w-9 place-items-center rounded-full text-xs font-bold', GHOST)}>
+            <Link href={pathname} locale={locale === 'ar' ? 'en' : 'ar'} className={cn("relative grid h-9 w-9 place-items-center rounded-full text-xs font-bold before:absolute before:-inset-1 before:content-['']", GHOST)}>
               {locale === 'ar' ? 'EN' : 'ع'}
             </Link>
             {/* Identity, far right, on wide screens only so the nav stays on one line below lg */}
