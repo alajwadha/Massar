@@ -661,7 +661,7 @@ const mahdiCvReview: CvReview = {
 };
 
 const mahdiScoreFactors: ScoreFactor[] = [
-  { label: { ar: 'التعليم', en: 'Education' }, detail: { ar: 'بكالوريوس إدارة سلاسل الإمداد واللوجستيات من الكلية الصناعية بالجبيل بمعدل 3.22', en: 'BSc Supply Chain and Logistics from Jubail Industrial College, GPA 3.22' }, strength: 'good' },
+  { label: { ar: 'التعليم', en: 'Education' }, detail: { ar: 'بكالوريوس إدارة سلاسل الإمداد واللوجستيات من الكلية الصناعية بالجبيل', en: 'BSc Supply Chain and Logistics from Jubail Industrial College' }, strength: 'good' },
   { label: { ar: 'الخبرة', en: 'Experience' }, detail: { ar: 'سنتين في بيكر هيوز بنتائج واضحة في التخطيط وتقليل الهدر', en: 'Two years at Baker Hughes with concrete planning and waste reduction results' }, strength: 'good' },
   { label: { ar: 'المهارات والأدوات', en: 'Skills and tools' }, detail: { ar: 'تخطيط الإنتاج مع Power BI وSQL، وهذا بالضبط اللي تطلبه أدوار التخطيط والتحليل', en: 'Production planning with Power BI and SQL, a direct match for planning and analyst roles' }, strength: 'strong' },
 ];

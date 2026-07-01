@@ -124,6 +124,64 @@ function Serif({ className, children }: { className?: string; children: React.Re
   return <span className={cn('font-serif font-normal', className)}>{children}</span>;
 }
 
+/* -------------------------------------------------------------- score dial -- */
+// v4-local segmented score gauge: a ticked dial (not a solid ring) with a verdict-band
+// color, a ready-threshold marker, and a draw-on sweep gated by reduced-motion. Does
+// NOT touch the shared ProgressRing (used by other designs).
+function ScoreDial({ value, size = 132 }: { value: number; size?: number }) {
+  const reduce = useReducedMotion();
+  const [lit, setLit] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setLit(true), 60);
+    return () => clearTimeout(t);
+  }, []);
+  const TICKS = 44;
+  const c = size / 2;
+  const rOuter = c - 4;
+  const rInner = c - 13;
+  const filled = Math.round((value / 100) * TICKS);
+  const readyIdx = Math.round(0.8 * TICKS);
+  const band = value >= 80 ? '#10b981' : value >= 62 ? '#f59e0b' : '#a8a29e';
+  const sparkSoft = value >= 80 ? 'rgba(16,185,129,0.40)' : value >= 62 ? 'rgba(245,158,11,0.40)' : 'rgba(168,162,158,0.30)';
+  const sparkGlow = value >= 80 ? 'rgba(16,185,129,0.85)' : value >= 62 ? 'rgba(245,158,11,0.85)' : 'rgba(168,162,158,0.65)';
+  const sparkA = (value / 100) * 2 * Math.PI;
+  const rMid = (rInner + rOuter) / 2;
+  const sx = c + rMid * Math.cos(sparkA);
+  const sy = c + rMid * Math.sin(sparkA);
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={`${value} / 100`} style={{ transform: 'rotate(-90deg)' }}>
+      {Array.from({ length: TICKS }).map((_, i) => {
+        const a = (i / TICKS) * 2 * Math.PI;
+        const cos = Math.cos(a);
+        const sin = Math.sin(a);
+        const on = i < filled;
+        const isThresh = i === readyIdx;
+        const ri = isThresh ? rInner - 3 : rInner;
+        const ro = isThresh ? rOuter + 1 : rOuter;
+        return (
+          <line
+            key={i}
+            x1={c + ri * cos} y1={c + ri * sin}
+            x2={c + ro * cos} y2={c + ro * sin}
+            strokeWidth={isThresh ? 3 : 2.5}
+            strokeLinecap="round"
+            stroke={isThresh ? 'currentColor' : on ? band : undefined}
+            className={isThresh ? 'text-stone-400 dark:text-stone-500' : on ? undefined : 'stroke-stone-200 dark:stroke-stone-700'}
+            style={on && !isThresh ? { opacity: reduce || lit ? 1 : 0, transition: 'opacity 360ms ease', transitionDelay: reduce ? '0ms' : `${i * 16}ms` } : undefined}
+          />
+        );
+      })}
+      {!reduce && (
+        <>
+          <motion.circle cx={sx} cy={sy} r={6.5} fill={sparkSoft} initial={{ opacity: 0 }} animate={{ opacity: [0.25, 0.6, 0.25] }} transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut', delay: (filled * 16) / 1000 + 0.3 }} />
+          <motion.circle cx={sx} cy={sy} r={3.2} fill={band} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: (filled * 16) / 1000, duration: 0.4 }} style={{ filter: `drop-shadow(0 0 5px ${sparkGlow})` }} />
+        </>
+      )}
+      {reduce && <circle cx={sx} cy={sy} r={3.2} fill={band} style={{ filter: `drop-shadow(0 0 4px ${sparkGlow})` }} />}
+    </svg>
+  );
+}
+
 /* ---------------------------------------------------------------- theme toggle -- */
 function ThemeToggle() {
   const [dark, setDark] = useState(false);
@@ -548,15 +606,17 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
         <Card className={cn('col-span-12 p-5 sm:p-6', railOn.length ? 'lg:col-span-8' : 'lg:col-span-12')}>
           <div className="grid items-start gap-5 sm:grid-cols-[auto_1fr] sm:gap-7">
             <div className="mx-auto flex flex-col items-center gap-3 sm:mx-0">
-              <div className="text-amber-600 dark:text-amber-400">
-                <ProgressRing value={score} size={118} stroke={6} color="currentColor" track="rgba(120,113,108,0.18)">
-                  <div className="leading-none">
-                    <Serif className="block text-5xl tracking-tight text-stone-900 dark:text-stone-50">
+              <div className="relative grid place-items-center" style={{ width: 132, height: 132 }}>
+                <div aria-hidden className="pointer-events-none absolute inset-6 rounded-full blur-2xl" style={{ background: score >= 80 ? 'radial-gradient(circle, rgba(16,185,129,0.18), transparent 72%)' : score >= 62 ? 'radial-gradient(circle, rgba(245,158,11,0.18), transparent 72%)' : 'radial-gradient(circle, rgba(168,162,158,0.14), transparent 72%)' }} />
+                <ScoreDial value={score} size={132} />
+                <div className="absolute inset-0 grid place-items-center text-center leading-none">
+                  <div>
+                    <Serif className={cn('block text-5xl tracking-tight', score >= 80 ? 'text-emerald-600 dark:text-emerald-400' : score >= 62 ? 'text-amber-600 dark:text-amber-400' : 'text-stone-900 dark:text-stone-50')}>
                       <Counter to={score} />
                     </Serif>
                     <div className="mt-0.5 text-[10px] font-medium text-stone-500 dark:text-stone-400">/ 100</div>
                   </div>
-                </ProgressRing>
+                </div>
               </div>
               <div className="inline-flex rounded-full border border-stone-200/80 bg-stone-50/80 p-0.5 dark:border-white/10 dark:bg-white/[0.05]">
                 {LEVELS.map((lv) => {
@@ -575,6 +635,23 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
               <Eyebrow>{ui.overview.scoreLabel[locale]}</Eyebrow>
               <h1 className="mt-2 text-balance text-[22px] font-semibold leading-[1.12] tracking-tight text-stone-900 dark:text-stone-50 sm:text-[28px]">{activePath.name[locale]}</h1>
               <p className="mt-2 text-[12.5px] leading-snug text-stone-500 dark:text-stone-400">{whyScore}</p>
+
+              {plan.scoreFactors.length > 0 && (
+                <div className="mt-4">
+                  <div className="text-[11px] font-bold uppercase tracking-wide text-stone-500 dark:text-stone-400">{locale === 'ar' ? 'وش وراء درجتك' : "What's behind your score"}</div>
+                  <ul className="mt-2 space-y-1.5">
+                    {plan.scoreFactors.map((f, i) => (
+                      <li key={i} className="flex items-start gap-2 text-[12.5px] leading-snug">
+                        <span aria-hidden className={cn('mt-[5px] h-1.5 w-1.5 shrink-0 rounded-full', f.strength === 'strong' ? 'bg-emerald-500' : f.strength === 'good' ? 'bg-amber-500' : 'bg-stone-400')} />
+                        <span className="min-w-0 flex-1">
+                          <span className="font-bold text-stone-800 dark:text-stone-100">{f.label[locale]}</span>
+                          <span className="text-stone-500 dark:text-stone-400"> · {f.detail[locale]}</span>
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
               {imps.length > 0 && (
                 <div className="mt-5">
@@ -1730,9 +1807,10 @@ function Shell() {
 
       <header className="sticky top-0 z-50 border-b border-stone-200/70 bg-[#f7f6f2]/80 backdrop-blur-xl dark:border-white/[0.07] dark:bg-[#0a0a0b]/80">
         <div className="mx-auto flex h-16 w-full max-w-5xl items-center gap-2 px-4 sm:gap-3 sm:px-8">
-          <div className="flex shrink-0 items-center gap-2.5">
-            <span className="grid h-8 w-8 place-items-center rounded-xl bg-stone-900 font-extrabold text-white dark:bg-stone-100 dark:text-stone-900">م</span>
-            <span className="hidden text-lg font-semibold tracking-tight sm:inline">مسار</span>
+          <div className="flex shrink-0 items-center">
+            <span className="grid h-9 w-9 place-items-center rounded-xl bg-white shadow-sm ring-1 ring-stone-900/10 dark:ring-white/15">
+              <img src="/masaar-mark.png" alt="Masaar" width={26} height={22} className="h-[22px] w-auto" />
+            </span>
           </div>
 
           {/* Primary nav, on the same line as the controls (labels collapse to icons on phone) */}
@@ -1745,7 +1823,7 @@ function Shell() {
                   <n.Icon className="h-4 w-4 shrink-0" />
                   <span className="hidden md:inline">{ui.nav[n.id][locale]}</span>
                   {n.pro && <span className={cn('ms-0.5 hidden rounded px-1 text-[8.5px] font-bold leading-tight md:inline', on ? 'bg-white/20 text-white dark:bg-stone-900/20 dark:text-stone-900' : 'bg-amber-500/15 text-amber-700 dark:text-amber-300')}>Pro</span>}
-                  {n.pro && <span className="ms-0.5 rounded bg-amber-500/15 px-1 text-[8px] font-bold leading-tight text-amber-700 dark:text-amber-300 md:hidden">Pro</span>}
+                  {n.pro && <span className={cn('ms-0.5 rounded px-1 text-[8px] font-bold leading-tight md:hidden', on ? 'bg-white/20 text-white dark:bg-stone-900/20 dark:text-stone-900' : 'bg-amber-500/15 text-amber-700 dark:text-amber-300')}>Pro</span>}
                 </button>
               );
             })}

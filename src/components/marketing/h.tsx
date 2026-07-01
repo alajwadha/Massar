@@ -196,8 +196,10 @@ export default function MarketingH({ locale }: { locale: Loc }) {
       {/* ---------------------------------------------------------- header -- */}
       <header className={cn('sticky top-0 z-40 border-b bg-[#f7f6f2]/80 backdrop-blur-md dark:bg-[#0a0a0b]/80', RULE)}>
         <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-3.5 sm:px-8">
-          <Link href="/" className="flex items-baseline gap-2">
-            <Serif className="text-2xl tracking-tight">{locale === 'ar' ? 'مسار' : 'Masaar'}</Serif>
+          <Link href="/" className="flex items-center gap-2" aria-label="Masaar">
+            <span className="grid h-9 w-9 place-items-center rounded-xl bg-white shadow-sm ring-1 ring-stone-900/10 dark:ring-white/15">
+              <img src="/masaar-mark.png" alt="Masaar" width={26} height={22} className="h-[22px] w-auto" />
+            </span>
           </Link>
           <nav className="hidden items-center gap-7 text-[13px] text-stone-500 dark:text-stone-400 md:flex">
             <a href="#how" className="transition-colors hover:text-stone-900 dark:hover:text-white">{t('navWork')}</a>
