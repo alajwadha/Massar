@@ -18,6 +18,11 @@ const serif = Instrument_Serif({
   display: 'swap',
 });
 
+// Same privacy posture as /c: tokenized private links, never indexed.
+export const metadata = {
+  robots: { index: false, follow: false, nocache: true },
+};
+
 export function generateStaticParams() {
   return Object.keys(plans).map((slug) => ({ slug }));
 }

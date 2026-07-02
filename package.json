@@ -12,7 +12,8 @@
     "hr:validate": "node scripts/validate-hr.mjs",
     "hr:import": "node scripts/import-hr.mjs",
     "dashboard:html": "node scripts/build-dashboard-html.mjs",
-    "hr:enrich": "node scripts/enrich-followers.mjs"
+    "hr:enrich": "node scripts/enrich-followers.mjs",
+    "validate:plan": "tsx scripts/validate-plan.ts"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -31,6 +32,7 @@
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.40",
     "tailwindcss": "^3.4.7",
+    "tsx": "^4.22.5",
     "typescript": "^5.5.4"
   }
 }

@@ -45,6 +45,7 @@ import { cn } from '@/lib/utils';
 import { Link, usePathname } from '@/i18n/routing';
 import { usePlan } from '@/components/app/plan-context';
 import { DashboardState, useNetwork, useProgress } from '@/components/app/dashboard-state';
+import { track } from '@/lib/track';
 import { ProgressRing, Counter, Avatar } from '@/components/app/ui';
 import { scoreNote } from '@/lib/scoring';
 import {
@@ -71,7 +72,8 @@ import {
   companyIndustries,
   cvGuide,
   interviewTips,
-  ui,
+  ui as uiBase,
+  forGender,
   type Contact,
   type ContactStatus,
   type CompanyTier,
@@ -111,6 +113,15 @@ const ACCENT = 'text-amber-700 dark:text-amber-300';
 
 const NOISE =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")";
+
+// The shared strings resolved for THIS customer: for a female customer every
+// string that carries a feminine `arF` variant reads feminine automatically
+// (see forGender in app-data.ts). Components shadow the import with this hook,
+// so all the existing `ui.x[locale]` reads stay untouched.
+function useUi() {
+  const { profile } = usePlan();
+  return useMemo(() => forGender(uiBase, profile.gender), [profile.gender]);
+}
 
 function Card({ className, children }: { className?: string; children: React.ReactNode }) {
   return <div className={cn(CARD, EDGE, className)}>{children}</div>;
@@ -241,7 +252,8 @@ const STATUS_BTNS: { key: ContactStatus; sk: 'status_sent' | 'status_replied' | 
 /* ------------------------------------------------------------- contact card -- */
 
 function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; locale: Loc; kind?: PickKind; reason?: string }) {
-  const { templates } = usePlan();
+  const ui = useUi();
+  const { templates, slug } = usePlan();
   const { statuses, setStatus } = useProgress();
   const [tpl, setTpl] = useState(0);
   const [copied, setCopied] = useState(false);
@@ -258,6 +270,8 @@ function ContactCard({ contact: c, locale, kind, reason }: { contact: Contact; l
     } catch {
       /* clipboard may be blocked */
     }
+    // Anonymous: which template got copied, never who it was for.
+    track(slug, 'template_copied', { template: template.id });
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
@@ -356,6 +370,7 @@ function CardGrid({ items, locale }: { items: { contact: Contact; kind?: PickKin
 // Transient review card: shows strengths + hygiene issues, and unmounts entirely
 // once every issue is marked Fixed (we never leave a resolved to-do hanging).
 function CvReviewCard({ locale }: { locale: Loc }) {
+  const ui = useUi();
   const { cvReview } = usePlan();
   const { cvFixed, toggleCvFix, resetCvFix } = useProgress();
   const hasIssues = cvReview.issues.length > 0;
@@ -434,6 +449,7 @@ function CvReviewCard({ locale }: { locale: Loc }) {
 // cannot fix (the certs are covered by "what raises your score"). Lives with the
 // score and persists.
 function LevelGaps({ locale }: { locale: Loc }) {
+  const ui = useUi();
   const { levelGaps } = usePlan();
   const { level } = useProgress();
   const gap = levelGaps[level];
@@ -466,7 +482,7 @@ function LevelGaps({ locale }: { locale: Loc }) {
 // Home is customizable: the score hero is the fixed core, and the surrounding
 // cards are widgets the customer can toggle (persisted in homeWidgets). New
 // widgets (weekly goal, snapshot) default off so they can be "added".
-const HOME_WIDGETS: { id: string; label: keyof typeof ui.overview }[] = [
+const HOME_WIDGETS: { id: string; label: keyof typeof uiBase.overview }[] = [
   { id: 'nextMove', label: 'wNextMove' },
   { id: 'network', label: 'wNetwork' },
   { id: 'cvReview', label: 'wCvReview' },
@@ -481,6 +497,7 @@ const WIDGET_DEFAULT: Record<string, boolean> = { nextMove: false, network: fals
 const WEEKLY_GOAL = 5;
 
 function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; openPath: (id: string) => void }) {
+  const ui = useUi();
   const plan = usePlan();
   const { network } = useNetwork();
   const { level, setLevel, statuses, certsDone, activePathId, setActivePath, homeWidgets, setWidget } = useProgress();
@@ -820,6 +837,7 @@ function Home({ locale, go, openPath }: { locale: Loc; go: (t: Tab) => void; ope
 /* ------------------------------------------------------------------- paths -- */
 
 function CertTimeline({ path, locale }: { path: CareerPath; locale: Loc }) {
+  const ui = useUi();
   const { certsDone, toggleCert, level } = useProgress();
   return (
     <div className="relative">
@@ -875,6 +893,7 @@ function CertTimeline({ path, locale }: { path: CareerPath; locale: Loc }) {
 }
 
 function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; onBack: () => void }) {
+  const ui = useUi();
   const plan = usePlan();
   const { network } = useNetwork();
   const { level, certsDone, activePathId, setActivePath } = useProgress();
@@ -991,6 +1010,7 @@ function PathDetail({ path, locale, onBack }: { path: CareerPath; locale: Loc; o
 }
 
 function Paths({ locale, selId, setSelId }: { locale: Loc; selId: string | null; setSelId: (id: string | null) => void }) {
+  const ui = useUi();
   const { paths: allPaths, primaryPath, tier } = usePlan();
   const paths = allPaths.slice(0, TIER_PATHS[tier]);
   const { level, activePathId } = useProgress();
@@ -1054,6 +1074,7 @@ function Chips<T extends string>({ label, options, value, onChange }: { label: s
 }
 
 function NetworkPanel({ locale, count, onFile, onClear }: { locale: Loc; count: number | null; onFile: (f: File) => void; onClear: () => void }) {
+  const ui = useUi();
   const inputRef = useRef<HTMLInputElement>(null);
   const Picker = <input ref={inputRef} type="file" accept=".csv,text/csv" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) onFile(f); e.target.value = ''; }} />;
   if (count !== null) {
@@ -1107,6 +1128,7 @@ function NetworkPanel({ locale, count, onFile, onClear }: { locale: Loc; count: 
 }
 
 function Contacts({ locale }: { locale: Loc }) {
+  const ui = useUi();
   const plan = usePlan();
   const { network, setFromCsv, clear } = useNetwork();
   const { statuses } = useProgress();
@@ -1227,6 +1249,7 @@ function Contacts({ locale }: { locale: Loc }) {
 // The message tracker now lives inside Contacts: a compact funnel of the outreach
 // the customer has logged (sent / replied / awaiting / follow-up) + reply rate.
 function OutreachLog({ locale }: { locale: Loc }) {
+  const ui = useUi();
   const plan = usePlan();
   const { network } = useNetwork();
   const { statuses } = useProgress();
@@ -1272,6 +1295,7 @@ function OutreachLog({ locale }: { locale: Loc }) {
 // while working) and worldwide full-time programs, with the best ones flagged and
 // each linking to that field's program page.
 function Study({ locale }: { locale: Loc }) {
+  const ui = useUi();
   const plan = usePlan();
   const { activePathId } = useProgress();
   const activePath = plan.paths.find((p) => p.id === (activePathId ?? plan.primaryPath.id)) ?? plan.primaryPath;
@@ -1428,6 +1452,7 @@ function SectionTitle({ icon: Icon, title, sub }: { icon: typeof GraduationCap; 
 }
 
 function Opportunities({ locale }: { locale: Loc }) {
+  const ui = useUi();
   const plan = usePlan();
   const { level, activePathId } = useProgress();
   const activePath = plan.paths.find((p) => p.id === (activePathId ?? plan.primaryPath.id)) ?? plan.primaryPath;
@@ -1588,6 +1613,7 @@ function Opportunities({ locale }: { locale: Loc }) {
 /* ----------------------------------------------------------- referral strip -- */
 // Rendered in the Shell (outside the tab content) so the invite shows on every page.
 function ReferralStrip({ locale }: { locale: Loc }) {
+  const ui = useUi();
   const plan = usePlan();
   const [copied, setCopied] = useState(false);
   // Fill the link after mount so the server and first client render match (the
@@ -1638,6 +1664,7 @@ function ReferralStrip({ locale }: { locale: Loc }) {
 /* ------------------------------------------------------------ feedback footer -- */
 
 function FeedbackFooter({ locale }: { locale: Loc }) {
+  const ui = useUi();
   const { slug } = usePlan();
   const [rating, setRating] = useState(0);
   const [text, setText] = useState('');
@@ -1697,6 +1724,7 @@ const NAV: { id: Tab; Icon: typeof LayoutDashboard; pro?: boolean }[] = [
 ];
 
 function CommandPalette({ open, setOpen, locale, go, openPath }: { open: boolean; setOpen: (v: boolean) => void; locale: Loc; go: (t: Tab) => void; openPath: (id: string) => void }) {
+  const ui = useUi();
   const { paths: allPaths, tier } = usePlan();
   const paths = allPaths.slice(0, TIER_PATHS[tier]);
   const [q, setQ] = useState('');
@@ -1760,6 +1788,7 @@ function CommandPalette({ open, setOpen, locale, go, openPath }: { open: boolean
 /* ----------------------------------------------------------------- shell -- */
 
 function ProUpsell({ locale }: { locale: Loc }) {
+  const ui = useUi();
   return (
     <div className="mx-auto max-w-md py-6">
       <Card className="flex flex-col items-center gap-3 p-8 text-center">
@@ -1772,15 +1801,16 @@ function ProUpsell({ locale }: { locale: Loc }) {
 }
 
 function Shell() {
+  const ui = useUi();
   const locale = useLocale() as Loc;
   const pathname = usePathname();
   const reduce = useReducedMotion();
-  const { profile, tier } = usePlan();
+  const { profile, tier, slug } = usePlan();
   const [tab, setTab] = useState<Tab>('home');
   const [pathSel, setPathSel] = useState<string | null>(null);
   const [cmdOpen, setCmdOpen] = useState(false);
 
-  const go = (t: Tab) => { setTab(t); if (t !== 'paths') setPathSel(null); };
+  const go = (t: Tab) => { track(slug, 'tab_visited', { tab: t }); setTab(t); if (t !== 'paths') setPathSel(null); };
   const openPath = (id: string) => { setTab('paths'); setPathSel(id); };
 
   useEffect(() => {

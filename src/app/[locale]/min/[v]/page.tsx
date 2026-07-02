@@ -31,7 +31,7 @@ export default function MinPage({
 }) {
   setRequestLocale(locale);
   if (!VS.includes(v)) notFound();
-  const plan = getPlan('ali-alajwad');
+  const plan = getPlan('ali-alajwad-kxggkx');
   if (!plan) notFound();
   return (
     <div className={serif.variable}>

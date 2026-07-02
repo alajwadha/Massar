@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { parseUploadedConnections, type Contact, type ContactStatus, type Level } from '@/lib/app-data';
+import { track } from '@/lib/track';
 
 /* ------------------------------------------------------------ network -- */
 // The customer's uploaded LinkedIn network. Kept in sessionStorage (per link) so a
@@ -52,6 +53,11 @@ export function DashboardState({
   initialCertsDone: string[];
   children: ReactNode;
 }) {
+  // One anonymous "plan opened" ping per page load (see src/lib/track.ts).
+  useEffect(() => {
+    track(slug, 'plan_opened');
+  }, [slug]);
+
   // ---- network (sessionStorage) ----
   const [network, setNetwork] = useState<Contact[] | null>(null);
   useEffect(() => {
@@ -65,6 +71,7 @@ export function DashboardState({
   const setFromCsv = (text: string) => {
     const list = parseUploadedConnections(text);
     setNetwork(list);
+    track(slug, 'csv_uploaded', { count: list.length });
     try { sessionStorage.setItem(`masaar:net:${slug}`, JSON.stringify(list)); } catch { /* ignore */ }
     // Save a copy to the customer's profile (the upload copy states this).
     try {
@@ -140,9 +147,18 @@ export function DashboardState({
       homeWidgets,
       level,
       setLevel,
-      setStatus: (id, s) => setStatuses((prev) => ({ ...prev, [id]: s })),
-      toggleCert: (n) => setCertsDone((prev) => ({ ...prev, [n]: !prev[n] })),
-      toggleCvFix: (id) => setCvFixed((prev) => ({ ...prev, [id]: !prev[id] })),
+      setStatus: (id, s) => {
+        track(slug, 'outreach_status', { status: s });
+        setStatuses((prev) => ({ ...prev, [id]: s }));
+      },
+      toggleCert: (n) => {
+        track(slug, 'cert_toggled', { cert: n });
+        setCertsDone((prev) => ({ ...prev, [n]: !prev[n] }));
+      },
+      toggleCvFix: (id) => {
+        track(slug, 'cv_issue_fixed', { issue: id });
+        setCvFixed((prev) => ({ ...prev, [id]: !prev[id] }));
+      },
       resetCvFix: () => setCvFixed({}),
       setActivePath: (id) => setActivePathId(id),
       setWidget: (id, on) => setHomeWidgets((prev) => ({ ...prev, [id]: on })),

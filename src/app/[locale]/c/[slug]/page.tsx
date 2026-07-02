@@ -19,6 +19,12 @@ const serif = Instrument_Serif({
   display: 'swap',
 });
 
+// Customer links are private: the tokenized slug is the only key, so keep the
+// pages out of search engines entirely.
+export const metadata = {
+  robots: { index: false, follow: false, nocache: true },
+};
+
 export function generateStaticParams() {
   return Object.keys(plans).map((slug) => ({ slug }));
 }

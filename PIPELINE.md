@@ -4,8 +4,8 @@ How we build and deliver one customer's plan, end to end, plus everything you ne
 actually do it: where the code lives, the data model, a step by step recipe for adding
 a customer, the scoring model, deployment, security, and a worked example.
 
-This is the source of truth for the process. The two validation agents check the work
-against this document.
+This is the source of truth for the process. The three validation agents check the work
+against this document, and each writes a structured report (see the gate below).
 
 ## Contents
 
@@ -38,9 +38,10 @@ After a customer sends their CV, before their link goes out:
 6. Source and fact check: every concrete claim checked against a real source or
    softened. Every verified fact is written to the research store.
 7. Link health check: every URL loads and points to the right page.
-8. Render verification: typecheck, production build, measured preview at desktop and
-   phone, Arabic and English, light and dark.
-9. Two agent validation gate (below).
+8. Render verification: `npm run validate:plan` (the deterministic checks), typecheck,
+   production build, measured preview at desktop and phone, Arabic and English, light
+   and dark.
+9. Three agent validation gate (below).
 10. Preview link first, click through every tab in both languages, then promote.
 11. Version the customer record as a dated snapshot.
 12. Deliver the link. The customer uploads their LinkedIn CSV and works the plan.
@@ -59,6 +60,26 @@ After a customer sends their CV, before their link goes out:
   relevance and anti-lazy check. Agent three exists to catch what two missed.
 - Give each agent the customer's CV and point it at the code. Run with the Agent tool one
   after another (each only after the previous passes), or a Workflow that enforces the order.
+- Deterministic first: run `npm run validate:plan` BEFORE agent one and fix everything it
+  reports. The script owns the mechanical checks (registry, caps, primary match, derived
+  scores, link shape, bilingual completeness); the agents own judgment (relevance,
+  grounding, honesty, voice). An agent may still flag a mechanical miss, but never skip
+  a judgment check because "the script covers it".
+- Structured reports: each agent ends its review by writing
+  `reports/<slug>/<YYYY-MM-DD>-cycle<N>-agent<K>.json` following `reports/schema.json`
+  (verdict PASS or FAIL plus one entry per finding: criterion, severity, item, evidence,
+  fix). Evidence NEVER quotes the CV text itself (the CV is never committed); it points
+  to the plan field or code line instead. The reports are part of the customer's dated
+  snapshot, so every delivery carries its own audit trail.
+- Circuit breaker: a full gate run is one cycle (agents one, two, three in order). If the
+  gate has failed THREE full cycles for the same customer, stop re-running it. Write down
+  what keeps failing and make a human decision (rescope the plan, fix the shared data, or
+  adjust this document) before any further cycle. Endless fix-and-rerun loops hide a
+  problem that is upstream of the gate.
+- Narrow re-verify: when a cycle fails on a small, isolated finding (one link, one label),
+  the next cycle may start with agent one re-checking just the touched items plus its full
+  relevance pass, but agents two and three still do their FULL reviews. Substantive changes
+  (paths, scores, majors, contacts) always restart the gate in full.
 
 Every review covers, in full:
 - Relevance and anti-lazy: every major, program, cert, company, and path fits THIS person's
@@ -120,9 +141,12 @@ The bar is STRICT. A finding is not a soft note; any one of these fails the gate
   not stiff MSA (per the Microsoft Arabic Saudi and Mozilla l10n guides). Use وش/ليش not
   ما الذي/لماذا, هذي not هذه, خلّ not اجعل, تستاهل not تستحق, عشان, مثل ما; address the
   customer directly and warmly (on their side, crisp). MATCH THE CUSTOMER'S GENDER: feminine
-  forms for a woman (see qamarPlan), masculine for a man. Known gap: the SHARED ui strings are
-  still masculine and need per-gender variants; a female customer's personal copy is feminine
-  but the surrounding UI chrome reads masculine until that is built.
+  forms for a woman (see qamarPlan), masculine for a man. This now covers the SHARED ui too:
+  every `profile` carries `gender`, and any shared string whose Arabic is grammatically
+  gendered carries an `arF` variant next to `ar` (see `forGender()` in app-data.ts; the UI
+  picks `arF` automatically for a female customer). When adding or editing a shared string
+  with a gendered verb or address form, ALWAYS add its `arF`; a woman must never be
+  addressed in the masculine anywhere in the product. This is a gate criterion.
 - Fields beyond the original six: the type system now also supports a `media` field
   (FieldTag/icon/gradFields/gradPrograms/fieldMajors/saudiUniStrength/CompanyIndustry). When a
   customer's field is new, ADD it across those unions/records (not reuse a wrong tag) and add
@@ -232,9 +256,14 @@ then renders `<PlanProvider plan={...}><V4 /></PlanProvider>`.
    and the person, not generic.
 6. Assemble the `CustomerPlan`. Set `connections: []` and `hrContacts: []` (both filled
    later, see section 7). Reuse `templates`, `tracker`, `journey` or customize them.
-7. Register it: add the plan to `plans` keyed by its `slug`.
-8. Verify: `npm run typecheck`, `npm run build`, link check, and a rendered preview in
-   both languages and themes (section 10). Then the two agent gate.
+7. Register it: add the plan to `plans` keyed by its `slug`. The slug is the person's
+   name PLUS a random 6 character token (for example `ali-alajwad-kxggkx`), generated
+   fresh per customer, never a bare guessable name: the link is the only key to their
+   plan and the HR contacts inside it. Customer pages are also `noindex`, so the link
+   stays out of search engines.
+8. Verify: `npm run validate:plan`, `npm run typecheck`, `npm run build`, link check,
+   and a rendered preview in both languages and themes (section 10). Then the three
+   agent gate.
 9. Deploy and send them `/<locale>/c/<slug>`.
 
 ---
@@ -265,7 +294,7 @@ the person and not a template with the names swapped. Work in this order.
    tied to a line, templates that name their real field and employer.
 7. Anti template checklist before the gate. Every claim points to a CV line. Nothing is
    generic enough to describe another candidate in the field. No invented cost, link, or
-   eligibility. The score follows the rubric. Then run the strict two agent gate (section 1).
+   eligibility. The score follows the rubric. Then run the strict three agent gate (section 1).
 
 The test of a good plan: paste it beside another customer's in the same field. If the
 paths, certs, and wording are interchangeable, it is still a template. Make it specific.
@@ -358,6 +387,7 @@ linking to Coursera), `careerDays` (dated events), `nationalPortals`, `tamheer`.
 ## 10. Build, verify, deploy
 
 ```bash
+npm run validate:plan  # deterministic plan checks (registry, caps, scores, links, LS)
 npm run typecheck      # tsc --noEmit
 npm run build          # production build; must pass before deploy
 ```
@@ -378,6 +408,13 @@ Production alias: `massar-sigma.vercel.app`. Never commit a Vercel token; pass i
 command line and revoke it when done. Never `--force` push or skip hooks.
 
 After deploy, the customer link is `https://massar-sigma.vercel.app/<locale>/c/<slug>`.
+
+Usage signals: the product posts small anonymous events (plan opened, tab visited, CSV
+uploaded, CV issue fixed, template copied, outreach status set) to `/api/track`, which
+logs them as one line JSON. Read them in the Vercel deployment logs (filter `[track]`)
+to see whether a delivered plan is actually being worked. No names, no contact data,
+no CV content; only the slug, the event, and tiny metadata. When Supabase lands these
+events move from logs to a table.
 
 ---
 
@@ -409,7 +446,8 @@ It grows into the database and ports straight to Supabase later.
 - Primary path: Energy Investment and Strategy (targets PIF, KAPSARC, energy funds).
 - HR is pulled live from the database for his eight sectors, capped at 300; his
   connections come from his own uploaded CSV.
-- Link: `massar-sigma.vercel.app/en/c/ali-alajwad` (and `/ar/`).
+- Link: `massar-sigma.vercel.app/en/c/ali-alajwad-kxggkx` (and `/ar/`). The slug carries
+  the per customer random token, so the link cannot be guessed from the name.
 
 ---
 

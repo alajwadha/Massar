@@ -6,7 +6,33 @@
 import { computeScoreByLevel, type ScoreInput } from './scoring';
 
 export type Loc = 'ar' | 'en';
-export type LS = { ar: string; en: string };
+// Arabic is grammatically gendered; `arF` is the feminine-address variant of `ar`.
+// Only strings that actually conjugate for the reader carry one; forGender() below
+// swaps it in transparently, so render code keeps indexing `[locale]` as before.
+export type LS = { ar: string; en: string; arF?: string };
+export type Gender = 'm' | 'f';
+
+// A read-only view of any copy tree (the shared `ui`, a plan, anything) where, for a
+// female customer, reading `.ar` yields `.arF` when the leaf provides one. A deep
+// Proxy instead of a deep copy so functions and arrays inside the tree keep working
+// and there is exactly ONE source of truth for every string.
+export function forGender<T extends object>(tree: T, gender: Gender | undefined): T {
+  if (gender !== 'f') return tree;
+  const wrap = (o: unknown): unknown => {
+    if (o === null || typeof o !== 'object') return o;
+    return new Proxy(o as object, {
+      get(target, prop, receiver) {
+        if (prop === 'ar') {
+          const f = (target as { arF?: unknown }).arF;
+          if (f != null) return f;
+        }
+        const v = Reflect.get(target, prop, receiver);
+        return typeof v === 'object' && v !== null ? wrap(v) : v;
+      },
+    });
+  };
+  return wrap(tree) as T;
+}
 
 export function tr(s: LS, locale: Loc): string {
   return s[locale];
@@ -32,6 +58,8 @@ export const profile = {
   region: 'eastern' as SaudiRegion,
   // Completed BEng (Manchester); the master's is in progress, so next = master.
   degree: 'bachelor' as Degree,
+  // Drives feminine-address copy across the WHOLE product (see forGender / arF).
+  gender: 'm' as Gender,
 };
 
 // CV competitiveness for the primary target, plus the cheapest-first improvements
@@ -598,7 +626,9 @@ const aliLevelGaps: Record<Level, LevelGap> = {
 };
 
 export const aliPlan: CustomerPlan = {
-  slug: 'ali-alajwad',
+  // Name + a random per-customer token: the link is the only key to the plan,
+  // so it must not be guessable from the name alone (PIPELINE.md §5 step 7).
+  slug: 'ali-alajwad-kxggkx',
   tier: 'pro',
   sectors: [
     'investment_finance',
@@ -633,6 +663,7 @@ const mahdiProfile = {
   location: { ar: 'الخبر، المنطقة الشرقية', en: 'Khobar, Eastern Province' } satisfies LS,
   region: 'eastern' as SaudiRegion,
   degree: 'bachelor' as Degree,
+  gender: 'm' as Gender,
 };
 
 const mahdiCvScore = {
@@ -856,7 +887,7 @@ const mahdiPaths: CareerPath[] = [
 ];
 
 export const mahdiPlan: CustomerPlan = {
-  slug: 'mahdi-alarifi',
+  slug: 'mahdi-alarifi-9i9t9e',
   tier: 'pro',
   sectors: ['manufacturing_mining', 'energy_petrochem', 'transport_logistics', 'retail_fmcg', 'gigaprojects_realestate', 'healthcare_pharma'],
   profile: mahdiProfile,
@@ -884,6 +915,7 @@ const alhajjiProfile = {
   location: { ar: 'الظهران، المنطقة الشرقية', en: 'Dhahran, Eastern Province' } satisfies LS,
   region: 'eastern' as SaudiRegion,
   degree: 'bachelor' as Degree,
+  gender: 'm' as Gender,
 };
 
 const alhajjiCvScore = {
@@ -1103,7 +1135,7 @@ const alhajjiStudyMajors: StudyMajor[] = [
 ];
 
 export const alhajjiPlan: CustomerPlan = {
-  slug: 'ali-alhajji',
+  slug: 'ali-alhajji-r54adh',
   tier: 'pro',
   sectors: ['energy_petrochem', 'manufacturing_mining', 'gigaprojects_realestate'],
   profile: alhajjiProfile,
@@ -1130,6 +1162,8 @@ const qamarProfile = {
   location: { ar: 'جدة، المنطقة الغربية', en: 'Jeddah, Western Province' } satisfies LS,
   region: 'western' as SaudiRegion,
   degree: 'bachelor' as Degree,
+  // Feminine: the shared ui swaps to its arF variants for her automatically.
+  gender: 'f' as Gender,
 };
 
 const qamarCvScore = {
@@ -1385,7 +1419,7 @@ const qamarStudyMajors: StudyMajor[] = [
 ];
 
 export const qamarPlan: CustomerPlan = {
-  slug: 'qamar-kashif',
+  slug: 'qamar-kashif-urrrws',
   tier: 'pro',
   sectors: ['tourism_entertainment', 'retail_fmcg', 'tech_startups'],
   profile: qamarProfile,
@@ -1765,7 +1799,7 @@ export const ui = {
   },
   shell: {
     greeting: { ar: 'أهلًا بعودتك', en: 'Welcome back' },
-    disclaimer: { ar: 'راجع التفاصيل قبل أي خطوة، يمكن نغلط في شي.', en: 'Double-check the details before you act, we might get something wrong.' },
+    disclaimer: { ar: 'راجع التفاصيل قبل أي خطوة، يمكن نغلط في شي.', arF: 'راجعي التفاصيل قبل أي خطوة، يمكن نغلط في شي.', en: 'Double-check the details before you act, we might get something wrong.' },
     disclaimerWarm: { ar: 'مستقبلك يهمّنا!', en: 'Your future matters to us!' },
     proLockTitle: { ar: 'هذي ميزة Pro', en: 'A Pro feature' },
     proLockBody: { ar: 'هذي الصفحة ضمن باقة Pro. رقّي باقتك وتنفتح لك الدراسات العليا والمصادر.', en: 'This page is part of the Pro plan. Upgrade to unlock graduate study and resources.' },
@@ -1778,23 +1812,23 @@ export const ui = {
     title: { ar: 'خطتك المهنية كلها في مكان واحد', en: 'Your whole career plan, in one place' },
     journeyLabel: { ar: 'من خطتك', en: 'of your plan' },
     certsLabel: { ar: 'شهادات أنجزتها', en: 'Certifications done' },
-    sentLabel: { ar: 'جهات تواصلت معها', en: 'Contacts reached' },
+    sentLabel: { ar: 'جهات تواصلت معها', arF: 'جهات تواصلتي معها', en: 'Contacts reached' },
     repliesLabel: { ar: 'ردود وصلتك', en: 'Replies' },
     nextMove: {
       eyebrow: { ar: 'خطوتك التالية', en: 'Your next move' },
-      connectTitle: { ar: 'اربط شبكتك', en: 'Connect your network' },
-      connectDesc: { ar: 'ارفع جهات اتصالك ونوريك أقرب الناس لأهدافك.', en: 'Upload your connections to surface the warmest intros.' },
-      reachTitle: { ar: 'تواصل اليوم', en: 'Reach out today' },
+      connectTitle: { ar: 'اربط شبكتك', arF: 'اربطي شبكتك', en: 'Connect your network' },
+      connectDesc: { ar: 'ارفع جهات اتصالك ونوريك أقرب الناس لأهدافك.', arF: 'ارفعي جهات اتصالك ونوريك أقرب الناس لأهدافك.', en: 'Upload your connections to surface the warmest intros.' },
+      reachTitle: { ar: 'تواصل اليوم', arF: 'تواصلي اليوم', en: 'Reach out today' },
       reachDesc: { ar: (n: number) => `${n} من شبكتك جاهزين للتواصل الحين.`, en: (n: number) => `${n} people from your network are ready now.` },
-      certTitle: { ar: 'واصل تقدّمك', en: 'Keep your momentum' },
-      certDesc: { ar: (c: string) => `كمّل شهادتك الحالية: ${c}.`, en: (c: string) => `Continue your current certification: ${c}.` },
+      certTitle: { ar: 'واصل تقدّمك', arF: 'واصلي تقدّمك', en: 'Keep your momentum' },
+      certDesc: { ar: (c: string) => `كمّل شهادتك الحالية: ${c}.`, arF: (c: string) => `كمّلي شهادتك الحالية: ${c}.`, en: (c: string) => `Continue your current certification: ${c}.` },
     },
     networkTitle: { ar: 'شبكتك', en: 'Your network' },
     networkCount: { ar: (n: number) => `${n} جهة مرتّبة حسب قربها من أهدافك`, en: (n: number) => `${n} connections ranked by fit` },
-    networkEmpty: { ar: 'لم ترفع شبكتك بعد', en: 'No network uploaded yet' },
+    networkEmpty: { ar: 'لم ترفع شبكتك بعد', arF: 'لم ترفعي شبكتك بعد', en: 'No network uploaded yet' },
     customize: { ar: 'تخصيص', en: 'Customize' },
-    customizeTitle: { ar: 'خصّص صفحتك', en: 'Customize your home' },
-    customizeSub: { ar: 'اختر البطاقات اللي تبي تظهر هنا.', en: 'Choose which cards appear here.' },
+    customizeTitle: { ar: 'خصّص صفحتك', arF: 'خصّصي صفحتك', en: 'Customize your home' },
+    customizeSub: { ar: 'اختر البطاقات اللي تبي تظهر هنا.', arF: 'اختاري البطاقات اللي تبين تظهر هنا.', en: 'Choose which cards appear here.' },
     doneBtn: { ar: 'تم', en: 'Done' },
     wNextMove: { ar: 'خطوتك التالية', en: 'Next move' },
     wNetwork: { ar: 'شبكتك', en: 'Your network' },
@@ -1809,27 +1843,28 @@ export const ui = {
     careerDayTitle: { ar: 'أقرب يوم مهني', en: 'Next career day' },
     goalTitle: { ar: 'هدف هذا الأسبوع', en: "This week's goal" },
     goalHint: { ar: (a: number, b: number) => `${a} من ${b} تواصلات`, en: (a: number, b: number) => `${a} of ${b} reach-outs` },
-    goalDone: { ar: 'أنجزت هدف الأسبوع 🎉', en: "You hit this week's goal 🎉" },
+    goalDone: { ar: 'أنجزت هدف الأسبوع 🎉', arF: 'أنجزتي هدف الأسبوع 🎉', en: "You hit this week's goal 🎉" },
     snapshotTitle: { ar: 'ملخّص تواصلك', en: 'Outreach snapshot' },
     scoreLabel: { ar: 'درجة تنافسية سيرتك', en: 'Your CV competitiveness' },
     scoreFor: { ar: 'لهدف', en: 'for' },
     levelLabel: { ar: 'المستوى الوظيفي المستهدف', en: 'Target seniority' },
-    levelHint: { ar: 'درجتك تتغيّر حسب المستوى اللي تستهدفه', en: 'Your score changes with the level you aim for' },
+    levelHint: { ar: 'درجتك تتغيّر حسب المستوى اللي تستهدفه', arF: 'درجتك تتغيّر حسب المستوى اللي تستهدفينه', en: 'Your score changes with the level you aim for' },
     improvementsTitle: { ar: 'وش يرفع درجتك', en: 'What raises your score' },
     scoreFactorsTitle: { ar: 'وش يبني درجتك', en: "What's behind your score" },
     strengthStrong: { ar: 'قوي', en: 'Strong' },
     strengthGood: { ar: 'جيد', en: 'Good' },
     strengthGrowing: { ar: 'قيد البناء', en: 'Growing' },
     quickWin: { ar: 'أسرع مكسب', en: 'Quickest win' },
-    reachable: { ar: 'درجتك لو كمّلت هذي الخطوات', en: 'Your reachable score' },
+    reachable: { ar: 'درجتك لو كمّلت هذي الخطوات', arF: 'درجتك لو كمّلتي هذي الخطوات', en: 'Your reachable score' },
     areasTitle: { ar: 'أقوى مساراتك', en: 'Your top areas' },
     areasSub: { ar: 'مرتّبة حسب قوتك في كل مسار', en: 'Ranked by your competitiveness' },
     tipTitle: { ar: 'أهمّ خطوة اليوم', en: "Today's top move" },
     tip: {
       ar: 'أسرع مكسب اليوم: عيد صياغة أبرز 3 إنجازات بأرقام وترفع درجتك +6 على طول.',
+      arF: 'أسرع مكسب اليوم: عيدي صياغة أبرز 3 إنجازات بأرقام وترفعين درجتك +6 على طول.',
       en: 'Your quickest win today: reframe your top 3 bullets for finance to add +6 to your score now.',
     },
-    actionsTitle: { ar: 'ابدأ معهم اليوم', en: 'Start with these today' },
+    actionsTitle: { ar: 'ابدأ معهم اليوم', arF: 'ابدئي معهم اليوم', en: 'Start with these today' },
     actionsSub: { ar: 'من شبكتك، تتجدّد يوميًا', en: 'From your network, refreshed daily' },
     openContacts: { ar: 'كل صنّاع القرار', en: 'All decision-makers' },
     nextCert: { ar: 'شهادتك الحالية', en: 'Your current certification' },
@@ -1839,19 +1874,20 @@ export const ui = {
     title: { ar: 'خمسة مسارات مبنية على سيرتك', en: 'Five paths built on your CV' },
     sub: {
       ar: 'افتح أي مسار وتشوف خارطة شهاداته، وش تضيف كل شهادة لدرجتك، وأهم ناس تتواصل معهم.',
+      arF: 'افتحي أي مسار وتشوفين خارطة شهاداته، وش تضيف كل شهادة لدرجتك، وأهم ناس تتواصلين معهم.',
       en: 'Open any path for its certification roadmap, what each adds to your score, and who to reach out to.',
     },
     score: { ar: 'الدرجة', en: 'Score' },
     scoreOf: { ar: 'من 100', en: 'of 100' },
     primary: { ar: 'مسارك الرئيسي', en: 'Primary path' },
     roadmap: { ar: 'خارطة الشهادات', en: 'Roadmap' },
-    open: { ar: 'افتح المسار', en: 'Open path' },
+    open: { ar: 'افتح المسار', arF: 'افتحي المسار', en: 'Open path' },
     statCerts: { ar: 'شهادات', en: 'certs' },
     statMonths: { ar: 'شهرًا', en: 'months' },
     back: { ar: 'كل المسارات', en: 'All paths' },
     progress: { ar: 'تقدّم المسار', en: 'Path progress' },
     totalScore: { ar: 'إجمالي ما يضيفه لدرجتك', en: 'Total score boost' },
-    picksTitle: { ar: 'ابدأ بهالخمسة', en: 'Start with these five' },
+    picksTitle: { ar: 'ابدأ بهالخمسة', arF: 'ابدئي بهالخمسة', en: 'Start with these five' },
     picksSub: {
       ar: 'الأعلى منصبًا، وناس بينك وبينهم قاسم مشترك، مع رسالة جاهزة لكل واحد.',
       en: 'The most senior, and people you share common ground with, each with a ready message.',
@@ -1881,14 +1917,14 @@ export const ui = {
     scoreAdd: { ar: 'للدرجة', en: 'to score' },
     whyNow: { ar: 'ليش الحين؟', en: 'Why now?' },
     official: { ar: 'الموقع الرسمي', en: 'Official site' },
-    markDone: { ar: 'علّمها منجزة', en: 'Mark done' },
+    markDone: { ar: 'علّمها منجزة', arF: 'علّميها منجزة', en: 'Mark done' },
     markedDone: { ar: 'منجزة', en: 'Done' },
-    bannerSub: { ar: 'تسترجع جزءًا من تكلفة الشهادات المعتمدة عبر هدف.', en: 'Reclaim part of the cost of approved certifications via Hadaf.' },
+    bannerSub: { ar: 'تسترجع جزءًا من تكلفة الشهادات المعتمدة عبر هدف.', arF: 'تسترجعين جزءًا من تكلفة الشهادات المعتمدة عبر هدف.', en: 'Reclaim part of the cost of approved certifications via Hadaf.' },
     opens: { ar: 'يفتح لك أبواب', en: 'Opens doors to' },
   },
   contacts: {
     eyebrow: { ar: 'التواصل', en: 'Outreach' },
-    title: { ar: 'تواصل مع اللي بيدهم القرار', en: 'Reach the people who decide' },
+    title: { ar: 'تواصل مع اللي بيدهم القرار', arF: 'تواصلي مع اللي بيدهم القرار', en: 'Reach the people who decide' },
     sub: {
       ar: 'صنّاع القرار للتواصل المباشر، والموارد البشرية للتقديم الرسمي. كل اسم ومعه رسالة جاهزة بصوتك.',
       en: 'Decision-makers for direct outreach, HR for the official application. Each with a ready message in your voice.',
@@ -1897,35 +1933,36 @@ export const ui = {
     tabHr: { ar: 'الموارد البشرية', en: 'HR' },
     connectionsHint: { ar: 'أهم الجهات للتواصل المباشر', en: 'Top targets for direct outreach' },
     hrHint: { ar: 'مسؤولو التوظيف · البوابة الرسمية', en: 'Recruiters · the official channel' },
-    placeholderNote: { ar: 'نعرض لك حاليًا مسؤولي توظيف من قاعدتنا. ارفع جهات اتصالك في لينكدإن وتطلع لك أقرب الناس لأهدافك تتواصل معهم أول.', en: 'Showing recruiters from our database for now. Upload your LinkedIn connections to reveal the warmest intros to reach out to first.' },
+    placeholderNote: { ar: 'نعرض لك حاليًا مسؤولي توظيف من قاعدتنا. ارفع جهات اتصالك في لينكدإن وتطلع لك أقرب الناس لأهدافك تتواصل معهم أول.', arF: 'نعرض لك حاليًا مسؤولي توظيف من قاعدتنا. ارفعي جهات اتصالك في لينكدإن وتطلع لك أقرب الناس لأهدافك تتواصلين معهم أول.', en: 'Showing recruiters from our database for now. Upload your LinkedIn connections to reveal the warmest intros to reach out to first.' },
     outreachLog: { ar: 'متابعة رسائلك', en: 'Your outreach' },
-    reachedLabel: { ar: 'تواصلت معهم', en: 'reached' },
+    reachedLabel: { ar: 'تواصلت معهم', arF: 'تواصلتي معهم', en: 'reached' },
     reachedOf: { ar: (a: number, b: number) => `${a} من ${b}`, en: (a: number, b: number) => `${a} of ${b}` },
     industry: { ar: 'المجال', en: 'Industry' },
     allIndustries: { ar: 'كل المجالات', en: 'All industries' },
-    search: { ar: 'ابحث بالاسم أو الشركة…', en: 'Search by name or company…' },
+    search: { ar: 'ابحث بالاسم أو الشركة…', arF: 'ابحثي بالاسم أو الشركة…', en: 'Search by name or company…' },
     recruiter: { ar: 'توظيف', en: 'Recruiter' },
     messagePreview: { ar: 'رسالة جاهزة', en: 'Ready message' },
     copy: { ar: 'نسخ', en: 'Copy' },
     copied: { ar: 'تم النسخ', en: 'Copied' },
     shuffle: { ar: 'صيغة أخرى', en: 'Shuffle' },
     linkedin: { ar: 'لينكدإن', en: 'LinkedIn' },
-    statusHint: { ar: 'حدّث الحالة بعد كل خطوة', en: 'Update the status after each step' },
+    statusHint: { ar: 'حدّث الحالة بعد كل خطوة', arF: 'حدّثي الحالة بعد كل خطوة', en: 'Update the status after each step' },
     inNetwork: { ar: 'في شبكتك', en: 'In your network' },
-    sameCompany: { ar: 'تعرف أحد في شركته', en: 'You know someone here' },
+    sameCompany: { ar: 'تعرف أحد في شركته', arF: 'تعرفين أحد في شركته', en: 'You know someone here' },
     sector: { ar: 'القطاع', en: 'Sector' },
     companySize: { ar: 'حجم الشركة', en: 'Company size' },
     allSectors: { ar: 'كل القطاعات', en: 'All sectors' },
     allSizes: { ar: 'كل الأحجام', en: 'All sizes' },
     handwrite: {
       ar: 'الأفضل تعيد صياغتها بأسلوبك!',
+      arF: 'الأفضل تعيدين صياغتها بأسلوبك!',
       en: 'Best to rewrite this in your own words!',
     },
     msgLangHint: { ar: 'لغة الرسالة', en: 'Message language' },
     showMore: { ar: (n: number) => `عرض المزيد (${n})`, en: (n: number) => `Show ${n} more` },
     showing: { ar: (a: number, b: number) => `تعرض ${a} من ${b}`, en: (a: number, b: number) => `Showing ${a} of ${b}` },
     inProgress: { ar: 'قيد المتابعة', en: 'In progress' },
-    notContacted: { ar: 'ما تواصلت معهم بعد', en: 'Not contacted yet' },
+    notContacted: { ar: 'ما تواصلت معهم بعد', arF: 'ما تواصلتي معهم بعد', en: 'Not contacted yet' },
     empty: { ar: 'لا نتائج مطابقة.', en: 'No matching results.' },
     status_new: { ar: 'جديد', en: 'New' },
     status_sent: { ar: 'أرسلت', en: 'Sent' },
@@ -1933,18 +1970,19 @@ export const ui = {
     status_followup: { ar: 'متابعة', en: 'Follow-up' },
   },
   network: {
-    title: { ar: 'اربط شبكتك في لينكدإن', en: 'Connect your LinkedIn network' },
+    title: { ar: 'اربط شبكتك في لينكدإن', arF: 'اربطي شبكتك في لينكدإن', en: 'Connect your LinkedIn network' },
     body: {
       ar: 'ارفع ملف جهات اتصالك (Connections.csv) ونرتّب لك شبكتك ونطلّع أقرب الناس لأهدافك تتواصل معهم أول. لمّا يعرّفك أحد تعرفه، توصل أسرع بكثير من رسالة باردة لشخص غريب. نحفظ ملفك بأمان في ملفّك الشخصي عشان نطابق شبكتك، ما نشاركه مع أحد، وتقدر تطلب حذفه في أي وقت.',
+      arF: 'ارفعي ملف جهات اتصالك (Connections.csv) ونرتّب لك شبكتك ونطلّع أقرب الناس لأهدافك تتواصلين معهم أول. لمّا يعرّفك أحد تعرفينه، توصلين أسرع بكثير من رسالة باردة لشخص غريب. نحفظ ملفك بأمان في ملفّك الشخصي عشان نطابق شبكتك، ما نشاركه مع أحد، وتقدرين تطلبين حذفه في أي وقت.',
       en: 'Upload your Connections.csv so we can rank your network and surface the people closest to your targets to reach out to first. A warm intro beats a cold message. Your file is saved securely to your profile to match your network, is never shared, and you can ask us to delete it anytime.',
     },
     note: { ar: 'لينكدإن ياخذ من 12 إلى 24 ساعة عشان يرسل لك الملف على بريدك.', en: 'LinkedIn takes 12 to 24 hours to email you the file.' },
-    upload: { ar: 'ارفع Connections.csv', en: 'Upload Connections.csv' },
+    upload: { ar: 'ارفع Connections.csv', arF: 'ارفعي Connections.csv', en: 'Upload Connections.csv' },
     matched: { ar: (n: number) => `حمّلنا ${n} جهة من شبكتك`, en: (n: number) => `Loaded ${n} of your connections` },
     ranked: { ar: 'حطّينا الأقرب لأهدافك فوق.', en: 'The closest matches to your targets are on top.' },
-    none: { ar: 'لم نتعرّف على أي جهة, جرّب ملفًا آخر.', en: 'No connections found, try another file.' },
+    none: { ar: 'لم نتعرّف على أي جهة, جرّب ملفًا آخر.', arF: 'لم نتعرّف على أي جهة, جرّبي ملفًا آخر.', en: 'No connections found, try another file.' },
     clear: { ar: 'إزالة الملف', en: 'Clear file' },
-    locked: { ar: 'ارفع جهات اتصالك وتشوف أقرب من تعرفهم هنا', en: 'Upload your connections to reveal who you know here' },
+    locked: { ar: 'ارفع جهات اتصالك وتشوف أقرب من تعرفهم هنا', arF: 'ارفعي جهات اتصالك وتشوفين أقرب من تعرفينهم هنا', en: 'Upload your connections to reveal who you know here' },
     howPhone: { ar: '📱 من تطبيق الجوال', en: '📱 On the phone app' },
     howLaptop: { ar: '💻 من المتصفح', en: '💻 On a laptop' },
     phoneSteps: {
@@ -1953,6 +1991,12 @@ export const ui = {
         'اختر «خصوصية البيانات» ثم «الحصول على نسخة من بياناتك».',
         'اختر «جهات الاتصال» فقط، ثم «اطلب الأرشيف».',
         'خلال 12 إلى 24 ساعة يصلك بريد فيه رابط التحميل, نزّل Connections.csv ثم ارفعه هنا.',
+      ],
+      arF: [
+        'افتحي تطبيق لينكدإن واضغطي صورتك ثم «الإعدادات».',
+        'اختاري «خصوصية البيانات» ثم «الحصول على نسخة من بياناتك».',
+        'اختاري «جهات الاتصال» فقط، ثم «اطلبي الأرشيف».',
+        'خلال 12 إلى 24 ساعة يصلك بريد فيه رابط التحميل, نزّلي Connections.csv ثم ارفعيه هنا.',
       ],
       en: [
         'Open the LinkedIn app, tap your photo, then Settings.',
@@ -1968,6 +2012,12 @@ export const ui = {
         'اختر «جهات الاتصال» تحديدًا، ثم «اطلب الأرشيف».',
         'خلال 12 إلى 24 ساعة يصلك بريد فيه الرابط, نزّل Connections.csv ثم ارفعه هنا.',
       ],
+      arF: [
+        'افتحي linkedin.com واضغطي «أنا» ثم «الإعدادات والخصوصية».',
+        'من «خصوصية البيانات» اختاري «الحصول على نسخة من بياناتك».',
+        'اختاري «جهات الاتصال» تحديدًا، ثم «اطلبي الأرشيف».',
+        'خلال 12 إلى 24 ساعة يصلك بريد فيه الرابط, نزّلي Connections.csv ثم ارفعيه هنا.',
+      ],
       en: [
         'Open linkedin.com, click Me, then Settings & Privacy.',
         'Under Data privacy, choose "Get a copy of your data".',
@@ -1981,35 +2031,36 @@ export const ui = {
     title: { ar: 'سجلّك الشخصي', en: 'Your personal log' },
     sub: {
       ar: 'إنت اللي تحدّث حالة كل تواصل بنفسك (ما نوصل لينكدإن)، وهنا تتجمّع أرقامك.',
+      arF: 'إنتي اللي تحدّثين حالة كل تواصل بنفسك (ما نوصل لينكدإن)، وهنا تتجمّع أرقامك.',
       en: 'You update each outreach status yourself (we never touch LinkedIn); your numbers add up here.',
     },
-    sent: { ar: 'جهات تواصلت معها', en: 'Contacts reached' },
+    sent: { ar: 'جهات تواصلت معها', arF: 'جهات تواصلتي معها', en: 'Contacts reached' },
     replied: { ar: 'ردود إيجابية', en: 'Positive replies' },
     ofRoadmap: { ar: 'من خارطتك', en: 'of your roadmap' },
     pending: { ar: 'بانتظار الردّ', en: 'Awaiting reply' },
     followup: { ar: 'تحتاج متابعة', en: 'Need follow-up' },
     replyRate: { ar: 'معدّل الردّ', en: 'Reply rate' },
-    vsBenchmark: { ar: 'كل اللي تحدّثه يطلع هنا على طول', en: 'Everything you log shows up here instantly' },
+    vsBenchmark: { ar: 'كل اللي تحدّثه يطلع هنا على طول', arF: 'كل اللي تحدّثينه يطلع هنا على طول', en: 'Everything you log shows up here instantly' },
     breakdown: { ar: 'توزيع تواصلك', en: 'Your outreach breakdown' },
-    empty: { ar: 'حدّث حالة كل تواصل من بطاقات «التواصل»، وبتطلع أرقامك هنا.', en: 'Update each outreach from the Contacts cards and your numbers appear here.' },
+    empty: { ar: 'حدّث حالة كل تواصل من بطاقات «التواصل»، وبتطلع أرقامك هنا.', arF: 'حدّثي حالة كل تواصل من بطاقات «التواصل»، وبتطلع أرقامك هنا.', en: 'Update each outreach from the Contacts cards and your numbers appear here.' },
     progressTitle: { ar: 'تقدّمك', en: 'Your progress' },
     certsDoneLabel: { ar: 'شهادات أنجزتها', en: 'Certifications done' },
     certsLeftLabel: { ar: 'شهادات متبقية', en: 'Certifications left' },
-    outreachLabel: { ar: 'جهات تواصلت معها', en: 'Contacts reached' },
+    outreachLabel: { ar: 'جهات تواصلت معها', arF: 'جهات تواصلتي معها', en: 'Contacts reached' },
     prepTitle: { ar: 'استعد', en: 'Prepare' },
-    prepSub: { ar: 'جهّز سيرتك ومقابلاتك قبل ما تتواصل.', en: 'Sharpen your CV and interviews before you reach out.' },
+    prepSub: { ar: 'جهّز سيرتك ومقابلاتك قبل ما تتواصل.', arF: 'جهّزي سيرتك ومقابلاتك قبل ما تتواصلين.', en: 'Sharpen your CV and interviews before you reach out.' },
   },
   study: {
     eyebrow: { ar: 'الدراسات العليا', en: 'Graduate study' },
-    title: { ar: 'طوّر نفسك بدرجة عليا', en: 'Level up with a graduate degree' },
-    sub: { ar: 'خيارات سعودية بدوام جزئي وإنت على رأس العمل، ودرجات بدوام كامل في جامعات قوية تقدر توصلها فعلًا.', en: 'Saudi part-time options while you work, and full-time degrees at strong universities you can realistically reach.' },
+    title: { ar: 'طوّر نفسك بدرجة عليا', arF: 'طوّري نفسك بدرجة عليا', en: 'Level up with a graduate degree' },
+    sub: { ar: 'خيارات سعودية بدوام جزئي وإنت على رأس العمل، ودرجات بدوام كامل في جامعات قوية تقدر توصلها فعلًا.', arF: 'خيارات سعودية بدوام جزئي وإنتي على رأس العمل، ودرجات بدوام كامل في جامعات قوية تقدرين توصلينها فعلًا.', en: 'Saudi part-time options while you work, and full-time degrees at strong universities you can realistically reach.' },
     chosenFor: { ar: (p: string) => `اخترناها عشان تناسب مسارك: ${p}`, en: (p: string) => `Chosen to fit your path: ${p}` },
     majorsLabel: { ar: 'تخصصات تناسب مسارك', en: 'Majors that fit your path' },
     fullTimeTitle: { ar: 'بدوام كامل', en: 'Full-time degrees' },
     fullTimeSub: { ar: 'جامعات قوية بمتناولك فعلًا، من الأصعب للأسهل قبولًا', en: 'Strong universities you can realistically reach, hardest to easiest' },
     partTimeTitle: { ar: 'في السعودية', en: 'In Saudi Arabia' },
-    partTimeSub: { ar: 'ادرس وإنت على رأس العمل، أقرب خيارين لك', en: 'Study while you work, your two nearest options' },
-    partTimeHow: { ar: 'برامج تنفيذية مسائية أو نهاية الأسبوع، تدرس وإنت محتفظ بوظيفتك، عادةً خلال سنتين إلى ثلاث.', en: 'Executive programs run evenings or weekends, so you study while keeping your job, usually over two to three years.' },
+    partTimeSub: { ar: 'ادرس وإنت على رأس العمل، أقرب خيارين لك', arF: 'ادرسي وإنتي على رأس العمل، أقرب خيارين لك', en: 'Study while you work, your two nearest options' },
+    partTimeHow: { ar: 'برامج تنفيذية مسائية أو نهاية الأسبوع، تدرس وإنت محتفظ بوظيفتك، عادةً خلال سنتين إلى ثلاث.', arF: 'برامج تنفيذية مسائية أو نهاية الأسبوع، تدرسين وإنتي محتفظة بوظيفتك، عادةً خلال سنتين إلى ثلاث.', en: 'Executive programs run evenings or weekends, so you study while keeping your job, usually over two to three years.' },
     degreeWord: { diploma: { ar: 'دبلوم في', en: 'Diploma in' }, bachelor: { ar: 'بكالوريوس في', en: "Bachelor's in" }, master: { ar: 'ماجستير في', en: "Master's in" }, phd: { ar: 'دكتوراه في', en: 'PhD in' } },
     tierHigh: { ar: 'عالمية، صعبة القبول', en: 'World class, hard to get in' },
     tierRespected: { ar: 'مرموقة ومعروفة', en: 'Respected and well known' },
@@ -2029,7 +2080,7 @@ export const ui = {
     timelineLabel: { ar: 'الجدول الزمني', en: 'Timeline' },
     fundingLabel: { ar: 'التمويل', en: 'Funding' },
     reqBrief: { ar: ['معدل تراكمي جيد، عادةً 3.0 من 4 فأعلى', 'اختبار لغة: آيلتس 6.5 أو توفل 90', 'توصيات وخطاب أهداف (مقال قصير عن طموحك)', 'بعض البرامج تطلب GMAT أو GRE'], en: ['A good GPA, usually 3.0 out of 4 or higher', 'English test: IELTS 6.5 or TOEFL 90', 'References and a statement of purpose (a short goals essay)', 'Some programs also ask for the GMAT or GRE'] },
-    timelineBrief: { ar: ['جهّز قبل 9 إلى 12 شهرًا', 'المواعيد تختلف حسب الدولة، مذكورة في كل بطاقة', 'أنجز اختبارات اللغة وGMAT مبكرًا'], en: ['Prepare 9 to 12 months ahead', 'Deadlines differ by country, shown on each card', 'Sit language and GMAT tests early'] },
+    timelineBrief: { ar: ['جهّز قبل 9 إلى 12 شهرًا', 'المواعيد تختلف حسب الدولة، مذكورة في كل بطاقة', 'أنجز اختبارات اللغة وGMAT مبكرًا'], arF: ['جهّزي قبل 9 إلى 12 شهرًا', 'المواعيد تختلف حسب الدولة، مذكورة في كل بطاقة', 'أنجزي اختبارات اللغة وGMAT مبكرًا'], en: ['Prepare 9 to 12 months ahead', 'Deadlines differ by country, shown on each card', 'Sit language and GMAT tests early'] },
     fundingBrief: { ar: ['منحة حكومية', 'رواد: قبول من أفضل 30، مضمونة', 'إمداد: قبول من أفضل 200، غير مضمونة'], en: ['Government scholarship', 'Pioneers: a top-30 offer, guaranteed', 'Imdad: a top-200 offer, not guaranteed'] },
     viewProgram: { ar: 'صفحة البرنامج', en: 'Program page' },
     worthItTitle: { ar: 'هل تستاهل الدراسة العليا؟', en: 'Is a graduate degree worth it?' },
@@ -2042,6 +2093,7 @@ export const ui = {
     timelineTitle: { ar: 'الجدول الزمني للتقديم', en: 'Application timeline' },
     timeline: {
       ar: ['ابدأ قبل 9 إلى 12 شهرًا من موعد البدء.', 'جهّز اختبارات اللغة وGMAT مبكرًا.', 'مواعيد التقديم غالبًا في الخريف للقبول التالي.', 'قدّم على المنح بالتوازي مع طلب القبول.'],
+      arF: ['ابدئي قبل 9 إلى 12 شهرًا من موعد البدء.', 'جهّزي اختبارات اللغة وGMAT مبكرًا.', 'مواعيد التقديم غالبًا في الخريف للقبول التالي.', 'قدّمي على المنح بالتوازي مع طلب القبول.'],
       en: ['Start 9 to 12 months before your intended start.', 'Sit language tests and the GMAT early.', 'Deadlines are often in the autumn for the next intake.', 'Apply for scholarships in parallel with admission.'],
     },
     fundingTitle: { ar: 'التمويل والدعم', en: 'Funding and support' },
@@ -2061,7 +2113,7 @@ export const ui = {
     },
   },
   cmd: {
-    placeholder: { ar: 'ابحث أو انتقل…', en: 'Search or jump to…' },
+    placeholder: { ar: 'ابحث أو انتقل…', arF: 'ابحثي أو انتقلي…', en: 'Search or jump to…' },
     go: { ar: 'انتقال', en: 'Go' },
     openPath: { ar: 'افتح المسار', en: 'Open path' },
   },
@@ -2074,12 +2126,12 @@ export const ui = {
     polished: { ar: 'سيرتك جاهزة بالكامل 👏', en: 'Your CV is fully polished 👏' },
     undo: { ar: 'تراجع', en: 'Undo' },
     clean: { ar: 'سيرتك قوية، ما تحتاج تعديلات.', en: 'Your CV is strong, nothing to fix.' },
-    polishProgress: { ar: (a: number, b: number) => `أصلحت ${a} من ${b}`, en: (a: number, b: number) => `${a} of ${b} fixed` },
+    polishProgress: { ar: (a: number, b: number) => `أصلحت ${a} من ${b}`, arF: (a: number, b: number) => `أصلحتي ${a} من ${b}`, en: (a: number, b: number) => `${a} of ${b} fixed` },
     gapsTitle: { ar: 'وش ينقصك للمستوى المستهدف', en: 'What you need for your target level' },
     experience: { ar: 'الخبرة', en: 'Experience' },
     certNeeded: { ar: 'شهادة مطلوبة', en: 'Certification' },
     other: { ar: 'أخرى', en: 'Also' },
-    ready: { ar: 'إنت جاهز لهذا المستوى، ما فيه فجوات تذكر!', en: "You're ready for this level, no real gaps!" },
+    ready: { ar: 'إنت جاهز لهذا المستوى، ما فيه فجوات تذكر!', arF: 'إنتي جاهزة لهذا المستوى، ما فيه فجوات تذكر!', en: "You're ready for this level, no real gaps!" },
   },
   opp: {
     eyebrow: { ar: 'فرص ومصادر', en: 'Opportunities & resources' },
@@ -2088,10 +2140,10 @@ export const ui = {
     tamheerTitle: { ar: 'برنامج تمهير', en: 'Tamheer program' },
     tamheerDesc: { ar: 'تدريب على رأس العمل للخريجين السعوديين عبر هدف، مع مكافأة شهرية.', en: 'On-the-job training for Saudi graduates via Hadaf, with a monthly reward.' },
     tamheerEligible: { ar: 'الشروط', en: 'Eligibility' },
-    tamheerApply: { ar: 'سجّل في طاقات', en: 'Register on Taqat' },
-    tamheerEntryHint: { ar: 'مناسب لك الآن كخرّيج في بداية المسار', en: 'A fit for you now as an early-career graduate' },
+    tamheerApply: { ar: 'سجّل في طاقات', arF: 'سجّلي في طاقات', en: 'Register on Taqat' },
+    tamheerEntryHint: { ar: 'مناسب لك الآن كخرّيج في بداية المسار', arF: 'مناسب لك الآن كخرّيجة في بداية المسار', en: 'A fit for you now as an early-career graduate' },
     careerDaysTitle: { ar: 'الأيام المهنية والمعارض', en: 'Career days & fairs' },
-    careerDaysSub: { ar: 'تواريخ تقريبية، تحقّق من الموقع قبل الحضور.', en: 'Approximate timing, check the site before attending.' },
+    careerDaysSub: { ar: 'تواريخ تقريبية، تحقّق من الموقع قبل الحضور.', arF: 'تواريخ تقريبية، تحقّقي من الموقع قبل الحضور.', en: 'Approximate timing, check the site before attending.' },
     relevantToYou: { ar: 'يناسب مجالك', en: 'Matches your field' },
     mastersTitle: { ar: 'الدراسات العليا', en: 'Graduate study' },
     mastersSub: { ar: 'برامج قوية في مجالك، الخيارات السعودية أولًا.', en: 'Strong programs in your field, Saudi options first.' },
@@ -2104,11 +2156,11 @@ export const ui = {
     sizeSmall: { ar: 'صغيرة', en: 'Small' },
     apply: { ar: 'تقديم', en: 'Apply' },
     visit: { ar: 'زيارة', en: 'Visit' },
-    cvGuideTitle: { ar: 'كيف تكتب سيرة قوية', en: 'How to write a strong CV' },
+    cvGuideTitle: { ar: 'كيف تكتب سيرة قوية', arF: 'كيف تكتبين سيرة قوية', en: 'How to write a strong CV' },
     interviewTitle: { ar: 'نصائح للمقابلات', en: 'Interview tips' },
     skillsTitle: { ar: 'مهارات مطلوبة تتعلّمها', en: 'In-demand skills to learn' },
-    skillsSub: { ar: 'ابدأ بهذي المهارات وترفع قيمتك بسرعة.', en: 'Start with these to raise your value fast.' },
-    learn: { ar: 'تعلّمها', en: 'Learn it' },
+    skillsSub: { ar: 'ابدأ بهذي المهارات وترفع قيمتك بسرعة.', arF: 'ابدئي بهذي المهارات وترفعين قيمتك بسرعة.', en: 'Start with these to raise your value fast.' },
+    learn: { ar: 'تعلّمها', arF: 'تعلّميها', en: 'Learn it' },
   },
   referral: {
     title: { ar: 'تعرف أحد يستاهل فرصة أحسن؟ اعطه خصم 30%!', en: 'Know someone who deserves a better shot? Give them 30% off!' },
